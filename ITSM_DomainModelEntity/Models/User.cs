@@ -68,7 +68,7 @@ namespace ITSM_DomainModelEntity.Models
 
         public DateTime? update_date { get; set; }
 
-        public bool active { get; set; } = true;
+        public bool active { get; set; } = true; 
 
         // Navigation properties
         public virtual Role? Role { get; set; }
