@@ -1,0 +1,257 @@
+﻿* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+body {
+    background: #f5f5f5;
+    min-height: 100vh;
+    overflow-x: hidden;
+    /* 保持滚动条始终可见 */
+    overflow-y: scroll;
+}
+
+.content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+h1 {
+    margin-bottom: 30px;
+    color: #333;
+}
+
+.open-button {
+    padding: 12px 24px;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* Overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.65);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    z-index: 1200;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    /* 防止滚动穿透 */
+    overscroll-behavior: contain;
+}
+
+    .modal-overlay.active_open_menu {
+        opacity: 1;
+        pointer-events: all;
+    }
+
+/* Game Container */
+.game-container {
+    position: relative;
+    width: 450px; /* Slightly narrower like in the reference */
+    height: 100%;
+    max-height: 100vh;
+    box-shadow: -3px 0 15px rgba(255, 255, 255, 0.5);
+    overflow: hidden;
+    background: rgba(25, 25, 35, 0.95); /* Slightly transparent dark background */
+    backdrop-filter: blur(10px);
+    transform: translateX(100%); /* Start positioned off-screen to the right */
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-overlay.active_open_menu .game-container {
+    transform: translateX(0); /* Slide in from right */
+}
+
+/* Status Bar */
+.status-bar {
+    height: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 15px;
+    background-color: #111;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.level-info {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    color: #e0e0e0;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Game Screen */
+.game-screen {
+    width: 100%;
+    height: calc(100% - 40px);
+    background: #0c0c0c;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto; /* Add scroll for tall screens */
+}
+
+/* Icon Grid */
+.icon-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 70px;
+    gap: 8px;
+    padding: 12px 12px;
+}
+
+/* Game Icon */
+.game-icon {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    position: relative;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #1f1f1f 0%, #111111 100%);
+    box-shadow: inset 0 1px 1px rgba(255,255,255,0.1);
+    padding: 6px 0;
+}
+
+/* Wide icon spans 2 columns */
+.wide-icon {
+    grid-column: span 2;
+}
+
+.game-icon:hover, .game-icon.active_open_menu {
+    background: linear-gradient(135deg, #252525 0%, #1a1a1a 100%);
+    border-color: #555;
+    box-shadow: inset 0 0 15px rgba(255,255,255,0.1);
+}
+
+.active_open_menu {
+    border: 1px solid rgba(130, 180, 255, 0.7);
+}
+
+.icon-image {
+    font-size: 24px;
+    margin-bottom: 6px;
+    color: rgba(200, 200, 220, 0.85);
+    /* Create a subtle glow effect */
+    text-shadow: 0 0 5px rgba(130, 180, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+.game-icon:hover .icon-image {
+    color: white;
+    text-shadow: 0 0 8px rgba(130, 180, 255, 0.5);
+}
+
+.icon-name {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    color: rgba(200, 200, 220, 0.85);
+    text-align: center;
+}
+
+.game-icon:hover .icon-name {
+    color: white;
+}
+
+/* Notification */
+.notification {
+    position: absolute;
+    top: 7px;
+    right: 10px;
+    width: 18px;
+    height: 18px;
+    background-color: #f00;
+    border-radius: 50%;
+    color: white;
+    font-size: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 5px rgba(255, 0, 0, 0.7);
+}
+
+/* Close button */
+.close-button {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    width: 24px;
+    height: 24px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: 0.1s ease-in-out;
+}
+
+    .close-button:hover {
+        background: rgba(220, 60, 60, 0.8);
+    }
+
+    .close-button:before, .close-button:after {
+        content: '';
+        position: absolute;
+        width: 12px;
+        height: 2px;
+        background: white;
+    }
+
+    .close-button:before {
+        transform: rotate(45deg);
+    }
+
+    .close-button:after {
+        transform: rotate(-45deg);
+    }
+
+/* Ensure the content is behind the menu when open */
+/* body.menu-open {
+    overflow: hidden;
+} */
+
+/* Add smooth scrollbar for the menu */
+.game-screen::-webkit-scrollbar {
+    width: 5px;
+}
+
+.game-screen::-webkit-scrollbar-track {
+    background: rgba(30, 30, 40, 0.5);
+}
+
+.game-screen::-webkit-scrollbar-thumb {
+    background: rgba(100, 100, 120, 0.6);
+    border-radius: 4px;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 480px) {
+    .game-container {
+        width: 85%;
+    }
+}
