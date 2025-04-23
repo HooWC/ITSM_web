@@ -1,0 +1,587 @@
+﻿:root {
+    --inc-cre-background-color: #121212;
+    --inc-cre-card-bg: #121212;
+    --inc-cre-input-bg: #1e2128;
+    --inc-cre-input-border: #2c2c2c;
+    --inc-cre-text-color: #ffffff;
+    --inc-cre-text-muted: #8e9299;
+    --inc-cre-blue-accent: #0077c8;
+    --blue-highlight: #00a1ff;
+    --btn-hover: #2a2d36;
+    --btn-active: #323642;
+    --resolve-btn: #1e88e5;
+    --submit-btn: #4caf50;
+    --tab-active: #2a2b30;
+    --warning-bg: #3b3800;
+    --inc-cre-border-radius: 4px;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    --content-max-width: 1200px;
+    --input-height: 36px;
+}
+
+/** {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-color: var(--inc-cre-background-color);
+    color: var(--inc-cre-text-color);
+    line-height: 1.5;
+    padding: 0;
+    margin: 0;
+    min-height: 100vh;
+}*/
+
+.inc-cre-container {
+    width: 100%;
+    margin: 0 auto;
+    background-color: var(--inc-cre-card-bg);
+    box-shadow: var(--shadow);
+    border-radius: var(--inc-cre-border-radius);
+    position: relative;
+}
+
+/* Header Styles - Keeping 100% width */
+.inc-cre-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--inc-cre-input-border);
+    background-color: var(--inc-cre-card-bg);
+    border-radius: var(--inc-cre-border-radius) var(--inc-cre-border-radius) 0 0;
+    width: 100%;
+}
+
+.inc-cre-header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.inc-cre-back-button, .inc-cre-menu-button {
+    background-color: var(--inc-cre-input-bg);
+    border: 1px solid var(--inc-cre-input-border);
+    color: var(--inc-cre-text-color);
+    width: 32px;
+    height: 32px;
+    border-radius: var(--inc-cre-border-radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    transition: background-color 0.2s;
+}
+
+    .inc-cre-back-button:hover, .inc-cre-menu-button:hover {
+        background-color: var(--btn-hover);
+    }
+
+.inc-cre-title-group {
+    margin-left: 5px;
+}
+
+.inc-cre-title {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.inc-cre-subtitle {
+    font-size: 12px;
+    color: var(--inc-cre-text-muted);
+}
+
+.inc-cre-header-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.inc-cre-btn {
+    padding: 8px 16px;
+    border-radius: var(--inc-cre-border-radius);
+    font-size: 14px;
+    cursor: pointer;
+    border: 1px solid var(--inc-cre-input-border);
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.inc-cre-btn-icon {
+    background-color: transparent;
+    color: var(--inc-cre-text-color);
+    width: 32px;
+    height: 32px;
+    padding: 0;
+}
+
+    .inc-cre-btn-icon:hover {
+        background-color: var(--btn-hover);
+    }
+
+.inc-cre-btn-submit {
+    background-color: var(--submit-btn);
+    color: white;
+    border: none;
+}
+
+.inc-cre-btn-resolve {
+    background-color: var(--resolve-btn);
+    color: white;
+    border: none;
+}
+
+    .inc-cre-btn-submit:hover, .inc-cre-btn-resolve:hover {
+        filter: brightness(1.1);
+    }
+
+/* Form Styles */
+.inc-cre-form-wrapper {
+    padding: 24px;
+    max-width: var(--content-max-width);
+    margin: 0 auto;
+}
+
+.inc-cre-incident-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.inc-cre-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.inc-cre-form-column {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.inc-cre-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.inc-cre-form-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--inc-cre-text-muted);
+}
+
+.inc-cre-required:after {
+    content: " *";
+    color: #ff4d4f;
+}
+
+.inc-cre-form-control {
+    width: 100%;
+    padding: 8px 12px;
+    background-color: var(--inc-cre-input-bg);
+    border: 1px solid var(--inc-cre-input-border);
+    border-radius: var(--inc-cre-border-radius);
+    color: var(--inc-cre-text-color);
+    font-size: 14px;
+    transition: border-color 0.2s;
+    height: var(--input-height);
+}
+
+select.inc-cre-form-control {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238e9299' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    padding-right: 36px;
+}
+
+.inc-cre-form-control:focus {
+    border-color: var(--inc-cre-blue-accent);
+    outline: none;
+}
+
+.inc-cre-input-with-icon {
+    position: relative;
+    display: flex;
+    width: 100%;
+}
+
+    .inc-cre-input-with-icon .inc-cre-form-control {
+        padding-right: 36px;
+        width: 100%;
+    }
+
+.inc-cre-icon-search {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    background: transparent;
+    border: none;
+    color: var(--inc-cre-text-muted);
+    cursor: pointer;
+}
+
+.inc-cre-short-description-group {
+    margin-top: 8px;
+    grid-column: 1 / -1; /* Make it span both columns */
+}
+
+.inc-cre-input-with-actions {
+    display: flex;
+    position: relative;
+    width: 100%;
+}
+
+    .inc-cre-input-with-actions .inc-cre-form-control {
+        flex-grow: 1;
+        padding-right: 76px; /* Space for action buttons */
+        width: 100%;
+    }
+
+.inc-cre-action-buttons {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding-right: 8px;
+}
+
+.inc-cre-btn-help {
+    background: transparent;
+    border: none;
+    color: var(--inc-cre-text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: var(--inc-cre-border-radius);
+}
+
+    .inc-cre-btn-help:hover {
+        background-color: var(--btn-hover);
+    }
+
+.inc-cre-full-width {
+    grid-column: 1 / -1;
+}
+
+.inc-cre-description-textarea {
+    resize: vertical;
+    min-height: 100px;
+    width: 100%;
+}
+
+.inc-cre-priority-display {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background-color: var(--inc-cre-input-bg);
+    border: 1px solid var(--inc-cre-input-border);
+    border-radius: var(--inc-cre-border-radius);
+    width: 100%;
+    height: var(--input-height);
+}
+
+.inc-cre-priority-value {
+    color: var(--blue-highlight);
+    text-decoration: underline;
+    cursor: pointer;
+    flex-grow: 1;
+}
+
+.inc-cre-info-icon {
+    color: var(--inc-cre-text-muted);
+}
+
+.inc-cre-related-search-container {
+    text-align: center;
+    padding: 0 24px 24px;
+    max-width: var(--content-max-width);
+    margin: 0 auto;
+}
+
+.inc-cre-btn-related-search {
+    background-color: var(--inc-cre-input-bg);
+    color: var(--inc-cre-text-color);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+    .inc-cre-btn-related-search:hover {
+        background-color: var(--btn-hover);
+    }
+
+.inc-cre-tab-section {
+    padding: 0 24px 24px;
+    max-width: var(--content-max-width);
+    margin: 0 auto;
+}
+
+.inc-cre-tabs {
+    display: flex;
+    border-top-left-radius: var(--inc-cre-border-radius);
+    border-top-right-radius: var(--inc-cre-border-radius);
+    overflow: hidden;
+}
+
+.inc-cre-tab {
+    padding: 12px 20px;
+    background-color: var(--inc-cre-input-bg);
+    color: var(--inc-cre-text-color);
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
+    flex: 1;
+    text-align: center;
+}
+
+    .inc-cre-tab:not(:first-child) {
+        display: none;
+    }
+
+    .inc-cre-tab:hover {
+        background-color: var(--btn-hover);
+    }
+
+    .inc-cre-tab.active {
+        background-color: var(--tab-active);
+        color: var(--blue-highlight);
+        border-bottom: 2px solid var(--blue-highlight);
+    }
+
+.inc-cre-tab-content {
+    background-color: var(--inc-cre-input-bg);
+    padding: 20px;
+    border-bottom-left-radius: var(--inc-cre-border-radius);
+    border-bottom-right-radius: var(--inc-cre-border-radius);
+}
+
+.inc-cre-tab-pane {
+    display: none;
+    flex-direction: column;
+    gap: 16px;
+}
+
+    .inc-cre-tab-pane.active {
+        display: flex;
+    }
+
+.inc-cre-watch-list, .inc-cre-work-notes-list {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.inc-cre-list-actions {
+    display: flex;
+    gap: 4px;
+}
+
+.inc-cre-icon-button {
+    background-color: var(--inc-cre-input-bg);
+    border: 1px solid var(--inc-cre-input-border);
+    color: var(--inc-cre-text-color);
+    width: 28px;
+    height: 28px;
+    border-radius: var(--inc-cre-border-radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+    .inc-cre-icon-button:hover {
+        background-color: var(--btn-hover);
+    }
+
+.inc-cre-notes-textarea {
+    width: 100%;
+    padding: 10px;
+    background-color: var(--inc-cre-input-bg);
+    border: 1px solid var(--inc-cre-input-border);
+    border-radius: var(--inc-cre-border-radius);
+    color: var(--inc-cre-text-color);
+    resize: vertical;
+    min-height: 80px;
+}
+
+.inc-cre-work-notes-textarea {
+    background-color: var(--warning-bg);
+}
+
+.inc-cre-notes-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+    .inc-cre-notes-group label {
+        font-size: 14px;
+        color: var(--inc-cre-text-muted);
+    }
+
+.inc-cre-form-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--inc-cre-input-border);
+    background-color: var(--inc-cre-card-bg);
+    border-radius: 0 0 var(--inc-cre-border-radius) var(--inc-cre-border-radius);
+    width: 100%;
+}
+
+.inc-cre-footer-buttons {
+    display: flex;
+    gap: 10px;
+    max-width: var(--content-max-width);
+    margin: 0 auto;
+}
+
+.inc-cre-btn-submit-footer, .inc-cre-btn-resolve-footer {
+    background-color: var(--inc-cre-input-bg);
+    color: var(--inc-cre-text-color);
+}
+
+    .inc-cre-btn-submit-footer:hover, .inc-cre-btn-resolve-footer:hover {
+        background-color: var(--btn-hover);
+    }
+
+/* Enhanced Media Queries for Mobile Responsiveness */
+@media (max-width: 768px) {
+    /* Switch to one column layout */
+    .inc-cre-form-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    /* Adjust padding for smaller screens */
+    .inc-cre-form-wrapper,
+    .inc-cre-related-search-container,
+    .inc-cre-tab-section {
+        padding: 16px;
+    }
+
+    /* Adjust form groups spacing */
+    .inc-cre-form-group {
+        margin-bottom: 12px;
+    }
+
+    /* Make header more compact */
+    .inc-cre-header {
+        padding: 10px 16px;
+        flex-wrap: wrap;
+    }
+
+    /* Adjust header right section */
+    .inc-cre-header-right {
+        gap: 6px;
+    }
+
+    /* Ensure buttons don't get too small */
+    .inc-cre-btn {
+        padding: 8px 10px;
+        font-size: 13px;
+    }
+
+    /* Make footer buttons take up more space */
+    .inc-cre-footer-buttons {
+        flex-direction: column;
+        gap: 8px;
+        width: 100%;
+    }
+
+        .inc-cre-footer-buttons .inc-cre-btn {
+            width: 100%;
+        }
+
+    /* Make tab text smaller */
+    .inc-cre-tab {
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+
+    /* Ensure everything in tab panes is full width */
+    .inc-cre-tab-pane > * {
+        width: 100%;
+    }
+}
+
+/* Additional media query for very small screens */
+@media (max-width: 480px) {
+    /* Further reduce paddings */
+    .inc-cre-form-wrapper,
+    .inc-cre-related-search-container,
+    .inc-cre-tab-section {
+        padding: 12px;
+    }
+
+    /* Make the header stack vertically if needed */
+    .inc-cre-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .inc-cre-header-right {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    /* Further spacing adjustments */
+    .inc-cre-form-grid {
+        gap: 12px;
+    }
+
+    /* Make priority display more compact */
+    .inc-cre-priority-display {
+        height: auto;
+        padding: 8px;
+    }
+
+    /* Adjust padding in tab content */
+    .inc-cre-tab-content {
+        padding: 16px 12px;
+    }
+
+    /* Make input text slightly smaller for better mobile display */
+    .inc-cre-form-control {
+        font-size: 13px;
+    }
+
+    /* Adjust button sizes in various places */
+    .inc-cre-back-button,
+    .inc-cre-menu-button,
+    .inc-cre-btn-icon {
+        width: 28px;
+        height: 28px;
+    }
+
+    /* Make the search icon more touchable */
+    .inc-cre-icon-search {
+        width: 44px;
+    }
+}

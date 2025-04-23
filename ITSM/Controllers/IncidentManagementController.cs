@@ -4,7 +4,12 @@ namespace ITSM.Controllers
 {
     public class IncidentManagementController : Controller
     {
-        public IActionResult Index()
+        public IActionResult All()
+        {
+            return View();
+        }
+
+        public IActionResult Create_New()
         {
             return View();
         }

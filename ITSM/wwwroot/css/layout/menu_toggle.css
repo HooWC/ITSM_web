@@ -1,0 +1,114 @@
+﻿/* Menu Toggle Styles */
+html[data-menu-collapsed="true"],
+.layout-menu-collapsed {
+    --bs-menu-width: var(--bs-menu-collapsed-width);
+}
+
+html[data-menu-collapsed="true"] .layout-menu,
+.layout-menu-collapsed .layout-menu {
+    margin-left: -16.25rem;
+    width: var(--bs-menu-collapsed-width) !important;
+}
+
+html[data-menu-collapsed="true"] .layout-page,
+.layout-menu-collapsed .layout-page {
+    margin-left: 0 !important;
+}
+
+/* Smooth transition for menu toggle */
+.layout-menu,
+.layout-page {
+    transition: all 0.3s ease-in-out;
+}
+
+/* Make toggle button more visible */
+.layout-menu-toggle {
+    background-color: rgba(0, 0, 0, 0.1);
+    padding: 0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    min-height: 28px;
+    margin-left: auto;
+    margin-right: 10px;
+}
+
+.layout-menu-toggle-close {
+    background-color: #696cff;
+    padding: 0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 15px;
+    height: 15px;
+    min-width: 15px;
+    min-height: 15px;
+    margin-top:30px;
+}
+
+.layout-menu-toggle:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+/* Add a floating button to reopen menu when collapsed */
+.menu-toggle-button {
+    position: fixed;
+    align-items: center;
+    justify-content: center;
+    left: 67px;
+    top: 30px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background-color: #1E1E1E;
+    display: none;
+    cursor: pointer;
+    z-index: 1099;
+    transition: all 0.3s ease;
+    padding-top: 5.5px;
+    padding-right:5px;
+}
+
+/* Explicitly show the floating button when menu is collapsed */
+html[data-menu-collapsed="true"] .menu-toggle-button,
+.layout-menu-collapsed .menu-toggle-button {
+    display: block !important;
+}
+
+.menu-toggle-button:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+/* 大于等于 1200px 隐藏按钮 */
+@media screen and (min-width: 1200px) {
+    .menu-toggle-button {
+        display: none !important;
+    }
+}
+
+/* Ensure it works on mobile */
+@media (max-width: 1199.98px) {
+    html[data-menu-collapsed="true"] .layout-menu {
+        margin-left: 0;
+    }
+    
+    html[data-menu-collapsed="true"] .layout-overlay {
+        display: none;
+    }
+    
+    .layout-menu-collapsed .layout-menu,
+    html[data-menu-collapsed="true"] .layout-menu {
+        display: none !important;
+    }
+    
+    /* When menu is hidden, also hide the toggle button */
+    .layout-menu-collapsed .menu-toggle-button,
+    html[data-menu-collapsed="true"] .menu-toggle-button {
+        display: none !important;
+    }
+} 

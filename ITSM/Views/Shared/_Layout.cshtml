@@ -26,28 +26,26 @@
 
     <link rel="stylesheet" href="~/assets/vendor/fonts/iconify-icons.css" />
 
-    <!-- Core CSS -->
-    <!-- build:css assets/vendor/css/theme.css  -->
-
+    <!-- My CSS -->
     <link rel="stylesheet" href="~/css/layout/open_menu.css" />
+    <link rel="stylesheet" href="~/css/layout/menu_toggle.css" />
+    <link rel="stylesheet" href="~/css/Inc/inc_all.css" />
+    <link rel="stylesheet" href="~/css/Inc/inc_new.css" />
+
+    <!-- build:css assets/vendor/css/theme.css  -->
     <link rel="stylesheet" href="~/assets/vendor/css/core.css" />
     <link rel="stylesheet" href="~/assets/css/demo.css" />
 
     <!-- Vendors CSS -->
-
     <link rel="stylesheet" href="~/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
 
     <!-- endbuild -->
-
     <link rel="stylesheet" href="~/assets/vendor/libs/apex-charts/apex-charts.css" />
 
     <!-- Page CSS -->
     <!-- Helpers -->
     <script src="~/assets/vendor/js/helpers.js"></script>
-    <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
-    <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
 
-    <script src="~/assets/js/config.js"></script>
 </head>
 
 <body>
@@ -150,22 +148,24 @@
     <!-- Layout wrapper -->
     <div class="layout-wrapper layout-content-navbar">
         <div class="layout-container">
+            <!-- Floating menu toggle button for collapsed state -->
+            <div class="menu-toggle-button" title="Open menu">
+                <a href="javascript:void(0);" class="layout-menu-toggle-close menu-link text-large ms-auto"></a>
+            </div>
             <!-- Menu -->
 
             <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
                 <div class="app-brand demo">
-                    <a href="index.html" class="app-brand-link">
+                    <a href="~/Home/Index" class="app-brand-link">
                         <span class="app-brand-logo demo">
                             <span class="text-primary">
-                                <img class="logo_hs" src="~/assets//img/logo/hs_logo.png" />
+                                <img class="logo_hs" src="~/assets/img/logo/hs_logo.png" />
                             </span>
                         </span>
                         <span class="app-brand-text demo menu-text fw-bold ms-2">HSG ITSM</span>
                     </a>
 
-                    <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto">
-                        <i class="bx bx-chevron-left d-block d-xl-none align-middle"></i>
-                    </a>
+                    <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto"></a>
                 </div>
 
                 <div class="menu-divider mt-0"></div>
@@ -175,7 +175,7 @@
                 <ul class="menu-inner py-1">
                     <!-- Dashboards -->
                     <li class="menu-item active open">
-                        <a href="index.html" class="menu-link">
+                        <a href="~/Home/Index" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-home-smile"></i>
                             <div class="text-truncate" data-i18n="Dashboards">Dashboards</div>
                         </a>
@@ -228,12 +228,12 @@
                         </a>
                         <ul class="menu-sub">
                             <li class="menu-item">
-                                <a href="pages-account-settings-connections.html" class="menu-link">
+                                <a href="~/IncidentManagement/All" class="menu-link">
                                     <div class="text-truncate" data-i18n="Connections">All</div>
                                 </a>
                             </li>
                             <li class="menu-item">
-                                <a href="pages-account-settings-account.html" class="menu-link">
+                                <a href="~/IncidentManagement/Create_New" class="menu-link">
                                     <div class="text-truncate" data-i18n="Account">Create New</div>
                                 </a>
                             </li>
@@ -242,10 +242,8 @@
                                     <div class="text-truncate" data-i18n="Notifications">Assigned to me</div>
                                 </a>
                             </li>
-                            </a>
+                        </ul>
                     </li>
-                </ul>
-                </li>
                 <li class="menu-item">
                     <a href="javascript:void(0);" class="menu-link menu-toggle">
                         <i class="menu-icon tf-icons bx bx-dock-top"></i>
@@ -410,6 +408,9 @@
     <!-- Place this tag before closing body tag for github widget button. -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <!-- <script src="../dist/css/style1.js"></script> -->
+    <!-- My JS -->
+    <script src="~/assets/js/config.js"></script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
           const openButton = document.querySelector('.open-button');
@@ -419,27 +420,33 @@
           const body = document.body;
 
           // Open modal when the open button is clicked
-          openButton.addEventListener('click', function() {
-              modal.classList.add('active_open_menu');
-              body.classList.add('menu-open');
+          if (openButton) {
+              openButton.addEventListener('click', function() {
+                  modal.classList.add('active_open_menu');
+                  body.classList.add('menu-open');
 
-              // Add animation delay to make it feel more polished
-              setTimeout(() => {
-                  modal.style.transition = 'opacity 0.3s ease';
-              }, 500);
-          });
+                  // Add animation delay to make it feel more polished
+                  setTimeout(() => {
+                      modal.style.transition = 'opacity 0.3s ease';
+                  }, 500);
+              });
+          }
 
           // Close modal when the close button is clicked
-          closeButton.addEventListener('click', function() {
-              closeMenu();
-          });
+          if (closeButton) {
+              closeButton.addEventListener('click', function() {
+                  closeMenu();
+              });
+          }
 
           // Close modal when clicking outside the game container
-          modal.addEventListener('click', function(e) {
-              if (e.target === modal) {
-                  closeMenu();
-              }
-          });
+          if (modal) {
+              modal.addEventListener('click', function(e) {
+                  if (e.target === modal) {
+                      closeMenu();
+                  }
+              });
+          }
 
           // Function to close menu with animation
           function closeMenu() {
@@ -478,10 +485,112 @@
 
           // Add keyboard support (Escape key to close)
           document.addEventListener('keydown', function(e) {
-              if (e.key === 'Escape' && modal.classList.contains('active_open_menu')) {
+              if (e.key === 'Escape' && modal && modal.classList.contains('active_open_menu')) {
                   closeMenu();
               }
           });
+          
+          // Menu toggle functionality
+          const menuToggleButtons = document.querySelectorAll('.layout-menu-toggle');
+          const floatingToggleButton = document.querySelector('.menu-toggle-button');
+          
+          function toggleMenu() {
+              const layoutWrapper = document.querySelector('.layout-wrapper');
+              layoutWrapper.classList.toggle('layout-menu-collapsed');
+              
+              // Also keep the data attribute for our custom styles
+              const html = document.documentElement;
+              const isCollapsed = html.getAttribute('data-menu-collapsed') === 'true';
+              
+              if (isCollapsed) {
+                  html.removeAttribute('data-menu-collapsed');
+              } else {
+                  html.setAttribute('data-menu-collapsed', 'true');
+              }
+              
+              // Force the menu button to be visible when collapsed
+              const toggleButton = document.querySelector('.menu-toggle-button');
+              if (toggleButton) {
+                  if (layoutWrapper.classList.contains('layout-menu-collapsed')) {
+                      toggleButton.style.display = 'block';
+                  } else {
+                      toggleButton.style.display = 'none';
+                  }
+              }
+          }
+          
+          menuToggleButtons.forEach(button => {
+              button.addEventListener('click', toggleMenu);
+          });
+          
+          // Add click event to the floating button
+          if (floatingToggleButton) {
+              floatingToggleButton.addEventListener('click', toggleMenu);
+          }
+          
+          // Set initial menu state based on screen size
+          function setInitialMenuState() {
+              const windowWidth = window.innerWidth;
+              const layoutWrapper = document.querySelector('.layout-wrapper');
+              const toggleButton = document.querySelector('.menu-toggle-button');
+              
+              // For mobile screens, keep it collapsed
+              if (windowWidth < 1200 && layoutWrapper && !layoutWrapper.classList.contains('layout-menu-collapsed')) {
+                  toggleMenu();
+              }
+              
+              // Check if menu is already collapsed (e.g., on page reload)
+              if (layoutWrapper && layoutWrapper.classList.contains('layout-menu-collapsed') && toggleButton) {
+                  toggleButton.style.display = 'block';
+              }
+          }
+          
+          // Call on page load
+          setInitialMenuState();
+          
+          // Also handle window resize
+          window.addEventListener('resize', function() {
+              const toggleButton = document.querySelector('.menu-toggle-button');
+              const layoutWrapper = document.querySelector('.layout-wrapper');
+              const layoutMenu = document.querySelector('.layout-menu');
+              
+              // Check if the menu is visible
+              if (layoutMenu) {
+                  const menuStyle = window.getComputedStyle(layoutMenu);
+                  const isMenuVisible = menuStyle.display !== 'none';
+                  
+                  // If menu is not visible, make sure toggle button is also not visible
+                  if (toggleButton && !isMenuVisible) {
+                      toggleButton.style.display = 'none';
+                  } else if (toggleButton && layoutWrapper && layoutWrapper.classList.contains('layout-menu-collapsed')) {
+                      // Only show button if screen width is appropriate
+                      if (window.innerWidth < 1200) {
+                          toggleButton.style.display = 'block';
+                      } else {
+                          toggleButton.style.display = 'none';
+                      }
+                  }
+              }
+          });
+          
+          // Check menu visibility on load
+          function checkMenuVisibility() {
+              const toggleButton = document.querySelector('.menu-toggle-button');
+              const layoutMenu = document.querySelector('.layout-menu');
+              
+              if (toggleButton && layoutMenu) {
+                  const menuStyle = window.getComputedStyle(layoutMenu);
+                  const isMenuVisible = menuStyle.display !== 'none';
+                  
+                  // If menu is not visible, hide toggle button
+                  if (!isMenuVisible) {
+                      toggleButton.style.display = 'none';
+                  }
+              }
+          }
+          
+          // Call on page load
+          checkMenuVisibility();
         });
     </script>
 </body>
