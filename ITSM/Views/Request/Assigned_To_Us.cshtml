@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewData["Title"] = "All";
+    ViewData["Title"] = "Assigned_To_Us";
     Layout = "_Layout";
 }
 
@@ -26,7 +26,7 @@
             <button class="inc-tab-icon-button">
                 <i class="fas fa-list"></i>
             </button>
-            <h2 class="all-title-header-front">Incidents</h2>
+            <h2 class="all-title-header-front">Assigned to department</h2>
             <div class="inc-tab-dropdown">
                 <button class="inc-tab-dropdown-toggle">Number <i class="fas fa-chevron-down"></i></button>
             </div>
@@ -87,7 +87,7 @@
             <tbody>
                 <tr>
                     <td><input type="checkbox"></td>
-                    <td class="inc-tab-incident-number" data-label="Number">INC0000001</td>
+                    <td class="inc-tab-incident-number" data-label="Number">REQ0000001</td>
                     <td data-label="Opened">2024-12-03 15:09:51</td>
                     <td data-label="Short description">Can't read email</td>
                     <td data-label="Caller">Fred Luddy</td>
@@ -101,7 +101,7 @@
                 </tr>
                 <tr>
                     <td><input type="checkbox"></td>
-                    <td class="inc-tab-incident-number" data-label="Number">INC0000002</td>
+                    <td class="inc-tab-incident-number" data-label="Number">REQ0000002</td>
                     <td data-label="Opened">2024-11-27 15:07:12</td>
                     <td data-label="Short description">Network file shares access issue</td>
                     <td data-label="Caller">Fred Luddy</td>
@@ -115,7 +115,7 @@
                 </tr>
                 <tr>
                     <td><input type="checkbox"></td>
-                    <td class="inc-tab-incident-number" data-label="Number">INC0000003</td>
+                    <td class="inc-tab-incident-number" data-label="Number">REQ0000003</td>
                     <td data-label="Opened">2024-12-04 15:07:30</td>
                     <td data-label="Short description">Wireless access is down in my area</td>
                     <td data-label="Caller">Joe Employee</td>
@@ -130,7 +130,7 @@
                 <!-- Continue with more rows following the same pattern... -->
                 <tr>
                     <td><input type="checkbox"></td>
-                    <td class="inc-tab-incident-number" data-label="Number">INC0000004</td>
+                    <td class="inc-tab-incident-number" data-label="Number">REQ0000004</td>
                     <td data-label="Opened">2024-12-10 14:49:22</td>
                     <td data-label="Short description">Forgot email password</td>
                     <td data-label="Caller">Fred Luddy</td>
@@ -159,12 +159,13 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
     $(function () {
-      var $target = $('#Incidents_menu');
+      var $target = $('#Requests_menu');
       if (!$target.hasClass('active') || !$target.hasClass('open')) {
           $('.menu-item').removeClass('active open');
           $target.addClass('active open');
       }
 
-      $('#Incidents_menu_all').addClass("active");
+      $('#Requests_child_assigned').addClass("active");
     });
 </script>
+

@@ -253,7 +253,7 @@
     --bs-menu-focus-color: #c4c4c4; /* Menu 左边 Focus 后的颜色 /=改装=/  */
     --bs-menu-link-color: #c4c4c4; /* Menu 左边 Focus 后的颜色 /=改装=/  */
     --bs-menu-sub-active-bg: var(--bs-primary-bg-subtle);
-    --bs-menu-sub-active-color: var(--bs-primary);
+    --bs-menu-sub-active-color: var(--text-active-menu); /* Menu 左边 父类下拉主题 Focus 后的颜色 /=改装=/  */
     --bs-menu-active-color: var(--text-active-menu);
     --bs-menu-active-bg: var(--bs-primary-bg-subtle);
     --bs-menu-active-toggle-bg: #edeef0;
@@ -25299,6 +25299,7 @@ li:not(:first-child) .dropdown-item, .dropdown-menu .dropdown-item:not(:first-ch
 .menu-vertical .menu-item.active > .menu-toggle {
     background-color: var(--bs-menu-sub-active-bg);
     color: var(--bs-menu-sub-active-color);
+    font-weight:bold;
 }
 
 .menu-vertical .menu-item.active:not(.open) > .menu-link:not(.menu-toggle)::before {
@@ -25674,15 +25675,20 @@ li:not(:first-child) .dropdown-item, .dropdown-menu .dropdown-item:not(:first-ch
 /* Layouts
 ******************************************************************************* */
 .layout-container {
-    min-block-size: 100vh;
+    min-height: 100vh;
 }
+
 
 .layout-wrapper,
 .layout-container {
     display: flex;
     flex: 1 1 auto;
     align-items: stretch;
-    inline-size: 100%;
+    width: 100%; /* 使用标准的 width 而不是 inline-size */
+    min-width: 100%; /* 确保不会小于视口宽度 */
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /* 确保 padding 不会增加总宽度 */
 }
 
 .layout-menu-offcanvas .layout-wrapper,
@@ -25725,6 +25731,7 @@ li:not(:first-child) .dropdown-item, .dropdown-menu .dropdown-item:not(:first-ch
     flex: 1 1 auto;
     align-items: stretch;
     padding: 0;
+    width: 100%;
 }
 
 .layout-without-menu .layout-page {

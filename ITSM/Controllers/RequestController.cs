@@ -2,9 +2,14 @@
 
 namespace ITSM.Controllers
 {
-    public class IncidentManagementController : Controller
+    public class RequestController : Controller
     {
         public IActionResult All()
+        {
+            return View();
+        }
+
+        public IActionResult Service_Catalog()
         {
             return View();
         }
@@ -14,7 +19,7 @@ namespace ITSM.Controllers
             return View();
         }
 
-        public IActionResult Assigned_To_Me()
+        public IActionResult Assigned_To_Us()
         {
             return View();
         }

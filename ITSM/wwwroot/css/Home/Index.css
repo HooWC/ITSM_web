@@ -1,0 +1,67 @@
+﻿/* Lori 的图片 */
+.congratulation-card {
+    position: relative;
+    overflow: hidden;
+    border: none;
+}
+
+    .congratulation-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, rgb(21, 25, 40) 20%, rgba(38, 46, 73, 0.938) 50%, rgba(88, 91, 124, 0.2) 90%, rgba(255, 255, 255, 0) 100%), url('../assets/img/my/lori.png') no-repeat bottom left 110px;
+        background-size: cover;
+        z-index: 1;
+    }
+
+.text-content {
+    position: relative;
+    z-index: 2;
+    padding: 2rem;
+}
+
+.image-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.badge-image {
+    max-height: 175px;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+}
+
+.btn-light {
+    background-color: white;
+    color: #4a6dff;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+    .btn-light:hover {
+        background-color: #f8f9fa;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .congratulation-card::before {
+        background: linear-gradient(180deg, rgba(74, 109, 255, 0.8) 0%, transparent 100%), url('../assets/img/my/lori.png') no-repeat center bottom;
+    }
+
+    .image-content {
+        padding-top: 0;
+    }
+
+    .badge-image {
+        max-height: 150px;
+    }
+}
+/* Lori 的图片 */

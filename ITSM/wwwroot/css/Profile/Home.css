@@ -1,0 +1,1992 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --body-bg-color: #121212;
+    --border-color: #444444cc;
+    --theme-bg-color: #121212;
+    --body-color: #fcfcff;
+    --main-color: #e6e6e6;
+    --main-light-color: #a1a4b9;
+    --title-color: #f7f7f7;
+    --body-font: "Jost", sans-serif;
+    --button-bg-color: #eaeefc;
+    --button-color: #4d76fd;
+    --unselected-mail: #121212;
+    --calendar-border-color: #cbcfe0;
+    --main-container-bg: #121212;
+}
+
+* {
+    outline: none;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+html {
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+}
+
+body {
+    font-family: var(--body-font);
+    background-color: var(--body-bg-color);
+    color: var(--body-color);
+    font-size: 15px;
+}
+
+img {
+    max-width: 100%;
+}
+
+.pro-file-container {
+    background-color: var(--theme-bg-color);
+    display: flex;
+    max-width: 1600px;
+    height: 100vh;
+    overflow: hidden;
+    margin: 0 auto;
+    /*padding:0px 14px;*/
+}
+
+.pro-file-user-profile-area {
+    width: 360px;
+    border-right: 1px solid var(--border-color);
+    border-left: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    overflow: auto;
+}
+
+.pro-file-task-manager {
+    font-size: 18px;
+    color: var(--title-color);
+    font-weight: 700;
+    text-align: center;
+    height: 70px;
+    letter-spacing: 0.7px;
+    line-height: 70px;
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    text-transform: uppercase;
+    background-color: var(--theme-bg-color);
+    border-bottom: 1px solid var(--border-color);
+    background: linear-gradient(135deg, #121212 0%, #1e1e1e 50%, #121212 100%);
+    text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.pro-file-user-photo {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.pro-file-user-name {
+    font-weight: 600;
+    margin: 15px 0 3px;
+}
+
+.pro-file-user-mail {
+    color: var(--main-light-color);
+    font-size: 12px;
+    font-weight: 500;
+    margin-bottom: 10px;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.3s ease;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 4px 10px;
+    border-radius: 8px;
+}
+
+    .pro-file-user-mail:hover {
+        color: #fff;
+        background: rgba(0, 0, 0, 0.4);
+    }
+
+.pro-file-user-profile {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    position: relative;
+}
+
+.pro-file-user-role {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 11px;
+    margin: 0px 0px 2px 0px;
+    letter-spacing: 1px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #0bca81 0%, #034c63 100%);
+    padding: 5px 12px;
+    font-weight: 600;
+    box-shadow: 0 2px 10px rgba(28, 181, 224, 0.3);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+}
+
+    .pro-file-user-role:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: 0.5s;
+    }
+
+    .pro-file-user-role:hover:before {
+        left: 100%;
+    }
+
+@keyframes pro-file-pulse {
+    0% {
+        opacity: 0.6;
+        transform: scale(0.9);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+
+    100% {
+        opacity: 0.6;
+        transform: scale(0.9);
+    }
+}
+
+.pro-file-user-title {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 11px;
+    margin-top: 5px;
+    letter-spacing: 0.75px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #8a0505 0%, #ff5e62 100%);
+    padding: 5px 12px;
+    font-weight: 500;
+    box-shadow: 0 2px 10px rgba(138, 5, 5, 0.3);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+    .pro-file-user-title:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: 0.5s;
+    }
+
+    .pro-file-user-title:hover:before {
+        left: 100%;
+    }
+
+.pro-file-side-wrapper {
+    padding: 25px 40px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+    .pro-file-side-wrapper:last-child {
+        border-bottom: none;
+    }
+
+.pro-file-user-notification {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 25px;
+}
+
+    .pro-file-user-notification svg {
+        width: 36px;
+        padding: 10px;
+        flex-shrink: 0;
+        border-radius: 50%;
+        overflow: visible;
+        background-color: var(--button-bg-color);
+        color: var(--button-color);
+    }
+
+.pro-file-notify:not(:last-child) {
+    margin-right: 25px;
+}
+
+.pro-file-notify.pro-file-alert {
+    position: relative;
+}
+
+    .pro-file-notify.pro-file-alert:before {
+        content: "2";
+        font-size: 9px;
+        font-weight: 700;
+        position: absolute;
+        background-color: #ff537b;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        top: -3px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        right: 0px;
+        color: #fff;
+    }
+
+    .pro-file-notify.pro-file-alert:last-child:before {
+        content: "5";
+    }
+
+.pro-file-progress {
+    margin-top: 15px;
+    border-radius: 10px;
+    background: rgba(20, 20, 20, 0.5);
+    height: 10px;
+    overflow: hidden;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.4);
+}
+
+.pro-file-progress-bar {
+    background: linear-gradient(90deg, var(--button-color), #1cb5e0);
+    border-radius: 10px;
+    width: 35%;
+    height: 100%;
+    animation: pro-file-progressAnimation 6s;
+    transition: 0.3s linear both;
+    transition-property: width, background-color;
+    box-shadow: 0 0 10px rgba(28, 181, 224, 0.5);
+}
+
+.pro-file-progress-status {
+    margin-top: 10px;
+    text-align: right;
+    color: var(--main-color);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+@keyframes pro-file-progressAnimation {
+    0% {
+        width: 5%;
+        background-color: #a2b6f5;
+    }
+
+    100% {
+        width: 35%;
+    }
+}
+
+.pro-file-task-status {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.pro-file-task-stat {
+    text-align: center;
+}
+
+.pro-file-task-number {
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    background: linear-gradient(to bottom, #ffffff, #cccccc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.1);
+}
+
+.pro-file-task-condition {
+    font-size: 12px;
+    color: var(--main-color);
+    font-weight: 700;
+}
+
+.pro-file-task-tasks {
+    margin-top: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--main-light-color);
+}
+
+.pro-file-project-title {
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 18px;
+    background: linear-gradient(to right, #1cb5e0, #4d76fd);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+    position: relative;
+    padding-bottom: 5px;
+}
+
+    .pro-file-project-title:after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 50%;
+        height: 2px;
+        background: linear-gradient(90deg, #1cb5e0, transparent);
+    }
+
+.pro-file-project-department {
+    position: relative;
+    vertical-align: middle;
+    padding: 0 30px;
+    color: var(--main-color);
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 14px;
+}
+
+    .pro-file-project-department:before {
+        position: absolute;
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        top: 10;
+        left: 0;
+    }
+
+    .pro-file-project-department:nth-child(1):before {
+        border: 3px solid #b36dfb;
+    }
+
+    .pro-file-project-department:nth-child(2):before {
+        border: 3px solid #625be8;
+    }
+
+    .pro-file-project-department:nth-child(3):before {
+        border: 3px solid #fec267;
+    }
+
+    .pro-file-project-department:nth-child(4):before {
+        border: 3px solid #fc6679;
+    }
+
+.pro-file-members {
+    width: 36px;
+    height: 36px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.pro-file-team-member {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    row-gap: 15px;
+    padding: 10px;
+    background: rgba(20, 20, 20, 0.3);
+    border-radius: 15px;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.pro-file-member-item {
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: center;
+}
+
+.pro-file-members {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid rgba(76, 119, 253, 0.3);
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+.pro-file-member-title {
+    position: absolute;
+    background: rgba(20, 20, 20, 0.9);
+    color: var(--body-color);
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 10px;
+    white-space: nowrap;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%) translateY(5px);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.2s;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    z-index: 10;
+    border: 1px solid rgba(28, 181, 224, 0.3);
+}
+
+.pro-file-member-role {
+    display: block;
+    margin-top: 4px;
+    font-size: 8px;
+    opacity: 0.7;
+    color: #1cb5e0;
+    text-align: center;
+}
+
+.pro-file-member-item:hover .pro-file-member-title {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.pro-file-member-item.pro-file-more-members .pro-file-members {
+    background: linear-gradient(135deg, #1e1e1e, #2d2d2d);
+    border: 2px solid rgba(28, 181, 224, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    box-shadow: 0 0 10px rgba(28, 181, 224, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+    .pro-file-member-item.pro-file-more-members .pro-file-members:before {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(45deg, transparent, rgba(28, 181, 224, 0.1), transparent);
+        transform: translateX(-100%);
+        animation: pro-file-shine 3s infinite;
+    }
+
+@keyframes pro-file-shine {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    20%, 100% {
+        transform: translateX(100%);
+    }
+}
+
+.pro-file-member-item.pro-file-more-members .pro-file-members:after {
+    content: "...";
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--body-color);
+    animation: pro-file-pulse 1.5s infinite;
+}
+
+.pro-file-main-area {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+.pro-file-header {
+    height: 70px;
+    width: 100%;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.pro-file-search-bar {
+    height: 70px;
+    position: relative;
+}
+
+    .pro-file-search-bar input {
+        height: 100%;
+        width: 100%;
+        display: block;
+        background-color: transparent;
+        border: none;
+        color: var(--body-color);
+        padding: 0 35px;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23a1a4b9' stroke-width='3' stroke-linecap='round' stroke-linejoin='round' class='feather feather-search'%3e%3ccircle cx='11' cy='11' r='8'/%3e%3cpath d='M21 21l-4.35-4.35'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-size: 18px;
+        background-position: 0 50%;
+        font-family: var(--body-font);
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+        .pro-file-search-bar input::placeholder {
+            color: var(--main-light-color);
+        }
+
+.pro-file-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px 0 30px;
+}
+
+.pro-file-inbox-calendar {
+    margin-right: 200px;
+}
+
+.pro-file-color-menu {
+    flex-shrink: 0;
+}
+
+.pro-file-msg {
+    padding: 30px;
+    background-color: var(--unselected-mail);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    transition: 0.4s ease;
+    position: relative;
+}
+
+    .pro-file-msg:last-child {
+        border-bottom: 1px solid var(--border-color);
+    }
+
+/* .pro-file-anim-y {
+     border-bottom: 1px solid var(--border-color) !important;
+} */
+
+.pro-file-msg_title {
+    padding: 25px 30px 25px 30px;
+    background-color: var(--unselected-mail);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    transition: 0.4s ease;
+}
+
+.pro-file-msg-title {
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.pro-file-msg-short-content {
+    font-size: 13px;
+    color: var(--main-light-color);
+    font-weight: 600;
+    margin-top: 5px;
+}
+
+.pro-file-msg-date {
+    font-size: 11px;
+    color: var(--main-light-color);
+    font-weight: 600;
+    margin-top: 5px;
+}
+
+.pro-file-selected-bg {
+    background-color: var(--theme-bg-color);
+}
+
+.pro-file-msg-department {
+    display: flex;
+    justify-content: space-between;
+    text-transform: uppercase;
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 3;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    background-color: var(--theme-bg-color);
+    border-left: 4px solid #b36dfb;
+}
+
+    .pro-file-msg-department svg {
+        width: 12px;
+    }
+
+.pro-file-inbox {
+    overflow: auto;
+}
+
+.pro-file-inbox-container {
+    border-right: 1px solid var(--border-color);
+    width: 420px;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    flex-shrink: 0;
+}
+
+.pro-file-main-container {
+    display: flex;
+    flex-grow: 1;
+    overflow: auto; /* 要启用滚动条 */
+    background-color: var(--main-container-bg);
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: black rgba(70, 69, 69, 0.856); /* Firefox */
+}
+
+    /* Chrome, Edge, Safari */
+    .pro-file-main-container::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    .pro-file-main-container::-webkit-scrollbar-thumb {
+        background-color: black; /* 滑块颜色 */
+        border-radius: 4px;
+    }
+
+    .pro-file-main-container::-webkit-scrollbar-track {
+        background-color: transparent; /* 滚动轨道透明 */
+    }
+
+.pro-file-msg-content {
+    width: 100% !important;
+    flex-grow: 1 !important;
+}
+
+.pro-file-mail-members {
+    width: 40px;
+    height: 40px;
+    margin-left: auto;
+    display: none !important;
+}
+
+.pro-file-mail-choice {
+    display: none;
+}
+
+    .pro-file-mail-choice + label:before {
+        content: "";
+        display: flex;
+        width: 35px;
+        height: 35px;
+        border: 2px solid var(--main-light-color);
+        margin-right: 15px;
+        border-radius: 50%;
+        transition: 0.3s;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='20' height='28' viewBox='0 0 24 24' fill='none' stroke='%23a1a4b9' stroke-width='4' stroke-linecap='round' stroke-linejoin='round' class='feather feather-check'%3e%3cpath d='M20 6L9 17l-5-5'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: center;
+        cursor: pointer;
+    }
+
+    .pro-file-mail-choice:checked + label:before {
+        border-color: green;
+        background-color: var(--button-color);
+        border-color: var(--button-color);
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='20' height='28' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='4' stroke-linecap='round' stroke-linejoin='round' class='feather feather-check'%3e%3cpath d='M20 6L9 17l-5-5'/%3e%3c/svg%3e");
+    }
+
+    .pro-file-mail-choice:checked .pro-file-msg {
+        background-color: red;
+    }
+
+.pro-file-add-task {
+    position: sticky;
+    flex-shrink: 0;
+    bottom: 0;
+    left: 0;
+    height: 80px;
+    margin-top: auto;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--theme-bg-color);
+    animation: pro-file-slideUp 0.45s 0.4s both;
+}
+
+.pro-file-add-button {
+    position: sticky;
+    bottom: 10px;
+    background: linear-gradient(135deg, rgb(37, 36, 36) 0%, #313435 100%);
+    border: 0;
+    margin: auto;
+    padding: 10px 30px;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 20px;
+    flex-shrink: 0;
+    z-index: 1;
+    cursor: pointer;
+    width: 140px;
+    margin: 20px 10px 0px 10px;
+    box-shadow: 0 5px 15px rgba(61, 63, 63, 0.3);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+    .pro-file-add-button:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: 0.5s;
+    }
+
+    .pro-file-add-button:hover:before {
+        left: 100%;
+    }
+
+    .pro-file-add-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(34, 35, 36, 0.5);
+    }
+
+.pro-file-mail-detail {
+    display: flex;
+    animation: pro-file-slideX 0.6s both;
+    flex-direction: column;
+    overflow: auto;
+    background-color: var(--theme-bg-color);
+}
+
+.pro-file-mail-detail-profile {
+    display: flex;
+    align-items: center;
+}
+
+.pro-file-mail-detail-header {
+    border-bottom: 1px solid var(--border-color);
+    padding: 16px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.pro-file-mail-detail-name {
+    font-size: 14px;
+    font-weight: 600;
+    margin-left: 10px;
+    white-space: nowrap;
+}
+
+@keyframes pro-file-slideX {
+    0% {
+        opacity: 0;
+        transform: translateX(200px);
+    }
+}
+
+.pro-file-inbox-detail {
+    width: 44px;
+    height: 44px;
+}
+
+.pro-file-mail-icons {
+    flex-shrink: 0;
+}
+
+    .pro-file-mail-icons svg {
+        width: 42px;
+        height: 42px;
+        padding: 13px;
+        flex-shrink: 0;
+        margin-left: 10px;
+        border-radius: 50%;
+        overflow: visible;
+        background-color: var(--button-bg-color);
+        color: var(--button-color);
+    }
+
+        .pro-file-mail-icons svg:first-child {
+            margin-left: 0;
+        }
+
+.pro-file-mail-contents {
+    padding: 30px;
+    border-right: 1px solid var(--border-color);
+    height: 100vh;
+}
+
+.pro-file-mail-contents-subject {
+    display: flex;
+    align-items: center;
+}
+
+.pro-file-mail-contents-title {
+    font-weight: 700;
+    font-size: 17px;
+    margin-left: 5px;
+}
+
+.pro-file-mail {
+    padding-left: 55px;
+    font-size: 14px;
+    color: var(--main-light-color);
+}
+
+.pro-file-mail-time {
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+}
+
+    .pro-file-mail-time svg {
+        width: 12px;
+        margin-right: 8px;
+    }
+
+.pro-file-mail-inside {
+    padding: 20px 0 30px;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--main-color);
+    line-height: 1.8em;
+}
+
+.pro-file-mail-checklist {
+    padding: 20px 0;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+}
+
+    .pro-file-mail-checklist .pro-file-mail-choice + label:before {
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+        margin-right: 12px;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='14' height='18' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='4' stroke-linecap='round' stroke-linejoin='round' class='feather feather-check'%3e%3cpath d='M20 6L9 17l-5-5'/%3e%3c/svg%3e");
+    }
+
+    .pro-file-mail-checklist label {
+        display: flex;
+        align-items: center;
+        color: var(--button-color);
+        font-weight: 600;
+        font-size: 13px;
+    }
+
+.pro-file-mail-checklist-date {
+    margin-left: 16px;
+    font-size: 13px;
+}
+
+.pro-file-assignee {
+    font-size: 13px;
+    margin-bottom: 10px;
+}
+
+    .pro-file-assignee :last-child {
+        margin-bottom: 0;
+    }
+
+.pro-file-mail-assign {
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.pro-file-mail-doc {
+    display: flex;
+    align-items: center;
+    padding: 30px 0;
+    flex-shrink: 0;
+    justify-content: space-between;
+}
+
+.pro-file-mail-doc-name {
+    color: var(--body-color);
+    font-weight: 600;
+    font-size: 15px;
+    margin-bottom: 3px;
+}
+
+.pro-file-mail-doc-date {
+    font-size: 13px;
+}
+
+.pro-file-mail-doc-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+    .pro-file-mail-doc-wrapper svg {
+        margin-right: 15px;
+        background-color: var(--button-bg-color);
+        color: var(--button-color);
+        width: 50px;
+        padding: 9px;
+        border-radius: 4px;
+    }
+
+.pro-file-mail-doc-icons svg:not(:last-child) {
+    margin-right: 8px;
+}
+
+.pro-file-mail-textarea {
+    display: flex;
+    background-color: var(--unselected-mail);
+    padding: 30px 0;
+    border-top: 1px solid var(--border-color);
+    position: sticky;
+    bottom: 0;
+    justify-content: space-between;
+    margin-top: auto;
+    left: 0;
+    overflow: hidden;
+    height: 80px;
+    flex-shrink: 0;
+}
+
+    .pro-file-mail-textarea input {
+        border: none;
+        background-color: transparent;
+        font-size: 15px;
+        width: 100%;
+        padding: 0 30px;
+        color: var(--main-color);
+    }
+
+        .pro-file-mail-textarea input::placeholder {
+            color: var(--main-light-color);
+        }
+
+.pro-file-textarea-icons {
+    display: flex;
+    align-items: center;
+}
+
+.pro-file-attach {
+    padding: 30px;
+    border-right: 1px solid var(--border-color);
+    border-left: 1px solid var(--border-color);
+}
+
+    .pro-file-attach svg {
+        color: var(--main-color);
+    }
+
+.pro-file-send {
+    padding: 30px;
+    background-color: var(--button-color);
+}
+
+    .pro-file-send svg {
+        color: var(--theme-bg-color);
+    }
+
+.pro-file-inbox-calendar-checkbox {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    opacity: 0;
+    z-index: 3;
+    cursor: pointer;
+}
+
+.pro-file-toggle-page {
+    overflow: hidden;
+    z-index: 2;
+}
+
+.pro-file-inbox-calendar {
+    position: relative;
+    width: 220px;
+    border-radius: 20px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.pro-file-layer {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--unselected-mail);
+    transition: 0.3s ease all;
+    z-index: 1;
+}
+
+.pro-file-toggle-page:before, .pro-file-toggle-page:after, .pro-file-toggle-page span {
+    position: absolute;
+    top: 4px;
+    width: 100px;
+    height: 10px;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 1;
+    padding: 9px 4px;
+    border-radius: 20px;
+    transition: 0.3s ease all;
+}
+
+.pro-file-toggle-page:before {
+    content: "";
+    left: 4px;
+    background-color: var(--button-color);
+}
+
+.pro-file-toggle-page span {
+    color: var(--theme-bg-color);
+    z-index: 1;
+    left: 6px;
+}
+
+.pro-file-toggle-page:after {
+    content: "Calendar";
+    right: 4px;
+    color: var(--main-light-color);
+}
+
+.pro-file-inbox-calendar-checkbox:checked + .pro-file-toggle-page span {
+    color: var(--main-light-color);
+}
+
+.pro-file-inbox-calendar-checkbox:checked + .pro-file-toggle-page:before {
+    left: 109px;
+}
+
+.pro-file-inbox-calendar-checkbox:checked + .pro-file-toggle-page:after {
+    color: var(--theme-bg-color);
+}
+
+.pro-file-calendar {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(7, minmax(195px, 1fr));
+    grid-template-rows: 57px;
+    grid-auto-rows: 120px;
+    overflow: auto;
+}
+
+.pro-file-calendar-wrapper {
+    width: 100%;
+    margin: auto;
+    margin-top: 0;
+    overflow: auto;
+    border-radius: 10px;
+    background: #fff;
+    max-width: 975px;
+    border: 1px solid var(--calendar-border-color);
+}
+
+.pro-file-days {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--main-color);
+    text-align: center;
+    line-height: 60px;
+}
+
+    .pro-file-days:not(:nth-of-type(7n + 7)) {
+        border-right: 1px solid var(--calendar-border-color);
+    }
+
+.pro-file-day {
+    padding: 15px;
+    overflow: hidden;
+    font-weight: 700;
+    font-size: 13px;
+    border-right: 1px solid var(--calendar-border-color);
+    border-top: 1px solid var(--calendar-border-color);
+}
+
+    .pro-file-day:nth-of-type(7n + 7) {
+        border-right: 0;
+    }
+
+    .pro-file-day.pro-file-not-work {
+        color: var(--main-color);
+    }
+
+    .pro-file-day.pro-file-project-market {
+        background-color: #f5eafd;
+        border-left: 3px solid #b86df7;
+        transition: 0.2s ease;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+    }
+
+        .pro-file-day.pro-file-project-market:hover {
+            transform: scale(1.3);
+            border: 0;
+            border-radius: 4px;
+            background-image: linear-gradient(to top, #6625dc, #7739e3, #874cea, #965df1, #a46ef8);
+            color: #fff;
+            font-size: 15px;
+        }
+
+            .pro-file-day.pro-file-project-market:hover .pro-file-project-detail {
+                color: #fff;
+                font-size: 9px;
+            }
+
+                .pro-file-day.pro-file-project-market:hover .pro-file-project-detail:before {
+                    top: 2px;
+                }
+
+            .pro-file-day.pro-file-project-market:hover .pro-file-hover-title {
+                display: block;
+                font-size: 8px;
+                padding-left: 18px;
+                margin-top: 5px 0 3px;
+            }
+
+            .pro-file-day.pro-file-project-market:hover .pro-file-popup-check {
+                display: block;
+                width: 12px;
+                margin-left: auto;
+                margin-top: 6px;
+            }
+
+    .pro-file-day.pro-file-project-design {
+        background-color: #eeeffd;
+        border-left: 3px solid #736eeb;
+    }
+
+    .pro-file-day.pro-file-project-develop {
+        background-color: #fef6e8;
+        border-left: 3px solid #ffc263;
+    }
+
+    .pro-file-day.pro-file-project-finance {
+        background-color: #fee9ec;
+        border-left: 3px solid #ff647a;
+        transition: 0.2s ease;
+        cursor: pointer;
+    }
+
+        .pro-file-day.pro-file-project-finance:hover {
+            background-image: linear-gradient(to top, #f7224b, #fa3d5d, #fd526e, #fe637e, #ff748e);
+            transform: scale(1.3);
+            border: 0;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 15px;
+        }
+
+            .pro-file-day.pro-file-project-finance:hover .pro-file-popup-check {
+                display: block;
+                width: 12px;
+                margin-left: auto;
+                margin-top: 10px;
+            }
+
+            .pro-file-day.pro-file-project-finance:hover .pro-file-project-detail {
+                color: #fff;
+                font-size: 9px;
+            }
+
+                .pro-file-day.pro-file-project-finance:hover .pro-file-project-detail:before {
+                    top: 2px;
+                    background-color: #ce283e;
+                }
+
+            .pro-file-day.pro-file-project-finance:hover .pro-file-hover-title {
+                display: block;
+                font-size: 8px;
+                padding-left: 18px;
+                margin-top: 5px;
+            }
+
+.pro-file-hover-title {
+    display: none;
+    color: #fff;
+}
+
+.pro-file-popup-check {
+    display: none;
+}
+
+.pro-file-hide {
+    display: none;
+}
+
+.pro-file-project-detail {
+    color: #783cae;
+    font-size: 10px;
+    position: relative;
+    margin-top: 5px;
+    padding-left: 20px;
+    line-height: 1.4em;
+}
+
+    .pro-file-project-detail + .pro-file-project-detail {
+        margin-top: 5px;
+    }
+
+    .pro-file-project-detail:before {
+        content: "";
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background-color: #b86df7;
+        top: 4px;
+        left: 10px;
+    }
+
+    .pro-file-project-detail.pro-file-design {
+        color: #4844c1;
+    }
+
+        .pro-file-project-detail.pro-file-design:before {
+            background-color: #6f69ea;
+        }
+
+    .pro-file-project-detail.pro-file-develop {
+        color: #de9d3a;
+    }
+
+        .pro-file-project-detail.pro-file-develop:before {
+            background-color: #ffc263;
+        }
+
+    .pro-file-project-detail.pro-file-finance {
+        color: #e85b6f;
+    }
+
+        .pro-file-project-detail.pro-file-finance:before {
+            background-color: #fd667a;
+        }
+
+.pro-file-week-month {
+    display: flex;
+    height: 30px;
+}
+
+.pro-file-button {
+    border: 1px solid var(--button-color);
+    border-radius: 25px 0 0 25px;
+    color: var(--button-color);
+    padding: 8px 16px;
+    font-weight: 600;
+    font-family: var(--body-font);
+    font-size: 12px;
+    flex-shrink: 0;
+    cursor: pointer;
+    background-color: transparent;
+}
+
+    .pro-file-button.pro-file-active {
+        background-color: var(--button-color);
+        color: var(--theme-bg-color);
+    }
+
+.pro-file-button-month {
+    border-radius: 0 25px 25px 0;
+    margin-left: -2px;
+}
+
+.pro-file-calender-tab {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 975px;
+    margin: 0 auto;
+    width: 100%;
+    padding-bottom: 30px;
+}
+
+.pro-file-current-month {
+    position: relative;
+    padding: 0 10px;
+    font-weight: 600;
+}
+
+.pro-file-current-year {
+    font-size: 12px;
+    color: var(--main-color);
+    font-weight: 600;
+    margin-top: 5px;
+}
+
+.pro-file-month-change {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.pro-file-button-weekends, .pro-file-button-task {
+    border-radius: 25px;
+}
+
+.pro-file-button-task {
+    margin-left: 15px;
+}
+
+.pro-file-button-weekends {
+    border-color: var(--main-light-color);
+    color: var(--main-light-color);
+}
+
+.pro-file-calendar-container {
+    flex-direction: column;
+    width: 100%;
+    padding: 30px 50px;
+    overflow: auto;
+    display: none;
+}
+
+    .pro-file-calendar-container.pro-file-calendar-show {
+        display: flex;
+    }
+
+.pro-file-color-menu {
+    flex-shrink: 0;
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+    width: 32px;
+    height: 32px;
+}
+
+    .pro-file-color-menu svg {
+        position: absolute;
+        z-index: 8;
+        width: 17px;
+        top: 7px;
+        right: 8px;
+        fill: #fff;
+        pointer-events: none;
+    }
+
+.pro-file-colorpicker {
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 55px;
+    top: -8px;
+    right: -8px;
+    position: absolute;
+    cursor: pointer;
+}
+
+@media screen and (max-width: 1270px) {
+    .pro-file-mail-icons svg:not(:first-child) {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 1160px) {
+    .pro-file-inbox-container {
+        width: 370px;
+    }
+
+    .pro-file-user-profile-area {
+        width: 320px;
+    }
+}
+
+@media screen and (max-width: 1070px) {
+    .pro-file-inbox-container {
+        display: none;
+    }
+
+    .pro-file-mail-detail-header .pro-file-mail-icons svg {
+        display: inline-block;
+    }
+}
+
+@media screen and (max-width: 960px) {
+    .pro-file-inbox-calendar {
+        margin-right: 100px;
+    }
+}
+
+@media screen and (max-width: 870px) {
+    .pro-file-user-profile-area {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 530px) {
+    .pro-file-search-bar {
+        display: none;
+    }
+
+    .pro-file-mail-textarea {
+        padding: 0;
+        height: 60px;
+    }
+
+    .pro-file-button-weekends {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 485px) {
+    .pro-file-mail-icons svg:not(:first-child) {
+        display: none;
+    }
+
+    .pro-file-inbox-calendar {
+        margin-right: 0;
+    }
+
+    .pro-file-calendar-container {
+        padding: 30px 20px;
+    }
+}
+
+@media screen and (max-width: 370px) {
+    .pro-file-mail-doc-icons, .pro-file-mail-checklist-date {
+        display: none;
+    }
+}
+/*  .pro-file-anim-y {
+	 animation: pro-file-slideUp 0.6s both;
+}
+ .pro-file-anim-y:nth-child(2) {
+	 animation-delay: 0.28s;
+}
+ .pro-file-anim-y:nth-child(3) {
+	 animation-delay: 0.42s;
+}
+ .pro-file-anim-y:nth-child(4) {
+	 animation-delay: 0.56s;
+}
+ .pro-file-anim-y:nth-child(5) {
+	 animation-delay: 0.7s;
+}
+ .pro-file-anim-y:nth-child(6) {
+	 animation-delay: 0.84s;
+}
+ .pro-file-anim-y:nth-child(7) {
+	 animation-delay: 0.98s;
+}
+ .pro-file-anim-y:nth-child(8) {
+	 animation-delay: 1.12s;
+}
+ .pro-file-anim-y:nth-child(9) {
+	 animation-delay: 1.26s;
+}
+ .pro-file-anim-y:nth-child(10) {
+	 animation-delay: 1.4s;
+} */
+@keyframes pro-file-slideUp {
+    0% {
+        transform: translateY(76px) scale(0.92);
+        opacity: 0;
+    }
+}
+
+/* 手机版本响应式设计 */
+@media screen and (max-width: 768px) {
+    /* 整体容器调整为纵向排列 */
+    .pro-file-container {
+        flex-direction: column;
+        height: auto;
+        overflow: auto;
+    }
+
+    /* 调整三个主要部分的显示顺序 */
+    .pro-file-main-area {
+        order: 2;
+        width: 100%;
+    }
+
+    .pro-file-user-profile-area {
+        order: 3;
+        width: 100%;
+        border-right: none;
+        border-top: 1px solid var(--border-color);
+    }
+
+    /* 确保Incident History在顶部 */
+    .pro-file-msg_title.pro-file-msg-department {
+        order: 1;
+        width: 100%;
+        text-align: center;
+        padding: 15px 0;
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+
+    /* 主容器布局调整 */
+    .pro-file-main-container {
+        flex-direction: column;
+        height: auto;
+    }
+
+    /* 收件箱容器调整 */
+    .pro-file-inbox-container {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    /* 邮件详情容器调整 */
+    .pro-file-mail-detail {
+        width: 100%;
+        border-left: none;
+        border-top: 1px solid var(--border-color);
+        padding-top: 20px;
+    }
+
+    /* 日历容器调整 */
+    .pro-file-calendar-container {
+        width: 100%;
+        padding-top: 20px;
+    }
+
+    /* 日历调整 */
+    .pro-file-calendar {
+        grid-template-columns: repeat(7, 1fr);
+    }
+
+    .pro-file-day {
+        height: 40px;
+        font-size: 12px;
+    }
+
+    /* 消息内容扩展到最大宽度 */
+    .pro-file-msg-content {
+        width: 100%;
+        flex-grow: 1;
+    }
+
+    /* 隐藏邮件成员图片 */
+    .pro-file-mail-members {
+        display: none;
+    }
+
+    /* Profile部分调整 */
+    .pro-file-task-manager {
+        text-align: center;
+        padding: 15px 0;
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+
+    /* 任务状态调整为两列 */
+    .pro-file-task-status {
+        flex-wrap: wrap;
+    }
+
+    .pro-file-task-stat {
+        width: calc(50% - 10px);
+        margin-bottom: 10px;
+    }
+
+    /* 按钮调整 */
+    button, .pro-file-add-button {
+        min-width: 100px;
+        padding: 8px 12px;
+    }
+
+    /* 触控友好的表单元素 */
+    input[type="checkbox"] + label {
+        min-width: 20px;
+        min-height: 20px;
+    }
+
+    /* Team member adjustments for mobile */
+    .pro-file-team-member {
+        grid-template-columns: repeat(4, 1fr);
+        padding: 8px;
+        gap: 8px;
+    }
+
+    .pro-file-members {
+        width: 38px;
+        height: 38px;
+    }
+
+    .pro-file-member-title {
+        font-size: 9px;
+        padding: 4px 8px;
+    }
+
+    .pro-file-member-role {
+        font-size: 7px;
+    }
+}
+
+/* Todo App Styles - Enhanced UI/UX */
+.pro-file-todo-container {
+    max-width: 100%;
+    width: 100%;
+    margin: 0;
+    height: 100%;
+    overflow: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    background: transparent;
+}
+
+    .pro-file-todo-container .pro-file-task-list {
+        display: flex;
+        height: 100%;
+        gap: 20px;
+        flex: 1;
+        width: 100%;
+    }
+
+@media (max-width: 850px) {
+    .pro-file-todo-container .pro-file-task-list {
+        flex-direction: column;
+    }
+
+        .pro-file-todo-container .pro-file-task-list .pro-file-task-column {
+            width: 100%;
+            margin-bottom: 25px;
+            max-height: 450px;
+        }
+}
+
+.pro-file-todo-container .pro-file-task-list .pro-file-task-column {
+    flex: 1;
+    position: relative;
+    border-radius: 3px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 120px);
+    transition: all 0.3s ease;
+    background-color: #1e1e1e;
+    border: 1px solid var(--border-color);
+    min-width: 0;
+}
+
+    .pro-file-todo-container .pro-file-task-list .pro-file-task-column .pro-file-task-column-header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0px 15px;
+        position: relative;
+    }
+
+        .pro-file-todo-container .pro-file-task-list .pro-file-task-column .pro-file-task-column-header h2 {
+            font-size: 11px;
+            font-weight: 600;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+.pro-file-todo-container .pro-file-task-list .pro-file-task-column-in-progress .pro-file-task-column-header {
+    background: #e03c1f;
+    color: white;
+    border-radius: 0;
+}
+
+.pro-file-todo-container .pro-file-task-list .pro-file-task-column-approved .pro-file-task-column-header {
+    background: #44d26f;
+    color: white;
+    border-radius: 0;
+}
+
+.pro-file-mail-detail {
+    display: flex;
+    animation: pro-file-slideX 0.6s both;
+    flex-direction: column;
+    overflow: auto;
+    background-color: transparent;
+    width: 100%;
+}
+
+.pro-file-task-inner-list {
+    user-select: none;
+    padding: 20px;
+    overflow-y: auto;
+    flex: 1;
+    position: relative;
+    scrollbar-width: thin;
+    scrollbar-color: #000 #262626;
+}
+
+    .pro-file-task-inner-list::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .pro-file-task-inner-list::-webkit-scrollbar-track {
+        background: #262626;
+    }
+
+    .pro-file-task-inner-list::-webkit-scrollbar-thumb {
+        background-color: #000;
+        border-radius: 0;
+    }
+
+.pro-file-task-item {
+    position: relative;
+    margin-bottom: 15px;
+    padding: 16px;
+    background: #2c2c2c;
+    border-radius: 0;
+    border: 1px solid var(--border-color);
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.25s ease-out;
+    word-break: break-word;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+}
+
+    .pro-file-task-item:last-child {
+        margin-bottom: 0;
+    }
+
+.pro-file-task-item-title {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--title-color);
+    line-height: 1.4;
+    width: 100%;
+}
+
+.pro-file-task-item-time {
+    font-size: 12px;
+    display: inline-block;
+    margin-top: 8px;
+    color: var(--main-light-color);
+    font-weight: 400;
+}
+
+.pro-file-task-item-assigned {
+    display: flex;
+    margin-top: 12px;
+    gap: 5px;
+    align-items: center;
+}
+
+.pro-file-task-item-assigned-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #2c2c2c;
+}
+
+    .pro-file-task-item-assigned-avatar:hover {
+        transform: scale(1.1);
+        z-index: 1;
+    }
+
+.pro-file-task-item-button {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: none;
+    padding: 0;
+    margin: 0;
+    border: none;
+    outline: none;
+    color: var(--main-color);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .pro-file-task-item-button i {
+        font-size: 22px;
+    }
+
+    .pro-file-task-item-button:hover {
+        background-color: rgba(80, 80, 80, 0.3);
+        color: var(--button-color);
+    }
+
+.pro-file-is-moving {
+    cursor: grabbing;
+    opacity: 0.9;
+    transform: scale(1.02);
+    z-index: 10;
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.4);
+}
+
+.pro-file-is-moved {
+    transition: transform 0.3s ease;
+    transform: scale(1.05);
+}
+
+/* Add avatar shine effect */
+@keyframes pro-file-avatar-shine {
+    0% {
+        box-shadow: 0 0 10px rgba(28, 181, 224, 0.5);
+    }
+
+    50% {
+        box-shadow: 0 0 20px rgba(28, 181, 224, 0.8);
+    }
+
+    100% {
+        box-shadow: 0 0 10px rgba(28, 181, 224, 0.5);
+    }
+}
+
+.pro-file-user-photo {
+    animation: pro-file-avatar-shine 3s infinite;
+}
+
+
+.gu-mirror {
+    position: fixed !important;
+    margin: 0 !important;
+    z-index: 9999 !important;
+    opacity: 0.8 !important;
+    list-style-type: none !important;
+    background: #2c2c2c !important;
+    border-radius: 0 !important;
+    padding: 16px !important;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3) !important;
+    border: 1px solid #444444cc !important;
+    width: 320px !important; /* 固定宽度避免变形 */
+    max-width: 90% !important;
+    pointer-events: none !important; /* 防止事件干扰 */
+}
+
+/* 常规Dragula所需的类 */
+.gu-hide {
+    display: none !important;
+}
+
+.gu-unselectable {
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+}
+
+.gu-transit {
+    opacity: 0.3 !important;
+}
+
+/* 修复任务项内部样式 */
+.gu-mirror .pro-file-task-item-title {
+    color: #fff !important;
+    font-size: 15px !important;
+    font-weight: 500 !important;
+    margin: 0 !important;
+    line-height: 1.4 !important;
+}
+
+.pro-file-msg {
+    position: relative;
+    border-bottom: 1px solid var(--border-color) !important;
+}
+
+/*.pro-file-inbox {
+    border-right: 1px solid var(--border-color);
+}*/
+
+/* Improved loading animations for incident history */
+.pro-file-inbox {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.pro-file-msg {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.5s forwards;
+    animation-fill-mode: both;
+}
+
+    .pro-file-msg:nth-child(2) {
+        animation-delay: 0.1s;
+    }
+
+    .pro-file-msg:nth-child(3) {
+        animation-delay: 0.15s;
+    }
+
+    .pro-file-msg:nth-child(4) {
+        animation-delay: 0.2s;
+    }
+
+    .pro-file-msg:nth-child(5) {
+        animation-delay: 0.25s;
+    }
+
+    .pro-file-msg:nth-child(6) {
+        animation-delay: 0.3s;
+    }
+
+    .pro-file-msg:nth-child(7) {
+        animation-delay: 0.35s;
+    }
+
+    .pro-file-msg:nth-child(8) {
+        animation-delay: 0.4s;
+    }
+
+    .pro-file-msg:nth-child(9) {
+        animation-delay: 0.45s;
+    }
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Fix for the Add Incident button area */
+.pro-file-add-task {
+    opacity: 0;
+    animation: fadeIn 0.5s forwards;
+    animation-delay: 0.5s;
+    box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.1);
+    border-top: 1px solid var(--border-color);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Message content styling improvements */
+.pro-file-msg-content {
+    transition: all 0.3s ease;
+}
+
+/* Title styling */
+.pro-file-msg_title {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    backdrop-filter: blur(5px);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}

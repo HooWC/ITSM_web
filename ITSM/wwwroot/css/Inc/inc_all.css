@@ -13,6 +13,11 @@ body {
     overflow: hidden;
 }*/
 
+.all-title-header-front {
+    font-size: 1.5rem;
+    margin-bottom: 5px;
+}
+
 .inc-tab-container {
     padding: 30px;
     max-width: 100%;

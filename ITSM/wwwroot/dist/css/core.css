@@ -25644,7 +25644,7 @@ li:not(:first-child) .dropdown-item, .dropdown-menu .dropdown-item:not(:first-ch
 }
 /* Layouts
 ******************************************************************************* */
-.layout-container {
+/*.layout-container {
     min-block-size: 100vh;
 }
 
@@ -25654,7 +25654,7 @@ li:not(:first-child) .dropdown-item, .dropdown-menu .dropdown-item:not(:first-ch
     flex: 1 1 auto;
     align-items: stretch;
     inline-size: 100%;
-}
+}*/
 
 .layout-menu-offcanvas .layout-wrapper,
 .layout-menu-fixed-offcanvas .layout-wrapper {

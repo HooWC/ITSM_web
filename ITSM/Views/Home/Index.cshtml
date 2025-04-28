@@ -634,3 +634,15 @@
     <div class="content-backdrop fade"></div>
 </div>
 <!-- Content wrapper -->
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+    $(function () {
+      $('.menu-item').removeClass('active open');
+
+      var $target = $('#Dashboards_menu');
+      if (!$target.hasClass('active') || !$target.hasClass('open')) {
+          $target.addClass('active open');
+      }
+    });
+</script>
