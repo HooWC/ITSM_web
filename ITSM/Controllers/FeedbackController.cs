@@ -2,14 +2,14 @@
 
 namespace ITSM.Controllers
 {
-    public class CMDBController : Controller
+    public class FeedbackController : Controller
     {
-        public IActionResult CMDB_List()
+        public IActionResult Feedback_List()
         {
             return View();
         }
 
-        public IActionResult CMDB_Create()
+        public IActionResult Feedback_Create()
         {
             return View();
         }

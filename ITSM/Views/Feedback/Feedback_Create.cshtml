@@ -1,0 +1,418 @@
+﻿
+@{
+    ViewData["Title"] = "Feedback_Create";
+    Layout = "_Layout";
+}
+
+<style>
+    /* Product Image Styles */
+    .inc-cre-product-image-container {
+        margin-bottom: 1.25rem;
+        border-radius: 0.375rem;
+        overflow: hidden;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+        max-width: 100%;
+        height: auto;
+    }
+
+    .inc-cre-product-image-wrapper {
+        position: relative;
+        width: 100%;
+        height: 0;
+        padding-bottom: 25%; /* Reduced height for rectangular images */
+        overflow: hidden;
+        background-color: #121212;
+    }
+
+    .inc-cre-product-image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: contain; /* Changed from cover to contain */
+        transition: transform 0.5s ease;
+        background-color: #121212;
+    }
+
+    .inc-cre-product-image-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 50%, transparent 100%);
+        padding: 0.75rem 1.25rem;
+        color: white;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    .inc-cre-product-title {
+        margin: 0 0 0.25rem 0;
+        font-weight: 600;
+        font-size: 1rem;
+    }
+
+    .inc-cre-product-description {
+        margin: 0;
+        opacity: 0.9;
+        font-size: 0.75rem;
+    }
+
+    .inc-cre-product-image-wrapper:hover .inc-cre-product-image {
+        transform: scale(1.03);
+    }
+
+    /* Add support for square images */
+    .inc-cre-product-image-wrapper.square {
+        padding-bottom: 25%; /* Keep same height for consistency */
+    }
+
+    /* Auto-detect and adjust for different image types */
+    .inc-cre-product-image.landscape {
+        object-position: center;
+    }
+
+    .inc-cre-product-image.portrait {
+        object-position: center;
+    }
+
+    @@media (max-width: 768px) {
+        .inc-cre-product-image-wrapper {
+            padding-bottom: 35%; /* Slightly taller on mobile but still compact */
+        }
+
+            .inc-cre-product-image-wrapper.square {
+                padding-bottom: 35%;
+            }
+    }
+</style>
+
+<div class="inc-cre-container">
+    <header class="inc-cre-header">
+        <div class="inc-cre-header-left">
+            <button class="inc-cre-menu-button">
+                <i class="fa-solid fa-plus"></i>
+            </button>
+            <div class="inc-cre-title-group">
+                <div class="inc-cre-title">Feedback Form</div>
+                <div class="inc-cre-subtitle">New record</div>
+            </div>
+        </div>
+        <div class="inc-cre-header-right">
+            <button class="inc-cre-btn inc-cre-btn-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 20h9"></path>
+                    <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                </svg>
+            </button>
+            <button class="inc-cre-btn inc-cre-btn-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="4" y1="6" x2="20" y2="6"></line>
+                    <line x1="4" y1="12" x2="20" y2="12"></line>
+                    <line x1="4" y1="18" x2="20" y2="18"></line>
+                </svg>
+            </button>
+            <button class="inc-cre-btn inc-cre-btn-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="12" cy="5" r="1"></circle>
+                    <circle cx="12" cy="19" r="1"></circle>
+                </svg>
+            </button>
+            <button class="inc-cre-btn inc-cre-btn-submit">Submit</button>
+            <div class="nav-item navbar-dropdown dropdown-user dropdown open-button">
+                <a class="nav-link dropdown-toggle hide-arrow p-0"
+                   href="javascript:void(0);"
+                   data-bs-toggle="dropdown">
+                    <div class="avatar avatar-online">
+                        <img src="https://www.diydoutu.com/touxiang/20201222-1.jpg" alt class="w-px-40 h-auto rounded-circle" />
+                    </div>
+                </a>
+            </div>
+            <!-- <button class="inc-cre-btn inc-cre-btn-resolve">Resolve</button> -->
+        </div>
+    </header>
+
+    <main class="inc-cre-form-wrapper">
+        <form id="incidentForm" class="inc-cre-incident-form">
+            <div class="inc-cre-form-grid">
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="number" class="inc-cre-form-label">Number</label>
+                        <input type="text" id="number" class="inc-cre-form-control" value="INC0010005" readonly>
+                    </div>
+
+                    <div class="inc-cre-form-group">
+                        <label for="caller" class="inc-cre-form-label inc-cre-required">Caller</label>
+                        <div class="inc-cre-input-with-icon">
+                            <input type="text" id="caller" class="inc-cre-form-control" required>
+                            <button type="button" class="inc-cre-icon-search">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="inc-cre-form-group">
+                        <label for="category" class="inc-cre-form-label">Category</label>
+                        <select id="category" class="inc-cre-form-control">
+                            <option>-- None --</option>
+                            <option selected>Inquiry / Help</option>
+                            <option>Software</option>
+                            <option>Hardware</option>
+                            <option>Network</option>
+                        </select>
+                    </div>
+
+                    <div class="inc-cre-form-group">
+                        <label for="subcategory" class="inc-cre-form-label">Subcategory</label>
+                        <select id="subcategory" class="inc-cre-form-control">
+                            <option selected>-- None --</option>
+                        </select>
+                    </div>
+
+                    <div class="inc-cre-form-group">
+                        <label for="service" class="inc-cre-form-label">Service</label>
+                        <div class="inc-cre-input-with-icon">
+                            <input type="text" id="service" class="inc-cre-form-control">
+                            <button type="button" class="inc-cre-icon-search">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="inc-cre-form-group">
+                        <label for="service-offering" class="inc-cre-form-label">Service offering</label>
+                        <div class="inc-cre-input-with-icon">
+                            <input type="text" id="service-offering" class="inc-cre-form-control">
+                            <button type="button" class="inc-cre-icon-search">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="inc-cre-form-group">
+                        <label for="config-item" class="inc-cre-form-label">Configuration item</label>
+                        <div class="inc-cre-input-with-icon">
+                            <input type="text" id="config-item" class="inc-cre-form-control">
+                            <button type="button" class="inc-cre-icon-search">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="channel" class="inc-cre-form-label">Channel</label>
+                        <select id="channel" class="inc-cre-form-control">
+                            <option selected>-- None --</option>
+                            <option>Email</option>
+                            <option>Phone</option>
+                            <option>Web</option>
+                        </select>
+                    </div>
+
+                    <div class="inc-cre-form-group">
+                        <label for="state" class="inc-cre-form-label">State</label>
+                        <select id="state" class="inc-cre-form-control">
+                            <option selected>New</option>
+                            <option>In Progress</option>
+                            <option>On Hold</option>
+                            <option>Resolved</option>
+                            <option>Closed</option>
+                        </select>
+                    </div>
+
+                    <div class="inc-cre-form-group">
+                        <label for="impact" class="inc-cre-form-label">Impact</label>
+                        <select id="impact" class="inc-cre-form-control">
+                            <option>1 - High</option>
+                            <option>2 - Medium</option>
+                            <option selected>3 - Low</option>
+                        </select>
+                    </div>
+
+                    <div class="inc-cre-form-group">
+                        <label for="urgency" class="inc-cre-form-label">Urgency</label>
+                        <select id="urgency" class="inc-cre-form-control">
+                            <option>1 - High</option>
+                            <option>2 - Medium</option>
+                            <option selected>3 - Low</option>
+                        </select>
+                    </div>
+
+                    <div class="inc-cre-form-group">
+                        <label for="priority" class="inc-cre-form-label">Priority</label>
+                        <div class="inc-cre-priority-display">
+                            <span id="priority-value" class="inc-cre-priority-value">5 - Planning</span>
+                            <svg class="inc-cre-info-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="16" x2="12" y2="12"></line>
+                                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="inc-cre-form-group">
+                        <label for="assignment-group" class="inc-cre-form-label">Assignment group</label>
+                        <div class="inc-cre-input-with-icon">
+                            <input type="text" id="assignment-group" class="inc-cre-form-control">
+                            <button type="button" class="inc-cre-icon-search">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="inc-cre-form-group">
+                        <label for="assigned-to" class="inc-cre-form-label">Assigned to</label>
+                        <div class="inc-cre-input-with-icon">
+                            <input type="text" id="assigned-to" class="inc-cre-form-control">
+                            <button type="button" class="inc-cre-icon-search">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="inc-cre-form-group inc-cre-short-description-group">
+                <label for="short-description" class="inc-cre-form-label inc-cre-required">Short description</label>
+                <div class="inc-cre-input-with-actions">
+                    <input type="text" id="short-description" class="inc-cre-form-control" required>
+                    <div class="inc-cre-action-buttons">
+                        <button type="button" class="inc-cre-btn-help">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                            </svg>
+                        </button>
+                        <button type="button" class="inc-cre-btn-help">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="4" y1="6" x2="20" y2="6"></line>
+                                <line x1="4" y1="12" x2="20" y2="12"></line>
+                                <line x1="4" y1="18" x2="20" y2="18"></line>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="inc-cre-form-group inc-cre-full-width">
+                <label for="description" class="inc-cre-form-label">Description</label>
+                <textarea id="description" class="inc-cre-form-control inc-cre-description-textarea" rows="5"></textarea>
+            </div>
+        </form>
+    </main>
+
+    <div class="inc-cre-related-search-container">
+        <button class="inc-cre-btn inc-cre-btn-related-search">
+            Related Search Results
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </button>
+    </div>
+
+    <div class="inc-cre-tab-section">
+        <div class="inc-cre-tabs">
+            <button class="inc-cre-tab active">Notes</button>
+            <button class="inc-cre-tab">Related Records</button>
+            <button class="inc-cre-tab">Resolution Information</button>
+        </div>
+
+        <div class="inc-cre-tab-content">
+            <div id="notes-tab" class="inc-cre-tab-pane active">
+                <div class="inc-cre-watch-list">
+                    <span>Watch list</span>
+                    <div class="inc-cre-list-actions">
+                        <button class="inc-cre-icon-button">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                        </button>
+                        <button class="inc-cre-icon-button">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <textarea class="inc-cre-notes-textarea"></textarea>
+
+                <div class="inc-cre-work-notes-list">
+                    <span>Work notes list</span>
+                    <div class="inc-cre-list-actions">
+                        <button class="inc-cre-icon-button">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                        </button>
+                        <button class="inc-cre-icon-button">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="inc-cre-notes-group">
+                    <label for="additional-comments">Additional comments</label>
+                    <textarea id="additional-comments" class="inc-cre-notes-textarea"></textarea>
+                </div>
+
+                <div class="inc-cre-notes-group">
+                    <label for="work-notes">Work notes</label>
+                    <textarea id="work-notes" class="inc-cre-notes-textarea inc-cre-work-notes-textarea"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="inc-cre-form-footer">
+        <div class="inc-cre-footer-buttons">
+            <button type="button" class="inc-cre-btn inc-cre-btn-submit-footer">Submit</button>
+            <!-- <button type="button" class="inc-cre-btn inc-cre-btn-resolve-footer">Resolve</button> -->
+        </div>
+    </footer>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+    $(function () {
+      var $target = $('#Feedback_menu');
+      if (!$target.hasClass('active') || !$target.hasClass('open')) {
+          $('.menu-item').removeClass('active open');
+          $target.addClass('active open');
+      }
+
+      $('#Feedback_menu_create').addClass("active");
+    });
+</script>
+

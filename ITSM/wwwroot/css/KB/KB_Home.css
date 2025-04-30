@@ -1,0 +1,291 @@
+﻿/* Reset and base styles */
+/** {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+body {
+    background-color: #121212;
+    font-size: 16px;
+    line-height: 1.5;
+}*/
+
+/* Header styles */
+.KB1-header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 10px 20px;
+    color: white;
+    height: 60px;
+    border:none;
+}
+
+.KB1-servicenow-logo {
+    height: 30px;
+}
+
+.KB1-user-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto;
+    margin-top: 20px;
+}
+
+.KB1-profile-pic {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+/* Hero section with search */
+.KB1-hero-section {
+    background-size: cover;
+    padding: 30px 0 60px;
+    color: white;
+    text-align: center;
+    position: relative;
+}
+
+.KB1-search-container {
+    max-width: 600px;
+    margin: 0 auto 30px;
+    display: flex;
+}
+
+    .KB1-search-container input {
+        flex: 1;
+        padding: 12px 20px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: clamp(13px, 1.2vw, 14px);
+        margin-right: 10px;
+    }
+
+    .KB1-search-container button {
+        background-color: #575758;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 0 20px;
+        cursor: pointer;
+    }
+
+.KB1-stats {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    font-size: 16px;
+}
+
+/* Knowledge section */
+.KB1-knowledge-section {
+    max-width: 1200px;
+    margin: -30px auto 30px;
+    padding: 0 20px;
+    position: relative;
+    z-index: 2;
+}
+
+.KB1-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+    .KB1-section-header h2 {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        color: #ffffff;
+        font-size: clamp(18px, 2vw, 22px);
+        font-weight: 500;
+    }
+
+.KB1-dropdown-btn {
+    background-color: #1E1E1E;
+    border: 1px solid #504e4e;
+    border-radius: 4px;
+    padding: 8px 15px;
+    color: #ffffff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+    .KB1-dropdown-btn i {
+        color: #f8f6f6;
+        font-size: 12px;
+    }
+
+/* Knowledge cards */
+.KB1-knowledge-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.KB1-card {
+    background-color: #1E1E1E;
+    border-radius: 8px;
+    border: 1px solid #504e4e;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    width: calc(25% - 15px);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s, border 0.3s;
+}
+
+    .KB1-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        border-color: #377bf0;
+    }
+
+.KB1-card-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+    color: white;
+    font-size: 24px;
+}
+
+.KB1-it-icon {
+    background-color: #377bf0;
+}
+
+.KB1-kcs-icon, .KB1-error-icon {
+    background-color: #377bf0;
+}
+
+.KB1-knowledge-icon {
+    background-color: #377bf0;
+}
+
+.KB1-card-title {
+    font-size: clamp(14px, 1.5vw, 16px);
+    margin-bottom: 15px;
+    color: #ffffff;
+    font-weight: 500;
+}
+
+.KB1-demo-text {
+    font-size: 14px;
+    color: #ff8282;
+}
+
+.KB1-card-count {
+    color: #9e9999;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.KB1-card-subscribe {
+    color: #4A86E8;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+/* Articles section */
+.KB1-articles-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px 40px;
+    display: flex;
+    gap: 20px;
+}
+
+.KB1-article-column {
+    flex: 1;
+    background-color: #1E1E1E;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.KB1-article-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid #68656562;
+}
+
+    .KB1-article-header h3 {
+        color: #ffffff;
+        font-size: clamp(16px, 1.8vw, 18px);
+        font-weight: 500;
+    }
+
+.KB1-article-content {
+    padding: 10px 20px;
+}
+
+.KB1-article-item {
+    padding: 15px 0;
+    border-bottom: 1px solid #96959565;
+}
+
+.KB1-article-title {
+    display: block;
+    color: #c0c0c0;
+    text-decoration: none;
+    font-size: clamp(14px, 1.5vw, 15px);
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+
+.KB1-article-meta {
+    display: flex;
+    gap: 15px;
+    color: #8b8a8a;
+    font-size: clamp(12px, 1vw, 13px);
+    margin-bottom: 5px;
+}
+
+.KB1-rating {
+    color: #ccc;
+}
+
+.KB1-no-content {
+    padding: 30px 0;
+    color: #666;
+    text-align: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .KB1-card {
+        width: calc(50% - 10px);
+    }
+
+    .KB1-articles-section {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 768px) {
+    .KB1-card {
+        width: 100%;
+    }
+
+    .KB1-search-container {
+        width: 90%;
+    }
+}
+
+/* Add at the end of the file */
+@font-face {
+    font-family: 'Inter';
+    src: url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    font-display: swap;
+}

@@ -2,34 +2,34 @@
 
 namespace ITSM.Controllers
 {
-    public class PersonalController : Controller
+    public class KnowledgeController : Controller
     {
-        public IActionResult Home()
+        public IActionResult KB_Home()
         {
             return View();
         }
 
-        public IActionResult Todo_List()
+        public IActionResult KB_List()
         {
             return View();
         }
 
-        public IActionResult Incident_List()
+        public IActionResult KB_Search()
         {
             return View();
         }
 
-        public IActionResult Request_List()
+        public IActionResult KB_Read()
         {
             return View();
         }
 
-        public IActionResult Knowledge_List()
+        public IActionResult KB_Create()
         {
             return View();
         }
 
-        public IActionResult Feedback_List()
+        public IActionResult KB_Import()
         {
             return View();
         }

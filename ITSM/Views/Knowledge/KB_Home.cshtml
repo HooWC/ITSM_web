@@ -1,0 +1,186 @@
+﻿
+@{
+    ViewData["Title"] = "KB_Home";
+    Layout = "_Layout";
+}
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+
+    body {
+        background-color: #121212;
+        font-size: 16px;
+        line-height: 1.5;
+    }
+</style>
+
+<header class="KB1-header">
+    <div class="KB1-user-profile nav-item navbar-dropdown dropdown-user dropdown open-button">
+        <a class="nav-link dropdown-toggle hide-arrow p-0"
+           href="javascript:void(0);"
+           data-bs-toggle="dropdown">
+            <div class="avatar avatar-online">
+                <img src="https://www.diydoutu.com/touxiang/20201222-1.jpg" alt class="w-px-40 h-auto rounded-circle" />
+            </div>
+        </a>
+    </div>
+</header>
+
+<main>
+    <div class="KB1-hero-section">
+        <div class="KB1-search-container">
+            <input type="text" placeholder="Search Title...">
+            <button type="submit"><i class="fas fa-search"></i></button>
+        </div>
+    </div>
+
+    <div class="KB1-knowledge-section">
+        <div class="KB1-section-header">
+            <h2>Explore our Knowledge Bases (76)</h2>
+            <div class="KB1-dropdown">
+                <button class="KB1-dropdown-btn">Actions <i class="fas fa-chevron-down"></i></button>
+            </div>
+        </div>
+
+        <div class="KB1-knowledge-cards">
+            <a href="it-knowledge.html" class="KB1-card">
+                <div class="KB1-card-icon KB1-it-icon">
+                    <i class="fas fa-phone-alt"></i>
+                </div>
+                <div class="KB1-card-title">IT</div>
+                <div class="KB1-card-count"><i class="far fa-file-alt"></i> 35</div>
+            </a>
+
+            <a href="kcs-knowledge.html" class="KB1-card">
+                <div class="KB1-card-icon KB1-kcs-icon">
+                    <i class="fas fa-book"></i>
+                </div>
+                <div class="KB1-card-title">KCS Knowledge Base</div>
+                <div class="KB1-card-count"><i class="far fa-file-alt"></i> 4</div>
+            </a>
+
+            <a href="knowledge.html" class="KB1-card">
+                <div class="KB1-card-icon KB1-knowledge-icon">
+                    <i class="fas fa-desktop"></i>
+                </div>
+                <div class="KB1-card-title">Knowledge</div>
+                <div class="KB1-card-count"><i class="far fa-file-alt"></i> 0</div>
+            </a>
+
+            <a href="known-error.html" class="KB1-card">
+                <div class="KB1-card-icon KB1-error-icon">
+                    <i class="fas fa-book"></i>
+                </div>
+                <div class="KB1-card-title">Known Error</div>
+                <div class="KB1-card-count"><i class="far fa-file-alt"></i> 3</div>
+            </a>
+        </div>
+    </div>
+
+    <div class="KB1-articles-section">
+        <div class="KB1-article-column">
+            <div class="KB1-article-header">
+                <h3>Featured</h3>
+            </div>
+            <div class="KB1-article-content">
+                <div class="KB1-article-item">
+                    <a href="#" class="KB1-article-title">Email Interruption Tonight at 11:00 PM Eastern</a>
+                    <div class="KB1-article-meta">
+                        <span class="KB1-author">Wayne Webb</span>
+                        <span class="KB1-views">0 Views</span>
+                        <span class="KB1-date">2y ago</span>
+                    </div>
+                </div>
+                <div class="KB1-article-item">
+                    <a href="#" class="KB1-article-title">Sales Force Automation is DOWN</a>
+                    <div class="KB1-article-meta">
+                        <span class="KB1-author">Wayne Webb</span>
+                        <span class="KB1-views">0 Views</span>
+                        <span class="KB1-date">2y ago</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="KB1-article-column">
+            <div class="KB1-article-header">
+                <h3>Most Useful</h3>
+            </div>
+            <div class="KB1-article-content">
+                <div class="KB1-no-content">No content to display</div>
+            </div>
+        </div>
+
+        <div class="KB1-article-column">
+            <div class="KB1-article-header">
+                <h3>Most Viewed</h3>
+            </div>
+            <div class="KB1-article-content">
+                <div class="KB1-article-item">
+                    <a href="#" class="KB1-article-title">What are phishing scams and how can I avoid them?</a>
+                    <div class="KB1-article-meta">
+                        <span class="KB1-author">Ron Kettering</span>
+                        <span class="KB1-views">90 Views</span>
+                        <span class="KB1-date">2y ago</span>
+                    </div>
+                    <div class="KB1-rating">
+                        <span class="KB1-star">&#9734;</span>
+                        <span class="KB1-star">&#9734;</span>
+                        <span class="KB1-star">&#9734;</span>
+                        <span class="KB1-star">&#9734;</span>
+                        <span class="KB1-star">&#9734;</span>
+                    </div>
+                </div>
+                <div class="KB1-article-item">
+                    <a href="#" class="KB1-article-title">Automatic Replies (Out Of Office)</a>
+                    <div class="KB1-article-meta">
+                        <span class="KB1-author">Ron Kettering</span>
+                        <span class="KB1-views">85 Views</span>
+                        <span class="KB1-date">2y ago</span>
+                    </div>
+                    <div class="KB1-rating">
+                        <span class="KB1-star">&#9734;</span>
+                        <span class="KB1-star">&#9734;</span>
+                        <span class="KB1-star">&#9734;</span>
+                        <span class="KB1-star">&#9734;</span>
+                        <span class="KB1-star">&#9734;</span>
+                    </div>
+                </div>
+                <div class="KB1-article-item">
+                    <a href="#" class="KB1-article-title">Automatic Replies (Out Of Office)</a>
+                    <div class="KB1-article-meta">
+                        <span class="KB1-author">Ron Kettering</span>
+                        <span class="KB1-views">85 Views</span>
+                        <span class="KB1-date">2y ago</span>
+                    </div>
+                    <div class="KB1-rating">
+                        <span class="KB1-star">&#9734;</span>
+                        <span class="KB1-star">&#9734;</span>
+                        <span class="KB1-star">&#9734;</span>
+                        <span class="KB1-star">&#9734;</span>
+                        <span class="KB1-star">&#9734;</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+    $(function () {
+      var $target = $('#Knowledge_menu');
+      if (!$target.hasClass('active') || !$target.hasClass('open')) {
+          $('.menu-item').removeClass('active open');
+          $target.addClass('active open');
+      }
+
+      $('#Knowledge_menu_home').addClass("active");
+    });
+</script>
+

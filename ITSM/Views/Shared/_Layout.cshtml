@@ -33,6 +33,9 @@
     <link rel="stylesheet" href="~/css/Home/Index.css" />
     <link rel="stylesheet" href="~/css/Request/service_catalog.css" />
     <link rel="stylesheet" href="~/css/Profile/Home.css" />
+    <link rel="stylesheet" href="~/css/KB/KB_Home.css" />
+    <link rel="stylesheet" href="~/css/KB/KB_Read.css" />
+    <link rel="stylesheet" href="~/css/KB/KB_Search.css" />
 
     <!-- build:css assets/vendor/css/theme.css  -->
     <link rel="stylesheet" href="~/assets/vendor/css/core.css" />
@@ -137,7 +140,7 @@
                         <i class="icon-image fa-solid fa-gears"></i>
                         <div class="icon-name">Setting</div>
                     </div>
-                    <div class="game-icon">
+                    <div class="game-icon" id="log-outBtn">
                         <i class="icon-image fa-solid fa-power-off"></i>
                         <div class="icon-name">Log Out</div>
                     </div>
@@ -182,7 +185,7 @@
                         </a>
                     </li>
 
-                    <!-- Layouts -->
+                    <!-- Personal -->
                     <li class="menu-item" id="Prosonal_menu">
                         <a href="javascript:void(0);" class="menu-link menu-toggle">
                             <i class="menu-icon tf-icons bx bx-layout"></i>
@@ -210,6 +213,11 @@
                                     <div class="text-truncate" data-i18n="Container">Requests</div>
                                 </a>
                             </li>
+                            <li class="menu-item" id="Prosonal_menu_kb">
+                                <a href="~/Personal/Knowledge_List" class="menu-link">
+                                    <div class="text-truncate" data-i18n="Container">Knowledges</div>
+                                </a>
+                            </li>
                             <li class="menu-item" id="Prosonal_menu_feedback">
                                 <a href="~/Personal/Feedback_List" class="menu-link">
                                     <div class="text-truncate" data-i18n="Blank">My Feedback</div>
@@ -222,6 +230,7 @@
                     <li class="menu-header small text-uppercase">
                         <span class="menu-header-text">EVENTS &amp; REQUEST</span>
                     </li>
+                    <!-- Incidents -->
                     <li class="menu-item" id="Incidents_menu">
                         <a href="javascript:void(0);" class="menu-link menu-toggle">
                             <i class="menu-icon tf-icons bx bx-dock-top"></i>
@@ -245,6 +254,7 @@
                             </li>
                         </ul>
                     </li>
+                    <!-- Requests -->
                     <li class="menu-item" id="Requests_menu">
                     <a href="javascript:void(0);" class="menu-link menu-toggle">
                         <i class="menu-icon tf-icons bx bx-dock-top"></i>
@@ -276,64 +286,100 @@
 
                 <!-- Components -->
                 <li class="menu-header small text-uppercase"><span class="menu-header-text">Components</span></li>
-                <!-- User interface -->
-                <li class="menu-item">
+                    <!-- Knowledge -->
+                    <li class="menu-item" id="Knowledge_menu">
                     <a href="javascript:void(0)" class="menu-link menu-toggle">
                         <i class="menu-icon tf-icons bx bx-box"></i>
                         <div class="text-truncate" data-i18n="User interface">Knowledge</div>
                     </a>
                     <ul class="menu-sub">
-                        <li class="menu-item">
-                            <a href="ui-accordion.html" class="menu-link">
-                                <div class="text-truncate" data-i18n="Accordion">Homepage</div>
+                        <li class="menu-item" id="Knowledge_menu_home">
+                            <a href="~/Knowledge/KB_Home" class="menu-link">
+                                <div class="text-truncate" data-i18n="Accordion">Home</div>
                             </a>
                         </li>
-                        <li class="menu-item">
-                            <a href="ui-alerts.html" class="menu-link">
+                            <li class="menu-item" id="Knowledge_menu_all">
+                                <a href="~/Knowledge/KB_List" class="menu-link">
+                                    <div class="text-truncate" data-i18n="Accordion">All</div>
+                                </a>
+                            </li>
+                            <li class="menu-item" id="Knowledge_menu_search">
+                                <a href="~/Knowledge/KB_Search" class="menu-link">
+                                <div class="text-truncate" data-i18n="Alerts">test search</div>
+                            </a>
+                        </li>
+                            <li class="menu-item" id="Knowledge_menu_read">
+                                <a href="~/Knowledge/KB_Read" class="menu-link">
+                                    <div class="text-truncate" data-i18n="Alerts">test read</div>
+                                </a>
+                            </li>
+                            <li class="menu-item" id="Knowledge_menu_create">
+                                <a href="~/Knowledge/KB_Create" class="menu-link">
                                 <div class="text-truncate" data-i18n="Alerts">Create New</div>
                             </a>
                         </li>
-                        <li class="menu-item">
-                            <a href="ui-badges.html" class="menu-link">
+                            <li class="menu-item" id="Knowledge_menu_import">
+                                <a href="~/Knowledge/KB_Import" class="menu-link">
                                 <div class="text-truncate" data-i18n="Badges">Import Articles</div>
                             </a>
                         </li>
                     </ul>
                 </li>
 
-                <!-- Extended components -->
-                <li class="menu-item">
+                    <!-- Feedback -->
+                    <li class="menu-item" id="Feedback_menu">
                     <a href="javascript:void(0)" class="menu-link menu-toggle">
                         <i class="menu-icon tf-icons bx bx-copy"></i>
                         <div class="text-truncate" data-i18n="Extended UI">Feedback</div>
                     </a>
                     <ul class="menu-sub">
-                        <li class="menu-item">
-                            <a href="extended-ui-perfect-scrollbar.html" class="menu-link">
+                            <li class="menu-item" id="Feedback_menu_all">
+                            <a href="~/Feedback/Feedback_List" class="menu-link">
                                 <div class="text-truncate" data-i18n="Perfect Scrollbar">All</div>
                             </a>
                         </li>
-                        <li class="menu-item">
-                            <a href="extended-ui-text-divider.html" class="menu-link">
+                            <li class="menu-item" id="Feedback_menu_create">
+                                <a href="~/Feedback/Feedback_Create" class="menu-link">
                                 <div class="text-truncate" data-i18n="Text Divider">Create New</div>
                             </a>
                         </li>
                     </ul>
                 </li>
 
-                <li class="menu-item">
+                    <!-- CMDB -->
+                    <li class="menu-item" id="CMDB_menu">
+                        <a href="javascript:void(0)" class="menu-link menu-toggle">
+                            <i class="menu-icon tf-icons bx bx-copy"></i>
+                            <div class="text-truncate" data-i18n="Extended UI">CMDB</div>
+                        </a>
+                        <ul class="menu-sub">
+                            <li class="menu-item" id="CMDB_menu_all">
+                                <a href="~/CMDB/CMDB_List" class="menu-link">
+                                    <div class="text-truncate" data-i18n="Perfect Scrollbar">All</div>
+                                </a>
+                            </li>
+                            <li class="menu-item" id="CMDB_menu_create">
+                                <a href="~/CMDB/CMDB_Create" class="menu-link">
+                                    <div class="text-truncate" data-i18n="Text Divider">Create New</div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <!-- Announcement -->
+                    <li class="menu-item" id="Announcement_menu">
                     <a href="javascript:void(0)" class="menu-link menu-toggle">
                         <i class="menu-icon tf-icons bx bx-copy"></i>
                         <div class="text-truncate" data-i18n="Extended UI">Announcement</div>
                     </a>
                     <ul class="menu-sub">
-                        <li class="menu-item">
-                            <a href="extended-ui-perfect-scrollbar.html" class="menu-link">
+                            <li class="menu-item" id="Announcement_menu_all">
+                            <a href="~/Announcement/Ann_List" class="menu-link">
                                 <div class="text-truncate" data-i18n="Perfect Scrollbar">All</div>
                             </a>
                         </li>
-                        <li class="menu-item">
-                            <a href="extended-ui-text-divider.html" class="menu-link">
+                            <li class="menu-item" id="Announcement_menu_create">
+                                <a href="~/Announcement/Ann_Create" class="menu-link">
                                 <div class="text-truncate" data-i18n="Text Divider">Create New</div>
                             </a>
                         </li>
@@ -343,29 +389,6 @@
                 <!-- Forms & Tables -->
                 <li class="menu-header small text-uppercase"><span class="menu-header-text">Forms &amp; Tables</span></li>
                 <!-- Forms -->
-                <li class="menu-item">
-                    <a href="javascript:void(0);" class="menu-link menu-toggle">
-                        <i class="menu-icon tf-icons bx bx-lock-open-alt"></i>
-                        <div class="text-truncate" data-i18n="Authentications">Authentications</div>
-                    </a>
-                    <ul class="menu-sub">
-                        <li class="menu-item">
-                            <a href="auth-login-basic.html" class="menu-link" target="_blank">
-                                <div class="text-truncate" data-i18n="Basic">Login</div>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="auth-register-basic.html" class="menu-link" target="_blank">
-                                <div class="text-truncate" data-i18n="Basic">Register</div>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="auth-forgot-password-basic.html" class="menu-link" target="_blank">
-                                <div class="text-truncate" data-i18n="Basic">Forgot Password</div>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
                 </ul>
             </aside>
             <!-- / Menu -->
@@ -414,8 +437,10 @@
     <!-- <script src="../dist/css/style1.js"></script> -->
     <!-- ============================================= -->
     <!-- My JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="~/assets/js/config.js"></script>
     <script src="~/js/Request/service_catalog.js"></script>
+    <script src="~/js/Layout/RightPhoneFunction.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

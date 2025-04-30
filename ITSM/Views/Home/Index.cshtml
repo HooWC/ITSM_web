@@ -3,6 +3,29 @@
     Layout = "_Layout";
 }
 
+@using ITSM_Insfrastruture.Repository.Token
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+<!-- 显示Session中的令牌信息 -->
+<div style="padding: 20px; background-color: #f5f5f5; margin-bottom: 20px; font-family: monospace;">
+    <h3>Session信息（测试用）</h3>
+    @{
+        var tokenJson = HttpContextAccessor.HttpContext.Session.GetString("UserToken");
+        if (!string.IsNullOrEmpty(tokenJson))
+        {
+            var token = System.Text.Json.JsonSerializer.Deserialize<TokenModel>(tokenJson);
+            <p><strong>Token值:</strong> @token.Token</p>
+            <p><strong>用户ID:</strong> @token.UserId</p>
+            <p><strong>用户名:</strong> @token.Username</p>
+            <p><strong>员工ID:</strong> @token.EmpId</p>
+        }
+        else
+        {
+            <p>Session中没有找到Token信息</p>
+        }
+    }
+</div>
+
 <nav class="layout-navbar container-xxl navbar-detached navbar navbar-expand-xl align-items-center bg-navbar-theme"
      id="layout-navbar">
     <div class="layout-menu-toggle navbar-nav align-items-xl-center me-4 me-xl-0 d-xl-none">
