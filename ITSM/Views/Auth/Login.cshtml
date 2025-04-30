@@ -18,7 +18,7 @@
         <div class="container">
             <div class="row full-height justify-content-center">
                 <div class="col-12 text-center align-self-center py-5">
-                    <div class="section pb-5 pt-5 pt-sm-2 text-center">
+                    <div class="section pb-3 pt-5 pt-sm-2 text-center">
                         <h6 class="mb-0 pb-3 title_in1">
                             <span>Log In </span>
                             <span>Sign Up</span>
@@ -36,15 +36,15 @@
                                             <div class="section text-center">
                                                 <h4 class="mb-4 pb-3 title_in2">Log In</h4>
                                                 <div class="form-group">
-                                                    <input type="text" name="emp_id" class="form-style" placeholder="Your Employee No" />
+                                                    <input type="text" name="emp_id" class="form-style" placeholder="Your Employee No" required />
                                                     <i class="input-icon uil uil-user"></i>
                                                 </div>
                                                 <div class="form-group mt-2">
-                                                    <input type="text" name="username" class="form-style" placeholder="Your User Name" />
+                                                    <input type="text" name="username" class="form-style" placeholder="Your User Name" required />
                                                     <i class="input-icon uil uil-at"></i>
                                                 </div>
                                                 <div class="form-group mt-2">
-                                                    <input type="password" name="password" class="form-style" placeholder="Your Password" />
+                                                    <input type="password" name="password" class="form-style" placeholder="Your Password" required />
                                                     <i class="input-icon uil uil-lock-alt"></i>
                                                 </div>
                                                 <button type="submit" class="btn_sumbit mt-4">Submit</button>
@@ -58,160 +58,175 @@
 
                                 <!-- Sign Up -->
                                 <div class="card-back">
-                                    <div class="center-wrap">
-                                        <div class="section text-center signup-container">
-                                            <div class="page-indicator-container">
-                                                <span class="page-indicator">1/4</span>
-                                            </div>
-                                            <h4 class="mb-4 pb-3 title_in2">Sign Up</h4>
+                                    <form action="~/Auth/Register" method="post">
+                                        <div class="center-wrap">
+                                            <div class="section text-center signup-container">
+                                                <div class="page-indicator-container">
+                                                    <span class="page-indicator">1/4</span>
+                                                </div>
+                                                <h4 class="mb-4 pb-3 title_in2">Sign Up</h4>
 
-                                            <!-- Page 1 -->
-                                            <div class="form-page active" id="page1">
-                                                <div class="form-row" style="display: flex; gap: 15px;">
-                                                    <div class="form-group" style="flex: 1;">
-                                                        <input type="text" class="form-style" placeholder="Employee No" />
+                                                <!-- Page 1 -->
+                                                <div class="form-page active" id="page1">
+                                                    <div class="form-row" style="display: flex; gap: 15px;">
+                                                        <div class="form-group" style="flex: 1;">
+                                                            <input type="text" name="emp_id" class="form-style" placeholder="* Emp No" required />
+                                                            <i class="input-icon uil uil-user"></i>
+                                                        </div>
+                                                        <div class="form-group" style="flex: 1;">
+                                                            <input type="text" name="title" class="form-style" placeholder="* Title" required />
+                                                            <i class="input-icon uil uil-briefcase"></i>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group mt-2">
+                                                        <input type="text" name="fullname" class="form-style" placeholder="* Full Name" required />
                                                         <i class="input-icon uil uil-user"></i>
                                                     </div>
-                                                    <div class="form-group" style="flex: 1;">
-                                                        <input type="text" class="form-style" placeholder="Title" />
-                                                        <i class="input-icon uil uil-briefcase"></i>
+
+                                                    <div class="form-group mt-2">
+                                                        <input type="text" name="email" class="form-style" placeholder="* Email" required />
+                                                        <i class="input-icon uil uil-envelope"></i>
+                                                    </div>
+
+                                                    <div class="form-navigation mt-4">
+                                                        <button type="button" class="btn-next">Next Page <i class="uil uil-arrow-right"></i></button>
                                                     </div>
                                                 </div>
 
-                                                <div class="form-group mt-2">
-                                                    <input type="text" class="form-style" placeholder="Full Name" />
-                                                    <i class="input-icon uil uil-user"></i>
-                                                </div>
-
-                                                <div class="form-group mt-2">
-                                                    <input type="text" class="form-style" placeholder="Email" />
-                                                    <i class="input-icon uil uil-envelope"></i>
-                                                </div>
-
-                                                <div class="form-navigation mt-4">
-                                                    <button type="button" class="btn-next">Next Page <i class="uil uil-arrow-right"></i></button>
-                                                </div>
-                                            </div>
-
-                                            <!-- Page 2 -->
-                                            <div class="form-page" id="page2">
-                                                <div class="form-row" style="display: flex; gap: 15px;">
-                                                    <div class="form-group" style="flex: 1;">
-                                                        <input type="text" class="form-style" placeholder="Business Phone" />
-                                                        <i class="input-icon uil uil-mobile-android"></i>
-                                                    </div>
-                                                    <div class="form-group" style="flex: 1;">
-                                                        <input type="text" class="form-style" placeholder="Mobile Phone" />
-                                                        <i class="input-icon uil uil-mobile-android"></i>
-                                                    </div>
-                                                </div>
-
-                                                <div class="form-group mt-2">
-                                                    <input type="password" class="form-style" placeholder="User Name" />
-                                                    <i class="input-icon uil uil-lock-alt"></i>
-                                                </div>
-
-                                                <div class="form-group mt-2">
-                                                    <input type="password" class="form-style" placeholder="Password" />
-                                                    <i class="input-icon uil uil-lock-access"></i>
-                                                </div>
-
-                                                <div class="form-navigation mt-4">
-                                                    <button type="button" class="btn-prev"><i class="uil uil-arrow-left"></i> Previous</button>
-                                                    <button type="button" class="btn-next">Next Page <i class="uil uil-arrow-right"></i></button>
-                                                </div>
-                                            </div>
-
-                                            <!-- Page 3 -->
-                                            <div class="form-page" id="page3">
-                                                <div class="form-row" style="display: flex; gap: 15px;">
-                                                    <div class="form-group" style="flex: 1;">
-                                                        <div class="form-select-wrapper">
-                                                            <select class="form-select" required>
-                                                                <!-- <option value="" disabled selected>Gender</option> -->
-                                                                <option value="male">Male</option>
-                                                                <option value="female">Female</option>
-                                                                <option value="other">Other</option>
-                                                            </select>
-                                                            <i class="select-icon uil uil-user-circle"></i>
-                                                            <i class="select-arrow uil uil-angle-down"></i>
+                                                <!-- Page 2 -->
+                                                <div class="form-page" id="page2">
+                                                    <div class="form-row" style="display: flex; gap: 15px;">
+                                                        <div class="form-group" style="flex: 1;">
+                                                            <input type="text" name="business_phone" class="form-style" placeholder="Business Phone" />
+                                                            <i class="input-icon uil uil-mobile-android"></i>
+                                                        </div>
+                                                        <div class="form-group" style="flex: 1;">
+                                                            <input type="text" name="mobile_phone" class="form-style" placeholder="* Mobile Phone" required />
+                                                            <i class="input-icon uil uil-mobile-android"></i>
                                                         </div>
                                                     </div>
-                                                    <div class="form-group" style="flex: 1;">
-                                                        <div class="form-select-wrapper">
-                                                            <select class="form-select" required>
-                                                                <!-- <option value="" disabled selected>Race</option> -->
-                                                                <option value="malay">Malay</option>
-                                                                <option value="indian">Indian</option>
-                                                                <option value="chinese">Chinese</option>
-                                                                <option value="other">Other</option>
-                                                            </select>
-                                                            <i class="select-icon uil uil-users-alt"></i>
-                                                            <i class="select-arrow uil uil-angle-down"></i>
-                                                        </div>
+
+                                                    <div class="form-group mt-2">
+                                                        <input type="password" name="username" class="form-style" placeholder="* User Name" required />
+                                                        <i class="input-icon uil uil-lock-alt"></i>
+                                                    </div>
+
+                                                    <div class="form-group mt-2">
+                                                        <input type="password" name="password" class="form-style" placeholder="* Password" required />
+                                                        <i class="input-icon uil uil-lock-access"></i>
+                                                    </div>
+
+                                                    <div class="form-navigation mt-4">
+                                                        <button type="button" class="btn-prev"><i class="uil uil-arrow-left"></i> Previous</button>
+                                                        <button type="button" class="btn-next">Next Page <i class="uil uil-arrow-right"></i></button>
                                                     </div>
                                                 </div>
 
-                                                <div class="form-row mt-2" style="display: flex; gap: 15px;">
-                                                    <div class="form-group" style="flex: 1;">
-                                                        <div class="form-select-wrapper">
-                                                            <select class="form-select" required>
-                                                                <option value="male">User</option>
-                                                                <option value="female">ITIL</option>
-                                                                <option value="other">Admin</option>
-                                                            </select>
-                                                            <i class="select-icon uil uil-user-circle"></i>
-                                                            <i class="select-arrow uil uil-angle-down"></i>
+                                                <!-- Page 3 -->
+                                                <div class="form-page" id="page3">
+                                                    <div class="form-row" style="display: flex; gap: 15px;">
+                                                        <div class="form-group" style="flex: 1;">
+                                                            <div class="form-select-wrapper">
+                                                                <select class="form-select" name="gender" required>
+                                                                    <!-- <option value="" disabled selected>Gender</option> -->
+                                                                    <option value="Male">Male</option>
+                                                                    <option value="Female">Female</option>
+                                                                    <option value="Other">Other</option>
+                                                                </select>
+                                                                <i class="select-icon uil uil-user-circle"></i>
+                                                                <i class="select-arrow uil uil-angle-down"></i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group" style="flex: 1;">
+                                                            <div class="form-select-wrapper">
+                                                                <select class="form-select" name="race" required>
+                                                                    <!-- <option value="" disabled selected>Race</option> -->
+                                                                    <option value="Malay">Malay</option>
+                                                                    <option value="Indian">Indian</option>
+                                                                    <option value="Chinese">Chinese</option>
+                                                                    <option value="Other">Other</option>
+                                                                </select>
+                                                                <i class="select-icon uil uil-users-alt"></i>
+                                                                <i class="select-arrow uil uil-angle-down"></i>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                    <div class="form-group" style="flex: 1;">
-                                                        <div class="form-select-wrapper">
-                                                            <select class="form-select" required>
-                                                                <option value="chinese">IT</option>
-                                                                <option value="hr">Human Resources</option>
-                                                                <option value="it">Information Technology</option>
-                                                                <option value="finance">Finance</option>
-                                                                <option value="marketing">Marketing</option>
-                                                                <option value="operations">Operations</option>
-                                                                <option value="other">Other</option>
-                                                            </select>
-                                                            <i class="select-icon uil uil-users-alt"></i>
-                                                            <i class="select-arrow uil uil-angle-down"></i>
+
+                                                    <div class="form-row mt-2" style="display: flex; gap: 15px;">
+                                                        <div class="form-group" style="flex: 1;">
+                                                            <div class="form-select-wrapper">
+                                                                <select class="form-select" name="role_id" required>
+                                                                    <option value="3">User</option>
+                                                                    <option value="2">ITIL</option>
+                                                                    <option value="1">Admin</option>
+                                                                </select>
+                                                                <i class="select-icon uil uil-user-circle"></i>
+                                                                <i class="select-arrow uil uil-angle-down"></i>
+                                                            </div>
                                                         </div>
+                                                        <div class="form-group" style="flex: 1;">
+                                                            <div class="form-select-wrapper">
+                                                                <select class="form-select" name="department_id" required>
+                                                                    <option value="1">IT</option>
+                                                                    <option value="2">Human Resources</option>
+                                                                    <option value="3">Information Technology</option>
+                                                                    <option value="4">Finance</option>
+                                                                    <option value="5">Marketing</option>
+                                                                    <option value="6">Operations</option>
+                                                                    <option value="7">Other</option>
+                                                                </select>
+                                                                <i class="select-icon uil uil-users-alt"></i>
+                                                                <i class="select-arrow uil uil-angle-down"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group mt-2">
+                                                        <input type="text" name="role_code" class="form-style" placeholder="* Role Code" required />
+                                                        <i class="input-icon uil uil-map-marker-alt"></i>
+                                                    </div>
+
+                                                    <div class="form-navigation mt-4">
+                                                        <button type="button" class="btn-prev"><i class="uil uil-arrow-left"></i> Previous</button>
+                                                        <button type="button" class="btn-next">Next Page <i class="uil uil-arrow-right"></i></button>
                                                     </div>
                                                 </div>
 
-                                                <div class="form-group mt-2">
-                                                    <input type="text" class="form-style" placeholder="Role Code" />
-                                                    <i class="input-icon uil uil-map-marker-alt"></i>
+                                                <!-- Page 4 -->
+                                                <div class="form-page" id="page4">
+                                                    <div class="form-group mt-2">
+                                                        <input type="text" name="register_code" class="form-style" placeholder="* Register Code" required />
+                                                        <i class="input-icon uil uil-lock-alt"></i>
+                                                    </div>
+
+                                                    <div class="form-navigation mt-4">
+                                                        <button type="button" class="btn-prev"><i class="uil uil-arrow-left"></i> Previous</button>
+                                                        <button type="submit" class="btn-submit">Submit</button>
+                                                    </div>
                                                 </div>
 
-                                                <div class="form-navigation mt-4">
-                                                    <button type="button" class="btn-prev"><i class="uil uil-arrow-left"></i> Previous</button>
-                                                    <button type="button" class="btn-next">Next Page <i class="uil uil-arrow-right"></i></button>
-                                                </div>
                                             </div>
-
-                                            <!-- Page 4 -->
-                                            <div class="form-page" id="page4">
-                                                <div class="form-group mt-2">
-                                                    <input type="text" class="form-style" placeholder="Register Code" />
-                                                    <i class="input-icon uil uil-lock-alt"></i>
-                                                </div>
-
-                                                <div class="form-navigation mt-4">
-                                                    <button type="button" class="btn-prev"><i class="uil uil-arrow-left"></i> Previous</button>
-                                                    <button type="submit" class="btn-submit">Submit</button>
-                                                </div>
-                                            </div>
-
                                         </div>
-                                    </div>
+                                    </form>
                                 </div>
 
                             </div>
                         </div>
                     </div>
+                    
+                    @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage as string))
+                    {
+                        <div class="error-message-container">
+                            <div class="error-message-card">
+                                <div class="error-content">
+                                    <button class="close-error-btn">X</button>
+                                    <p class="error-text">@ViewBag.ErrorMessage</p>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
                 </div>
             </div>
         </div>
@@ -226,6 +241,23 @@
         });
 
         document.addEventListener('DOMContentLoaded', function() {
+            const closeErrorBtn = document.querySelector('.close-error-btn');
+            const errorContainer = document.querySelector('.error-message-container');
+
+            if (closeErrorBtn) {
+              closeErrorBtn.addEventListener('click', function() {
+                errorContainer.style.display = 'none';
+              });
+            }
+
+            window.showError = function(message) {
+              const errorText = document.querySelector('.error-text');
+              if (errorText) {
+                errorText.textContent = message || 'System Error';
+                errorContainer.style.display = 'block';
+              }
+            };
+
           const pages = document.querySelectorAll('.form-page');
           const pageIndicator = document.querySelector('.page-indicator');
 

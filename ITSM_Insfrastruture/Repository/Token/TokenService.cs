@@ -25,9 +25,6 @@ namespace ITSM_Insfrastruture.Repository.Token
             _httpContextAccessor = httpContextAccessor;
         }
 
-        /// <summary>
-        /// 保存用户令牌到会话和持久Cookie
-        /// </summary>
         public void SaveToken(TokenModel tokenModel)
         {
             if (_httpContextAccessor.HttpContext != null)
@@ -35,9 +32,9 @@ namespace ITSM_Insfrastruture.Repository.Token
                 try
                 {
                     var tokenJson = JsonSerializer.Serialize(tokenModel);
-                    Console.WriteLine($"正在保存令牌: {tokenJson}");
+                    // Console.WriteLine($"Token Json: {tokenJson}");
                     
-                    // 保存到Session
+                    // Save To Session
                     try
                     {
                         if (!_httpContextAccessor.HttpContext.Session.IsAvailable)
@@ -45,14 +42,14 @@ namespace ITSM_Insfrastruture.Repository.Token
                             _httpContextAccessor.HttpContext.Session.Set("SessionTest", new byte[] { 1 });
                         }
                         _httpContextAccessor.HttpContext.Session.SetString(TokenKey, tokenJson);
-                        Console.WriteLine("令牌已保存到Session");
+                        // Console.WriteLine("Token Save To Session");
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"保存令牌到Session时出错: {ex.Message}");
+                        Console.WriteLine($"Token Save To Session Error: {ex.Message}");
                     }
                     
-                    // 保存到持久Cookie
+                    // Save To Cookie
                     try
                     {
                         _httpContextAccessor.HttpContext.Response.Cookies.Append(
@@ -66,78 +63,74 @@ namespace ITSM_Insfrastruture.Repository.Token
                                 SameSite = SameSiteMode.Lax,
                                 IsEssential = true
                             });
-                        Console.WriteLine("令牌已保存到持久Cookie");
+                        // Console.WriteLine("Token Save To Cookie");
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"保存令牌到Cookie时出错: {ex.Message}");
+                        Console.WriteLine($"Token Save To Cookie Error: {ex.Message}");
                     }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"令牌序列化时出错: {ex.Message}");
+                    Console.WriteLine($"Error while serializing token: {ex.Message}");
                 }
             }
             else
             {
-                Console.WriteLine("无法保存令牌，HttpContext为null");
+                Console.WriteLine("Cannot Save Token，HttpContext is null");
             }
         }
 
-        /// <summary>
-        /// 从会话或持久Cookie获取令牌
-        /// </summary>
         public TokenModel GetToken()
         {
             if (_httpContextAccessor.HttpContext == null)
             {
-                Console.WriteLine("无法获取令牌，HttpContext为null");
+                // Console.WriteLine("Cannot get Token，HttpContext为null");
                 return null;
             }
             
-            // 首先尝试从Session获取
+            // Try Session get
             try
             {
                 var sessionToken = GetTokenFromSession();
                 if (sessionToken != null)
                 {
-                    Console.WriteLine("从Session中获取到令牌");
+                    // Console.WriteLine("Session get Token");
                     return sessionToken;
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"从Session获取令牌时出错: {ex.Message}");
+                Console.WriteLine($"Session get Token Error: {ex.Message}");
             }
             
-            // 如果Session中没有，尝试从Cookie获取
+            // Try Cookie get
             try
             {
                 var cookieToken = GetTokenFromCookie();
                 if (cookieToken != null)
                 {
-                    Console.WriteLine("从Cookie中获取到令牌");
-                    // 发现cookie中有令牌但session中没有，自动同步到session
+                    // Console.WriteLine("Cookie get Token");
                     try
                     {
                         if (_httpContextAccessor.HttpContext.Session != null)
                         {
                             var tokenJson = JsonSerializer.Serialize(cookieToken);
                             _httpContextAccessor.HttpContext.Session.SetString(TokenKey, tokenJson);
-                            Console.WriteLine("已将Cookie令牌同步到Session");
+                            // Console.WriteLine("The cookie token has been synchronized to the Session");
                         }
                     }
-                    catch { /* 忽略同步错误 */ }
+                    catch { /* Ignore sync errors */ }
                     
                     return cookieToken;
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"从Cookie获取令牌时出错: {ex.Message}");
+                Console.WriteLine($"Error getting token from cookie: {ex.Message}");
             }
             
-            Console.WriteLine("没有找到有效的令牌");
+            Console.WriteLine("No valid token found");
             return null;
         }
 
@@ -189,9 +182,6 @@ namespace ITSM_Insfrastruture.Repository.Token
             return null;
         }
 
-        /// <summary>
-        /// 检查令牌是否有效
-        /// </summary>
         public bool IsTokenValid()
         {
             try
@@ -200,54 +190,51 @@ namespace ITSM_Insfrastruture.Repository.Token
                 
                 if (token != null && !string.IsNullOrEmpty(token.Token))
                 {
-                    Console.WriteLine($"发现有效令牌，用户名: {token.Username}");
+                    // Console.WriteLine($"Found a valid token, username: {token.Username}");
                     return true;
                 }
-                
-                Console.WriteLine("没有找到有效令牌");
+
+                // Console.WriteLine("No valid token found");
                 return false;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"验证令牌时发生错误: {ex.Message}");
+                Console.WriteLine($"An error occurred while validating the token: {ex.Message}");
                 return false;
             }
         }
 
-        /// <summary>
-        /// 清除令牌
-        /// </summary>
         public void ClearToken()
         {
             if (_httpContextAccessor.HttpContext == null)
             {
-                Console.WriteLine("无法清除令牌，HttpContext为null");
+                Console.WriteLine("Unable to clear token，HttpContext is null");
                 return;
             }
             
             try
             {
-                // 清除Session中的令牌
+                // Clear the token in the Session
                 if (_httpContextAccessor.HttpContext.Session != null)
                 {
                     _httpContextAccessor.HttpContext.Session.Remove(TokenKey);
-                    Console.WriteLine("已清除Session中的令牌");
+                    // Console.WriteLine("The token in the session has been cleared");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"清除Session中的令牌时出错: {ex.Message}");
+                Console.WriteLine($"Error clearing token from Session: {ex.Message}");
             }
             
             try
             {
-                // 清除Cookie中的令牌
+                // Clear the token in the cookie
                 _httpContextAccessor.HttpContext.Response.Cookies.Delete(CookieTokenKey);
-                Console.WriteLine("已清除Cookie中的令牌");
+                // Console.WriteLine("Token in Cookie Cleared");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"清除Cookie中的令牌时出错: {ex.Message}");
+                Console.WriteLine($"Error clearing token from cookie: {ex.Message}");
             }
         }
     }

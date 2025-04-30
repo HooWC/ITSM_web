@@ -6,6 +6,10 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Diagnostics;
 using System.Linq;
+using ITSM_DomainModelEntity.Models;
+using ITSM_Insfrastruture.Repository.Config;
+using System.Text;
+using System.Security.Cryptography;
 
 namespace ITSM.Controllers
 {
@@ -26,56 +30,29 @@ namespace ITSM.Controllers
         {
             try
             {
-                Console.WriteLine("----- 开始自动登录检查 -----");
-                Console.WriteLine($"当前URL: {Request.Path}");
-                
-                // 输出请求中的所有Cookie用于调试
-                if (Request.Cookies != null && Request.Cookies.Count > 0)
-                {
-                    Console.WriteLine("请求中的Cookie:");
-                    foreach (var cookie in Request.Cookies)
-                    {
-                        Console.WriteLine($"  {cookie.Key}: {(cookie.Key.Contains("Token") ? "[隐藏内容]" : cookie.Value)}");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("请求中没有Cookie");
-                }
-                
-                // 检查是否有有效令牌，如果有则自动登录
-                Console.WriteLine("检查令牌有效性...");
                 if (_tokenService.IsTokenValid())
                 {
                     var token = _tokenService.GetToken();
                     if (token != null)
-                    {
-                        Console.WriteLine($"找到有效令牌，用户: {token.Username}，自动重定向到首页");
-                        // 添加一个ViewBag消息，便于在页面上观察
-                        ViewBag.AutoLoginMessage = $"自动登录成功，用户: {token.Username}";
                         return RedirectToAction("Index", "Home");
-                    }
                 }
                 else
                 {
-                    // 检查为什么令牌无效
-                    var sessionValue = "未能读取";
+                    // Check why the token is invalid
+                    var sessionValue = "Failed to read";
                     if (_httpContextAccessor.HttpContext?.Session != null)
                     {
-                        // 使用完全限定名称解决SessionExtensions命名冲突
                         sessionValue = ITSM_Insfrastruture.Repository.Token.SessionExtensions.GetString(
                             _httpContextAccessor.HttpContext.Session, "UserToken") ?? "null";
                     }
-                    Console.WriteLine($"令牌无效或不存在，Session值: {sessionValue}");
+                    Console.WriteLine($"The token is invalid or does not exist，Session value: {sessionValue}");
                 }
-                
-                Console.WriteLine("----- 自动登录检查完成 -----");
             }
             catch (Exception ex)
             {
-                // 记录任何异常
-                Console.WriteLine($"检查令牌时发生错误: {ex.Message}");
-                Console.WriteLine($"异常堆栈: {ex.StackTrace}");
+                // Log any exceptions
+                Console.WriteLine($"An error occurred while checking the token: {ex.Message}");
+                Console.WriteLine($"Exception stack: {ex.StackTrace}");
             }
             
             return View();
@@ -86,44 +63,28 @@ namespace ITSM.Controllers
         {
             if (string.IsNullOrEmpty(emp_id) || string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
-                ViewBag.ErrorMessage = "请填写所有必填字段";
+                ViewBag.ErrorMessage = "Please fill in all required fields";
                 return View();
             }
 
             try
             {
-                Console.WriteLine($"----- 开始手动登录 (用户: {username}) -----");
                 bool loginResult = await _authApi.LoginAsync(emp_id, username, password);
 
                 if (loginResult)
-                {
-                    // 登录成功，输出调试信息
-                    var token = _tokenService.GetToken();
-                    Console.WriteLine($"登录成功，用户: {token?.Username}");
-                    
-                    // 输出所有已设置的Cookie
-                    Console.WriteLine("登录后响应中的Cookie:");
-                    foreach (var cookie in Response.Headers.Where(h => h.Key == "Set-Cookie"))
-                    {
-                        Console.WriteLine($"  Set-Cookie: {cookie.Value}");
-                    }
-                    
-                    Console.WriteLine("----- 手动登录完成，重定向到首页 -----");
                     return RedirectToAction("Index", "Home");
-                }
                 else
                 {
-                    Console.WriteLine("登录失败，用户名或密码错误");
-                    ViewBag.ErrorMessage = "用户名或密码错误，请重试";
+                    ViewBag.ErrorMessage = "Wrong username or password. Try again.";
                     return View();
                 }
             }
             catch (Exception ex)
             {
-                // 记录登录异常
-                Console.WriteLine($"登录过程中发生错误: {ex.Message}");
-                Console.WriteLine($"异常堆栈: {ex.StackTrace}");
-                ViewBag.ErrorMessage = "登录过程中发生错误，请稍后重试";
+                // Log any exceptions
+                Console.WriteLine($"Ex Message: {ex.Message}");
+                Console.WriteLine($"Ex StackTrace: {ex.StackTrace}");
+                ViewBag.ErrorMessage = "An error occurred during login, please try again later";
                 return View();
             }
         }
@@ -133,9 +94,111 @@ namespace ITSM.Controllers
             return View();
         }
 
-        public IActionResult Register()
+        [HttpPost]
+        public async Task<IActionResult> Register(User user, string role_code, string register_code)
         {
-            return View();
+            try
+            {
+                // Check If Null
+                if (string.IsNullOrEmpty(user.emp_id) || 
+                    string.IsNullOrEmpty(user.fullname) || 
+                    string.IsNullOrEmpty(user.email) ||
+                    string.IsNullOrEmpty(user.username) || 
+                    string.IsNullOrEmpty(user.password) ||
+                    string.IsNullOrEmpty(user.mobile_phone) ||
+                    string.IsNullOrEmpty(role_code) ||
+                    string.IsNullOrEmpty(register_code))
+                {
+                    ViewBag.ErrorMessage = "Please fill in all required fields";
+                    return View("Login");
+                }
+
+                // Prefix
+                if (user.gender == "Male")
+                    user.prefix = "Mr.";
+                else if (user.gender == "Female")
+                    user.prefix = "Ms.";
+                else
+                    user.prefix = "-";
+
+                // Register Code
+                if (register_code != Info.RegisterCode)
+                {
+                    ViewBag.ErrorMessage = "Register Code Error";
+                    return View("Login");
+                }
+
+                // Role Code
+                string expectedRoleCode;
+                switch (user.role_id)
+                {
+                    case 1: // Admin
+                        expectedRoleCode = Info.AdminCode;
+                        break;
+                    case 2: // ITIL
+                        expectedRoleCode = Info.ITILCode;
+                        break;
+                    case 3: // User
+                        expectedRoleCode = Info.UserCode;
+                        break;
+                    default:
+                        ViewBag.ErrorMessage = "Role Error";
+                        return View("Login");
+                }
+
+                if (role_code != expectedRoleCode)
+                {
+                    ViewBag.ErrorMessage = "Role Code Error";
+                    return View("Login");
+                }
+
+                var newuser = new User()
+                {
+                    emp_id = user.emp_id,
+                    photo = (byte[]?)null,
+                    prefix = user.prefix,
+                    fullname = user.fullname,
+                    email = user.email,
+                    gender = user.gender,
+                    department_id = user.department_id,
+                    title = user.title,
+                    business_phone = user.business_phone == null ? null : user.business_phone,
+                    mobile_phone = user.mobile_phone,
+                    role_id = user.role_id,
+                    username = user.username,
+                    password = user.password,
+                    race = user.race
+                };
+                
+                // Register Api
+                var userApi = new User_api(_httpContextAccessor);
+                var registerResult = await userApi.Register_User(newuser);
+                
+                if (!registerResult.Success)
+                {
+                    ViewBag.ErrorMessage = registerResult.Message ?? "Registration failed";
+                    return View("Login");
+                }
+
+                // Automatically log in after successful registration
+                bool loginResult = await _authApi.LoginAsync(user.emp_id, user.username, user.password);
+                
+                if (loginResult)
+                    return RedirectToAction("Index", "Home");
+                else
+                {
+                    // If creation succeeds but login fails
+                    ViewBag.ErrorMessage = "Registration was successful, but automatic login failed.";
+                    return View("Login");
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = "EX: " + ex.Message;
+                Console.WriteLine($"Register Error: {ex.Message}");
+                Console.WriteLine($"Ex Error: {ex.StackTrace}");
+                return View("Login");
+            }
         }
     }
 }

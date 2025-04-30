@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ITSM_DomainModelEntity\ITSM_DomainModelEntity.csproj" />
     <ProjectReference Include="..\ITSM_Insfrastruture\ITSM_Insfrastruture.csproj" />
   </ItemGroup>
 

@@ -25,36 +25,25 @@ namespace ITSM_Insfrastruture.Repository.Api
             _tokenService = new TokenService(httpContextAccessor);
         }
 
-        /// <summary>
-        /// 登录并获取令牌
-        /// </summary>
-        /// <param name="emp_id">员工ID</param>
-        /// <param name="username">用户名</param>
-        /// <param name="password">密码（明文，后端会使用bcrypt验证）</param>
-        /// <returns>登录是否成功</returns>
         public async Task<bool> LoginAsync(string emp_id, string username, string password)
         {
             try
             {
-                // 检查是否已有有效令牌
+                // Check if there is a valid token
                 if (_tokenService.IsTokenValid())
                 {
                     return true;
                 }
 
-                // 创建登录数据对象，密码以明文传递
-                // 后端API将使用bcrypt.compare()比较哈希值
+                // Api Value
                 var loginData = new
                 {
                     emp_id,
                     username,
-                    password  // 密码以明文发送，服务器端使用bcrypt.compare()验证
+                    password 
                 };
 
-                var content = new StringContent(
-                    JsonSerializer.Serialize(loginData),
-                    Encoding.UTF8,
-                    "application/json");
+                var content = new StringContent(JsonSerializer.Serialize(loginData),Encoding.UTF8,"application/json");
 
                 var response = await _client.PostAsync(_authUrl, content);
                 
@@ -65,7 +54,7 @@ namespace ITSM_Insfrastruture.Repository.Api
 
                     if (authResult != null && !string.IsNullOrEmpty(authResult.token))
                     {
-                        // 保存令牌，永久有效直到用户登出
+                        // Save Token
                         var tokenModel = new TokenModel
                         {
                             Token = authResult.token,
@@ -83,7 +72,7 @@ namespace ITSM_Insfrastruture.Repository.Api
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"登录时发生错误: {ex.Message}");
+                Console.WriteLine($"Login Ex Error: {ex.Message}");
                 return false;
             }
         }
