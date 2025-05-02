@@ -1,0 +1,96 @@
+﻿@{
+    ViewData["Title"] = "Show_Session";
+    Layout = "_Layout";
+}
+
+@using ITSM_Insfrastruture.Repository.Token
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #121212;
+        color: #E0E0E0;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding:0px 20px;
+    }
+
+    .layout-page{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .dropdown-user {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+    }
+</style>
+
+<div class="nav-item navbar-dropdown dropdown-user dropdown open-button">
+    <a class="nav-link dropdown-toggle hide-arrow p-0"
+       href="javascript:void(0);"
+       data-bs-toggle="dropdown">
+        <div class="avatar avatar-online">
+            <img src="https://www.diydoutu.com/touxiang/20201222-1.jpg" alt class="w-px-40 h-auto rounded-circle" />
+        </div>
+    </a>
+</div>
+
+<div class="session-page-container">
+    @{
+        var tokenJson = HttpContextAccessor.HttpContext.Session.GetString("UserToken");
+        if (!string.IsNullOrEmpty(tokenJson))
+        {
+            var token = System.Text.Json.JsonSerializer.Deserialize<TokenModel>(tokenJson);
+            <div class="session-page-session-card">
+                <div class="session-page-card-header">
+                    <i class="fas fa-key"></i>
+                    <h2>Session Information</h2>
+                </div>
+                <div class="session-page-card-content">
+                    <div class="session-page-info-item">
+                        <span class="session-page-label">Token Value</span>
+                        <div class="session-page-token-container">
+                            <span class="session-page-value session-page-token">@token.Token</span>
+                            <button class="session-page-copy-btn" id="copyTokenBtn" title="Copy Token">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="session-page-info-item">
+                        <span class="session-page-label">User ID</span>
+                        <span class="session-page-value">@token.UserId</span>
+                    </div>
+                    <div class="session-page-info-item">
+                        <span class="session-page-label">User Name</span>
+                        <span class="session-page-value">@token.Username</span>
+                    </div>
+                    <div class="session-page-info-item">
+                        <span class="session-page-label">Emp ID</span>
+                        <span class="session-page-value">@token.EmpId</span>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+<script>
+    document.getElementById('copyTokenBtn').addEventListener('click', function() {
+        const token = document.querySelector('.session-page-token').textContent;
+        navigator.clipboard.writeText(token);
+    });
+</script>
+

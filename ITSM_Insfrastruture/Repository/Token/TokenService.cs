@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using System;
+using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -18,7 +19,7 @@ namespace ITSM_Insfrastruture.Repository.Token
         private readonly IHttpContextAccessor _httpContextAccessor;
         private const string TokenKey = "UserToken";
         private const string CookieTokenKey = "AuthTokenCookie";
-        private const int CookieDaysValid = 365; // Cookie有效期（天）
+        private const int CookieDaysValid = 365; // Cookie validity period (days)
 
         public TokenService(IHttpContextAccessor httpContextAccessor)
         {

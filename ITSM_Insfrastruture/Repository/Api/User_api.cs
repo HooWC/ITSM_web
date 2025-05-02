@@ -17,6 +17,8 @@ namespace ITSM_Insfrastruture.Repository.Api
     public class User_api
     {
         private readonly string _registerUrl = Api_Link.RegisterLink;
+        private readonly string _allUserUrl = Api_Link.AllUserLink;
+        private readonly string _F_U_UserUrl = Api_Link.User_F_U_Link;
         private readonly HttpClient _client;
         private readonly TokenService _tokenService;
 
@@ -133,15 +135,69 @@ namespace ITSM_Insfrastruture.Repository.Api
 
         private class ErrorResponse
         {
-            public string message { get; set; }
+            public string? message { get; set; }
         }
 
         // == Register ==
+        public async Task<List<User>> GetAllUser_API()
+        {
+            try
+            {
+                var tokenModel = _tokenService.GetToken();
+                if (tokenModel == null) return new List<User>();
+
+                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenModel.Token);
+                string jsonStr = await _client.GetStringAsync(_allUserUrl);
+                return JsonConvert.DeserializeObject<List<User>>(jsonStr) ?? new List<User>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"EX GetAllUser_API: {ex.Message}");
+                return new List<User>();
+            }
+        }
+
+        public async Task<User> FindByIDUser_API(int id)
+        {
+            try
+            {
+                var tokenModel = _tokenService.GetToken();
+                if (tokenModel == null) return null;
+
+                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenModel.Token);
+                var jsonStr = await _client.GetStringAsync($"{_F_U_UserUrl}{id}");
+                return JsonConvert.DeserializeObject<User>(jsonStr);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"EX FindByIDUser_API: {ex.Message}");
+                return null;
+            }
+        }
+
+        public async Task<bool> UpdateUser_API(User user)
+        {
+            try
+            {
+                var tokenModel = _tokenService.GetToken();
+                if (tokenModel == null) return false;
+
+                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenModel.Token);
+                var jsonStr = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
+                var response = await _client.PutAsync($"{_F_U_UserUrl}{user.id}", jsonStr);
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"EX UpdateUser_API: {ex.Message}");
+                return false;
+            }
+        }
     }
 
     public class RegisterResult
     {
         public bool Success { get; set; }
-        public string Message { get; set; }
+        public string? Message { get; set; }
     }
 }
