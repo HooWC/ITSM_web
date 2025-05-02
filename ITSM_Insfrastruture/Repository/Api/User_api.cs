@@ -61,6 +61,10 @@ namespace ITSM_Insfrastruture.Repository.Api
                             };
 
                             _tokenService.SaveToken(tokenModel);
+                            
+                            // Register success then save user infomation
+                            await FetchAndSaveUserInfo(registerResult.user.id);
+                            
                             return new RegisterResult { Success = true };
                         }
                         else
@@ -137,8 +141,8 @@ namespace ITSM_Insfrastruture.Repository.Api
         {
             public string? message { get; set; }
         }
-
         // == Register ==
+
         public async Task<List<User>> GetAllUser_API()
         {
             try
@@ -185,13 +189,65 @@ namespace ITSM_Insfrastruture.Repository.Api
                 _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenModel.Token);
                 var jsonStr = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
                 var response = await _client.PutAsync($"{_F_U_UserUrl}{user.id}", jsonStr);
-                return response.IsSuccessStatusCode;
+                
+                if (response.IsSuccessStatusCode)
+                {
+                    // Update User Session Infomation
+                    if (tokenModel.UserId == user.id)
+                    {
+                        _tokenService.SaveUserInfo(user);
+                    }
+                    return true;
+                }
+                
+                return false;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"EX UpdateUser_API: {ex.Message}");
                 return false;
             }
+        }
+
+        private async Task<bool> FetchAndSaveUserInfo(int userId)
+        {
+            try
+            {
+                var token = _tokenService.GetToken();
+                if (token == null || string.IsNullOrEmpty(token.Token))
+                {
+                    Console.WriteLine("Failed to get user information: No valid token");
+                    return false;
+                }
+
+                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Token);
+
+                var user = await FindByIDUser_API(userId);
+
+                if (user != null)
+                {
+                    // Save User Information Session && Cookie
+                    _tokenService.SaveUserInfo(user);
+                    return true;
+                }
+                else
+                {
+                    Console.WriteLine($"Failed to obtain information of user ID={userId}");
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"EX Save Info Error: {ex.Message}");
+                return false;
+            }
+        }
+
+        public User GetCurrentUser()
+        {
+            // Get User Current Data
+            return _tokenService.GetUserInfo();
         }
     }
 
