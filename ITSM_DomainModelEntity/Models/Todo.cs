@@ -20,11 +20,13 @@ namespace ITSM_DomainModelEntity.Models
         [StringLength(255)]
         public string? title { get; set; }
 
-        public DateTime create_date { get; set; } = DateTime.Now;
+        public DateTime create_date { get; set; }
 
-        public DateTime? update_date { get; set; }
+        public DateTime update_date { get; set; }
 
         public bool active { get; set; } = false;
+
+        public string? todo_id { get; set; }
 
         // Navigation properties
         public virtual User? User { get; set; }

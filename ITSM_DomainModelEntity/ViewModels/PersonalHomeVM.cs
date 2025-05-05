@@ -9,7 +9,7 @@ namespace ITSM_DomainModelEntity.ViewModels
 {
     public class PersonalHomeVM
     {
-        public User Users { get; set; }
+        public User User { get; set; }
         public int CompletedTodo {  get; set; }
         public int TodoCount { get; set; }
         public int AllTodo {  get; set; }
@@ -21,6 +21,8 @@ namespace ITSM_DomainModelEntity.ViewModels
         public int CompletedReq { get; set; }
         public int AllKnowledge { get; set; }
         public int AllFeedback { get; set; }
+        public string? DepartmentName { get; set; }
+        public string? RoleName { get; set; }
         public List<User> Team { get; set; }
         public List<Incident> IncidentsHistory { get; set; }
     }

@@ -20,17 +20,6 @@ a {
         text-decoration: underline;
     }
 
-/* Header Styles */
-header {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    background-color: #121212;
-    padding: 10px 20px;
-    border: none;
-    margin-bottom:0px;
-}
-
 .logo {
     height: 40px;
 }

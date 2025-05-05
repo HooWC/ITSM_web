@@ -135,6 +135,15 @@ h1 {
     padding: 6px 0;
 }
 
+    .game-icon a {
+        text-decoration: none;
+        text-align: center;
+    }
+
+        .game-icon a:hover {
+            text-decoration: none;
+        }
+
 /* Wide icon spans 2 columns */
 .wide-icon {
     grid-column: span 2;

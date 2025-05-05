@@ -143,34 +143,18 @@ namespace ITSM_Insfrastruture.Repository.Api
                 fullname = apiUser.fullname,
                 email = apiUser.email,
                 gender = apiUser.gender,
+                department_id = apiUser.department_id,
                 title = apiUser.title,
                 business_phone = apiUser.business_phone,
                 mobile_phone = apiUser.mobile_phone,
+                role_id = apiUser.role_id,
                 username = apiUser.username,
                 password = apiUser.password,
                 race = apiUser.race,
                 update_date = apiUser.update_date,
-                create_date = apiUser.create_date ?? DateTime.Now
+                create_date = apiUser.create_date ?? DateTime.Now,
+                active = apiUser.active
             };
-
-            string departmentStr = apiUser.department?.ToString().ToLower();
-            user.department_id = departmentStr switch
-            {
-                "it" => 1,
-                "hr" => 2,
-                _ => apiUser.department_id ?? 0
-            };
-
-            string roleStr = apiUser.role?.ToString().ToLower();
-            user.role_id = roleStr switch
-            {
-                "admin" => 1,
-                "itil" => 2,
-                "user" => 3
-            };
-
-            string activeStr = apiUser.active?.ToString().ToLower();
-            user.active = activeStr == "active" ? true : false;
 
             return user;
         }

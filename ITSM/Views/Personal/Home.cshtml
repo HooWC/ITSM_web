@@ -1,7 +1,20 @@
-﻿@{
+﻿@using ITSM_DomainModelEntity.ViewModels
+@model PersonalHomeVM
+@{
     ViewData["Title"] = "Home";
     Layout = "_Layout";
 }
+
+<style>
+    .dropdown-menu{
+        background: #4b4c4d;
+        color:white;
+    }
+
+    .dropdown-item:hover{
+        text-decoration: none;
+    }
+</style>
 
 <div class="pro-file-container" style="width: 100%; display: flex;">
 
@@ -13,77 +26,20 @@
                     <div class="pro-file-msg_title pro-file-msg-department ">
                         Incident History
                     </div>
-                    <div class="pro-file-msg pro-file-selected-bg pro-file-anim-y">
-                        <input type="checkbox" name="msg" id="mail1" class="pro-file-mail-choice" checked>
-                        <label for="mail1"></label>
-                        <div class="pro-file-msg-content">
-                            <div class="pro-file-msg-title">INC000476</div>
-                            <div class="pro-file-msg-short-content">Write an articke about design</div>
-                            <div class="pro-file-msg-date">22 Feb, 2019</div>
+
+                    @foreach (var i in Model.IncidentsHistory)
+                    {
+                        <div class="pro-file-msg pro-file-selected-bg pro-file-anim-y">
+                            <input type="checkbox" name="msg" class="pro-file-mail-choice" @(i.state == "Resolved" ? "checked" : "") disabled />
+                            <label></label>
+                            <div class="pro-file-msg-content">
+                                <div class="pro-file-msg-title">@i.inc_number</div>
+                                <div class="pro-file-msg-short-content">@i.short_description</div>
+                                <div class="pro-file-msg-date">@i.create_date.ToString("dd MMM, yyyy")</div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="pro-file-msg pro-file-anim-y">
-                        <input type="checkbox" name="msg" id="mail2" class="pro-file-mail-choice">
-                        <label for="mail2"></label>
-                        <div class="pro-file-msg-content">
-                            <div class="pro-file-msg-title">Disrupt next level aesthetic raw</div>
-                            <div class="pro-file-msg-date">22 Feb, 2019</div>
-                        </div>
-                    </div>
-                    <div class="pro-file-msg pro-file-selected-bg pro-file-anim-y">
-                        <input type="checkbox" name="msg" id="mail3" class="pro-file-mail-choice" checked>
-                        <label for="mail3"></label>
-                        <div class="pro-file-msg-content">
-                            <div class="pro-file-msg-title">Chicharrones craft beer tattooed</div>
-                            <div class="pro-file-msg-date">22 Feb, 2019</div>
-                        </div>
-                        <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-1.2.1&auto=format&fit=crop&w=998&q=80" alt="" class="pro-file-members pro-file-mail-members">
-                    </div>
-                    <div class="pro-file-msg pro-file-anim-y">
-                        <input type="checkbox" name="msg" id="mail4" class="pro-file-mail-choice">
-                        <label for="mail4"></label>
-                        <div class="pro-file-msg-content">
-                            <div class="pro-file-msg-title">Vaporware readymade shabby</div>
-                            <div class="pro-file-msg-date">22 Feb, 2019</div>
-                        </div>
-                        <img src="https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60" alt="" class="pro-file-members pro-file-mail-members">
-                    </div>
-                    <div class="pro-file-msg pro-file-anim-y">
-                        <input type="checkbox" name="msg" id="mail5" class="pro-file-mail-choice">
-                        <label for="mail5"></label>
-                        <div class="pro-file-msg-content">
-                            <div class="pro-file-msg-title"> Four dollar toast taxidermy</div>
-                            <div class="pro-file-msg-date">22 Feb, 2019</div>
-                        </div>
-                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2100&q=80" alt="" class="pro-file-members pro-file-mail-members">
-                    </div>
-                    <div class="pro-file-msg pro-file-anim-y">
-                        <input type="checkbox" name="msg" id="mail6" class="pro-file-mail-choice">
-                        <label for="mail6"></label>
-                        <div class="pro-file-msg-content">
-                            <div class="pro-file-msg-title">Slow-carb disrupt kogi tote bag</div>
-                            <div class="pro-file-msg-date">22 Feb, 2019</div>
-                        </div>
-                        <img src="https://images.unsplash.com/photo-1541647376583-8934aaf3448a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80" alt="" class="pro-file-members pro-file-mail-members">
-                    </div>
-                    <div class="pro-file-msg pro-file-anim-y">
-                        <input type="checkbox" name="msg" id="mail7" class="pro-file-mail-choice">
-                        <label for="mail7"></label>
-                        <div class="pro-file-msg-content">
-                            <div class="pro-file-msg-title">Pour-over subway tile twee</div>
-                            <div class="pro-file-msg-date">22 Feb, 2019</div>
-                        </div>
-                        <img src="https://assets.codepen.io/3364143/Screen+Shot+2020-08-01+at+12.24.16.png" alt="" class="pro-file-members pro-file-mail-members">
-                    </div>
-                    <div class="pro-file-msg pro-file-anim-y">
-                        <input type="checkbox" name="msg" id="mail8" class="pro-file-mail-choice">
-                        <label for="mail8"></label>
-                        <div class="pro-file-msg-content">
-                            <div class="pro-file-msg-title">Create AdWords campaign</div>
-                            <div class="pro-file-msg-date">22 Feb, 2019</div>
-                        </div>
-                        <img src="https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60" alt="" class="pro-file-members pro-file-mail-members">
-                    </div>
+                    }
+
                 </div>
                 <div class="pro-file-add-task">
                     <button class="pro-file-add-button" onclick="location.href='/IncidentManagement/Create_Form';">Add Incident</button>
@@ -92,34 +48,30 @@
             </div>
             <div class="col-xxl-8 col-lg-12 col-md-12 order-1" style="max-height: 100vh; overflow-y: auto; padding:20px; width: 60%;">
                 <div class="row g-4">
-                    <!-- First row: Profile / Sales / User -->
+                    <!-- Row: Inc / Inc Pedding / Inc Resolved -->
                     <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 mb-0">
                         <div class="card">
                             <div class="card-body">
                                 <div class="card-title d-flex align-items-start justify-content-between">
                                     <div class="avatar flex-shrink-0">
-                                        <img src="../assets/img/icons/unicons/chart-success.png"
-                                             alt="chart success"
-                                             class="rounded" />
+                                        <img src="~/assets/img/icons/unicons/paypal.png" alt="paypal" class="rounded" />
                                     </div>
                                     <div class="dropdown">
                                         <button class="btn p-0"
-                                                type="button"
-                                                id="cardOpt3"
-                                                data-bs-toggle="dropdown"
-                                                aria-haspopup="true"
-                                                aria-expanded="false">
+                                        type="button"
+                                        id="cardOpt3"
+                                        data-bs-toggle="dropdown"
+                                        aria-haspopup="true"
+                                        aria-expanded="false">
                                             <i class="icon-base bx bx-dots-vertical-rounded text-body-secondary"></i>
                                         </button>
                                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt3">
                                             <a class="dropdown-item" href="javascript:void(0);">View More</a>
-                                            <a class="dropdown-item" href="javascript:void(0);">Delete</a>
                                         </div>
                                     </div>
                                 </div>
-                                <span class="fw-medium d-block mb-1">Profile</span>
-                                <h3 class="card-title mb-2">$12,628</h3>
-                                <small class="text-success fw-medium"><i class="icon-base bx bx-up-arrow-alt"></i> +72.80%</small>
+                                <span class="fw-medium d-block mb-1">All Incidents</span>
+                                <h3 class="card-title mb-2">@Model.AllInc</h3>
                             </div>
                         </div>
                     </div>
@@ -128,28 +80,54 @@
                             <div class="card-body">
                                 <div class="card-title d-flex align-items-start justify-content-between">
                                     <div class="avatar flex-shrink-0">
-                                        <img src="../assets/img/icons/unicons/wallet-info.png"
-                                             alt="wallet info"
+                                        <img src="~/assets/img/icons/unicons/cc-primary.png" alt="Credit Card" class="rounded" />
+                                    </div>
+                                </div>
+                                <span class="fw-medium d-block mb-1">Incidents Pedding</span>
+                                <h3 class="card-title mb-2">@Model.ApplyInc</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 mb-0">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="card-title d-flex align-items-start justify-content-between">
+                                    <div class="avatar flex-shrink-0">
+                                        <img src="~/assets/img/icons/unicons/chart-success.png"
+                                             alt="chart success"
                                              class="rounded" />
+                                    </div>
+                                </div>
+                                <span class="fw-medium d-block mb-1">Incidents Resolved</span>
+                                <h3 class="card-title mb-2">@Model.CompletedInc</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Row: Req / Req Pedding / Req Resolved -->
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 mb-0">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="card-title d-flex align-items-start justify-content-between">
+                                    <div class="avatar flex-shrink-0">
+                                        <img src="~/assets/img/icons/unicons/paypal.png" alt="paypal" class="rounded" />
                                     </div>
                                     <div class="dropdown">
                                         <button class="btn p-0"
-                                                type="button"
-                                                id="cardOpt6"
-                                                data-bs-toggle="dropdown"
-                                                aria-haspopup="true"
-                                                aria-expanded="false">
+                                        type="button"
+                                        id="cardOpt4"
+                                        data-bs-toggle="dropdown"
+                                        aria-haspopup="true"
+                                        aria-expanded="false">
                                             <i class="icon-base bx bx-dots-vertical-rounded text-body-secondary"></i>
                                         </button>
-                                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt6">
+                                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt4">
                                             <a class="dropdown-item" href="javascript:void(0);">View More</a>
-                                            <a class="dropdown-item" href="javascript:void(0);">Delete</a>
                                         </div>
                                     </div>
                                 </div>
-                                <span class="fw-medium d-block mb-1">Sales</span>
-                                <h3 class="card-title mb-2">$4,679</h3>
-                                <small class="text-success fw-medium"><i class="icon-base bx bx-up-arrow-alt"></i> +28.42%</small>
+                                <span class="fw-medium d-block mb-1">All Requests</span>
+                                <h3 class="card-title mb-2">@Model.AllReq</h3>
                             </div>
                         </div>
                     </div>
@@ -158,143 +136,54 @@
                             <div class="card-body">
                                 <div class="card-title d-flex align-items-start justify-content-between">
                                     <div class="avatar flex-shrink-0">
-                                        <img src="../assets/img/icons/unicons/wallet.png"
+                                        <img src="~/assets/img/icons/unicons/cc-primary.png" alt="Credit Card" class="rounded" />
+                                    </div>
+                                </div>
+                                <span class="fw-medium d-block mb-1">Requests Pedding</span>
+                                <h3 class="card-title mb-2">@Model.ApplyReq</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 mb-0">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="card-title d-flex align-items-start justify-content-between">
+                                    <div class="avatar flex-shrink-0">
+                                        <img src="~/assets/img/icons/unicons/chart.png" alt="Todos" class="rounded" />
+                                    </div>
+                                </div>
+                                <span class="fw-medium d-block mb-1">Requests Resolved</span>
+                                <h3 class="card-title mb-2">@Model.CompletedReq</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Row: Feedback / Knowledge -->
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 mb-0">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="card-title d-flex align-items-start justify-content-between">
+                                    <div class="avatar flex-shrink-0">
+                                        <img src="~/assets/img/icons/unicons/wallet.png"
                                              alt="User"
                                              class="rounded" />
                                     </div>
                                     <div class="dropdown">
                                         <button class="btn p-0"
-                                                type="button"
-                                                id="cardOpt6"
-                                                data-bs-toggle="dropdown"
-                                                aria-haspopup="true"
-                                                aria-expanded="false">
-                                            <i class="icon-base bx bx-dots-vertical-rounded text-body-secondary"></i>
-                                        </button>
-                                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt6">
-                                            <a class="dropdown-item" href="javascript:void(0);">View More</a>
-                                            <a class="dropdown-item" href="javascript:void(0);">Delete</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <span class="fw-medium d-block mb-1">User</span>
-                                <h3 class="card-title mb-2">38.4K</h3>
-                                <small class="text-success fw-medium"><i class="icon-base bx bx-up-arrow-alt"></i> +18.42%</small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Second row: Payments / Transactions / Todos -->
-                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 mb-0">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="card-title d-flex align-items-start justify-content-between">
-                                    <div class="avatar flex-shrink-0">
-                                        <img src="../assets/img/icons/unicons/paypal.png" alt="paypal" class="rounded" />
-                                    </div>
-                                    <div class="dropdown">
-                                        <button class="btn p-0"
-                                                type="button"
-                                                id="cardOpt4"
-                                                data-bs-toggle="dropdown"
-                                                aria-haspopup="true"
-                                                aria-expanded="false">
+                                        type="button"
+                                        id="cardOpt4"
+                                        data-bs-toggle="dropdown"
+                                        aria-haspopup="true"
+                                        aria-expanded="false">
                                             <i class="icon-base bx bx-dots-vertical-rounded text-body-secondary"></i>
                                         </button>
                                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt4">
                                             <a class="dropdown-item" href="javascript:void(0);">View More</a>
-                                            <a class="dropdown-item" href="javascript:void(0);">Delete</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <span class="fw-medium d-block mb-1">Payments</span>
-                                <h3 class="card-title mb-2">$2,456</h3>
-                                <small class="text-danger fw-medium"><i class="icon-base bx bx-down-arrow-alt"></i> -14.82%</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 mb-0">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="card-title d-flex align-items-start justify-content-between">
-                                    <div class="avatar flex-shrink-0">
-                                        <img src="../assets/img/icons/unicons/cc-primary.png" alt="Credit Card" class="rounded" />
-                                    </div>
-                                    <div class="dropdown">
-                                        <button class="btn p-0"
-                                                type="button"
-                                                id="cardOpt1"
-                                                data-bs-toggle="dropdown"
-                                                aria-haspopup="true"
-                                                aria-expanded="false">
-                                            <i class="icon-base bx bx-dots-vertical-rounded text-body-secondary"></i>
-                                        </button>
-                                        <div class="dropdown-menu" aria-labelledby="cardOpt1">
-                                            <a class="dropdown-item" href="javascript:void(0);">View More</a>
-                                            <a class="dropdown-item" href="javascript:void(0);">Delete</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <span class="fw-medium d-block mb-1">Transactions</span>
-                                <h3 class="card-title mb-2">$14,857</h3>
-                                <small class="text-success fw-medium"><i class="icon-base bx bx-up-arrow-alt"></i> +28.14%</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 mb-0">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="card-title d-flex align-items-start justify-content-between">
-                                    <div class="avatar flex-shrink-0">
-                                        <img src="../assets/img/icons/unicons/chart.png" alt="Todos" class="rounded" />
-                                    </div>
-                                    <div class="dropdown">
-                                        <button class="btn p-0"
-                                                type="button"
-                                                id="cardOpt2"
-                                                data-bs-toggle="dropdown"
-                                                aria-haspopup="true"
-                                                aria-expanded="false">
-                                            <i class="icon-base bx bx-dots-vertical-rounded text-body-secondary"></i>
-                                        </button>
-                                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt2">
-                                            <a class="dropdown-item" href="javascript:void(0);">View More</a>
-                                            <a class="dropdown-item" href="javascript:void(0);">Delete</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <span class="fw-medium d-block mb-1">Todos</span>
-                                <h3 class="card-title mb-2">78</h3>
-                                <small class="text-success fw-medium"><i class="icon-base bx bx-up-arrow-alt"></i> +8.24%</small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 mb-0">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="card-title d-flex align-items-start justify-content-between">
-                                    <div class="avatar flex-shrink-0">
-                                        <img src="../assets/img/icons/unicons/paypal.png" alt="paypal" class="rounded" />
-                                    </div>
-                                    <div class="dropdown">
-                                        <button class="btn p-0"
-                                                type="button"
-                                                id="cardOpt4"
-                                                data-bs-toggle="dropdown"
-                                                aria-haspopup="true"
-                                                aria-expanded="false">
-                                            <i class="icon-base bx bx-dots-vertical-rounded text-body-secondary"></i>
-                                        </button>
-                                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt4">
-                                            <a class="dropdown-item" href="javascript:void(0);">View More</a>
-                                            <a class="dropdown-item" href="javascript:void(0);">Delete</a>
                                         </div>
                                     </div>
                                 </div>
                                 <span class="fw-medium d-block mb-1">Knowledges</span>
-                                <h3 class="card-title mb-2">$2,456</h3>
-                                <small class="text-danger fw-medium"><i class="icon-base bx bx-down-arrow-alt"></i> -14.82%</small>
+                                <h3 class="card-title mb-2">@Model.AllKnowledge</h3>
                             </div>
                         </div>
                     </div>
@@ -303,30 +192,30 @@
                             <div class="card-body">
                                 <div class="card-title d-flex align-items-start justify-content-between">
                                     <div class="avatar flex-shrink-0">
-                                        <img src="../assets/img/icons/unicons/cc-primary.png" alt="Credit Card" class="rounded" />
+                                        <img src="~/assets/img/icons/unicons/wallet-info.png"
+                                             alt="wallet info"
+                                             class="rounded" />
                                     </div>
                                     <div class="dropdown">
                                         <button class="btn p-0"
-                                                type="button"
-                                                id="cardOpt1"
-                                                data-bs-toggle="dropdown"
-                                                aria-haspopup="true"
-                                                aria-expanded="false">
+                                        type="button"
+                                        id="cardOpt1"
+                                        data-bs-toggle="dropdown"
+                                        aria-haspopup="true"
+                                        aria-expanded="false">
                                             <i class="icon-base bx bx-dots-vertical-rounded text-body-secondary"></i>
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="cardOpt1">
                                             <a class="dropdown-item" href="javascript:void(0);">View More</a>
-                                            <a class="dropdown-item" href="javascript:void(0);">Delete</a>
                                         </div>
                                     </div>
                                 </div>
                                 <span class="fw-medium d-block mb-1">Feedback</span>
-                                <h3 class="card-title mb-2">$14,857</h3>
-                                <small class="text-success fw-medium"><i class="icon-base bx bx-up-arrow-alt"></i> +28.14%</small>
+                                <h3 class="card-title mb-2">@Model.AllFeedback</h3>
                             </div>
                         </div>
                     </div>
-                
+
                 </div>
             </div>
 
@@ -336,18 +225,23 @@
         <div class="pro-file-task-manager">profile</div>
         <div class="pro-file-side-wrapper">
             <div class="pro-file-user-profile">
-                <img src="https://assets.codepen.io/3364143/Screen+Shot+2020-08-01+at+12.24.16.png" alt="" class="pro-file-user-photo">
-                <div class="pro-file-user-name">Hoo Weng Chin</div>
-                <div class="pro-file-user-mail">wengchin123456@gmail.com</div>
-                <div class="pro-file-user-role">ADMIN</div>
-                <div class="pro-file-user-title">Software Developer</div>
+                <img src="@(Model.User.photo != null ? "data:image/jpeg;base64," + Convert.ToBase64String(Model.User.photo) : 
+                    Url.Content("~/img/avatar/user_avatar.jpg"))"
+                alt="User Avatar"
+                class="pro-file-user-photo">
+                <div class="pro-file-user-name">@Model.User.fullname</div>
+                <div class="pro-file-user-mail">@Model.User.email</div>
+                <div class="pro-file-user-role">@Model.RoleName</div>
+                <div class="pro-file-user-title">@Model.DepartmentName</div>
 
             </div>
             <div class="pro-file-user-notification">
                 <div class="pro-file-notify">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" fill="currentColor">
-                        <path d="M280.4 148.3L96 300.1V464c0 8.8 7.2 16 16 16l112-.3c8.8 0 16-7.2 16-16V368c0-8.8 7.2-16 16-16h64c8.8 0 16 7.2 16 16v95.7c0 8.8 7.2 16 16 16l112 .3c8.8 0 16-7.2 16-16V300L295.7 148.3a12.2 12.2 0 0 0-15.3 0zM571.6 251.5l-61.6-53.6V48c0-8.8-7.2-16-16-16h-48c-8.8 0-16 7.2-16 16v72.6L318.5 43.2c-27.6-24-68.4-24-96 0L4.3 251.5c-6.6 5.8-7.2 16-1.4 22.6l21.4 24.6c5.6 6.5 15.3 7.1 21.8 1.4L64 281.2V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V281.2l17.9 18.8c6.5 5.7 16.2 5.1 21.8-1.4l21.4-24.6c5.8-6.6 5.2-16.8-1.3-22.5z" />
-                    </svg>
+                    <a href="~/Home/Index">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" fill="currentColor">
+                            <path d="M280.4 148.3L96 300.1V464c0 8.8 7.2 16 16 16l112-.3c8.8 0 16-7.2 16-16V368c0-8.8 7.2-16 16-16h64c8.8 0 16 7.2 16 16v95.7c0 8.8 7.2 16 16 16l112 .3c8.8 0 16-7.2 16-16V300L295.7 148.3a12.2 12.2 0 0 0-15.3 0zM571.6 251.5l-61.6-53.6V48c0-8.8-7.2-16-16-16h-48c-8.8 0-16 7.2-16 16v72.6L318.5 43.2c-27.6-24-68.4-24-96 0L4.3 251.5c-6.6 5.8-7.2 16-1.4 22.6l21.4 24.6c5.6 6.5 15.3 7.1 21.8 1.4L64 281.2V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V281.2l17.9 18.8c6.5 5.7 16.2 5.1 21.8-1.4l21.4-24.6c5.8-6.6 5.2-16.8-1.3-22.5z" />
+                        </svg>
+                    </a>
                 </div>
 
                 <div class="pro-file-notify">
@@ -362,72 +256,72 @@
                     </svg>
                 </div>
 
+                <div class="pro-file-notify">
+                    <svg class="open-button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+                        <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    </svg>
+                </div>
+
             </div>
-            <div class="pro-file-progress-status">12/34</div>
+            <div class="pro-file-progress-status">@Model.CompletedTodo/@Model.AllTodo</div>
             <div class="pro-file-progress">
                 <div class="pro-file-progress-bar"></div>
             </div>
             <div class="pro-file-task-status">
                 <div class="pro-file-task-stat">
-                    <div class="pro-file-task-number">12</div>
+                    <div class="pro-file-task-number">@Model.CompletedTodo</div>
                     <div class="pro-file-task-condition">Completed</div>
-                    <div class="pro-file-task-tasks">tasks</div>
+                    <div class="pro-file-task-tasks">TASKS</div>
                 </div>
                 <div class="pro-file-task-stat">
-                    <div class="pro-file-task-number">22</div>
-                    <div class="pro-file-task-condition">To do</div>
-                    <div class="pro-file-task-tasks">tasks</div>
+                    <div class="pro-file-task-number">@Model.TodoCount</div>
+                    <div class="pro-file-task-condition">To-do</div>
+                    <div class="pro-file-task-tasks">TASKS</div>
                 </div>
                 <div class="pro-file-task-stat">
-                    <div class="pro-file-task-number">243</div>
+                    <div class="pro-file-task-number">@Model.AllTodo</div>
                     <div class="pro-file-task-condition">All</div>
-                    <div class="pro-file-task-tasks">tasks</div>
+                    <div class="pro-file-task-tasks">TASKS</div>
                 </div>
             </div>
         </div>
         <div class="pro-file-side-wrapper">
-            <div class="pro-file-project-title">IT Team</div>
+            <div class="pro-file-project-title">@Model.DepartmentName Team</div>
             <div class="pro-file-team-member">
-                <div class="pro-file-member-item">
-                    <img src="https://images.unsplash.com/flagged/photo-1574282893982-ff1675ba4900?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&q=80" alt="" class="pro-file-members">
-                    <div class="pro-file-member-title">John Doe<span class="pro-file-member-role">Developer</span></div>
-                </div>
-                <div class="pro-file-member-item">
-                    <img src="https://assets.codepen.io/3364143/Screen+Shot+2020-08-01+at+12.24.16.png" alt="" class="pro-file-members">
-                    <div class="pro-file-member-title">Anna Smith<span class="pro-file-member-role">Designer</span></div>
-                </div>
-                <div class="pro-file-member-item">
-                    <img src="https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60" alt="" class="pro-file-members">
-                    <div class="pro-file-member-title">Mike Chen<span class="pro-file-member-role">DevOps</span></div>
-                </div>
-                <div class="pro-file-member-item">
-                    <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-1.2.1&auto=format&fit=crop&w=998&q=80" alt="" class="pro-file-members">
-                    <div class="pro-file-member-title">Sarah Johnson<span class="pro-file-member-role">UI/UX</span></div>
-                </div>
-                <div class="pro-file-member-item">
-                    <img src="https://images.unsplash.com/photo-1541647376583-8934aaf3448a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80" alt="" class="pro-file-members">
-                    <div class="pro-file-member-title">Alex Wu<span class="pro-file-member-role">Manager</span></div>
-                </div>
-                <div class="pro-file-member-item">
-                    <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2100&q=80" alt="" class="pro-file-members">
-                    <div class="pro-file-member-title">Emma Lee<span class="pro-file-member-role">Developer</span></div>
-                </div>
-                <div class="pro-file-member-item">
-                    <img src="https://images.unsplash.com/photo-1541647376583-8934aaf3448a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80" alt="" class="pro-file-members">
-                    <div class="pro-file-member-title">David Park<span class="pro-file-member-role">Tester</span></div>
-                </div>
-                <div class="pro-file-member-item">
-                    <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-1.2.1&auto=format&fit=crop&w=998&q=80" alt="" class="pro-file-members">
-                    <div class="pro-file-member-title">Lily Tan<span class="pro-file-member-role">Support</span></div>
-                </div>
-                <div class="pro-file-member-item">
-                    <img src="https://images.unsplash.com/flagged/photo-1574282893982-ff1675ba4900?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&q=80" alt="" class="pro-file-members">
-                    <div class="pro-file-member-title">Ryan Ng<span class="pro-file-member-role">Developer</span></div>
-                </div>
-                <div class="pro-file-member-item pro-file-more-members">
-                    <div class="pro-file-members"></div>
-                </div>
+                @if (Model.Team != null && Model.Team.Count > 0)
+                {
+                    foreach (var i in Model.Team)
+                    {
+                        <div class="pro-file-member-item">
+
+                            @if (i.photo == null)
+                            {
+                                <img src="~/img/avatar/user_avatar.jpg" alt="user_avatar.jpg" class="pro-file-members" />
+                            }
+                            else
+                            {
+                                <img src="data:image/jpeg;base64,@Convert.ToBase64String(i.photo)" alt="data_avatar" class="pro-file-members" />
+                            }
+
+                            <div class="pro-file-member-title">@i.fullname<span class="pro-file-member-role">@i.title</span></div>
+                        </div>
+                    }
+
+                    @if (Model.Team.Count >= 9)
+                    {
+                        <div class="pro-file-member-item pro-file-more-members">
+                            <div class="pro-file-members"></div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="pro-file-member-item pro-file-more-members">
+                        <div class="pro-file-members"></div>
+                    </div>
+                }
             </div>
+
         </div>
     </div>
 </div>
@@ -443,7 +337,6 @@
 
       $('#Prosonal_menu_profile').addClass("active");
       
-      // 调整窗口大小时保持布局
       $(window).resize(function() {
         if ($(window).width() < 768) {
           $('.pro-file-main-area').css('width', '100%');
@@ -454,7 +347,6 @@
         }
       });
       
-      // 页面加载时执行一次
       $(window).trigger('resize');
     });
 </script>

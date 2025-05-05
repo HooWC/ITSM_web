@@ -24899,6 +24899,18 @@ li:not(:first-child) .dropdown-item, .dropdown-menu .dropdown-item:not(:first-ch
     }
 }
 
+.menu-item a{
+    text-decoration:none;
+}
+
+.menu-item a:hover {
+    text-decoration: none;
+}
+
+.menu-link {
+    text-decoration: none;
+}
+
 .menu .menu-sub > .menu-item > .menu-link::before {
     position: absolute;
     border-radius: 50%;
