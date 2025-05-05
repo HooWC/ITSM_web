@@ -144,6 +144,10 @@ namespace ITSM_Insfrastruture.Repository.Api
                 _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenModel.Token);
                 var response = await _client.DeleteAsync($"{_sudTodoUrl}{id}");
 
+                // Testing Debug
+                // var responseStr = await response.Content.ReadAsStringAsync();
+                // Console.WriteLine($"RESPONSE: {responseStr}");
+
                 return response.IsSuccessStatusCode;
             }
             catch (Exception ex)

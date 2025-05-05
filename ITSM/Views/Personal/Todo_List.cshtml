@@ -74,6 +74,14 @@
     .todo-page.active {
         display: table-row;
     }
+
+    .inc-tab-incident-number a{
+        text-decoration:none;
+    }
+
+    .inc-tab-incident-number a:hover {
+        text-decoration: none;
+    }
 </style>
 
 <div class="inc-tab-container">
@@ -135,9 +143,7 @@
         <table class="inc-tab-incidents-table">
             <thead>
                 <tr>
-                    <th class="inc-tab-checkbox-column">
-                        
-                    </th>
+                    <th class="inc-tab-checkbox-column"></th>
                     <th class="inc-tab-sortable number-column" id="sortByNumber">Number <i class="fas fa-arrow-up" id="sortIcon"></i></th>
                     <th class="title-column">title</th>
                     <th class="create-date-column">create_date</th>
@@ -151,7 +157,9 @@
                 {
                     <tr class="todo-item" data-id="@i.id">
                         <td><input type="checkbox" class="item-checkbox"></td>
-                        <td class="inc-tab-incident-number" data-label="Number">@i.todo_id</td>
+                        <td class="inc-tab-incident-number" data-label="Number">
+                            <a href="~/Personal/Todo_Edit?id=@i.id">@i.todo_id</a>
+                        </td>
                         <td data-label="Short description">@i.title</td>
                         <td data-label="Opened">@i.create_date.ToString("yyyy-MM-dd HH:mm:ss")</td>
                         <td data-label="Caller">@i.update_date.ToString("yyyy-MM-dd HH:mm:ss"))</td>

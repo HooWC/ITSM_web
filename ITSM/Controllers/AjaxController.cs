@@ -39,22 +39,17 @@ namespace ITSM.Controllers
         public async Task<IActionResult> SearchTodo(string searchTerm, string filterBy = "number")
         {
             if (string.IsNullOrEmpty(searchTerm))
-            {
                 return Json(new List<Todo>());
-            }
 
-            // 获取当前用户信息
+            // Get current user information
             var currentUser = _tokenService.GetUserInfo();
             if (currentUser == null)
-            {
-                return Json(new { success = false, message = "未登录" });
-            }
+                return Json(new { success = false, message = "Not logged in" });
 
-            // 获取用户的所有Todo
+            // Get all Todos of a user
             var allTodos = await _todoApi.GetAllTodo_API();
             var userTodos = allTodos.Where(x => x.user_id == currentUser.id).ToList();
 
-            // 根据筛选字段和搜索关键词筛选结果
             List<Todo> filteredTodos = new List<Todo>();
             
             switch (filterBy.ToLower())

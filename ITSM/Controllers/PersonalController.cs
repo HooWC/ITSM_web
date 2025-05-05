@@ -179,6 +179,53 @@ namespace ITSM.Controllers
                 return RedirectToAction("Index", "Home");
         }
 
+        public async Task<IActionResult> Todo_Edit(int id)
+        {
+            // current user info
+            var tokenService = new TokenService(_httpContextAccessor);
+            var currentUser = tokenService.GetUserInfo();
+
+            // Making concurrent API requests
+            var todoTask = _todoApi.GetAllTodo_API();
+
+            // Get Todo
+            var allTodo = await todoTask;
+            var todo = allTodo.Where(x => x.user_id == currentUser.id && x.id == id).FirstOrDefault();
+
+            return View(todo);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Todo_Edit(Todo todo, string active_word)
+        {
+            // current user info
+            var tokenService = new TokenService(_httpContextAccessor);
+            var currentUser = tokenService.GetUserInfo();
+
+            // Making concurrent API requests
+            var todoTask = _todoApi.GetAllTodo_API();
+
+            // Get Todo
+            var allTodo = await todoTask;
+            var edit_todo = allTodo.Where(x => x.user_id == currentUser.id && x.id == todo.id).FirstOrDefault();
+            if(edit_todo != null)
+            {
+                // Update
+                edit_todo.active = active_word == "Doing" ? false : true;
+                edit_todo.title = todo.title;
+                edit_todo.update_date = DateTime.Now;
+
+                bool result = await _todoApi.UpdateTodo_API(edit_todo);
+
+                if (result)
+                    return RedirectToAction("Todo_List", "Personal");
+                else
+                    return View();
+            }
+
+            return View();
+        }
+
         public IActionResult Incident_List()
         {
             return View();
