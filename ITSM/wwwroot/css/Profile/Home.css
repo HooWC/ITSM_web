@@ -268,9 +268,8 @@ img {
 .pro-file-progress-bar {
     background: linear-gradient(90deg, var(--button-color), #1cb5e0);
     border-radius: 10px;
-    width: 35%;
     height: 100%;
-    animation: pro-file-progressAnimation 6s;
+    width: 0%;
     transition: 0.3s linear both;
     transition-property: width, background-color;
     box-shadow: 0 0 10px rgba(28, 181, 224, 0.5);
@@ -286,12 +285,12 @@ img {
 
 @keyframes pro-file-progressAnimation {
     0% {
-        width: 5%;
+        width: 0%;
         background-color: #a2b6f5;
     }
 
     100% {
-        width: 35%;
+        width: 0%;
     }
 }
 

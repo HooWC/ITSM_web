@@ -26,11 +26,12 @@ namespace ITSM.Controllers
             // Clear the token so the user must log in again the next time they visit
             _tokenService.ClearToken();
 
-            // Returns a JSON result, indicating a successful exit
+            // Returns a JSON result
             return Json(new { success = true, message = "Log out success" });
         }
 
         /// <summary>
+        /// Personal/Todo
         /// Search Todo list
         /// </summary>
         /// <param name="searchTerm">Search keyword</param>
@@ -41,49 +42,64 @@ namespace ITSM.Controllers
             if (string.IsNullOrEmpty(searchTerm))
                 return Json(new List<Todo>());
 
-            // Get current user information
             var currentUser = _tokenService.GetUserInfo();
             if (currentUser == null)
                 return Json(new { success = false, message = "Not logged in" });
 
-            // Get all Todos of a user
             var allTodos = await _todoApi.GetAllTodo_API();
             var userTodos = allTodos.Where(x => x.user_id == currentUser.id).ToList();
 
-            List<Todo> filteredTodos = new List<Todo>();
-            
+            List<Todo> filteredTodos;
+
             switch (filterBy.ToLower())
             {
                 case "number":
-                    filteredTodos = userTodos.Where(t => t.todo_id != null && t.todo_id.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+                    filteredTodos = userTodos
+                        .Where(t => t.todo_id != null && t.todo_id.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                        .ToList();
                     break;
                 case "title":
-                    filteredTodos = userTodos.Where(t => t.title != null && t.title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+                    filteredTodos = userTodos
+                        .Where(t => t.title != null && t.title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                        .ToList();
                     break;
                 case "create_date":
-                    filteredTodos = userTodos.Where(t => t.create_date.ToString("yyyy-MM-dd").Contains(searchTerm)).ToList();
+                    filteredTodos = userTodos
+                        .Where(t => t.create_date.ToString("yyyy-MM-dd").Contains(searchTerm))
+                        .ToList();
                     break;
                 default:
-                    filteredTodos = userTodos.Where(t => t.todo_id != null && t.todo_id.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+                    filteredTodos = userTodos
+                        .Where(t => t.todo_id != null && t.todo_id.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                        .ToList();
                     break;
             }
 
-            return Json(filteredTodos);
+            var result = filteredTodos.Select(t => new {
+                t.id,
+                t.todo_id,
+                t.title,
+                t.user_id,
+                t.active,
+                create_date = t.create_date.ToString("yyyy-MM-dd HH:mm:ss"),
+                update_date = t.update_date.ToString("yyyy-MM-dd HH:mm:ss")
+            });
+
+            return Json(result);
         }
 
         /// <summary>
+        /// Personal/Todo
         /// Filter the Todo list by status
         /// </summary>
         /// <param name="status">Status to filter: all/doing/completed</param>
         /// <returns>Filtered Todo list</returns>
         public async Task<IActionResult> FilterTodoByStatus(string status = "all")
         {
-            // Get current user info
             var currentUser = _tokenService.GetUserInfo();
             if (currentUser == null)
                 return Json(new { success = false, message = "Not logged in" });
 
-            // Get all todos for the user
             var allTodos = await _todoApi.GetAllTodo_API();
             var userTodos = allTodos.Where(x => x.user_id == currentUser.id).ToList();
 
@@ -103,42 +119,54 @@ namespace ITSM.Controllers
                     break;
             }
 
-            return Json(filteredTodos);
+            var result = filteredTodos.Select(t => new {
+                t.id,
+                t.todo_id,
+                t.title,
+                t.user_id,
+                t.active,
+                create_date = t.create_date.ToString("yyyy-MM-dd HH:mm:ss"),
+                update_date = t.update_date.ToString("yyyy-MM-dd HH:mm:ss")
+            });
+
+            return Json(result);
         }
 
         /// <summary>
+        /// Personal/Todo
         /// Sort the Todo list
         /// </summary>
         /// <param name="sortOrder">Sorting method: asc (ascending)/desc (descending)</param>
         /// <returns>The sorted Todo list</returns>
         public async Task<IActionResult> SortTodo(string sortOrder = "asc")
         {
-            // Get current user info
             var currentUser = _tokenService.GetUserInfo();
             if (currentUser == null)
                 return Json(new { success = false, message = "Not logged in" });
 
-            // Get all todos for the user
             var allTodos = await _todoApi.GetAllTodo_API();
             var userTodos = allTodos.Where(x => x.user_id == currentUser.id).ToList();
 
             List<Todo> sortedTodos;
-
             if (sortOrder.ToLower() == "desc")
-            {
-                // OrderByDescending
                 sortedTodos = userTodos.OrderByDescending(x => x.id).ToList();
-            }
             else
-            {
-                // OrderBy
                 sortedTodos = userTodos.OrderBy(x => x.id).ToList();
-            }
 
-            return Json(sortedTodos);
+            var result = sortedTodos.Select(x => new {
+                x.id,
+                x.title,
+                x.user_id,
+                x.active,
+                create_date = x.create_date.ToString("yyyy-MM-dd HH:mm:ss"),
+                update_date = x.update_date.ToString("yyyy-MM-dd HH:mm:ss")
+            });
+
+            return Json(result);
         }
 
         /// <summary>
+        /// Personal/Todo
         /// Delete multiple Todo items
         /// </summary>
         /// <param name="ids">Todo item ID list to be deleted</param>
@@ -152,7 +180,7 @@ namespace ITSM.Controllers
             // Get current user information
             var currentUser = _tokenService.GetUserInfo();
             if (currentUser == null)
-                return RedirectToAction("Login", "Auth");
+                return Json(new { success = false, message = "Not logged in" });
 
             try
             {

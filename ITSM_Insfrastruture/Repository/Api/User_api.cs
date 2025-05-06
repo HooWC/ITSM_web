@@ -19,6 +19,8 @@ namespace ITSM_Insfrastruture.Repository.Api
         private readonly string _registerUrl = Api_Link.RegisterLink;
         private readonly string _allUserUrl = Api_Link.AllUserLink;
         private readonly string _F_U_UserUrl = Api_Link.User_F_U_Link;
+        private readonly string _UserForgotPasswordUrl = Api_Link.UserForgotPasswordLink;
+        private readonly string _UserNoTokenUrl = Api_Link.UserNoTokenLink;
         private readonly HttpClient _client;
         private readonly TokenService _tokenService;
 
@@ -240,6 +242,51 @@ namespace ITSM_Insfrastruture.Repository.Api
             catch (Exception ex)
             {
                 Console.WriteLine($"EX Save Info Error: {ex.Message}");
+                return false;
+            }
+        }
+
+        public async Task<bool> VerifyUserWithoutToken(User user)
+        {
+            try
+            {
+                var userVerificationData = new 
+                {
+                    emp_id = user.emp_id,
+                    username = user.username
+                };
+
+                var jsonStr = new StringContent(JsonConvert.SerializeObject(userVerificationData), Encoding.UTF8, "application/json");
+                var response = await _client.PostAsync(_UserNoTokenUrl, jsonStr);
+                
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"EX VerifyUserWithoutToken: {ex.Message}");
+                return false;
+            }
+        }
+
+        public async Task<bool> ResetForgotPassword(User user)
+        {
+            try
+            {
+                var passwordResetData = new 
+                {
+                    emp_id = user.emp_id,
+                    username = user.username,
+                    password = user.password
+                };
+
+                var jsonStr = new StringContent(JsonConvert.SerializeObject(passwordResetData), Encoding.UTF8, "application/json");
+                var response = await _client.PostAsync(_UserForgotPasswordUrl, jsonStr);
+                
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"EX ResetForgotPassword: {ex.Message}");
                 return false;
             }
         }

@@ -1,5 +1,5 @@
-﻿@using ITSM_DomainModelEntity.Models
-@model List<Todo>
+﻿@using ITSM_DomainModelEntity.ViewModels
+@model TodoVM
 @{
     ViewData["Title"] = "Todo_List";
     Layout = "_Layout";
@@ -107,8 +107,12 @@
             <button class="inc-tab-icon-button" id="refreshButton">
                 <i class="fas fa-sync-alt"></i>
             </button>
-            <button class="inc-tab-icon-button">
-                <i class="fas fa-cog"></i>
+            <button class="inc-cre-btn inc-cre-btn-icon" onclick="window.open('/Info/Info_Personal_Todo', '_blank')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
             </button>
             <div class="inc-tab-dropdown">
                 <button class="inc-tab-dropdown-toggle" id="statusDropdown">All <i class="fas fa-chevron-down"></i></button>
@@ -125,7 +129,8 @@
                 href="javascript:void(0);"
                 data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
-                        <img src="https://www.diydoutu.com/touxiang/20201222-1.jpg" alt="avatar" class="w-px-40 h-auto rounded-circle" />
+                        <img src="@(Model.User.photo != null ? "data:image/jpeg;base64," + Convert.ToBase64String(Model.User.photo) :
+                        Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 h-auto rounded-circle" />
                     </div>
                 </a>
             </div>
@@ -153,7 +158,7 @@
             </thead>
             <tbody id="todoTableBody">
 
-                @foreach(var i in Model)
+                @foreach(var i in Model.Todo)
                 {
                     <tr class="todo-item" data-id="@i.id">
                         <td><input type="checkbox" class="item-checkbox"></td>
@@ -162,7 +167,7 @@
                         </td>
                         <td data-label="Short description">@i.title</td>
                         <td data-label="Opened">@i.create_date.ToString("yyyy-MM-dd HH:mm:ss")</td>
-                        <td data-label="Caller">@i.update_date.ToString("yyyy-MM-dd HH:mm:ss"))</td>
+                        <td data-label="Caller">@i.update_date.ToString("yyyy-MM-dd HH:mm:ss")</td>
                         <td data-label="Caller">@((i.active == true) ? "Completed" : "Doing")</td>
                     </tr>
                 }
@@ -355,11 +360,13 @@
               },
               success: function(data) {
                   updateTodoTable(data);
+
                   // Reset pagination
                   resetPagination();
               },
               error: function(error) {
-                  console.error('Sort Error:', error);
+                  errorLogin(error);
+                  // console.error('Sort Error:', error);
               }
           });
       }
@@ -431,8 +438,8 @@
                   }
               },
               error: function(error) {
+                  errorLogin(error);
                   // console.error('Delete Error:', error);
-                  // alert('An error occurred while deleting the selected items');
               }
           });
       });
@@ -519,7 +526,8 @@
                   resetPagination();
               },
               error: function(error) {
-                  console.error('Search Error:', error);
+                  errorLogin(error);
+                  // console.error('Search Error:', error);
               }
           });
       }
@@ -549,7 +557,8 @@
                   resetPagination();
               },
               error: function(error) {
-                  console.error('Filter Error:', error);
+                  errorLogin(error);
+                  // console.error('Filter Error:', error);
               }
           });
       }
@@ -573,6 +582,19 @@
           resetPagination();
       }
       
+      // 添加日期格式化函数
+      function formatDate(dateString) {
+          if (!dateString) return '-';
+          const date = new Date(dateString);
+          const year = date.getFullYear();
+          const month = String(date.getMonth() + 1).padStart(2, '0');
+          const day = String(date.getDate()).padStart(2, '0');
+          const hours = String(date.getHours()).padStart(2, '0');
+          const minutes = String(date.getMinutes()).padStart(2, '0');
+          const seconds = String(date.getSeconds()).padStart(2, '0');
+          return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+      }
+      
       // Update Todo table function
       function updateTodoTable(data) {
           var tableBody = $('#todoTableBody');
@@ -588,19 +610,20 @@
           }
           
           $.each(data, function(index, todo) {
-              var updateDateStr = todo.update_date ? new Date(todo.update_date).toLocaleString() : '-';
               var row = `
                   <tr class="todo-item" data-id="${todo.id}">
                       <td><input type="checkbox" class="item-checkbox"></td>
-                      <td class="inc-tab-incident-number" data-label="Number">${todo.todo_id}</td>
+                      <td class="inc-tab-incident-number" data-label="Number">
+                          <a href="/Personal/Todo_Edit?id=${todo.id}">${todo.todo_id}
+                      </td>
                       <td data-label="Short description">${todo.title}</td>
-                      <td data-label="Opened">${new Date(todo.create_date).toLocaleString()}</td>
-                      <td data-label="Caller">${updateDateStr}</td>
+                      <td data-label="Opened">${formatDate(todo.create_date)}</td>
+                      <td data-label="Caller">${todo.update_date}</td>
                       <td data-label="Caller">${todo.active ? "Completed" : "Doing"}</td>
                   </tr>
               `;
               tableBody.append(row);
-          });
+            });
           
           // Reinitialize paging
           initPagination();
@@ -608,5 +631,14 @@
           // Check for selections
           checkSelection();
       }
-    });
+
+      // No login Function
+      function errorLogin(error){
+        const msg = error?.responseJSON?.message;
+
+        if (msg === "Not logged in"){
+            window.location.href="/Auth/Login";
+        }
+      }
+  });
 </script>

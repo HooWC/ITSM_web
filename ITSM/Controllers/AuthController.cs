@@ -17,6 +17,7 @@ namespace ITSM.Controllers
     {
         private readonly Auth_api _authApi;
         private readonly TokenService _tokenService;
+        private readonly User_api _userApi;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         public AuthController(IHttpContextAccessor httpContextAccessor)
@@ -24,6 +25,7 @@ namespace ITSM.Controllers
             _httpContextAccessor = httpContextAccessor;
             _authApi = new Auth_api(httpContextAccessor);
             _tokenService = new TokenService(httpContextAccessor);
+            _userApi = new User_api(httpContextAccessor);
         }
 
         public IActionResult Login()
@@ -89,8 +91,29 @@ namespace ITSM.Controllers
             }
         }
 
-        public IActionResult ForgotPasswrd()
+        public IActionResult ForgotPassword()
         {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword(User user)
+        {
+            bool res = await _userApi.VerifyUserWithoutToken(user);
+
+            if (res)
+            {
+                bool reset = await _userApi.ResetForgotPassword(user);
+                if(reset)
+                    return RedirectToAction("Login", "Auth");
+                else
+                {
+                    @ViewBag.ErrorMessage = "Reset Password Error";
+                    return View();
+                }
+            }
+
+            @ViewBag.ErrorMessage = "Employee No and User Name Error.";
             return View();
         }
 

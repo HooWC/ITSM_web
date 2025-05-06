@@ -1,0 +1,51 @@
+﻿<!doctype html>
+
+<html lang="en"
+      class="layout-menu-fixed layout-compact"
+      data-assets-path="~/assets/"
+      data-template="vertical-menu-template-free"
+      data-bs-theme="dark">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+
+    <title>HS Info</title>
+
+    <meta name="description" content="" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="~/assets/img/favicon/favicon.ico" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="~/css/Info/Info.css" />
+
+</head>
+
+<body>
+    <div class="artic-word-body">
+        @RenderBody()
+    </div>
+
+    <script>
+        window.addEventListener('scroll', function() {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = scrollTop / docHeight;
+            document.querySelector('.artic-word-scroll-indicator').style.width = scrollPercent * 100 + '%';
+
+            const scrollToTopBtn = document.querySelector('.scroll-to-top');
+            if (scrollTop > 300) {
+                scrollToTopBtn.classList.add('visible');
+            } else {
+                scrollToTopBtn.classList.remove('visible');
+            }
+        });
+        document.querySelector('.scroll-to-top').addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    </script>
+</body>
+</html>

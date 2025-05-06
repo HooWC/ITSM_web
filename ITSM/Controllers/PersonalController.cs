@@ -122,7 +122,14 @@ namespace ITSM.Controllers
             var allTodo = await todoTask;
             var todo = allTodo.Where(x => x.user_id == currentUser.id).ToList();
 
-            return View(todo);
+            // return to view data
+            var model = new TodoVM
+            {
+                User = currentUser,
+                Todo = todo,
+            };
+
+            return View(model);
         }
 
         public async Task<IActionResult> Todo_Create()
@@ -133,21 +140,7 @@ namespace ITSM.Controllers
             // get todo new id
             var allTodo = await todoTask;
             var todo = allTodo.Last();
-            string newId = "";
-            if (todo != null)
-            {
-                string t_id_up = todo.todo_id;
-                string prefix = new string(t_id_up.TakeWhile(char.IsLetter).ToArray());
-                string numberPart = new string(t_id_up.SkipWhile(char.IsLetter).ToArray());
-                int number = int.Parse(numberPart);
-                newId = prefix + (number + 1);
-            }
-            else
-            {
-                newId = "TOD1";
-            }
-
-            ViewBag.new_id = newId;
+            ViewBag.new_id = "TOD-?";
 
             return View();
         }
@@ -159,6 +152,24 @@ namespace ITSM.Controllers
             var tokenService = new TokenService(_httpContextAccessor);
             var currentUser = tokenService.GetUserInfo();
 
+            // Making concurrent API requests
+            var todoTask = _todoApi.GetAllTodo_API();
+
+            // get todo new id
+            var allTodo = await todoTask;
+            var last_todo = allTodo.Last();
+            string newId = "";
+            if (last_todo != null)
+            {
+                string t_id_up = last_todo.todo_id;
+                string prefix = new string(t_id_up.TakeWhile(char.IsLetter).ToArray());
+                string numberPart = new string(t_id_up.SkipWhile(char.IsLetter).ToArray());
+                int number = int.Parse(numberPart);
+                newId = prefix + (number + 1);
+            }
+            else
+                newId = "TOD1";
+
             // Create New Todo
             Todo new_todo = new Todo()
             {
@@ -166,7 +177,7 @@ namespace ITSM.Controllers
                 title = todo.title,
                 create_date = DateTime.Now,
                 update_date = DateTime.Now,
-                todo_id = todo.todo_id,
+                todo_id = newId,
                 active = active_word == "Doing" ? false : true
             };
 
@@ -210,10 +221,9 @@ namespace ITSM.Controllers
             var edit_todo = allTodo.Where(x => x.user_id == currentUser.id && x.id == todo.id).FirstOrDefault();
             if(edit_todo != null)
             {
-                // Update
+                // Update Todo Data
                 edit_todo.active = active_word == "Doing" ? false : true;
                 edit_todo.title = todo.title;
-                edit_todo.update_date = DateTime.Now;
 
                 bool result = await _todoApi.UpdateTodo_API(edit_todo);
 

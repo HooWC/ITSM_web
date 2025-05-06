@@ -1,19 +1,27 @@
 ﻿@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700,800,900');
 
+*{
+    user-select:none;
+}
+
     html, body {
       height: 100%;
       margin: 0;
       padding: 0;
     }
-    
-    body {
-      font-weight: 300;
-      font-size: 15px;
-      line-height: 1.7;
-      color: #c4c3ca;
-      background-color: #1d222b !important; 
-      overflow-x: hidden;
-    }
+
+.container{
+    user-select:none;
+}
+
+body {
+    font-weight: 300;
+    font-size: 15px;
+    line-height: 1.7;
+    color: #c4c3ca;
+    background-color: #1d222b !important;
+    overflow-x: hidden;
+}
     a {
       cursor: pointer;
       transition: all 200ms linear;
@@ -55,6 +63,7 @@
       position: relative;
       width: 100%;
       display: block;
+      user-select:none;
     }
     .full-height{
       min-height: 100vh;

@@ -24,7 +24,7 @@ namespace ITSM_DomainModelEntity.Models
 
         public DateTime update_date { get; set; }
 
-        public bool active { get; set; } = false;
+        public bool active { get; set; }
 
         public string? todo_id { get; set; }
 

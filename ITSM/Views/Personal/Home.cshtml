@@ -265,7 +265,7 @@
             </div>
             <div class="pro-file-progress-status">@Model.CompletedTodo/@Model.AllTodo</div>
             <div class="pro-file-progress">
-                <div class="pro-file-progress-bar"></div>
+                <div class="pro-file-progress-bar" id="progressBar"></div>
             </div>
             <div class="pro-file-task-status">
                 <div class="pro-file-task-stat">
@@ -348,6 +348,21 @@
       });
       
       $(window).trigger('resize');
+      
+      // 处理进度条
+      function updateProgressBar() {
+        var completed = @Model.CompletedTodo;
+        var total = @Model.AllTodo;
+        var percentage = total > 0 ? (completed / total) * 100 : 0;
+        var progressColor = percentage < 30 ? "#ff5252" : percentage < 70 ? "#ffb142" : "#4cd97b";
+        
+        $('#progressBar').css({
+          'width': percentage + '%',
+          'background-color': progressColor
+        });
+      }
+      
+      updateProgressBar();
     });
 </script>
 

@@ -71,8 +71,7 @@ namespace ITSM_Insfrastruture.Repository.Api
                 if (tokenModel == null) return false;
 
                 _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenModel.Token);
-                
-                // 使用自定义的序列化设置
+
                 var jsonSettings = new JsonSerializerSettings
                 {
                     DateFormatString = "yyyy-MM-dd HH:mm:ss",
@@ -86,8 +85,8 @@ namespace ITSM_Insfrastruture.Repository.Api
                 );
                 
                 var response = await _client.PutAsync($"{_sudTodoUrl}{todo.id}", jsonStr);
-                var responseStr = await response.Content.ReadAsStringAsync();
-                Console.WriteLine($"RESPONSE UPDATE: {responseStr}");
+                //var responseStr = await response.Content.ReadAsStringAsync();
+                //Console.WriteLine($"RESPONSE UPDATE: {responseStr}");
 
                 return response.IsSuccessStatusCode;
             }

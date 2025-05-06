@@ -26,6 +26,9 @@ namespace ITSM_Insfrastruture.Repository.Config
         public static readonly string UserCurrentLink = $"{BaseUrl}/users/current";
         // get user delete  (ID) (need token) (x)
         public static readonly string UserDeleteLink = $"{BaseUrl}/users/";
+        
+        public static readonly string UserForgotPasswordLink = $"{BaseUrl}/userNoToken/forgotpassword";
+        public static readonly string UserNoTokenLink = $"{BaseUrl}/userNoToken/getbyid";
         // === For User Part ===
 
         // ============================================================================
