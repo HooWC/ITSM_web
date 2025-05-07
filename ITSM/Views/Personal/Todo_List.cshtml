@@ -165,10 +165,10 @@
                         <td class="inc-tab-incident-number" data-label="Number">
                             <a href="~/Personal/Todo_Edit?id=@i.id">@i.todo_id</a>
                         </td>
-                        <td data-label="Short description">@i.title</td>
-                        <td data-label="Opened">@i.create_date.ToString("yyyy-MM-dd HH:mm:ss")</td>
-                        <td data-label="Caller">@i.update_date.ToString("yyyy-MM-dd HH:mm:ss")</td>
-                        <td data-label="Caller">@((i.active == true) ? "Completed" : "Doing")</td>
+                        <td data-label="title">@i.title</td>
+                        <td data-label="create date">@i.create_date.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                        <td data-label="update date">@i.update_date.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                        <td data-label="active">@((i.active == true) ? "Completed" : "Doing")</td>
                     </tr>
                 }
                 
@@ -616,10 +616,10 @@
                       <td class="inc-tab-incident-number" data-label="Number">
                           <a href="/Personal/Todo_Edit?id=${todo.id}">${todo.todo_id}
                       </td>
-                      <td data-label="Short description">${todo.title}</td>
-                      <td data-label="Opened">${formatDate(todo.create_date)}</td>
-                      <td data-label="Caller">${todo.update_date}</td>
-                      <td data-label="Caller">${todo.active ? "Completed" : "Doing"}</td>
+                      <td data-label="title">${todo.title}</td>
+                      <td data-label="create_date">${formatDate(todo.create_date)}</td>
+                      <td data-label="update_date">${todo.update_date}</td>
+                      <td data-label="active">${todo.active ? "Completed" : "Doing"}</td>
                   </tr>
               `;
               tableBody.append(row);

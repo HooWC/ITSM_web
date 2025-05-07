@@ -17,7 +17,7 @@ namespace ITSM_DomainModelEntity.Models
         [StringLength(20)]
         public string? inc_number { get; set; }
 
-        public DateTime create_date { get; set; } = DateTime.Now;
+        public DateTime create_date { get; set; }
 
         [Required]
         [StringLength(255)]
@@ -58,7 +58,7 @@ namespace ITSM_DomainModelEntity.Models
         [ForeignKey("AssignedTo")]
         public int assigned_to { get; set; }
 
-        public DateTime? updated { get; set; }
+        public DateTime updated { get; set; }
 
         [ForeignKey("UpdatedBy")]
         public int? updated_by { get; set; }

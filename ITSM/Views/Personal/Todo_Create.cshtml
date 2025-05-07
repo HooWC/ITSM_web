@@ -13,7 +13,6 @@
 
     body {
         font-family: 'Segoe UI', Arial, sans-serif;
-        background-color: var(--background-color);
         color: var(--text-color);
         line-height: 1.5;
         padding: 10px;
@@ -56,7 +55,7 @@
                     <line x1="12" y1="17" x2="12.01" y2="17"></line>
                 </svg>
             </button>
-            <button class="inc-cre-btn inc-cre-btn-submit" onclick="document.getElementById('incidentForm').submit();">Create</button>
+            <button class="inc-cre-btn inc-cre-btn-submit" onclick="document.getElementById('todoForm').submit();">Submit</button>
             <div class="nav-item navbar-dropdown dropdown-user dropdown open-button">
                 <a class="nav-link dropdown-toggle hide-arrow p-0"
                    href="javascript:void(0);"
@@ -70,12 +69,38 @@
     </header>
 
     <main class="inc-cre-form-wrapper">
-        <form id="incidentForm" class="inc-cre-incident-form" action="~/Personal/Todo_Create" method="post">
+
+        @if (!string.IsNullOrEmpty(ViewBag.Error as string))
+        {
+            <div id="error-notification" class="error-notification">
+                <div class="error-notification-content">
+                    <div class="error-notification-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                    </div>
+                    <div class="error-notification-text">
+                        <div class="error-notification-title">Submission failed</div>
+                        <div class="error-notification-message" id="error-notification-message">@ViewBag.Error</div>
+                    </div>
+                </div>
+                <button type="button" class="error-notification-close" id="error-notification-close">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+        }
+
+        <form id="todoForm" class="inc-cre-incident-form" action="~/Personal/Todo_Create" method="post">
             <div class="inc-cre-form-grid">
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="number" class="inc-cre-form-label">Number</label>
-                        <input type="text" name="todo_id" id="number" class="inc-cre-form-control" value="@ViewBag.new_id" readonly>
+                        <input type="text" name="todo_id" id="number" class="inc-cre-form-control" value="TOD_TBD" readonly>
                     </div>
                 </div>
 
@@ -94,15 +119,6 @@
                 <label for="short-description" class="inc-cre-form-label inc-cre-required">Title</label>
                 <div class="inc-cre-input-with-actions">
                     <input type="text" name="title" id="short-description" class="inc-cre-form-control" required>
-                    <div class="inc-cre-action-buttons">
-                        <button type="button" class="inc-cre-btn-help">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                                <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                            </svg>
-                        </button>
-                    </div>
                 </div>
             </div>
         </form>

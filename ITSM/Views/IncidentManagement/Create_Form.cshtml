@@ -1,26 +1,24 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Create_New";
     Layout = "_Layout";
 }
 
 <style>
-        * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
+    * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
     }
 
     body {
-        font-family: 'Segoe UI', Arial, sans-serif;
-        background-color: var(--background-color);
-        color: var(--text-color);
-        line-height: 1.5;
-        padding: 10px;
-        margin: 0;
-        min-height: 100vh;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.5;
+    padding: 10px;
+    margin: 0;
+    min-height: 100vh;
     }
-
 </style>
 
 <div class="inc-cre-container">
@@ -39,34 +37,28 @@
             </div>
         </div>
         <div class="inc-cre-header-right">
-            <button class="inc-cre-btn inc-cre-btn-icon">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"></path>
-                    <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
-                </svg>
-            </button>
-            <button class="inc-cre-btn inc-cre-btn-icon">
+            <button class="inc-cre-btn inc-cre-btn-icon" onclick="location.href='/IncidentManagement/All'">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="4" y1="6" x2="20" y2="6"></line>
                     <line x1="4" y1="12" x2="20" y2="12"></line>
                     <line x1="4" y1="18" x2="20" y2="18"></line>
                 </svg>
             </button>
-            <button class="inc-cre-btn inc-cre-btn-icon">
+            <button class="inc-cre-btn inc-cre-btn-icon" onclick="window.open('/Info/Info_Personal_Todo', '_blank')">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="1"></circle>
-                    <circle cx="12" cy="5" r="1"></circle>
-                    <circle cx="12" cy="19" r="1"></circle>
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
                 </svg>
             </button>
-            <button class="inc-cre-btn inc-cre-btn-submit">Submit</button>
-            <button class="inc-cre-btn inc-cre-btn-resolve">Resolve</button>
+            <button class="inc-cre-btn inc-cre-btn-submit" onclick="document.getElementById('incidentForm').submit();">Submit</button>
+            @* <button class="inc-cre-btn inc-cre-btn-resolve">Resolve</button> *@
             <div class="nav-item navbar-dropdown dropdown-user dropdown open-button">
                 <a class="nav-link dropdown-toggle hide-arrow p-0"
-                   href="javascript:void(0);"
-                   data-bs-toggle="dropdown">
+                href="javascript:void(0);"
+                data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
-                        <img src="https://www.diydoutu.com/touxiang/20201222-1.jpg" alt class="w-px-40 h-auto rounded-circle" />
+                        <img src="https://www.diydoutu.com/touxiang/20201222-1.jpg" alt="avatar" class="w-px-40 h-auto rounded-circle" />
                     </div>
                 </a>
             </div>
@@ -74,76 +66,97 @@
     </header>
 
     <main class="inc-cre-form-wrapper">
-        <form id="incidentForm" class="inc-cre-incident-form">
+
+        @if (!string.IsNullOrEmpty(ViewBag.Error as string))
+        {
+            <div id="error-notification" class="error-notification">
+                <div class="error-notification-content">
+                    <div class="error-notification-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                    </div>
+                    <div class="error-notification-text">
+                        <div class="error-notification-title">Submission failed</div>
+                        <div class="error-notification-message" id="error-notification-message">@ViewBag.Error</div>
+                    </div>
+                </div>
+                <button type="button" class="error-notification-close" id="error-notification-close">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+        }
+        
+        <form id="incidentForm" class="inc-cre-incident-form" action="~/IncidentManagement/Create_Form" method="post">
             <div class="inc-cre-form-grid">
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="number" class="inc-cre-form-label">Number</label>
-                        <input type="text" id="number" class="inc-cre-form-control" value="INC0010005" readonly>
+                        <input type="text" id="number" class="inc-cre-form-control" value="INC-TBD" readonly>
                     </div>
 
                     <div class="inc-cre-form-group">
-                        <label for="caller" class="inc-cre-form-label inc-cre-required">Caller</label>
+                        <label for="caller" class="inc-cre-form-label">Caller</label>
                         <div class="inc-cre-input-with-icon">
-                            <input type="text" id="caller" class="inc-cre-form-control" required>
-                            <button type="button" class="inc-cre-icon-search">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="11" cy="11" r="8"></circle>
-                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                                </svg>
-                            </button>
+                            <input type="text" id="caller" class="inc-cre-form-control" value="@ViewBag.CurrentUser" readonly required>
                         </div>
                     </div>
 
                     <div class="inc-cre-form-group">
-                        <label for="category" class="inc-cre-form-label">Category</label>
-                        <select id="category" class="inc-cre-form-control">
-                            <option>-- None --</option>
-                            <option selected>Inquiry / Help</option>
-                            <option>Software</option>
-                            <option>Hardware</option>
-                            <option>Network</option>
+                        <label for="category" class="inc-cre-form-label">Category
+                            <button type="button" class="inc-cre-btn-help">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                </svg>
+                            </button>
+                        </label>
+                        <select id="category" name="category" class="inc-cre-form-control">
+                            <option value="Hardware" selected>Hardware</option>
+                            <option value="Software">Software</option>
+                            <option value="Network">Network</option>
+                            <option value="Email">Email</option>
+                            <option value="Database">Database</option>
+                            <option value="Others">Others</option>
                         </select>
                     </div>
 
                     <div class="inc-cre-form-group">
-                        <label for="subcategory" class="inc-cre-form-label">Subcategory</label>
-                        <select id="subcategory" class="inc-cre-form-control">
+                        <label for="subcategory" class="inc-cre-form-label">Subcategory
+                            <button type="button" class="inc-cre-btn-help">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                </svg>
+                            </button>
+                        </label>
+                        <select id="subcategory" name="subcategory" class="inc-cre-form-control">
                             <option selected>-- None --</option>
                         </select>
                     </div>
 
                     <div class="inc-cre-form-group">
-                        <label for="service" class="inc-cre-form-label">Service</label>
-                        <div class="inc-cre-input-with-icon">
-                            <input type="text" id="service" class="inc-cre-form-control">
-                            <button type="button" class="inc-cre-icon-search">
+                        <label for="assignment-group" class="inc-cre-form-label inc-cre-required">
+                            Assignment group
+                            <button type="button" class="inc-cre-btn-help">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="11" cy="11" r="8"></circle>
-                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
                                 </svg>
                             </button>
-                        </div>
-                    </div>
-
-                    <div class="inc-cre-form-group">
-                        <label for="service-offering" class="inc-cre-form-label">Service offering</label>
+                        </label>
                         <div class="inc-cre-input-with-icon">
-                            <input type="text" id="service-offering" class="inc-cre-form-control">
-                            <button type="button" class="inc-cre-icon-search">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="11" cy="11" r="8"></circle>
-                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="inc-cre-form-group">
-                        <label for="config-item" class="inc-cre-form-label">Configuration item</label>
-                        <div class="inc-cre-input-with-icon">
-                            <input type="text" id="config-item" class="inc-cre-form-control">
-                            <button type="button" class="inc-cre-icon-search">
+                            <input type="text" id="assignment-group" class="inc-cre-form-control" readonly>
+                            <input type="hidden" id="assignment-group-id" name="assignment_group" value="">
+                            <button type="button" class="inc-cre-icon-search" id="assignment-group-search">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <circle cx="11" cy="11" r="8"></circle>
                                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -155,48 +168,76 @@
 
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
-                        <label for="channel" class="inc-cre-form-label">Channel</label>
-                        <select id="channel" class="inc-cre-form-control">
-                            <option selected>-- None --</option>
-                            <option>Email</option>
-                            <option>Phone</option>
-                            <option>Web</option>
+                        <label for="state" class="inc-cre-form-label">
+                            State
+                            <button type="button" class="inc-cre-btn-help">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                </svg>
+                            </button>
+                        </label>
+                        <select id="state" name="state" class="inc-cre-form-control">
+                            <option value="Pedding" selected>Pedding</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="On-Hold">On-Hold</option>
+                            <option value="Resolved">Resolved</option>
+                            <option value="Closed">Closed</option>
+                            @* <option value="Cancelled">Cancelled</option> *@
                         </select>
                     </div>
 
                     <div class="inc-cre-form-group">
-                        <label for="state" class="inc-cre-form-label">State</label>
-                        <select id="state" class="inc-cre-form-control">
-                            <option selected>New</option>
-                            <option>In Progress</option>
-                            <option>On Hold</option>
-                            <option>Resolved</option>
-                            <option>Closed</option>
+                        <label for="impact" class="inc-cre-form-label">
+                            Impact
+                            <button type="button" class="inc-cre-btn-help">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                </svg>
+                            </button>
+                        </label>
+                        <select id="impact" name="impact" class="inc-cre-form-control">
+                            <option value="1 - High">1 - High</option>
+                            <option value="2 - Medium">2 - Medium</option>
+                            <option value="3 - Low" selected>3 - Low</option>
                         </select>
                     </div>
 
                     <div class="inc-cre-form-group">
-                        <label for="impact" class="inc-cre-form-label">Impact</label>
-                        <select id="impact" class="inc-cre-form-control">
-                            <option>1 - High</option>
-                            <option>2 - Medium</option>
-                            <option selected>3 - Low</option>
+                        <label for="urgency" class="inc-cre-form-label">
+                            Urgency
+                            <button type="button" class="inc-cre-btn-help">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                </svg>
+                            </button>
+                        </label>
+                        <select id="urgency" name="urgency" class="inc-cre-form-control">
+                            <option value="1 - High">1 - High</option>
+                            <option value="2 - Medium">2 - Medium</option>
+                            <option value="3 - Low" selected>3 - Low</option>
                         </select>
                     </div>
 
                     <div class="inc-cre-form-group">
-                        <label for="urgency" class="inc-cre-form-label">Urgency</label>
-                        <select id="urgency" class="inc-cre-form-control">
-                            <option>1 - High</option>
-                            <option>2 - Medium</option>
-                            <option selected>3 - Low</option>
-                        </select>
-                    </div>
-
-                    <div class="inc-cre-form-group">
-                        <label for="priority" class="inc-cre-form-label">Priority</label>
+                        <label for="priority" class="inc-cre-form-label">
+                            Priority
+                            <button type="button" class="inc-cre-btn-help">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                </svg>
+                            </button>
+                        </label>
                         <div class="inc-cre-priority-display">
                             <span id="priority-value" class="inc-cre-priority-value">5 - Planning</span>
+                            <input type="hidden" id="priority-hidden" name="priority" value="5 - Planning">
                             <svg class="inc-cre-info-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <circle cx="12" cy="12" r="10"></circle>
                                 <line x1="12" y1="16" x2="12" y2="12"></line>
@@ -206,23 +247,20 @@
                     </div>
 
                     <div class="inc-cre-form-group">
-                        <label for="assignment-group" class="inc-cre-form-label">Assignment group</label>
-                        <div class="inc-cre-input-with-icon">
-                            <input type="text" id="assignment-group" class="inc-cre-form-control">
-                            <button type="button" class="inc-cre-icon-search">
+                        <label for="assigned-to" class="inc-cre-form-label">
+                            Assigned to
+                            <button type="button" class="inc-cre-btn-help">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="11" cy="11" r="8"></circle>
-                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
                                 </svg>
                             </button>
-                        </div>
-                    </div>
-
-                    <div class="inc-cre-form-group">
-                        <label for="assigned-to" class="inc-cre-form-label">Assigned to</label>
+                        </label>
                         <div class="inc-cre-input-with-icon">
-                            <input type="text" id="assigned-to" class="inc-cre-form-control">
-                            <button type="button" class="inc-cre-icon-search">
+                            <input type="text" id="assigned-to" class="inc-cre-form-control" readonly>
+                            <input type="hidden" id="assigned-to-id" name="assigned_to" value="">
+                            <button type="button" class="inc-cre-icon-search" id="assigned-to-search" disabled>
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <circle cx="11" cy="11" r="8"></circle>
                                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -236,7 +274,7 @@
             <div class="inc-cre-form-group inc-cre-short-description-group">
                 <label for="short-description" class="inc-cre-form-label inc-cre-required">Short description</label>
                 <div class="inc-cre-input-with-actions">
-                    <input type="text" id="short-description" class="inc-cre-form-control" required>
+                    <input type="text" id="short-description" name="short_description" class="inc-cre-form-control" required>
                     <div class="inc-cre-action-buttons">
                         <button type="button" class="inc-cre-btn-help">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -245,102 +283,147 @@
                                 <line x1="12" y1="17" x2="12.01" y2="17"></line>
                             </svg>
                         </button>
-                        <button type="button" class="inc-cre-btn-help">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <line x1="4" y1="6" x2="20" y2="6"></line>
-                                <line x1="4" y1="12" x2="20" y2="12"></line>
-                                <line x1="4" y1="18" x2="20" y2="18"></line>
-                            </svg>
-                        </button>
                     </div>
                 </div>
             </div>
 
             <div class="inc-cre-form-group inc-cre-full-width">
                 <label for="description" class="inc-cre-form-label">Description</label>
-                <textarea id="description" class="inc-cre-form-control inc-cre-description-textarea" rows="5"></textarea>
+                <textarea id="description" name="describe" class="inc-cre-form-control inc-cre-description-textarea" rows="5"></textarea>
             </div>
         </form>
     </main>
 
-    <div class="inc-cre-related-search-container">
+    @* <div class="inc-cre-related-search-container">
         <button class="inc-cre-btn inc-cre-btn-related-search">
-            Related Search Results
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="6 9 12 15 18 9"></polyline>
-            </svg>
+            Discussion & Notes
         </button>
     </div>
 
     <div class="inc-cre-tab-section">
         <div class="inc-cre-tabs">
             <button class="inc-cre-tab active">Notes</button>
-            <button class="inc-cre-tab">Related Records</button>
-            <button class="inc-cre-tab">Resolution Information</button>
         </div>
 
         <div class="inc-cre-tab-content">
             <div id="notes-tab" class="inc-cre-tab-pane active">
-                <div class="inc-cre-watch-list">
-                    <span>Watch list</span>
-                    <div class="inc-cre-list-actions">
-                        <button class="inc-cre-icon-button">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="12" cy="7" r="4"></circle>
-                            </svg>
-                        </button>
-                        <button class="inc-cre-icon-button">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="9" cy="7" r="4"></circle>
-                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                            </svg>
-                        </button>
+                <div class="inc-cre-notes-container">
+                    <div class="inc-cre-notes-header">
+                        <div class="inc-cre-watch-list">
+                            <span>Work notes list</span>
+                            <div class="inc-cre-info-icon">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                </svg>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <textarea class="inc-cre-notes-textarea"></textarea>
 
-                <div class="inc-cre-work-notes-list">
-                    <span>Work notes list</span>
-                    <div class="inc-cre-list-actions">
-                        <button class="inc-cre-icon-button">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="12" cy="7" r="4"></circle>
-                            </svg>
-                        </button>
-                        <button class="inc-cre-icon-button">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="9" cy="7" r="4"></circle>
-                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                            </svg>
-                        </button>
+                    <div class="inc-cre-work-notes-area">
+                        <textarea id="work-notes" class="inc-cre-notes-textarea" placeholder="Enter chat history..."></textarea>
+                        <div class="inc-cre-notes-actions">
+                            <label class="inc-cre-checkbox-container"></label>
+                            <button type="button" class="inc-cre-btn inc-cre-btn-post">Post</button>
+                        </div>
                     </div>
-                </div>
 
-                <div class="inc-cre-notes-group">
-                    <label for="additional-comments">Additional comments</label>
-                    <textarea id="additional-comments" class="inc-cre-notes-textarea"></textarea>
-                </div>
-
-                <div class="inc-cre-notes-group">
-                    <label for="work-notes">Work notes</label>
-                    <textarea id="work-notes" class="inc-cre-notes-textarea inc-cre-work-notes-textarea"></textarea>
+                    <div class="inc-cre-activities-section">
+                        <h3 class="inc-cre-section-title">Activities: <span id="activity-count">0</span></h3>
+                        
+                        <div class="inc-cre-activity-container">
+                            <!-- 示例活动 -->
+                            <div class="inc-cre-activity-item">
+                                <div class="inc-cre-user-avatar">
+                                    <img src="https://www.diydoutu.com/touxiang/20201222-1.jpg" alt="System Administrator">
+                                </div>
+                                <div class="inc-cre-activity-content">
+                                    <div class="inc-cre-activity-header">
+                                        <span class="inc-cre-user-name">System Administrator</span>
+                                        <span class="inc-cre-activity-time">Field changes • 2019-03-20 01:58:28</span>
+                                    </div>
+                                    <div class="inc-cre-activity-details">
+                                        <table class="inc-cre-activity-table">
+                                            <tr>
+                                                <td class="inc-cre-field-value">Solved (Work Around)</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 第二个示例活动 -->
+                            <div class="inc-cre-activity-item">
+                                <div class="inc-cre-user-avatar">
+                                    <img src="https://www.diydoutu.com/touxiang/20201222-1.jpg" alt="System Administrator">
+                                </div>
+                                <div class="inc-cre-activity-content">
+                                    <div class="inc-cre-activity-header">
+                                        <span class="inc-cre-user-name">System Administrator</span>
+                                        <span class="inc-cre-activity-time">Field changes • 2019-03-20 01:58:28</span>
+                                    </div>
+                                    <div class="inc-cre-activity-details">
+                                        <table class="inc-cre-activity-table">
+                                            <tr>
+                                                <td class="inc-cre-field-value">Solved (Work Around)</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <footer class="inc-cre-form-footer">
+ *@
+    @* <footer class="inc-cre-form-footer">
         <div class="inc-cre-footer-buttons">
             <button type="button" class="inc-cre-btn inc-cre-btn-submit-footer">Submit</button>
             <button type="button" class="inc-cre-btn inc-cre-btn-resolve-footer">Resolve</button>
         </div>
-    </footer>
+    </footer> *@
+</div>
+
+<!-- 模态框 - 用于Assignment group和Assigned to选择 -->
+<div id="inc-cre-modal" class="inc-cre-modal">
+    <div class="inc-cre-modal-content">
+        <div class="inc-cre-modal-header">
+            <h3 id="inc-cre-modal-title">选择项</h3>
+            <button type="button" class="inc-cre-modal-close">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+        <div class="inc-cre-modal-body">
+            <div class="inc-cre-search-wrapper">
+                <input type="text" id="inc-cre-search-input" class="inc-cre-form-control" placeholder="搜索...">
+                <button type="button" class="inc-cre-search-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="inc-cre-table-wrapper">
+                <table class="inc-cre-modal-table">
+                    <thead>
+                        <tr>
+                            <th>名称</th>
+                            <th>描述</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inc-cre-modal-table-body">
+                        <!-- 表格内容会通过JavaScript动态填充 -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -353,6 +436,340 @@
       }
 
       $('#Incidents_menu_create').addClass("active");
+      
+      // 更新Priority逻辑
+      function updatePriority() {
+          var impact = $("#impact").val();
+          var urgency = $("#urgency").val();
+          var priority = "5 - Planning"; // 默认值
+          
+          if (impact === "1 - High" && urgency === "1 - High") {
+              priority = "1 - Critical";
+          } else if ((impact === "1 - High" && urgency === "2 - Medium") || 
+                     (impact === "2 - Medium" && urgency === "1 - High")) {
+              priority = "2 - High";
+          } else if ((impact === "1 - High" && urgency === "3 - Low") || 
+                     (impact === "2 - Medium" && urgency === "2 - Medium") || 
+                     (impact === "3 - Low" && urgency === "1 - High")) {
+              priority = "3 - Moderate";
+          } else if ((impact === "2 - Medium" && urgency === "3 - Low") || 
+                     (impact === "3 - Low" && urgency === "2 - Medium")) {
+              priority = "4 - Low";
+          } else if (impact === "3 - Low" && urgency === "3 - Low") {
+              priority = "5 - Planning";
+          }
+          
+          $("#priority-value").text(priority);
+          $("#priority-hidden").val(priority);
+      }
+      
+      // 当Impact或Urgency改变时更新Priority
+      $("#impact, #urgency").change(function() {
+          updatePriority();
+      });
+      
+      // 页面加载时初始化Priority
+      updatePriority();
+      
+      // 定义每个Category对应的Subcategory选项
+      var subcategories = {
+          "Hardware": [
+              "Laptop/Desktop",
+              "Monitor",
+              "Printer",
+              "Keyboard/Mouse",
+              "Hard Disk",
+              "Power Supply",
+              "Battery",
+              "Peripheral Devices",
+              "Other"
+          ],
+          "Software": [
+              "Microsoft Office",
+              "IHub",
+              "HSG ITSM",
+              "ERP System",
+              "Website / Web Application",
+              "Mobile App",
+              "Antivirus",
+              "Browser",
+              "License Issues",
+              "Other"
+          ],
+          "Network": [
+              "Wi-Fi Connectivity",
+              "LAN Issue",
+              "Internet Down",
+              "VPN Problem",
+              "Switch/Router",
+              "DNS Issue",
+              "Network Performance",
+              "Other"
+          ],
+          "Email": [
+              "Cannot Send/Receive",
+              "Outlook Issue",
+              "Email Configuration",
+              "Other"
+          ],
+          "Database": [
+              "Connection Failure",
+              "Data Corruption",
+              "Query Timeout",
+              "Backup Failure",
+              "Performance Issue",
+              "Access Denied",
+              "Other"
+          ],
+          "Others": [
+              "General Inquiry",
+              "How-To Support",
+              "Not Categorized",
+              "Scheduled Maintenance",
+              "Other"
+          ]
+      };
+      
+      // 初始化Subcategory
+      function updateSubcategories() {
+          var category = $("#category").val();
+          var $subcategory = $("#subcategory");
+          
+          // 清空现有选项
+          $subcategory.empty();
+          
+          // 添加新选项
+          if (subcategories[category]) {
+              $.each(subcategories[category], function(index, value) {
+                  $subcategory.append($("<option></option>").text(value).val(value));
+              });
+          }
+      }
+      
+      // 页面加载时初始化
+      updateSubcategories();
+      
+      // 当Category选择变化时更新Subcategory
+      $("#category").change(function() {
+          updateSubcategories();
+      });
+      
+      // 模态框功能
+      var currentInputField = null;
+      var selectedDepartmentId = null;
+      var departmentList = [];
+      var usersByDepartment = {};
+      
+      // 从服务器获取部门数据
+      function loadDepartments() {
+          $.ajax({
+              url: '/Ajax/DepartmentData',
+              type: 'GET',
+              dataType: 'json',
+              success: function(data) {
+                  departmentList = data;
+                  console.log("部门数据加载成功:", data);
+              },
+              error: function(xhr, status, error) {
+                  console.error("加载部门数据失败:", error);
+              }
+          });
+      }
+      
+      // 加载部门数据
+      loadDepartments();
+      
+      // 根据部门ID获取用户数据
+      function loadUsersByDepartment(departmentId) {
+          $.ajax({
+              url: '/Ajax/AssignedToData',
+              type: 'POST',
+              data: { departmentId: departmentId },
+              dataType: 'json',
+              success: function(data) {
+                  if (data && Array.isArray(data)) {
+                      usersByDepartment[departmentId] = data;
+                      openModal("选择分配人员", data, $("#assigned-to"));
+                  } else if (data && data.success === false) {
+                      console.error("获取用户数据失败:", data.message);
+                      alert("获取用户数据失败: " + data.message);
+                  } else {
+                      console.error("获取用户数据格式不正确");
+                      alert("获取用户数据格式不正确");
+                  }
+              },
+              error: function(xhr, status, error) {
+                  console.error("获取用户数据请求失败:", error);
+                  alert("获取用户数据请求失败: " + error);
+              }
+          });
+      }
+      
+      // 打开模态框
+      function openModal(title, data, targetInput) {
+          currentInputField = targetInput;
+          
+          // 设置标题
+          $("#inc-cre-modal-title").text(title);
+          
+          // 清空并填充表格
+          var tableBody = $("#inc-cre-modal-table-body");
+          tableBody.empty();
+          
+          $.each(data, function(index, item) {
+              var id = item.id || item.user_id || index;
+              var name = item.name || item.fullname || '';
+              var description = item.description || item.title || '';
+              
+              tableBody.append(
+                  '<tr data-id="' + id + '" data-name="' + name + '">' +
+                  '<td>' + name + '</td>' +
+                  '<td>' + description + '</td>' +
+                  '</tr>'
+              );
+          });
+          
+          // 显示模态框
+          $("#inc-cre-modal").fadeIn(200);
+      }
+      
+      // 关闭模态框
+      function closeModal() {
+          $("#inc-cre-modal").fadeOut(200);
+          currentInputField = null;
+      }
+      
+      // 点击Assignment Group搜索按钮
+      $("#assignment-group-search").on('click', function() {
+          if (departmentList && departmentList.length > 0) {
+              openModal("选择分配组", departmentList, $("#assignment-group"));
+          } else {
+              loadDepartments(); // 如果数据还未加载，重新加载
+              setTimeout(function() {
+                  if (departmentList && departmentList.length > 0) {
+                      openModal("选择分配组", departmentList, $("#assignment-group"));
+                  } else {
+                      alert("无法加载部门数据，请刷新页面重试");
+                  }
+              }, 500);
+          }
+      });
+      
+      // 点击Assigned To搜索按钮
+      $("#assigned-to-search").on('click', function() {
+          if (!selectedDepartmentId) {
+              alert("请先选择分配组");
+              return;
+          }
+          
+          // 检查是否已有缓存的用户数据
+          if (usersByDepartment[selectedDepartmentId]) {
+              openModal("选择分配人员", usersByDepartment[selectedDepartmentId], $("#assigned-to"));
+          } else {
+              loadUsersByDepartment(selectedDepartmentId);
+          }
+      });
+      
+      // 点击模态框关闭按钮
+      $(".inc-cre-modal-close").click(function() {
+          closeModal();
+      });
+      
+      // 点击模态框外部关闭
+      $(document).on('click', '.inc-cre-modal', function(e) {
+          if ($(e.target).hasClass('inc-cre-modal')) {
+              closeModal();
+          }
+      });
+      
+      // 选择表格行
+      $(document).on('click', '.inc-cre-modal-table tbody tr', function() {
+          var selectedName = $(this).data('name');
+          var selectedId = $(this).data('id');
+          
+          if (currentInputField) {
+              currentInputField.val(selectedName);
+              
+              // 如果选择的是部门，则启用Assigned to
+              if (currentInputField.attr('id') === 'assignment-group') {
+                  selectedDepartmentId = selectedId;
+                  $("#assignment-group-id").val(selectedId); // 将ID保存到隐藏输入框
+                  $("#assigned-to-search").prop('disabled', false);
+                  $("#assigned-to").val(''); // 清空之前选择的用户
+                  $("#assigned-to-id").val(''); // 清空之前选择的用户ID
+              } else if (currentInputField.attr('id') === 'assigned-to') {
+                  // 如果选择的是用户，保存用户ID
+                  $("#assigned-to-id").val(selectedId);
+              }
+          }
+          
+          closeModal();
+      });
+      
+      // 模态框中的搜索功能
+      $("#inc-cre-search-input").on('keyup', function() {
+          var value = $(this).val().toLowerCase();
+          $(".inc-cre-modal-table tbody tr").filter(function() {
+              $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+          });
+      });
+      
+      // 加载部门数据
+      loadDepartments();
+      
+      // Notes部分功能
+      // 更新活动数量
+      function updateActivityCount() {
+          var count = $(".inc-cre-activity-item").length;
+          $("#activity-count").text(count);
+      }
+      
+      // 初始化更新活动数量
+      updateActivityCount();
+      
+      // 发布工作笔记
+      $(".inc-cre-btn-post").click(function() {
+          var workNotes = $("#work-notes").val().trim();
+          var isCustomerVisible = $("#customer-visible").is(":checked");
+          
+          if (workNotes) {
+              // 获取当前时间
+              var now = new Date();
+              var dateString = now.getFullYear() + '-' + 
+                              ('0' + (now.getMonth() + 1)).slice(-2) + '-' + 
+                              ('0' + now.getDate()).slice(-2) + ' ' + 
+                              ('0' + now.getHours()).slice(-2) + ':' + 
+                              ('0' + now.getMinutes()).slice(-2) + ':' + 
+                              ('0' + now.getSeconds()).slice(-2);
+              
+              // 创建新的活动项
+              var newActivity = $('<div class="inc-cre-activity-item">' +
+                  '<div class="inc-cre-user-avatar">' +
+                      '<img src="https://www.diydoutu.com/touxiang/20201222-1.jpg" alt="Current User">' +
+                  '</div>' +
+                  '<div class="inc-cre-activity-content">' +
+                      '<div class="inc-cre-activity-header">' +
+                          '<span class="inc-cre-user-name">' + $("#assigned-to").val() || '当前用户' + '</span>' +
+                          '<span class="inc-cre-activity-time">Work notes • ' + dateString + '</span>' +
+                      '</div>' +
+                      '<div class="inc-cre-activity-details">' +
+                          '<div class="inc-cre-work-note-content">' + workNotes.replace(/\n/g, '<br>') + '</div>' +
+                      '</div>' +
+                  '</div>' +
+              '</div>');
+              
+              // 添加到活动容器的顶部
+              $(".inc-cre-activity-container").prepend(newActivity);
+              
+              // 清空文本框
+              $("#work-notes").val('');
+              
+              // 更新活动数量
+              updateActivityCount();
+          } else {
+              alert("请输入工作笔记内容");
+          }
+      });
     });
 </script>
 

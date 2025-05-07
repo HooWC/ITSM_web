@@ -1,4 +1,5 @@
-﻿using ITSM_DomainModelEntity.Models;
+﻿using Humanizer;
+using ITSM_DomainModelEntity.Models;
 using ITSM_DomainModelEntity.ViewModels;
 using ITSM_Insfrastruture.Repository.Api;
 using ITSM_Insfrastruture.Repository.Token;
@@ -134,20 +135,18 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Todo_Create()
         {
-            // Making concurrent API requests
-            var todoTask = _todoApi.GetAllTodo_API();
-
-            // get todo new id
-            var allTodo = await todoTask;
-            var todo = allTodo.Last();
-            ViewBag.new_id = "TOD-?";
-
             return View();
         }
 
         [HttpPost]
         public async Task<IActionResult> Todo_Create(Todo todo, string active_word)
         {
+            if (todo.title == null)
+            {
+                ViewBag.Error = "Please fill in all required fields";
+                return View();
+            }
+
             // current user info
             var tokenService = new TokenService(_httpContextAccessor);
             var currentUser = tokenService.GetUserInfo();
@@ -157,10 +156,11 @@ namespace ITSM.Controllers
 
             // get todo new id
             var allTodo = await todoTask;
-            var last_todo = allTodo.Last();
+            
             string newId = "";
-            if (last_todo != null)
+            if (allTodo.Count > 0)
             {
+                var last_todo = allTodo.Last();
                 string t_id_up = last_todo.todo_id;
                 string prefix = new string(t_id_up.TakeWhile(char.IsLetter).ToArray());
                 string numberPart = new string(t_id_up.SkipWhile(char.IsLetter).ToArray());
@@ -187,7 +187,10 @@ namespace ITSM.Controllers
             if (result)
                 return RedirectToAction("Todo_List", "Personal");
             else
-                return RedirectToAction("Index", "Home");
+            {
+                ViewBag.Error = "Create Todo Error";
+                return View();
+            }
         }
 
         public async Task<IActionResult> Todo_Edit(int id)

@@ -1,5 +1,5 @@
 ﻿@using ITSM_DomainModelEntity.ViewModels
-@model TodoVM
+@model IncidentVM
 @{
     ViewData["Title"] = "Inc_List";
     Layout = "_Layout";
@@ -35,43 +35,39 @@
         }
 
     .inc-tab-incidents-table th.number-column {
-        width: 8%;
+        width: 9%;
     }
 
     .inc-tab-incidents-table th.short-column {
-        width: 15%;
+        width: 16%;
     }
 
     .inc-tab-incidents-table th.create-date-column {
-        width: 8%;
+        width: 9%;
     }
 
     .inc-tab-incidents-table th.update-date-column {
-        width: 8%;
-    }
-
-    .inc-tab-incidents-table th.caller-column {
-        width: 10%;
+        width: 9%;
     }
 
     .inc-tab-incidents-table th.priority-column {
-        width: 10%;
+        width: 12%;
     }
 
     .inc-tab-incidents-table th.state-column {
-        width: 8%;
+        width: 9%;
     }
 
     .inc-tab-incidents-table th.category-column {
-        width: 10%;
+        width: 12%;
     }
 
     .inc-tab-incidents-table th.assignment-group-column {
-        width: 13%;
+        width: 12%;
     }
 
     .inc-tab-incidents-table th.assigned-to-column {
-        width: 10%;
+        width: 12%;
     }
 
     .item-delete-btn {
@@ -115,8 +111,12 @@
                 <button class="inc-tab-dropdown-toggle" id="filterDropdown">Number <i class="fas fa-chevron-down"></i></button>
                 <div class="inc-tab-dropdown-menu" id="filterMenu" style="display:none;">
                     <a href="#" class="inc-tab-dropdown-item" data-filter="number">Number</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="title">Title</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="create_date">Create Date</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-filter="short_description">Short description</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-filter="priority">Priority</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-filter="state">State</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-filter="category">Category</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-filter="assignment_group">Assignment group</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-filter="assigned_to">Assigned to</a>
                 </div>
             </div>
             <div class="inc-tab-search-container">
@@ -139,8 +139,8 @@
                 <div class="inc-tab-dropdown-menu" id="statusMenu" style="display:none;">
                     <a href="#" class="inc-tab-dropdown-item" data-status="all">All</a>
                     <a href="#" class="inc-tab-dropdown-item" data-status="pedding">Pedding</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-status="onhold">On-Hold</a>
                     <a href="#" class="inc-tab-dropdown-item" data-status="inprogress">In Progress</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-status="onhold">On-Hold</a>
                     <a href="#" class="inc-tab-dropdown-item" data-status="resolved">Resolved</a>
                     <a href="#" class="inc-tab-dropdown-item" data-status="closed">Closed</a>
                     <a href="#" class="inc-tab-dropdown-item" data-status="cancelled">Cancelled</a>
@@ -175,29 +175,32 @@
                     <th class="inc-tab-checkbox-column"></th>
                     <th class="inc-tab-sortable number-column" id="sortByNumber">Number <i class="fas fa-arrow-up" id="sortIcon"></i></th>
                     <th class="short-column">Short description</th>
-                    <th class="caller-column">Caller</th>
-                    <th class="create-date-column">Opened</th>
                     <th class="priority-column">Priority</th>
                     <th class="state-column">State</th>
                     <th class="category-column">Category</th>
                     <th class="assignment-group-column">Assignment group</th>
                     <th class="assigned-to-column">Assigned to</th>
+                    <th class="create-date-column">Opened</th>
                     <th class="update-date-column">Updated</th>
                 </tr>
             </thead>
-            <tbody id="todoTableBody">
+            <tbody id="incTableBody">
 
-                @foreach (var i in Model.Todo)
+                @foreach (var i in Model.Inc)
                 {
-                    <tr class="todo-item" data-id="@i.id">
+                    <tr class="incident-item" data-id="@i.id">
                         <td><input type="checkbox" class="item-checkbox"></td>
                         <td class="inc-tab-incident-number" data-label="Number">
-                            <a href="~/Personal/Todo_Edit?id=@i.id">@i.todo_id</a>
+                            <a href="~/?id=@i.id">@i.inc_number</a>
                         </td>
-                        <td data-label="Short description">@i.title</td>
-                        <td data-label="Opened">@i.create_date.ToString("yyyy-MM-dd HH:mm:ss")</td>
-                        <td data-label="Caller">@i.update_date.ToString("yyyy-MM-dd HH:mm:ss")</td>
-                        <td data-label="Caller">@((i.active == true) ? "Completed" : "Doing")</td>
+                        <td data-label="short description">@i.short_description</td>
+                        <td data-label="priority">@i.priority</td>
+                        <td data-label="state">@i.state</td>
+                        <td data-label="category">@i.category</td>
+                        <td data-label="assignment group">@(i.AssignmentGroup?.name)</td>
+                        <td data-label="assigned to">@(i.AssignedTo?.fullname)</td>
+                        <td data-label="create date">@i.create_date.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                        <td data-label="update date">@i.updated.ToString("yyyy-MM-dd HH:mm:ss")</td>
                     </tr>
                 }
 
@@ -227,8 +230,8 @@
 
         var currentPage = 1;
         var itemsPerPage = 10;
-        var totalItems = $('.todo-item').length;
-        var totalPages = Math.ceil(totalItems / itemsPerPage);
+        var IncidentItems = $('.incident-item').length;
+        var IncidentPages = Math.ceil(IncidentItems / itemsPerPage);
 
         // Set default filter field and status
         var currentFilter = 'number';
@@ -271,7 +274,7 @@
 
             // If search box is not empty, perform search
             if ($('#searchInput').val().trim() !== '') {
-                searchTodos();
+                searchIncidents();
             }
         });
 
@@ -330,7 +333,7 @@
 
         $('#lastPageBtn').click(function() {
             if ($(this).prop('disabled')) return;
-            currentPage = totalPages;
+            currentPage = IncidentPages;
             applyPagination();
             updatePaginationInfo();
             updatePaginationButtons();
@@ -338,7 +341,7 @@
 
             // Search box input event
         $('#searchInput').on('keyup', function() {
-            searchTodos();
+            searchIncidents();
         });
 
         // Refresh button click event
@@ -349,8 +352,8 @@
         // Initialize the paging system
         function initPagination() {
             // Calculate total items and pages
-            totalItems = $('.todo-item').length;
-            totalPages = Math.ceil(totalItems / itemsPerPage);
+            IncidentItems = $('.incident-item').length;
+            IncidentPages = Math.ceil(IncidentItems / itemsPerPage);
 
             // Show first page content
             applyPagination();
@@ -376,19 +379,19 @@
             }
 
             // Call the sort API
-            sortTodos();
+            sortIncidents();
         });
 
         // Sort todos function
-        function sortTodos() {
+        function sortIncidents() {
             $.ajax({
-                url: '/Ajax/SortTodo',
+                url: '/Ajax/SortIncident',
                 method: 'GET',
                 data: {
                     sortOrder: currentSortOrder
                 },
                 success: function(data) {
-                    updateTodoTable(data);
+                    updateIncidentTable(data);
 
                     // Reset pagination
                     resetPagination();
@@ -447,7 +450,7 @@
 
             // Send delete request
             $.ajax({
-                url: '/Ajax/DeleteTodos',
+                url: '/Ajax/DeleteIncidents',
                 method: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify(selectedIds),
@@ -476,14 +479,14 @@
         // Apply paging Function
         function applyPagination() {
             // Hide all items
-            $('.todo-item').hide();
+            $('.incident-item').hide();
 
             // Calculate the start and end index of the current page
             var start = (currentPage - 1) * itemsPerPage;
             var end = start + itemsPerPage;
 
             // Show only items on the current page
-            $('.todo-item').each(function(index) {
+            $('.incident-item').each(function(index) {
                 if (index >= start && index < end) {
                     $(this).show();
                 }
@@ -493,19 +496,19 @@
         // Update paging information Function
         function updatePaginationInfo() {
             // Calculates the range of items currently displayed
-            var totalItems = $('.todo-item').length;
+            var IncidentItems = $('.incident-item').length;
 
-            if (totalItems === 0) {
+            if (IncidentItems === 0) {
                 $('#paginationInfo').text('0 items');
                 return;
             }
 
             // Calculate the range of items displayed on the current page
             var start = (currentPage - 1) * itemsPerPage + 1;
-            var end = Math.min(currentPage * itemsPerPage, totalItems);
+            var end = Math.min(currentPage * itemsPerPage, IncidentItems);
 
             // Total items
-            $('#paginationInfo').text(start + ' to ' + end + ' of ' + totalItems);
+            $('#paginationInfo').text(start + ' to ' + end + ' of ' + IncidentItems);
         }
 
         // Reset pagination Function
@@ -514,8 +517,8 @@
             currentPage = 1;
 
             // Recalculate total items and pages
-            totalItems = $('.todo-item').length;
-            totalPages = Math.ceil(totalItems / itemsPerPage);
+            IncidentItems = $('.incident-item').length;
+            IncidentPages = Math.ceil(IncidentItems / itemsPerPage);
 
             // Apply paging
             applyPagination();
@@ -526,11 +529,11 @@
         // Update the paging button status
         function updatePaginationButtons() {
             $('#firstPageBtn, #prevPageBtn').prop('disabled', currentPage === 1);
-            $('#nextPageBtn, #lastPageBtn').prop('disabled', currentPage === totalPages || totalItems === 0);
+            $('#nextPageBtn, #lastPageBtn').prop('disabled', currentPage === IncidentPages || IncidentItems === 0);
         }
 
         // Search Todo List Function
-        function searchTodos() {
+        function searchIncidents() {
             var searchTerm = $('#searchInput').val().trim();
             if (searchTerm === '') {
                 // If the search box is empty, refresh the page
@@ -539,14 +542,14 @@
             }
 
             $.ajax({
-                url: '/Ajax/SearchTodo',
+                url: '/Ajax/SearchIncident',
                 method: 'GET',
                 data: {
                     searchTerm: searchTerm,
                     filterBy: currentFilter
                 },
                 success: function(data) {
-                    updateTodoTable(data);
+                    updateIncidentTable(data);
                     if (currentStatus !== 'all') {
                         filterTableByStatus(currentStatus);
                     }
@@ -566,7 +569,7 @@
             if (currentStatus === 'all') {
                 // Filter All active
                 if ($('#searchInput').val().trim() !== '') {
-                    searchTodos();
+                    searchIncidents();
                 } else {
                     location.reload();
                 }
@@ -574,13 +577,13 @@
             }
 
             $.ajax({
-                url: '/Ajax/FilterTodoByStatus',
+                url: '/Ajax/FilterIncidentByStatus',
                 method: 'GET',
                 data: {
                     status: currentStatus
                 },
                 success: function(data) {
-                    updateTodoTable(data);
+                    updateIncidentTable(data);
 
                     // Reset pagination
                     resetPagination();
@@ -596,7 +599,7 @@
         function filterTableByStatus(status) {
             if (status === 'all') return;
 
-            var rows = $('#todoTableBody tr');
+            var rows = $('#incTableBody tr');
             rows.each(function() {
                 var statusCell = $(this).find('td:last-child').text().trim();
                 if ((status === 'doing' && statusCell === 'Doing') ||
@@ -625,30 +628,34 @@
         }
 
         // Update Todo table function
-        function updateTodoTable(data) {
-            var tableBody = $('#todoTableBody');
+        function updateIncidentTable(data) {
+            var tableBody = $('#incTableBody');
             tableBody.empty();
 
             if (data.length === 0) {
-                tableBody.append('<tr><td colspan="6" class="text-center">No matching todos found</td></tr>');
-                totalItems = 0;
-                totalPages = 0;
+                tableBody.append('<tr><td colspan="6" class="text-center">No matching Incidents found</td></tr>');
+                IncidentItems = 0;
+                IncidentPages = 0;
                 updatePaginationInfo();
                 updatePaginationButtons();
                 return;
             }
 
-            $.each(data, function(index, todo) {
+            $.each(data, function(index, inc) {
                 var row = `
-                    <tr class="todo-item" data-id="${todo.id}">
+                    <tr class="incident-item" data-id="${inc.id}">
                         <td><input type="checkbox" class="item-checkbox"></td>
                         <td class="inc-tab-incident-number" data-label="Number">
-                            <a href="/Personal/Todo_Edit?id=${todo.id}">${todo.todo_id}
+                            <a href="/?id=${inc.id}">${inc.inc_number}
                         </td>
-                        <td data-label="Short description">${todo.title}</td>
-                        <td data-label="Opened">${formatDate(todo.create_date)}</td>
-                        <td data-label="Caller">${todo.update_date}</td>
-                        <td data-label="Caller">${todo.active ? "Completed" : "Doing"}</td>
+                        <td data-label="short description">${inc.short_description}</td>
+                        <td data-label="priority">${formatDate(inc.priority)}</td>
+                        <td data-label="state">${inc.state}</td>
+                        <td data-label="category">${inc.category}</td>
+                        <td data-label="assignment group">${inc.assignment_group}</td>
+                        <td data-label="assigned to">${inc.assigned_to}</td>
+                        <td data-label="create date">${inc.create_date}</td>
+                        <td data-label="update date">${inc.update_date}</td>
                     </tr>
                 `;
                 tableBody.append(row);
