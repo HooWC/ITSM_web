@@ -7,9 +7,9 @@ using ITSM_DomainModelEntity.Models;
 
 namespace ITSM_DomainModelEntity.ViewModels
 {
-    public class IncidentVM
+    public class IncidentInfoVM
     {
         public User? User { get; set; }
-        public List<Incident>? Inc { get; set; }
+        public Incident? Inc { get; set; }
     }
 }

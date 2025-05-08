@@ -53,7 +53,8 @@ namespace ITSM_Insfrastruture.Repository.Api
 
                 _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenModel.Token);
                 var jsonStr = await _client.GetStringAsync($"{_sudIncUrl}{id}");
-                return JsonConvert.DeserializeObject<Incident>(jsonStr);
+                var incidentList = JsonConvert.DeserializeObject<List<Incident>>(jsonStr);
+                return incidentList?.FirstOrDefault();
             }
             catch (Exception ex)
             {
@@ -70,7 +71,19 @@ namespace ITSM_Insfrastruture.Repository.Api
                 if (tokenModel == null) return false;
 
                 _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenModel.Token);
-                var jsonStr = new StringContent(JsonConvert.SerializeObject(incident), Encoding.UTF8, "application/json");
+
+                var jsonSettings = new JsonSerializerSettings
+                {
+                    DateFormatString = "yyyy-MM-dd HH:mm:ss",
+                    DateTimeZoneHandling = DateTimeZoneHandling.Local
+                };
+
+                var jsonStr = new StringContent(
+                    JsonConvert.SerializeObject(incident, jsonSettings),
+                    Encoding.UTF8,
+                    "application/json"
+                );
+
                 var response = await _client.PutAsync($"{_sudIncUrl}{incident.id}", jsonStr);
 
                 return response.IsSuccessStatusCode;

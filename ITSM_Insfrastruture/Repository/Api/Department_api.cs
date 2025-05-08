@@ -53,7 +53,8 @@ namespace ITSM_Insfrastruture.Repository.Api
 
                 _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenModel.Token);
                 var jsonStr = await _client.GetStringAsync($"{_sudDepartmentUrl}{id}");
-                return JsonConvert.DeserializeObject<Department>(jsonStr);
+                var departmentList = JsonConvert.DeserializeObject<List<Department>>(jsonStr);
+                return departmentList?.FirstOrDefault();
             }
             catch (Exception ex)
             {

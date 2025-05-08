@@ -138,9 +138,13 @@ body {
     border: none;
 }
 
-    .inc-cre-btn-submit:hover, .inc-cre-btn-resolve:hover {
-        filter: brightness(1.1);
-    }
+.inc-cre-btn-submit:hover {
+    background-color: #3c8f3f;
+}
+
+.inc-cre-btn-resolve:hover {
+    filter: brightness(1.1);
+}
 
 /* Form Styles */
 .inc-cre-form-wrapper {

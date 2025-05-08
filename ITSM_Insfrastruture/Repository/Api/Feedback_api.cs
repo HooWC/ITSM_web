@@ -53,7 +53,8 @@ namespace ITSM_Insfrastruture.Repository.Api
 
                 _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenModel.Token);
                 var jsonStr = await _client.GetStringAsync($"{_sudFeedbackUrl}{id}");
-                return JsonConvert.DeserializeObject<Feedback>(jsonStr);
+                var feedbackList = JsonConvert.DeserializeObject<List<Feedback>>(jsonStr);
+                return feedbackList?.FirstOrDefault();
             }
             catch (Exception ex)
             {

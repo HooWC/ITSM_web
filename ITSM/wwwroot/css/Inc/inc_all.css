@@ -263,53 +263,63 @@ input[type="checkbox"] {
     align-items: center;
 }
 
+    /* 1 - Critical 深红色 */
+    .inc-tab-priority.priority-1::before,
     .inc-tab-priority.critical::before {
         content: "";
         display: inline-block;
         width: 10px;
         height: 10px;
         border-radius: 50%;
-        background-color: #e74c3c;
+        background-color: #8B0000; /* 深红色 */
         margin-right: 5px;
     }
 
+    /* 2 - High 红色 */
+    .inc-tab-priority.priority-2::before,
     .inc-tab-priority.high::before {
         content: "";
         display: inline-block;
         width: 10px;
         height: 10px;
         border-radius: 50%;
-        background-color: #e67e22;
+        background-color: #FF0000; /* 红色 */
         margin-right: 5px;
     }
 
+    /* 3 - Moderate 黄色 */
+    .inc-tab-priority.priority-3::before,
     .inc-tab-priority.moderate::before {
         content: "";
         display: inline-block;
         width: 10px;
         height: 10px;
         border-radius: 50%;
-        background-color: #f1c40f;
+        background-color: #FFFF00; /* 黄色 */
         margin-right: 5px;
     }
 
+    /* 4 - Low 青色 */
+    .inc-tab-priority.priority-4::before,
     .inc-tab-priority.low::before {
         content: "";
         display: inline-block;
         width: 10px;
         height: 10px;
         border-radius: 50%;
-        background-color: #3498db;
+        background-color: #00FFFF; /* 青色 */
         margin-right: 5px;
     }
 
+    /* 5 - Planning 浅青色 */
+    .inc-tab-priority.priority-5::before,
     .inc-tab-priority.planning::before {
         content: "";
         display: inline-block;
         width: 10px;
         height: 10px;
         border-radius: 50%;
-        background-color: #95a5a6;
+        background-color: #E0FFFF; /* 浅青色 */
         margin-right: 5px;
     }
 

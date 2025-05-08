@@ -56,7 +56,7 @@ namespace ITSM_DomainModelEntity.Models
         public int assignment_group { get; set; }
 
         [ForeignKey("AssignedTo")]
-        public int assigned_to { get; set; }
+        public int? assigned_to { get; set; }
 
         public DateTime updated { get; set; }
 
@@ -71,6 +71,9 @@ namespace ITSM_DomainModelEntity.Models
         public DateTime? resolved_date { get; set; }
 
         public DateTime? close_date { get; set; }
+
+        [StringLength(50)]
+        public string? resolved_type { get; set; }
 
         // Navigation properties
         public virtual User? Sender { get; set; }

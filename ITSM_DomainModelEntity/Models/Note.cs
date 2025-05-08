@@ -23,7 +23,7 @@ namespace ITSM_DomainModelEntity.Models
         [ForeignKey("User")]
         public int user_id { get; set; }
 
-        public DateTime create_date { get; set; } = DateTime.Now;
+        public DateTime create_date { get; set; }
 
         [Required]
         public string? message { get; set; }

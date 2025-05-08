@@ -53,8 +53,10 @@ namespace ITSM_Insfrastruture.Repository.Api
                 if (tokenModel == null) return null;
 
                 _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenModel.Token);
-                var jsonStr = await _client.GetStringAsync($"{_sudTodoUrl}{id}");
-                return JsonConvert.DeserializeObject<Todo>(jsonStr);
+                string jsonStr = await _client.GetStringAsync($"{_sudTodoUrl}{id}");
+                
+                var todoList = JsonConvert.DeserializeObject<List<Todo>>(jsonStr);
+                return todoList?.FirstOrDefault();
             }
             catch (Exception ex)
             {

@@ -135,21 +135,29 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Todo_Create()
         {
+            // current user info
+            var tokenService = new TokenService(_httpContextAccessor);
+            var currentUser = tokenService.GetUserInfo();
+
+            ViewBag.Photo = currentUser.photo;
+
             return View();
         }
 
         [HttpPost]
         public async Task<IActionResult> Todo_Create(Todo todo, string active_word)
         {
+            // current user info
+            var tokenService = new TokenService(_httpContextAccessor);
+            var currentUser = tokenService.GetUserInfo();
+
+            ViewBag.Photo = currentUser.photo;
+
             if (todo.title == null)
             {
                 ViewBag.Error = "Please fill in all required fields";
                 return View();
             }
-
-            // current user info
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser = tokenService.GetUserInfo();
 
             // Making concurrent API requests
             var todoTask = _todoApi.GetAllTodo_API();
@@ -199,12 +207,10 @@ namespace ITSM.Controllers
             var tokenService = new TokenService(_httpContextAccessor);
             var currentUser = tokenService.GetUserInfo();
 
-            // Making concurrent API requests
-            var todoTask = _todoApi.GetAllTodo_API();
+            ViewBag.Photo = currentUser.photo;
 
             // Get Todo
-            var allTodo = await todoTask;
-            var todo = allTodo.Where(x => x.user_id == currentUser.id && x.id == id).FirstOrDefault();
+            var todo = await _todoApi.FindByIDTodo_API(id);
 
             return View(todo);
         }
@@ -216,12 +222,10 @@ namespace ITSM.Controllers
             var tokenService = new TokenService(_httpContextAccessor);
             var currentUser = tokenService.GetUserInfo();
 
-            // Making concurrent API requests
-            var todoTask = _todoApi.GetAllTodo_API();
+            ViewBag.Photo = currentUser.photo;
 
             // Get Todo
-            var allTodo = await todoTask;
-            var edit_todo = allTodo.Where(x => x.user_id == currentUser.id && x.id == todo.id).FirstOrDefault();
+            var edit_todo = await _todoApi.FindByIDTodo_API(todo.id);
             if(edit_todo != null)
             {
                 // Update Todo Data

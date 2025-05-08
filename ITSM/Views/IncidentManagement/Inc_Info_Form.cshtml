@@ -1,0 +1,1312 @@
+﻿@using ITSM_DomainModelEntity.ViewModels
+@model IncidentInfoVM
+@{
+    ViewData["Title"] = "Inc_Info_Form";
+    Layout = "_Layout";
+}
+
+<style>
+    * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    }
+
+    body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.5;
+    padding: 10px;
+    margin: 0;
+    min-height: 100vh;
+    }
+
+    /* 笔记活动容器滚动样式 */
+    .inc-cre-activity-container {
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 8px;
+    }
+
+    .inc-cre-activity-container::-webkit-scrollbar {
+    width: 6px;
+    }
+
+    .inc-cre-activity-container::-webkit-scrollbar-track {
+    border-radius: 3px;
+    }
+
+    .inc-cre-activity-container::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+    }
+
+    .inc-cre-activity-container::-webkit-scrollbar-thumb:hover {
+    background: #555;
+    }
+
+    .inc-cre-activity-item {
+    margin-bottom: 20px;
+    }
+
+    /* Resolve部分样式 */
+    .inc-cre-resolve-container {
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    padding: 20px;
+    margin-bottom: 20px;
+    }
+
+    .inc-cre-resolve-input-area {
+    border: 1px solidrgba(156, 151, 151, 0.78);
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 20px;
+    }
+
+    .inc-cre-resolve-select {
+    margin-bottom: 15px;
+    padding: 5px;
+    border: 1px solid solidrgba(156, 151, 151, 0.78);
+    border-radius: 4px;
+    width: 100%;
+    font-size: 14px;
+    }
+
+    .inc-cre-btn-resolve {
+    background-color: #3a546e;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    }
+
+    .inc-cre-btn-resolve:hover {
+    background-color: #31465c;
+    }
+
+    .inc-cre-btn-closed {
+    background-color: #750b1c;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    }
+
+    .inc-cre-btn-closed:hover {
+    background-color: #5c0715;
+    }
+
+    .inc-cre-resolve-history-container {
+    max-height: 300px;
+    overflow-y: auto;
+    border-radius: 6px;
+    padding: 10px;
+    }
+
+    .inc-cre-resolve-item {
+    display: flex;
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+    }
+
+    .inc-cre-resolve-item:last-child {
+    border-bottom: none;
+    }
+
+    .inc-cre-resolve-content {
+    flex: 1;
+    }
+
+    .inc-cre-resolve-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    }
+
+    .inc-cre-resolve-type {
+    font-weight: 600;
+    color: #28a745;
+    }
+
+    .inc-cre-resolve-time {
+    color: #888;
+    font-size: 12px;
+    }
+
+    .inc-cre-resolve-details {
+    font-size: 14px;
+    color: #444;
+    }
+
+    .inc-cre-btn-submit-footer {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    }
+
+    .inc-cre-btn-submit-footer:hover {
+    background-color:#3c8f3f;
+    }
+
+    .inc-cre-btn-resolve-footer {
+    background-color: #3a546e;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    }
+
+    .inc-cre-btn-resolve-footer:hover {
+    background-color: #31465c;
+    }
+
+    /* 已解决状态下的样式 */
+    .inc-cre-loading-spinner {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+    }
+    
+    .inc-cre-resolve-user {
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: #fff;
+    }
+    
+    /* 解决历史记录样式增强 */
+    .resolution-history-section {
+        display: none; /* 默认隐藏 */
+    }
+    
+    .inc-cre-section-title {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 16px;
+        color: #fff;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #4caf50;
+        display: inline-block;
+    }
+    
+    .inc-cre-resolve-item {
+        background: linear-gradient(135deg, #2c3e50, #1a242f);
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 15px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        position: relative;
+        color: #fff;
+        transition: all 0.3s ease;
+    }
+    
+    .inc-cre-resolve-item:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .inc-cre-resolve-content {
+        width: 100%;
+    }
+    
+    .inc-cre-resolve-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding-bottom: 8px;
+    }
+    
+    .inc-cre-resolve-type {
+        font-weight: bold;
+        color: #4caf50;
+        font-size: 16px;
+    }
+    
+    .inc-cre-resolve-time {
+        color: #bbb;
+        font-size: 13px;
+    }
+    
+    .inc-cre-resolve-user {
+        display: flex;
+        align-items: center;
+        margin-bottom: 12px;
+    }
+    
+    .inc-cre-resolve-user-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        margin-right: 10px;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .inc-cre-resolve-details {
+        line-height: 1.6;
+        font-size: 14px;
+        color: #fff;
+        background-color: rgba(255, 255, 255, 0.05);
+        padding: 10px;
+        border-radius: 6px;
+        border-left: 3px solid #4caf50;
+    }
+
+    /* 聊天历史记录的样式增强 */
+    .resolved-mode .inc-cre-activity-container {
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        padding: 15px;
+    }
+    
+    .resolved-mode .inc-cre-activities-section h3 {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 16px;
+        color: #fff;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #3a546e;
+        display: inline-block;
+    }
+    
+    .resolved-mode .inc-cre-activity-item {
+        transition: all 0.3s ease;
+    }
+    
+    .resolved-mode .inc-cre-activity-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+</style>
+
+<div class="inc-cre-container">
+    <header class="inc-cre-header">
+        <div class="inc-cre-header-left">
+            <button class="inc-cre-menu-button">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+            <div class="inc-cre-title-group">
+                <div class="inc-cre-title">Incident Information</div>
+                <div class="inc-cre-subtitle">@Model.Inc.inc_number</div>
+            </div>
+        </div>
+        <div class="inc-cre-header-right">
+            <button class="inc-cre-btn inc-cre-btn-icon" onclick="location.href='/IncidentManagement/All'">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="4" y1="6" x2="20" y2="6"></line>
+                    <line x1="4" y1="12" x2="20" y2="12"></line>
+                    <line x1="4" y1="18" x2="20" y2="18"></line>
+                </svg>
+            </button>
+            <button class="inc-cre-btn inc-cre-btn-icon" onclick="window.open('/Info/Info_Personal_Todo', '_blank')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+            </button>
+
+            @if (Model.Inc.state != "Resolved")
+            {
+                <button class="inc-cre-btn inc-cre-btn-closed">Closed</button>
+                <button class="inc-cre-btn inc-cre-btn-resolve" id="resolve-button">Resolve</button>
+                <button class="inc-cre-btn inc-cre-btn-submit" onclick="document.getElementById('incidentForm').submit();">Save</button>
+            }
+            <div class="nav-item navbar-dropdown dropdown-user dropdown open-button">
+                <a class="nav-link dropdown-toggle hide-arrow p-0"
+                href="javascript:void(0);"
+                data-bs-toggle="dropdown">
+                    <div class="avatar avatar-online">
+                        <img src="@(ViewBag.Photo != null ? "data:image/jpeg;base64," + Convert.ToBase64String(ViewBag.Photo) :
+                        Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 h-auto rounded-circle" />
+                    </div>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="inc-cre-form-wrapper">
+
+        @if (!string.IsNullOrEmpty(ViewBag.Error as string))
+        {
+            <div id="error-notification" class="error-notification">
+                <div class="error-notification-content">
+                    <div class="error-notification-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                    </div>
+                    <div class="error-notification-text">
+                        <div class="error-notification-title">Submission failed</div>
+                        <div class="error-notification-message" id="error-notification-message">@ViewBag.Error</div>
+                    </div>
+                </div>
+                <button type="button" class="error-notification-close" id="error-notification-close">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+        }
+
+
+        <form id="incidentForm" class="inc-cre-incident-form" action="~/IncidentManagement/Inc_Info_Form" method="post">
+            <input type="text" name="id" id="id" class="inc-cre-form-control" value="@Model.Inc.id" style="display:none;" readonly>
+            <div class="inc-cre-form-grid">
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="number" class="inc-cre-form-label">Number</label>
+                        <input type="text" name="inc_number" id="number" class="inc-cre-form-control" value="@Model.Inc.inc_number" readonly>
+                    </div>
+
+                    <div class="inc-cre-form-group">
+                        <label for="caller" class="inc-cre-form-label">Caller</label>
+                        <div class="inc-cre-input-with-icon">
+                            <input type="text" name="sender" id="caller" class="inc-cre-form-control" value="@Model.User.fullname" readonly required>
+                        </div>
+                    </div>
+
+                    <div class="inc-cre-form-group">
+                        <label for="category" class="inc-cre-form-label">
+                            Category
+                            <button type="button" class="inc-cre-btn-help">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                </svg>
+                            </button>
+                        </label>
+                        <select id="category" name="category" class="inc-cre-form-control">
+                            <option value="Hardware" selected="@(Model.Inc.category == "Hardware")">Hardware</option>
+                            <option value="Software" selected="@(Model.Inc.category == "Software")">Software</option>
+                            <option value="Network" selected="@(Model.Inc.category == "Network")">Network</option>
+                            <option value="Email" selected="@(Model.Inc.category == "Email")">Email</option>
+                            <option value="Database" selected="@(Model.Inc.category == "Database")">Database</option>
+                            <option value="Others" selected="@(Model.Inc.category == "Others")">Others</option>
+                        </select>
+                    </div>
+
+                    <div class="inc-cre-form-group">
+                        <label for="subcategory" class="inc-cre-form-label">
+                            Subcategory
+                            <button type="button" class="inc-cre-btn-help">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                </svg>
+                            </button>
+                        </label>
+                        <select id="subcategory" name="subcategory" class="inc-cre-form-control">
+                            <option selected>-- None --</option>
+                        </select>
+                    </div>
+
+                    <div class="inc-cre-form-group">
+                        <label for="assignment-group" class="inc-cre-form-label inc-cre-required">
+                            Assignment group
+                            <button type="button" class="inc-cre-btn-help">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                </svg>
+                            </button>
+                        </label>
+                        <div class="inc-cre-input-with-icon">
+                            <input type="text" id="assignment-group" class="inc-cre-form-control" readonly value="@(Model.Inc.AssignmentGroup?.name ?? "")">
+                            <input type="hidden" id="assignment-group-id" name="assignment_group" value="@Model.Inc.assignment_group">
+                            <button type="button" class="inc-cre-icon-search" id="assignment-group-search">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="state" class="inc-cre-form-label">
+                            State
+                            <button type="button" class="inc-cre-btn-help">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                </svg>
+                            </button>
+                        </label>
+                        <select id="state" name="state" class="inc-cre-form-control">
+                            @* <option value="Closed" selected="@(Model.Inc.state == "Closed")">Closed</option> *@
+                            @* <option value="Cancelled">Cancelled</option> *@
+                            @if (Model.Inc.state == "Resolved")
+                            {
+                                <option value="Resolved" selected="@(Model.Inc.state == "Resolved")">Resolved</option>
+                            }
+                            else
+                            {
+                                <option value="Pedding" selected="@(Model.Inc.state == "Pedding")">Pedding</option>
+                                <option value="In Progress" selected="@(Model.Inc.state == "In Progress")">In Progress</option>
+                                <option value="On-Hold" selected="@(Model.Inc.state == "On-Hold")">On-Hold</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="inc-cre-form-group">
+                        <label for="impact" class="inc-cre-form-label">
+                            Impact
+                            <button type="button" class="inc-cre-btn-help">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                </svg>
+                            </button>
+                        </label>
+                        <select id="impact" name="impact" class="inc-cre-form-control">
+                            <option value="1 - High" selected="@(Model.Inc.impact == "1 - High")">1 - High</option>
+                            <option value="2 - Medium" selected="@(Model.Inc.impact == "2 - Medium")">2 - Medium</option>
+                            <option value="3 - Low" selected="@(Model.Inc.impact == "3 - Low")">3 - Low</option>
+                        </select>
+                    </div>
+
+                    <div class="inc-cre-form-group">
+                        <label for="urgency" class="inc-cre-form-label">
+                            Urgency
+                            <button type="button" class="inc-cre-btn-help">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                </svg>
+                            </button>
+                        </label>
+                        <select id="urgency" name="urgency" class="inc-cre-form-control">
+                            <option value="1 - High" selected="@(Model.Inc.urgency == "1 - High")">1 - High</option>
+                            <option value="2 - Medium" selected="@(Model.Inc.urgency == "2 - Medium")">2 - Medium</option>
+                            <option value="3 - Low" selected="@(Model.Inc.urgency == "3 - Low")">3 - Low</option>
+                        </select>
+                    </div>
+
+                    <div class="inc-cre-form-group">
+                        <label for="priority" class="inc-cre-form-label">
+                            Priority
+                            <button type="button" class="inc-cre-btn-help">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                </svg>
+                            </button>
+                        </label>
+                        <div class="inc-cre-priority-display">
+                            <span id="priority-value" class="inc-cre-priority-value">@Model.Inc.priority</span>
+                            <input type="hidden" id="priority-hidden" name="priority" value="@Model.Inc.priority">
+                            <svg class="inc-cre-info-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="16" x2="12" y2="12"></line>
+                                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="inc-cre-form-group">
+                        <label for="assigned-to" class="inc-cre-form-label">
+                            Assigned to
+                            <button type="button" class="inc-cre-btn-help">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                </svg>
+                            </button>
+                        </label>
+                        <div class="inc-cre-input-with-icon">
+                            <input type="text" id="assigned-to" class="inc-cre-form-control" readonly value="@(Model.Inc.AssignedTo?.fullname ?? "")">
+                            <input type="hidden" id="assigned-to-id" name="assigned_to" value="@Model.Inc.assigned_to">
+                            <button type="button" class="inc-cre-icon-search" id="assigned-to-search" @(Model.Inc.assignment_group > 0 ? "" : "disabled")>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="inc-cre-form-group inc-cre-short-description-group">
+                <label for="short-description" class="inc-cre-form-label inc-cre-required">Short description</label>
+                <div class="inc-cre-input-with-actions">
+                    @if (Model.Inc.state != "Resolved")
+                    {
+                        <input type="text" maxlength="100" id="short-description" name="short_description" class="inc-cre-form-control" value="@Model.Inc.short_description" required>
+                    }
+                    else
+                    {
+                        <input type="text" maxlength="100" id="short-description" name="short_description" class="inc-cre-form-control" value="@Model.Inc.short_description" readonly required>
+                    }
+                    <div class="inc-cre-action-buttons">
+                        <button type="button" class="inc-cre-btn-help">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="inc-cre-form-group inc-cre-full-width">
+                <label for="description" class="inc-cre-form-label">Description</label>
+                @if (Model.Inc.state != "Resolved")
+                {
+                    <textarea id="description" name="describe" class="inc-cre-form-control inc-cre-description-textarea" rows="5">@Model.Inc.describe</textarea>
+                }
+                else
+                {
+                    <textarea id="description" name="describe" class="inc-cre-form-control inc-cre-description-textarea" rows="5" readonly>@Model.Inc.describe</textarea>
+                }
+            </div>
+        </form>
+    </main>
+
+    <div class="inc-cre-related-search-container">
+        <button class="inc-cre-btn inc-cre-btn-related-search">
+            Notes & Resolve
+        </button>
+    </div>
+
+    <div class="inc-cre-tab-section">
+        <div class="inc-cre-tabs">
+            <button class="inc-cre-tab active">Notes</button>
+        </div>
+
+        <div class="inc-cre-tab-content">
+            <div id="notes-tab" class="inc-cre-tab-pane active">
+                <div class="inc-cre-notes-container">
+                    <div class="inc-cre-notes-header">
+                        <div class="inc-cre-watch-list">
+                            <span>Work notes list</span>
+                            <div class="inc-cre-info-icon">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="inc-cre-work-notes-area">
+                        <textarea id="work-notes" class="inc-cre-notes-textarea" placeholder="Enter chat history..."></textarea>
+                        <div class="inc-cre-notes-actions">
+                            <label class="inc-cre-checkbox-container"></label>
+                            <button type="button" class="inc-cre-btn inc-cre-btn-post" id="post-note-btn">Post</button>
+                        </div>
+                    </div>
+
+                    <div class="inc-cre-activities-section">
+                        <h3 class="inc-cre-section-title">Activities: <span id="activity-count">0</span></h3>
+
+                        <div class="inc-cre-activity-container">
+                            <!-- 活动条目将通过JavaScript动态添加 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="inc-cre-tab-section">
+        <div class="inc-cre-tabs">
+            <button class="inc-cre-tab active">Resolve</button>
+        </div>
+
+        <div class="inc-cre-tab-content">
+            <div id="notes-tab" class="inc-cre-tab-pane active">
+                <div class="inc-cre-resolve-container">
+                    <div class="inc-cre-notes-header">
+                        <div class="inc-cre-watch-list">
+                            <span>Resolve Reason</span>
+                            <div class="inc-cre-info-icon">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="inc-cre-resolve-input-area" id="resolve-input-area">
+                        <select id="resolve-type" name="resolveType" class="inc-cre-form-control inc-cre-resolve-select">
+                            <option value="">-- Select Resolution Type --</option>
+                            <option value="Permanent Fix">Permanent Fix</option>
+                            <option value="Work Around">Work Around</option>
+                            <option value="Not Fixed">Not Fixed</option>
+                            <option value="No Issue Found">No Issue Found</option>
+                            <option value="Automatically Resolved">Automatically Resolved</option>
+                            <option value="Resolved">Resolved</option>
+                        </select>
+                        <textarea id="resolve-notes" name="resolveNotes" class="inc-cre-notes-textarea" placeholder="Enter resolution details..."></textarea>
+                    </div>
+
+                    <div class="inc-cre-resolve-history-section resolution-history-section" id="resolution-history-section">
+                        <h3 class="inc-cre-section-title">Resolution Information</h3>
+
+                        <div class="inc-cre-resolve-history-container">
+                            <div class="inc-cre-loading-spinner" id="resolution-loading">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">加载中...</span>
+                                </div>
+                            </div>
+                            <div id="resolution-history-content">
+                                <!-- 解决历史将由AJAX加载 -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (Model.Inc.state != "Resolved")
+    {
+        <footer class="inc-cre-form-footer">
+            <div class="inc-cre-footer-buttons">
+                <button type="button" class="inc-cre-btn inc-cre-btn-submit-footer" onclick="document.getElementById('incidentForm').submit();">Save</button>
+                <button type="button" class="inc-cre-btn inc-cre-btn-resolve-footer" id="resolve-button-footer">Resolve</button>
+            </div>
+        </footer>
+    }
+</div>
+
+<div id="inc-cre-modal" class="inc-cre-modal">
+    <div class="inc-cre-modal-content">
+        <div class="inc-cre-modal-header">
+            <h3 id="inc-cre-modal-title">选择项</h3>
+            <button type="button" class="inc-cre-modal-close">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+        <div class="inc-cre-modal-body">
+            <div class="inc-cre-search-wrapper">
+                <input type="text" id="inc-cre-search-input" class="inc-cre-form-control" placeholder="搜索...">
+                <button type="button" class="inc-cre-search-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="inc-cre-table-wrapper">
+                <table class="inc-cre-modal-table">
+                    <thead>
+                        <tr>
+                            <th>名称</th>
+                            <th>描述</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inc-cre-modal-table-body">
+                        <!-- 表格内容会通过JavaScript动态填充 -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+    $(function () {
+      var $target = $('#Incidents_menu');
+        if (!$target.hasClass('active') || !$target.hasClass('open')) {
+            $('.menu-item').removeClass('active open');
+            $target.addClass('active open');
+        }
+
+        $('#Incidents_menu_all').addClass("active");
+
+      // 检查是否为已解决状态
+      var isResolved = "@Model.Inc.state" === "Resolved";
+      
+      // 如果已解决，禁用所有表单元素并显示解决历史
+      if (isResolved) {
+          // 禁用所有选择框
+          $("#category, #subcategory, #state, #impact, #urgency").prop("disabled", true);
+          
+          // 禁用Assignment group和Assigned to的搜索按钮
+          $("#assignment-group-search, #assigned-to-search").prop("disabled", true);
+          
+          // 只隐藏Work notes输入区域，保留历史记录
+          $(".inc-cre-work-notes-area").hide();
+          $(".inc-cre-watch-list").hide(); // 隐藏Work notes list标题
+          
+          // 为聊天历史添加已解决模式的样式
+          $(".inc-cre-activities-section").addClass("resolved-mode");
+          $(".inc-cre-activities-section h3").text("Chat History");
+          
+          // 修改Notes标签页的标题
+          $(".inc-cre-tab-section:first .inc-cre-tab").text("Chat History");
+          
+          // 如果是已解决状态，隐藏整个Resolve部分
+          $(".inc-cre-resolve-container .inc-cre-notes-header").hide();
+          
+          // 隐藏resolve输入区域，显示历史区域并添加额外样式
+          $("#resolve-input-area").hide();
+          $("#resolution-history-section").show().css({
+              'padding': '20px',
+              'border-radius': '10px',
+              'margin-top': '20px',
+              'box-shadow': '0 2px 5px rgba(0,0,0,0.05)'
+          });
+          
+          // 修改Resolve标签页的标题
+          $(".inc-cre-tab-section:last .inc-cre-tab").text("Resolution Details");
+          
+          // 加载解决历史
+          loadResolutionHistory();
+      }
+
+      // 更新Priority逻辑
+      function updatePriority() {
+          var impact = $("#impact").val();
+          var urgency = $("#urgency").val();
+          var priority = "5 - Planning"; // 默认值
+
+          if (impact === "1 - High" && urgency === "1 - High") {
+              priority = "1 - Critical";
+          } else if ((impact === "1 - High" && urgency === "2 - Medium") ||
+                     (impact === "2 - Medium" && urgency === "1 - High")) {
+              priority = "2 - High";
+          } else if ((impact === "1 - High" && urgency === "3 - Low") ||
+                     (impact === "2 - Medium" && urgency === "2 - Medium") ||
+                     (impact === "3 - Low" && urgency === "1 - High")) {
+              priority = "3 - Moderate";
+          } else if ((impact === "2 - Medium" && urgency === "3 - Low") ||
+                     (impact === "3 - Low" && urgency === "2 - Medium")) {
+              priority = "4 - Low";
+          } else if (impact === "3 - Low" && urgency === "3 - Low") {
+              priority = "5 - Planning";
+          }
+
+          $("#priority-value").text(priority);
+          $("#priority-hidden").val(priority);
+      }
+
+      // 当Impact或Urgency改变时更新Priority
+      $("#impact, #urgency").change(function() {
+          updatePriority();
+      });
+
+      // 页面加载时初始化Priority
+      updatePriority();
+
+      // 定义每个Category对应的Subcategory选项
+      var subcategories = {
+          "Hardware": [
+              "Laptop/Desktop",
+              "Monitor",
+              "Printer",
+              "Keyboard/Mouse",
+              "Hard Disk",
+              "Power Supply",
+              "Battery",
+              "Peripheral Devices",
+              "Other"
+          ],
+          "Software": [
+              "Microsoft Office",
+              "IHub",
+              "HSG ITSM",
+              "ERP System",
+              "Website / Web Application",
+              "Mobile App",
+              "Antivirus",
+              "Browser",
+              "License Issues",
+              "Other"
+          ],
+          "Network": [
+              "Wi-Fi Connectivity",
+              "LAN Issue",
+              "Internet Down",
+              "VPN Problem",
+              "Switch/Router",
+              "DNS Issue",
+              "Network Performance",
+              "Other"
+          ],
+          "Email": [
+              "Cannot Send/Receive",
+              "Outlook Issue",
+              "Email Configuration",
+              "Other"
+          ],
+          "Database": [
+              "Connection Failure",
+              "Data Corruption",
+              "Query Timeout",
+              "Backup Failure",
+              "Performance Issue",
+              "Access Denied",
+              "Other"
+          ],
+          "Others": [
+              "General Inquiry",
+              "How-To Support",
+              "Not Categorized",
+              "Scheduled Maintenance",
+              "Other"
+          ]
+      };
+
+      // 初始化Subcategory
+      function updateSubcategories() {
+          var category = $("#category").val();
+          var $subcategory = $("#subcategory");
+          var currentSubcategory = "@Model.Inc.subcategory"; // 保存当前子类别值
+
+          // 清空现有选项
+          $subcategory.empty();
+
+          // 添加新选项
+          if (subcategories[category]) {
+              $.each(subcategories[category], function(index, value) {
+                  var isSelected = (value === currentSubcategory) ? 'selected' : '';
+                  $subcategory.append($("<option " + isSelected + "></option>").text(value).val(value));
+              });
+          }
+      }
+
+      // 页面加载时初始化
+      updateSubcategories();
+
+      // 当Category选择变化时更新Subcategory
+      $("#category").change(function() {
+          updateSubcategories();
+      });
+
+      // 模态框功能
+      var currentInputField = null;
+      var selectedDepartmentId = @(Model.Inc.assignment_group > 0 ? Model.Inc.assignment_group : "null");
+      var departmentList = [];
+      var usersByDepartment = {};
+
+      // 从服务器获取部门数据
+      function loadDepartments() {
+          $.ajax({
+              url: '/Ajax/DepartmentData',
+              type: 'GET',
+              dataType: 'json',
+              success: function(data) {
+                  departmentList = data;
+                  console.log("部门数据加载成功:", data);
+              },
+              error: function(xhr, status, error) {
+                  console.error("加载部门数据失败:", error);
+              }
+          });
+      }
+
+      // 加载部门数据
+      loadDepartments();
+
+      // 根据部门ID获取用户数据
+      function loadUsersByDepartment(departmentId) {
+          $.ajax({
+              url: '/Ajax/AssignedToData',
+              type: 'POST',
+              data: { departmentId: departmentId },
+              dataType: 'json',
+              success: function(data) {
+                  if (data && Array.isArray(data)) {
+                      usersByDepartment[departmentId] = data;
+                      openModal("选择分配人员", data, $("#assigned-to"));
+                  } else if (data && data.success === false) {
+                      console.error("获取用户数据失败:", data.message);
+                      alert("获取用户数据失败: " + data.message);
+                  } else {
+                      console.error("获取用户数据格式不正确");
+                      alert("获取用户数据格式不正确");
+                  }
+              },
+              error: function(xhr, status, error) {
+                  console.error("获取用户数据请求失败:", error);
+                  alert("获取用户数据请求失败: " + error);
+              }
+          });
+      }
+
+      // 打开模态框
+      function openModal(title, data, targetInput) {
+          currentInputField = targetInput;
+
+          // 设置标题
+          $("#inc-cre-modal-title").text(title);
+
+          // 清空并填充表格
+          var tableBody = $("#inc-cre-modal-table-body");
+          tableBody.empty();
+
+          $.each(data, function(index, item) {
+              var id = item.id || item.user_id || index;
+              var name = item.name || item.fullname || '';
+              var description = item.description || item.title || '';
+
+              tableBody.append(
+                  '<tr data-id="' + id + '" data-name="' + name + '">' +
+                  '<td>' + name + '</td>' +
+                  '<td>' + description + '</td>' +
+                  '</tr>'
+              );
+          });
+
+          // 显示模态框
+          $("#inc-cre-modal").fadeIn(200);
+      }
+
+      // 关闭模态框
+      function closeModal() {
+          $("#inc-cre-modal").fadeOut(200);
+          currentInputField = null;
+      }
+
+      // 点击Assignment Group搜索按钮
+      $("#assignment-group-search").on('click', function() {
+          if (isResolved) {
+              return; // 如果已解决，不执行操作
+          }
+          
+          if (departmentList && departmentList.length > 0) {
+              openModal("选择分配组", departmentList, $("#assignment-group"));
+          } else {
+              loadDepartments(); // 如果数据还未加载，重新加载
+              setTimeout(function() {
+                  if (departmentList && departmentList.length > 0) {
+                      openModal("选择分配组", departmentList, $("#assignment-group"));
+                  } else {
+                      alert("无法加载部门数据，请刷新页面重试");
+                  }
+              }, 500);
+          }
+      });
+
+      // 点击Assigned To搜索按钮
+      $("#assigned-to-search").on('click', function() {
+          if (isResolved) {
+              return; // 如果已解决，不执行操作
+          }
+      
+          if (!selectedDepartmentId) {
+              alert("请先选择分配组");
+              return;
+          }
+
+          // 检查是否已有缓存的用户数据
+          if (usersByDepartment[selectedDepartmentId]) {
+              openModal("选择分配人员", usersByDepartment[selectedDepartmentId], $("#assigned-to"));
+          } else {
+              loadUsersByDepartment(selectedDepartmentId);
+          }
+      });
+
+      // 点击模态框关闭按钮
+      $(".inc-cre-modal-close").click(function() {
+          closeModal();
+      });
+
+      // 点击模态框外部关闭
+      $(document).on('click', '.inc-cre-modal', function(e) {
+          if ($(e.target).hasClass('inc-cre-modal')) {
+              closeModal();
+          }
+      });
+
+      // 选择表格行
+      $(document).on('click', '.inc-cre-modal-table tbody tr', function() {
+          var selectedName = $(this).data('name');
+          var selectedId = $(this).data('id');
+
+          if (currentInputField) {
+              currentInputField.val(selectedName);
+
+              // 如果选择的是部门，则启用Assigned to
+              if (currentInputField.attr('id') === 'assignment-group') {
+                  selectedDepartmentId = selectedId;
+                  $("#assignment-group-id").val(selectedId); // 将ID保存到隐藏输入框
+                  $("#assigned-to-search").prop('disabled', false);
+                  $("#assigned-to").val(''); // 清空之前选择的用户
+                  $("#assigned-to-id").val(''); // 清空之前选择的用户ID
+              } else if (currentInputField.attr('id') === 'assigned-to') {
+                  // 如果选择的是用户，保存用户ID
+                  $("#assigned-to-id").val(selectedId);
+              }
+          }
+
+          closeModal();
+      });
+
+      // 模态框中的搜索功能
+      $("#inc-cre-search-input").on('keyup', function() {
+          var value = $(this).val().toLowerCase();
+          $(".inc-cre-modal-table tbody tr").filter(function() {
+              $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+          });
+      });
+
+      // 加载部门数据
+      loadDepartments();
+
+      // Notes部分功能
+      // 更新活动数量
+      function updateActivityCount() {
+          var count = $(".inc-cre-activity-container .inc-cre-activity-item").length;
+          $("#activity-count").text(count);
+      }
+
+      // 初始化更新活动数量
+      updateActivityCount();
+
+      // 发布工作笔记
+      $("#post-note-btn").click(function() {
+          if (isResolved) {
+              alert("此事件已解决，无法添加新的工作笔记");
+              return;
+          }
+          
+          var workNotes = $("#work-notes").val().trim();
+          
+          if (workNotes) {
+              // 禁用按钮，防止重复提交
+              $(this).prop("disabled", true);
+              
+              // 获取当前事件ID
+              var incidentId = $("#id").val();
+              
+              // 通过AJAX调用后端API添加笔记
+              $.ajax({
+                  url: '/Ajax/AddNote',
+                  type: 'POST',
+                  data: {
+                      incidentId: incidentId,
+                      message: workNotes
+                  },
+                  dataType: 'json',
+                  success: function(response) {
+                      $("#post-note-btn").prop("disabled", false);
+                      
+                      if (response.success) {
+                          // 获取当前时间
+                          var dateString = response.note.create_date;
+                          
+                          // 创建新的活动项
+                          var newActivity = $('<div class="inc-cre-activity-item">' +
+                              '<div class="inc-cre-user-avatar">' +
+                                  '<img src="' + (response.note.user_avatar ? 'data:image/jpeg;base64,' + response.note.user_avatar : 'https://www.diydoutu.com/touxiang/20201222-1.jpg') + '" alt="' + response.note.user_name + '">' +
+                              '</div>' +
+                              '<div class="inc-cre-activity-content">' +
+                                  '<div class="inc-cre-activity-header">' +
+                                      '<span class="inc-cre-user-name">' + response.note.user_name + '</span>' +
+                                      '<span class="inc-cre-activity-time">Work notes • ' + dateString + '</span>' +
+                                  '</div>' +
+                                  '<div class="inc-cre-activity-details">' +
+                                      '<div class="inc-cre-work-note-content">' + response.note.message.replace(/\n/g, '<br>') + '</div>' +
+                                  '</div>' +
+                              '</div>' +
+                          '</div>');
+                          
+                          // 添加到活动容器的顶部
+                          $(".inc-cre-activity-container").prepend(newActivity);
+                          
+                          // 清空文本框
+                          $("#work-notes").val('');
+                          
+                          // 更新活动数量
+                          updateActivityCount();
+                      } else {
+                          alert("添加笔记失败: " + response.message);
+                      }
+                  },
+                  error: function(xhr, status, error) {
+                      // 重新启用按钮
+                      $("#post-note-btn").prop("disabled", false);
+                      console.error("添加笔记请求失败:", error);
+                      alert("添加笔记请求失败: " + error);
+                  }
+              });
+          } else {
+              alert("请输入工作笔记内容");
+          }
+      });
+
+      // 加载事件的所有笔记
+      function loadNotes() {
+          var incidentId = $("#id").val();
+          
+          // 通过AJAX获取现有的笔记
+          $.ajax({
+              url: '/Ajax/GetNotesByIncident',
+              type: 'GET',
+              data: { incidentId: incidentId },
+              dataType: 'json',
+              success: function(response) {
+                  if (response.success && response.notes) {
+                      // 清空活动容器
+                      $(".inc-cre-activity-container").empty();
+                      
+                      // 添加每个笔记到活动容器
+                      $.each(response.notes, function(i, note) {
+                          var noteItem = $('<div class="inc-cre-activity-item">' +
+                              '<div class="inc-cre-user-avatar">' +
+                                  '<img src="' + (note.user_avatar ? 'data:image/jpeg;base64,' + note.user_avatar : 'https://www.diydoutu.com/touxiang/20201222-1.jpg') + '" alt="' + note.user_name + '">' +
+                              '</div>' +
+                              '<div class="inc-cre-activity-content">' +
+                                  '<div class="inc-cre-activity-header">' +
+                                      '<span class="inc-cre-user-name">' + note.user_name + '</span>' +
+                                      '<span class="inc-cre-activity-time">Work notes • ' + note.create_date + '</span>' +
+                                  '</div>' +
+                                  '<div class="inc-cre-activity-details">' +
+                                      '<div class="inc-cre-work-note-content">' + note.message.replace(/\n/g, '<br>') + '</div>' +
+                                  '</div>' +
+                              '</div>' +
+                          '</div>');
+                          
+                          $(".inc-cre-activity-container").append(noteItem);
+                      });
+                      
+                      // 更新活动数量
+                      updateActivityCount();
+                  } else if (!response.success) {
+                      console.error("加载笔记失败:", response.message);
+                  }
+              },
+              error: function(xhr, status, error) {
+                  console.error("加载笔记请求失败:", error);
+              }
+          });
+      }
+      
+      // 页面加载时加载现有笔记
+      loadNotes();
+      
+      // Resolve功能相关代码
+      $("#resolve-button, #resolve-button-footer").click(function() {
+          // 如果已解决，不执行操作
+          if (isResolved) {
+              alert("此事件已解决，无法再次解决");
+              return;
+          }
+          
+          var resolveType = $("#resolve-type").val();
+          var resolveNotes = $("#resolve-notes").val().trim();
+          
+          if (!resolveType) {
+              alert("Please select a resolution type");
+              return;
+          }
+          
+          if (!resolveNotes) {
+              alert("Please enter resolution details");
+              return;
+          }
+          
+          // 获取表单数据
+          var formData = $("#incidentForm").serialize();
+          // 添加resolve相关数据
+          formData += "&resolveType=" + encodeURIComponent(resolveType);
+          formData += "&resolveNotes=" + encodeURIComponent(resolveNotes);
+          
+          $.ajax({
+              url: '/Ajax/ResolveIncident',
+              type: 'POST',
+              data: formData,
+              success: function(response) {
+                  if (response.success) {
+                      window.location.href = '/IncidentManagement/All';
+                  } else {
+                      // alert("Failed to resolve incident: " + response.message);
+                  }
+              },
+              error: function(xhr, status, error) {
+                  // alert("Error: " + error);
+              }
+          });
+      });
+
+      // 加载解决历史信息
+      function loadResolutionHistory() {
+          var incidentId = $("#id").val();
+          
+          $.ajax({
+              url: '/Ajax/GetResolutionHistory',
+              type: 'GET',
+              data: { incidentId: incidentId },
+              dataType: 'json',
+              success: function(response) {
+                  $("#resolution-loading").hide();
+                  
+                  if (response.success && response.resolution) {
+                      var res = response.resolution;
+                      var userAvatar = res.resolved_by_avatar ? 'data:image/jpeg;base64,' + res.resolved_by_avatar : '/img/avatar/user_avatar.jpg';
+                      
+                      var historyItem = $('<div class="inc-cre-resolve-item">' +
+                          '<div class="inc-cre-resolve-content">' +
+                              '<div class="inc-cre-resolve-header">' +
+                                  '<span class="inc-cre-resolve-type">' + res.resolved_type + '</span>' +
+                                  '<span class="inc-cre-resolve-time">' + res.resolved_date + '</span>' +
+                              '</div>' +
+                              '<div class="inc-cre-resolve-user">' +
+                                  '<img src="' + userAvatar + '" alt="Avatar" class="inc-cre-resolve-user-avatar" />' +
+                                  '<span>Resolved By: ' + res.resolved_by_name + '</span>' +
+                              '</div>' +
+                              '<div class="inc-cre-resolve-details">' + res.resolution.replace(/\n/g, '<br>') + '</div>' +
+                          '</div>' +
+                      '</div>');
+                      
+                      $("#resolution-history-content").html(historyItem);
+                  } else {
+                      $("#resolution-history-content").html('<div class="text-center">无法加载解决历史</div>');
+                      console.error("加载解决历史失败:", response.message);
+                  }
+              },
+              error: function(xhr, status, error) {
+                  $("#resolution-loading").hide();
+                  $("#resolution-history-content").html('<div class="text-center">加载失败</div>');
+                  console.error("加载解决历史请求失败:", error);
+              }
+          });
+      }
+    });
+</script>
+
+
+

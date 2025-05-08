@@ -172,7 +172,8 @@ namespace ITSM_Insfrastruture.Repository.Api
 
                 _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenModel.Token);
                 var jsonStr = await _client.GetStringAsync($"{_F_U_UserUrl}{id}");
-                return JsonConvert.DeserializeObject<User>(jsonStr);
+                var userList = JsonConvert.DeserializeObject<List<User>>(jsonStr);
+                return userList?.FirstOrDefault();
             }
             catch (Exception ex)
             {

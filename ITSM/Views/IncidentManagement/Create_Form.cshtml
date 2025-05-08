@@ -52,13 +52,13 @@
                 </svg>
             </button>
             <button class="inc-cre-btn inc-cre-btn-submit" onclick="document.getElementById('incidentForm').submit();">Submit</button>
-            @* <button class="inc-cre-btn inc-cre-btn-resolve">Resolve</button> *@
             <div class="nav-item navbar-dropdown dropdown-user dropdown open-button">
                 <a class="nav-link dropdown-toggle hide-arrow p-0"
                 href="javascript:void(0);"
                 data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
-                        <img src="https://www.diydoutu.com/touxiang/20201222-1.jpg" alt="avatar" class="w-px-40 h-auto rounded-circle" />
+                        <img src="@(ViewBag.Photo != null ? "data:image/jpeg;base64," + Convert.ToBase64String(ViewBag.Photo) :
+                        Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 h-auto rounded-circle" />
                     </div>
                 </a>
             </div>
@@ -180,11 +180,6 @@
                         </label>
                         <select id="state" name="state" class="inc-cre-form-control">
                             <option value="Pedding" selected>Pedding</option>
-                            <option value="In Progress">In Progress</option>
-                            <option value="On-Hold">On-Hold</option>
-                            <option value="Resolved">Resolved</option>
-                            <option value="Closed">Closed</option>
-                            @* <option value="Cancelled">Cancelled</option> *@
                         </select>
                     </div>
 
@@ -294,100 +289,8 @@
         </form>
     </main>
 
-    @* <div class="inc-cre-related-search-container">
-        <button class="inc-cre-btn inc-cre-btn-related-search">
-            Discussion & Notes
-        </button>
-    </div>
-
-    <div class="inc-cre-tab-section">
-        <div class="inc-cre-tabs">
-            <button class="inc-cre-tab active">Notes</button>
-        </div>
-
-        <div class="inc-cre-tab-content">
-            <div id="notes-tab" class="inc-cre-tab-pane active">
-                <div class="inc-cre-notes-container">
-                    <div class="inc-cre-notes-header">
-                        <div class="inc-cre-watch-list">
-                            <span>Work notes list</span>
-                            <div class="inc-cre-info-icon">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="inc-cre-work-notes-area">
-                        <textarea id="work-notes" class="inc-cre-notes-textarea" placeholder="Enter chat history..."></textarea>
-                        <div class="inc-cre-notes-actions">
-                            <label class="inc-cre-checkbox-container"></label>
-                            <button type="button" class="inc-cre-btn inc-cre-btn-post">Post</button>
-                        </div>
-                    </div>
-
-                    <div class="inc-cre-activities-section">
-                        <h3 class="inc-cre-section-title">Activities: <span id="activity-count">0</span></h3>
-                        
-                        <div class="inc-cre-activity-container">
-                            <!-- 示例活动 -->
-                            <div class="inc-cre-activity-item">
-                                <div class="inc-cre-user-avatar">
-                                    <img src="https://www.diydoutu.com/touxiang/20201222-1.jpg" alt="System Administrator">
-                                </div>
-                                <div class="inc-cre-activity-content">
-                                    <div class="inc-cre-activity-header">
-                                        <span class="inc-cre-user-name">System Administrator</span>
-                                        <span class="inc-cre-activity-time">Field changes • 2019-03-20 01:58:28</span>
-                                    </div>
-                                    <div class="inc-cre-activity-details">
-                                        <table class="inc-cre-activity-table">
-                                            <tr>
-                                                <td class="inc-cre-field-value">Solved (Work Around)</td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- 第二个示例活动 -->
-                            <div class="inc-cre-activity-item">
-                                <div class="inc-cre-user-avatar">
-                                    <img src="https://www.diydoutu.com/touxiang/20201222-1.jpg" alt="System Administrator">
-                                </div>
-                                <div class="inc-cre-activity-content">
-                                    <div class="inc-cre-activity-header">
-                                        <span class="inc-cre-user-name">System Administrator</span>
-                                        <span class="inc-cre-activity-time">Field changes • 2019-03-20 01:58:28</span>
-                                    </div>
-                                    <div class="inc-cre-activity-details">
-                                        <table class="inc-cre-activity-table">
-                                            <tr>
-                                                <td class="inc-cre-field-value">Solved (Work Around)</td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
- *@
-    @* <footer class="inc-cre-form-footer">
-        <div class="inc-cre-footer-buttons">
-            <button type="button" class="inc-cre-btn inc-cre-btn-submit-footer">Submit</button>
-            <button type="button" class="inc-cre-btn inc-cre-btn-resolve-footer">Resolve</button>
-        </div>
-    </footer> *@
 </div>
 
-<!-- 模态框 - 用于Assignment group和Assigned to选择 -->
 <div id="inc-cre-modal" class="inc-cre-modal">
     <div class="inc-cre-modal-content">
         <div class="inc-cre-modal-header">
@@ -436,12 +339,12 @@
       }
 
       $('#Incidents_menu_create').addClass("active");
-      
-      // 更新Priority逻辑
+
+          // Update Priority Logic
       function updatePriority() {
           var impact = $("#impact").val();
           var urgency = $("#urgency").val();
-          var priority = "5 - Planning"; // 默认值
+              var priority = "5 - Planning"; // default value
           
           if (impact === "1 - High" && urgency === "1 - High") {
               priority = "1 - Critical";
@@ -463,15 +366,15 @@
           $("#priority-hidden").val(priority);
       }
       
-      // 当Impact或Urgency改变时更新Priority
+      // Update Priority when Impact or Urgency changes
       $("#impact, #urgency").change(function() {
           updatePriority();
       });
       
-      // 页面加载时初始化Priority
+      // Initialize Priority when the page loads
       updatePriority();
       
-      // 定义每个Category对应的Subcategory选项
+      // Define the Subcategory options for each Category
       var subcategories = {
           "Hardware": [
               "Laptop/Desktop",
@@ -530,15 +433,15 @@
           ]
       };
       
-      // 初始化Subcategory
+      // Initialize Subcategory
       function updateSubcategories() {
           var category = $("#category").val();
           var $subcategory = $("#subcategory");
           
-          // 清空现有选项
+          // Clear existing options
           $subcategory.empty();
           
-          // 添加新选项
+          // Add new option
           if (subcategories[category]) {
               $.each(subcategories[category], function(index, value) {
                   $subcategory.append($("<option></option>").text(value).val(value));
@@ -546,21 +449,21 @@
           }
       }
       
-      // 页面加载时初始化
+      // Initialized when the page loads
       updateSubcategories();
       
-      // 当Category选择变化时更新Subcategory
+      // Update Subcategory when Category selection changes
       $("#category").change(function() {
           updateSubcategories();
       });
       
-      // 模态框功能
+      // Modal box function
       var currentInputField = null;
       var selectedDepartmentId = null;
       var departmentList = [];
       var usersByDepartment = {};
       
-      // 从服务器获取部门数据
+      // Get department data from the server
       function loadDepartments() {
           $.ajax({
               url: '/Ajax/DepartmentData',
@@ -568,18 +471,18 @@
               dataType: 'json',
               success: function(data) {
                   departmentList = data;
-                  console.log("部门数据加载成功:", data);
+                  // console.log("Department data loaded successfully:", data);
               },
               error: function(xhr, status, error) {
-                  console.error("加载部门数据失败:", error);
+                  // console.error("Failed to load department data:", error);
               }
           });
       }
       
-      // 加载部门数据
+      // Load department data
       loadDepartments();
       
-      // 根据部门ID获取用户数据
+      // Get user data based on department ID
       function loadUsersByDepartment(departmentId) {
           $.ajax({
               url: '/Ajax/AssignedToData',
@@ -589,30 +492,30 @@
               success: function(data) {
                   if (data && Array.isArray(data)) {
                       usersByDepartment[departmentId] = data;
-                      openModal("选择分配人员", data, $("#assigned-to"));
+                      openModal("Select assignees", data, $("#assigned-to"));
                   } else if (data && data.success === false) {
-                      console.error("获取用户数据失败:", data.message);
-                      alert("获取用户数据失败: " + data.message);
+                      // console.error("Failed to obtain user data:", data.message);
+                      // alert("Failed to obtain user data: " + data.message);
                   } else {
-                      console.error("获取用户数据格式不正确");
-                      alert("获取用户数据格式不正确");
+                      // console.error("The format of the obtained user data is incorrect");
+                      // alert("The format of the obtained user data is incorrect");
                   }
               },
               error: function(xhr, status, error) {
-                  console.error("获取用户数据请求失败:", error);
-                  alert("获取用户数据请求失败: " + error);
+                  // console.error("Failed to obtain user data request:", error);
+                  // alert("Failed to obtain user data request: " + error);
               }
           });
       }
       
-      // 打开模态框
+      // Open modal
       function openModal(title, data, targetInput) {
           currentInputField = targetInput;
           
-          // 设置标题
+          // Title
           $("#inc-cre-modal-title").text(title);
           
-          // 清空并填充表格
+          // Clear and fill the table
           var tableBody = $("#inc-cre-modal-table-body");
           tableBody.empty();
           
@@ -629,27 +532,27 @@
               );
           });
           
-          // 显示模态框
+          // Show modal box
           $("#inc-cre-modal").fadeIn(200);
       }
       
-      // 关闭模态框
+      // Close modal box
       function closeModal() {
           $("#inc-cre-modal").fadeOut(200);
           currentInputField = null;
       }
       
-      // 点击Assignment Group搜索按钮
+      // Click the Assignment Group search button
       $("#assignment-group-search").on('click', function() {
           if (departmentList && departmentList.length > 0) {
-              openModal("选择分配组", departmentList, $("#assignment-group"));
+              openModal("Select assignment group", departmentList, $("#assignment-group"));
           } else {
-              loadDepartments(); // 如果数据还未加载，重新加载
+              loadDepartments(); // If the data has not been loaded, reload it
               setTimeout(function() {
                   if (departmentList && departmentList.length > 0) {
                       openModal("选择分配组", departmentList, $("#assignment-group"));
                   } else {
-                      alert("无法加载部门数据，请刷新页面重试");
+                      // alert("无法加载部门数据，请刷新页面重试");
                   }
               }, 500);
           }
@@ -658,7 +561,7 @@
       // 点击Assigned To搜索按钮
       $("#assigned-to-search").on('click', function() {
           if (!selectedDepartmentId) {
-              alert("请先选择分配组");
+              // alert("请先选择分配组");
               return;
           }
           
@@ -767,7 +670,7 @@
               // 更新活动数量
               updateActivityCount();
           } else {
-              alert("请输入工作笔记内容");
+              // alert("请输入工作笔记内容");
           }
       });
     });
