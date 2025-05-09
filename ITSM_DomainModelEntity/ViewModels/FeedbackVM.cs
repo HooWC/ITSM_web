@@ -7,9 +7,9 @@ using ITSM_DomainModelEntity.Models;
 
 namespace ITSM_DomainModelEntity.ViewModels
 {
-    public class TodoVM
+    public class FeedbackVM
     {
         public User? User { get; set; }
-        public List<Todo>? Todo { get; set; }
+        public List<Feedback>? Feedback { get; set; }
     }
 }

@@ -210,6 +210,7 @@ select.inc-cre-form-control {
     background-position: right 12px center;
     background-size: 16px;
     padding-right: 36px;
+    margin-bottom:10px;
 }
 
 .inc-cre-form-control:focus {
@@ -1100,3 +1101,94 @@ select.inc-cre-form-control {
     font-size: 15px;
     margin-bottom: 4px;
 }
+
+/* Inc_Info_Form */
+
+/*.inc-cre-resolve-item {
+    background: linear-gradient(135deg, #2c3e50, #1a242f);
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    color: #fff;
+    transition: all 0.3s ease;
+}
+
+    .inc-cre-resolve-item:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+.inc-cre-resolve-content {
+    width: 100%;
+}
+
+.inc-cre-resolve-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 8px;
+}
+
+.inc-cre-resolve-type {
+    font-weight: bold;
+    color: #4caf50;
+    font-size: 16px;
+}
+
+.inc-cre-resolve-time {
+    color: #bbb;
+    font-size: 13px;
+}
+
+.inc-cre-resolve-user {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.inc-cre-resolve-user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-right: 10px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.inc-cre-resolve-details {
+    line-height: 1.6;
+    font-size: 14px;
+    color: #fff;
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 10px;
+    border-radius: 6px;
+    border-left: 3px solid #4caf50;
+}
+
+.resolved-mode .inc-cre-activity-container {
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    padding: 15px;
+}
+
+.resolved-mode .inc-cre-activities-section h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #fff;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #3a546e;
+    display: inline-block;
+}
+
+.resolved-mode .inc-cre-activity-item {
+    transition: all 0.3s ease;
+}
+
+    .resolved-mode .inc-cre-activity-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }*/

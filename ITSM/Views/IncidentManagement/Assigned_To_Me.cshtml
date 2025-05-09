@@ -1,24 +1,9 @@
-﻿
+﻿@using ITSM_DomainModelEntity.ViewModels
+@model IncidentVM
 @{
     ViewData["Title"] = "Assigned_To_me";
     Layout = "_Layout";
 }
-
-<style>
-    * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-    }
-
-    body {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-        background-color: #121212;
-        color: #e0e0e0;
-        min-height: 100vh;
-        overflow: hidden;
-    }
-</style>
 
 <div class="inc-tab-container">
     <header>
@@ -26,31 +11,54 @@
             <button class="inc-tab-icon-button">
                 <i class="fas fa-list"></i>
             </button>
-            <h2 class="all-title-header-front">Assigned to me</h2>
+            <h2 class="all-title-header-front">Incidents</h2>
             <div class="inc-tab-dropdown">
-                <button class="inc-tab-dropdown-toggle">Number <i class="fas fa-chevron-down"></i></button>
+                <button class="inc-tab-dropdown-toggle" id="filterDropdown">Number <i class="fas fa-chevron-down"></i></button>
+                <div class="inc-tab-dropdown-menu" id="filterMenu" style="display:none;">
+                    <a href="#" class="inc-tab-dropdown-item" data-filter="number">Number</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-filter="short_description">Short description</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-filter="priority">Priority</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-filter="state">State</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-filter="category">Category</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-filter="assignment_group">Assignment group</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-filter="assigned_to">Assigned to</a>
+                </div>
             </div>
             <div class="inc-tab-search-container">
-                <input type="text" placeholder="Search" class="inc-tab-search-input">
+                <input type="text" placeholder="Search" class="inc-tab-search-input" id="searchInput">
             </div>
         </div>
         <div class="inc-tab-header-right">
-            <button class="inc-tab-icon-button">
+            <button class="inc-tab-icon-button" id="refreshButton">
                 <i class="fas fa-sync-alt"></i>
             </button>
-            <button class="inc-tab-icon-button">
-                <i class="fas fa-cog"></i>
+            <button class="inc-cre-btn inc-cre-btn-icon" onclick="window.open('/Info/Info_Personal_Todo', '_blank')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
             </button>
             <div class="inc-tab-dropdown">
-                <button class="inc-tab-dropdown-toggle">Actions on selected rows... <i class="fas fa-chevron-down"></i></button>
+                <button class="inc-tab-dropdown-toggle" id="statusDropdown">All <i class="fas fa-chevron-down"></i></button>
+                <div class="inc-tab-dropdown-menu" id="statusMenu" style="display:none;">
+                    <a href="#" class="inc-tab-dropdown-item" data-status="all">All</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-status="pedding">Pedding</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-status="inprogress">In Progress</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-status="onhold">On-Hold</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-status="resolved">Resolved</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-status="closed">Closed</a>
+                </div>
             </div>
-            <button class="inc-tab-new-button">New</button>
+            <button class="inc-tab-new-button item-delete-btn" id="deleteButton" disabled>Delete</button>
+            <button class="inc-tab-new-button" onclick="window.location.href='/IncidentManagement/Create_Form';">New</button>
             <div class="nav-item navbar-dropdown dropdown-user dropdown open-button">
                 <a class="nav-link dropdown-toggle hide-arrow p-0"
                    href="javascript:void(0);"
                    data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
-                        <img src="https://www.diydoutu.com/touxiang/20201222-1.jpg" alt class="w-px-40 h-auto rounded-circle" />
+                        <img src="@(Model.User.photo != null ? "data:image/jpeg;base64," + Convert.ToBase64String(Model.User.photo) :
+                        Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 h-auto rounded-circle" />
                     </div>
                 </a>
             </div>
@@ -68,105 +76,90 @@
         <table class="inc-tab-incidents-table">
             <thead>
                 <tr>
-                    <th class="inc-tab-checkbox-column">
-                        <input type="checkbox">
-                    </th>
-                    <th class="inc-tab-sortable">Number <i class="fas fa-arrow-up"></i></th>
-                    <th>Opened</th>
-                    <th>Short description</th>
-                    <th>Caller</th>
-                    <th>Priority</th>
-                    <th>State</th>
-                    <th>Category</th>
-                    <th>Assignment group</th>
-                    <th>Assigned to</th>
-                    <th>Updated</th>
-                    <th>Updated by</th>
+                    <th class="inc-tab-checkbox-column"></th>
+                    <th class="inc-tab-sortable number-column" id="sortByNumber">Number <i class="fas fa-arrow-up" id="sortIcon"></i></th>
+                    <th class="short-column">Short description</th>
+                    <th class="priority-column">Priority</th>
+                    <th class="state-column">State</th>
+                    <th class="category-column">Category</th>
+                    <th class="assignment-group-column">Assignment group</th>
+                    <th class="assigned-to-column">Assigned to</th>
+                    <th class="create-date-column">Opened</th>
+                    <th class="update-date-column">Updated</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td><input type="checkbox"></td>
-                    <td class="inc-tab-incident-number" data-label="Number">REQ0000001</td>
-                    <td data-label="Opened">2024-12-03 15:09:51</td>
-                    <td data-label="Short description">Can't read email</td>
-                    <td data-label="Caller">Fred Luddy</td>
-                    <td data-label="Priority"><span class="inc-tab-priority critical">1 - Critical</span></td>
-                    <td data-label="State">Closed</td>
-                    <td data-label="Category">Network</td>
-                    <td data-label="Assignment group">Service Desk</td>
-                    <td data-label="Assigned to">Charlie Whitherspoon</td>
-                    <td data-label="Updated">2025-03-05 12:16:07</td>
-                    <td data-label="Updated by">admin</td>
-                </tr>
-                <tr>
-                    <td><input type="checkbox"></td>
-                    <td class="inc-tab-incident-number" data-label="Number">REQ0000002</td>
-                    <td data-label="Opened">2024-11-27 15:07:12</td>
-                    <td data-label="Short description">Network file shares access issue</td>
-                    <td data-label="Caller">Fred Luddy</td>
-                    <td data-label="Priority"><span class="inc-tab-priority critical">1 - Critical</span></td>
-                    <td data-label="State">On Hold</td>
-                    <td data-label="Category">Network</td>
-                    <td data-label="Assignment group">Network</td>
-                    <td data-label="Assigned to">Howard Johnson</td>
-                    <td data-label="Updated">2025-03-05 11:51:11</td>
-                    <td data-label="Updated by">admin</td>
-                </tr>
-                <tr>
-                    <td><input type="checkbox"></td>
-                    <td class="inc-tab-incident-number" data-label="Number">REQ0000003</td>
-                    <td data-label="Opened">2024-12-04 15:07:30</td>
-                    <td data-label="Short description">Wireless access is down in my area</td>
-                    <td data-label="Caller">Joe Employee</td>
-                    <td data-label="Priority"><span class="inc-tab-priority critical">1 - Critical</span></td>
-                    <td data-label="State">In Progress</td>
-                    <td data-label="Category">Network</td>
-                    <td data-label="Assignment group">Network</td>
-                    <td data-label="Assigned to">Beth Anglin</td>
-                    <td data-label="Updated">2025-03-05 11:51:14</td>
-                    <td data-label="Updated by">admin</td>
-                </tr>
-                <!-- Continue with more rows following the same pattern... -->
-                <tr>
-                    <td><input type="checkbox"></td>
-                    <td class="inc-tab-incident-number" data-label="Number">REQ0000004</td>
-                    <td data-label="Opened">2024-12-10 14:49:22</td>
-                    <td data-label="Short description">Forgot email password</td>
-                    <td data-label="Caller">Fred Luddy</td>
-                    <td data-label="Priority"><span class="inc-tab-priority critical">1 - Critical</span></td>
-                    <td data-label="State">Closed</td>
-                    <td data-label="Category">Inquiry / Help</td>
-                    <td data-label="Assignment group">Service Desk</td>
-                    <td data-label="Assigned to">Bud Richman</td>
-                    <td data-label="Updated">2025-03-05 12:16:24</td>
-                    <td data-label="Updated by">admin</td>
-                </tr>
-                <!-- Continue with remaining rows... -->
+            <tbody id="incTableBody">
+
+                @foreach (var i in Model.Inc)
+                {
+                    <tr class="incident-item" data-id="@i.id">
+                        <td><input type="checkbox" class="item-checkbox"></td>
+                        <td class="inc-tab-incident-number" data-label="Number">
+                            <a href="~/IncidentManagement/Inc_Info_Form?id=@i.id">@i.inc_number</a>
+                        </td>
+                        <td data-label="short description">@i.short_description</td>
+                        <td data-label="priority">
+                            @{
+                                string priorityClass = "inc-tab-priority ";
+                                if (i.priority == "1 - Critical")
+                                {
+                                    priorityClass += "priority-1";
+                                }
+                                else if (i.priority == "2 - High")
+                                {
+                                    priorityClass += "priority-2";
+                                }
+                                else if (i.priority == "3 - Moderate")
+                                {
+                                    priorityClass += "priority-3";
+                                }
+                                else if (i.priority == "4 - Low")
+                                {
+                                    priorityClass += "priority-4";
+                                }
+                                else if (i.priority == "5 - Planning")
+                                {
+                                    priorityClass += "priority-5";
+                                }
+                            }
+                            <span class="@priorityClass">@i.priority</span>
+                        </td>
+                        <td data-label="state">@i.state</td>
+                        <td data-label="category">@i.category</td>
+                        <td data-label="assignment group">@(i.AssignmentGroup?.name)</td>
+                        <td data-label="assigned to">@(i.AssignedTo?.fullname)</td>
+                        <td data-label="create date">@i.create_date.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                        <td data-label="update date">@i.updated.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                    </tr>
+                }
+
             </tbody>
         </table>
     </div>
 
     <div class="inc-tab-pagination">
-        <button class="inc-tab-pagination-button"><i class="fas fa-angle-double-left"></i></button>
-        <button class="inc-tab-pagination-button"><i class="fas fa-angle-left"></i></button>
-        <span class="inc-tab-pagination-info">1 to 20 of 67</span>
-        <button class="inc-tab-pagination-button"><i class="fas fa-angle-right"></i></button>
-        <button class="inc-tab-pagination-button"><i class="fas fa-angle-double-right"></i></button>
+        <button class="inc-tab-pagination-button" id="firstPageBtn" disabled><i class="fas fa-angle-double-left"></i></button>
+        <button class="inc-tab-pagination-button" id="prevPageBtn" disabled><i class="fas fa-angle-left"></i></button>
+        <span class="inc-tab-pagination-info" id="paginationInfo">-</span>
+        <button class="inc-tab-pagination-button" id="nextPageBtn"><i class="fas fa-angle-right"></i></button>
+        <button class="inc-tab-pagination-button" id="lastPageBtn"><i class="fas fa-angle-double-right"></i></button>
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script>
-    $(function () {
-      var $target = $('#Incidents_menu');
-      if (!$target.hasClass('active') || !$target.hasClass('open')) {
-          $('.menu-item').removeClass('active open');
-          $target.addClass('active open');
-      }
+<span style="display:none" id="forAjaxGetFunctionName_search">Assigned_to_me_Assigned_SearchIncident</span>
+<span style="display:none" id="forAjaxGetFunctionName_sort">Assigned_to_me_Assigned_SortIncident</span>
+<span style="display:none" id="forAjaxGetFunctionName_filter">Assigned_to_me_Assigned_FilterIncident</span>
 
-      $('#Incidents_menu_assigned').addClass("active");
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="~/js/List/AllList.js"></script>
+<script>
+      $(function () {
+        var $target = $('#Incidents_menu');
+        if (!$target.hasClass('active') || !$target.hasClass('open')) {
+            $('.menu-item').removeClass('active open');
+            $target.addClass('active open');
+        }
+
+        $('#Incidents_menu_assigned').addClass("active");
     });
 </script>
-
-

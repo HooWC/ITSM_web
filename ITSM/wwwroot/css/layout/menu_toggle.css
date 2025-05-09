@@ -38,9 +38,9 @@ html[data-menu-collapsed="true"] .layout-page,
 }
 
 .layout-menu-toggle-close {
-    background-color: #696cff;
+    background-color: transparent;
     padding: 0;
-    right:2px;
+    right: 2px;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -49,7 +49,14 @@ html[data-menu-collapsed="true"] .layout-page,
     height: 15px;
     min-width: 15px;
     min-height: 15px;
-    margin-top:30px;
+    margin-top: 30px;
+    animation: showBg 0s ease .3s forwards;
+}
+
+@keyframes showBg {
+    to {
+        background-color: #696cff;
+    }
 }
 
 /* Add a floating button to reopen menu when collapsed */
@@ -58,7 +65,7 @@ html[data-menu-collapsed="true"] .layout-page,
     align-items: center;
     justify-content: center;
     left: 67px;
-    top: 30px;
+    top: 20px;
     width: 28px;
     height: 28px;
     border-radius: 50%;

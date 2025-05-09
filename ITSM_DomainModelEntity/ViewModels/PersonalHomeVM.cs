@@ -15,6 +15,8 @@ namespace ITSM_DomainModelEntity.ViewModels
         public int AllTodo {  get; set; }
         public int AllInc {  get; set; }
         public int ApplyInc {  get; set; }
+        public int InProgressInc {  get; set; }
+        public int OnHoldInc {  get; set; }
         public int CompletedInc { get; set; }
         public int AllReq { get; set; }
         public int ApplyReq { get; set; }

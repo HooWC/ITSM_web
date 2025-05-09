@@ -1,0 +1,96 @@
+/* 
+ * logo_fix.css
+ * 修复在菜单折叠状态下logo大小变化问题
+ */
+
+/* 确保logo在任何情况下都保持原始大小 */
+html .layout-wrapper .menu .app-brand .app-brand-logo .text-primary .logo_hs,
+html .layout-wrapper.layout-menu-collapsed .menu .app-brand .app-brand-logo .text-primary .logo_hs,
+html[data-menu-collapsed="true"] .menu .app-brand .app-brand-logo .text-primary .logo_hs {
+    width: 35px !important;
+    height: 35px !important;
+    transition: none !important; /* 防止尺寸变化的过渡效果 */
+    transform: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
+    object-fit: contain !important;
+}
+
+/* 确保在菜单折叠时logo容器不会缩小 */
+html .layout-wrapper.layout-menu-collapsed:not(.layout-menu-hover) .layout-menu .app-brand-img,
+html .layout-wrapper.layout-menu-collapsed:not(.layout-menu-hover):not(.layout-menu-offcanvas):not(.layout-menu-fixed-offcanvas) .layout-menu .app-brand-img,
+html[data-menu-collapsed="true"] .layout-menu .app-brand-img {
+    display: block !important;
+    width: auto !important;
+    max-width: none !important;
+    transform: none !important;
+    min-width: 35px !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* 确保品牌区域在折叠时显示正常 */
+html .layout-wrapper.layout-menu-collapsed .app-brand.demo,
+html[data-menu-collapsed="true"] .app-brand.demo {
+    min-width: 35px !important;
+    justify-content: center !important;
+    height: auto !important;
+    display: flex !important;
+    width: auto !important;
+    padding: 0 !important;
+    margin: 12px auto !important;
+}
+
+/* 修复在菜单折叠时可能发生的logo位置调整 */
+html .layout-wrapper.layout-menu-collapsed .menu .app-brand .app-brand-link,
+html[data-menu-collapsed="true"] .menu .app-brand .app-brand-link {
+    justify-content: center !important;
+    padding-left: 0 !important;
+    width: 100% !important;
+    display: flex !important;
+}
+
+/* 确保logo在菜单折叠时不被隐藏 */
+html .layout-wrapper.layout-menu-collapsed .menu .app-brand-logo,
+html[data-menu-collapsed="true"] .menu .app-brand-logo {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* 确保在折叠时品牌文本被隐藏，但logo保持可见 */
+html .layout-wrapper.layout-menu-collapsed .menu .app-brand-text.demo,
+html[data-menu-collapsed="true"] .menu .app-brand-text.demo {
+    display: none !important;
+}
+
+/* 针对特定情况的修复 */
+html .layout-wrapper.layout-menu-collapsed:not(.layout-menu-hover) .layout-menu .app-brand-logo ~ .app-brand-text,
+html .layout-wrapper.layout-menu-collapsed:not(.layout-menu-hover):not(.layout-menu-offcanvas):not(.layout-menu-fixed-offcanvas) .layout-menu .app-brand-logo ~ .app-brand-text {
+    margin-left: 0 !important;
+    opacity: 0 !important;
+    display: none !important;
+}
+
+/* 特殊情况下的logo容器修复 */
+html .layout-wrapper.layout-menu-collapsed .menu .app-brand-logo .text-primary,
+html[data-menu-collapsed="true"] .menu .app-brand-logo .text-primary {
+    display: flex !important;
+    justify-content: center !important;
+    width: 100% !important;
+}
+
+/* 修复其他可能影响logo显示的样式 */
+html .layout-menu-collapsed .menu .app-brand.demo,
+html[data-menu-collapsed="true"] .menu .app-brand.demo {
+    overflow: visible !important;
+}
+
+@media screen and (max-width: 1199.98px) {
+    /* 移动设备响应式修复 */
+    .layout-menu-collapsed .menu .app-brand .app-brand-logo .text-primary .logo_hs {
+        width: 35px !important;
+        height: 35px !important;
+    }
+} 

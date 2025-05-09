@@ -31,6 +31,13 @@ namespace ITSM.Controllers
             _depApi = new Department_api(httpContextAccessor);
             _roleApi = new Role_api(httpContextAccessor);
         }
+
+        // ????
+        //public async Task<IActionResult> Admin_All()
+        //{
+
+        //}
+
         public async Task<IActionResult> All()
         {
             // current user info
@@ -47,7 +54,7 @@ namespace ITSM.Controllers
 
             // get incident list data
             var allInc = await inc;
-            var incList = allInc.Where(x => x.sender == currentUser.id).ToList();
+            var incList = allInc.Where(x => x.sender == currentUser.id).OrderByDescending(y => y.id).ToList();
 
             // get user and department data
             var allDepartments = await dep;
@@ -255,9 +262,153 @@ namespace ITSM.Controllers
             return RedirectToAction("All", "IncidentManagement");
         }
 
-        public IActionResult Assigned_To_Me()
+        public async Task<IActionResult> Assigned_To_Me()
         {
-            return View();
+            // current user info
+            var tokenService = new TokenService(_httpContextAccessor);
+            var currentUser = tokenService.GetUserInfo();
+
+            // Making concurrent API requests
+            var inc = _incApi.GetAllIncident_API();
+            var dep = _depApi.GetAllDepartment_API();
+            var user = _userApi.GetAllUser_API();
+
+            // Wait for all tasks to complete
+            await Task.WhenAll(inc, dep, user);
+
+            // get incident list data
+            var allInc = await inc;
+            var incList = allInc.Where(x => x.assigned_to == currentUser.id).OrderByDescending(y => y.id).ToList();
+
+            // get user and department data
+            var allDepartments = await dep;
+            var allUsers = await user;
+
+            foreach (var incident in incList)
+            {
+                incident.AssignmentGroup = allDepartments.FirstOrDefault(d => d.id == incident.assignment_group);
+                incident.AssignedTo = allUsers.FirstOrDefault(u => u.id == incident.assigned_to);
+            }
+
+            var model = new IncidentVM
+            {
+                User = currentUser,
+                Inc = incList
+            };
+
+            return View(model);
         }
+
+        public async Task<IActionResult> Assigned_To_Group()
+        {
+            // current user info
+            var tokenService = new TokenService(_httpContextAccessor);
+            var currentUser = tokenService.GetUserInfo();
+
+            // Making concurrent API requests
+            var inc = _incApi.GetAllIncident_API();
+            var dep = _depApi.GetAllDepartment_API();
+            var user = _userApi.GetAllUser_API();
+
+            // Wait for all tasks to complete
+            await Task.WhenAll(inc, dep, user);
+
+            // get incident list data
+            var allInc = await inc;
+            var incList = allInc.Where(x => x.assignment_group == currentUser.department_id).OrderByDescending(y => y.id).ToList();
+
+            // get user and department data
+            var allDepartments = await dep;
+            var allUsers = await user;
+
+            foreach (var incident in incList)
+            {
+                incident.AssignmentGroup = allDepartments.FirstOrDefault(d => d.id == incident.assignment_group);
+                incident.AssignedTo = allUsers.FirstOrDefault(u => u.id == incident.assigned_to);
+            }
+
+            var model = new IncidentVM
+            {
+                User = currentUser,
+                Inc = incList
+            };
+
+            return View(model);
+        }
+
+        public async Task<IActionResult> Resolved_Assigned_To_Me()
+        {
+            // current user info
+            var tokenService = new TokenService(_httpContextAccessor);
+            var currentUser = tokenService.GetUserInfo();
+
+            // Making concurrent API requests
+            var inc = _incApi.GetAllIncident_API();
+            var dep = _depApi.GetAllDepartment_API();
+            var user = _userApi.GetAllUser_API();
+
+            // Wait for all tasks to complete
+            await Task.WhenAll(inc, dep, user);
+
+            // get incident list data
+            var allInc = await inc;
+            var incList = allInc.Where(x => x.assigned_to == currentUser.id || x.updated_by == currentUser.id && x.state == "Resolved").OrderByDescending(y => y.id).ToList();
+
+            // get user and department data
+            var allDepartments = await dep;
+            var allUsers = await user;
+
+            foreach (var incident in incList)
+            {
+                incident.AssignmentGroup = allDepartments.FirstOrDefault(d => d.id == incident.assignment_group);
+                incident.AssignedTo = allUsers.FirstOrDefault(u => u.id == incident.assigned_to);
+            }
+
+            var model = new IncidentVM
+            {
+                User = currentUser,
+                Inc = incList
+            };
+
+            return View(model);
+        }
+
+        public async Task<IActionResult> Closed_Assigned_To_Me()
+        {
+            // current user info
+            var tokenService = new TokenService(_httpContextAccessor);
+            var currentUser = tokenService.GetUserInfo();
+
+            // Making concurrent API requests
+            var inc = _incApi.GetAllIncident_API();
+            var dep = _depApi.GetAllDepartment_API();
+            var user = _userApi.GetAllUser_API();
+
+            // Wait for all tasks to complete
+            await Task.WhenAll(inc, dep, user);
+
+            // get incident list data
+            var allInc = await inc;
+            var incList = allInc.Where(x => (x.assigned_to == currentUser.id || x.updated_by == currentUser.id) && x.state == "Closed").OrderByDescending(y => y.id).ToList();
+
+            // get user and department data
+            var allDepartments = await dep;
+            var allUsers = await user;
+
+            foreach (var incident in incList)
+            {
+                incident.AssignmentGroup = allDepartments.FirstOrDefault(d => d.id == incident.assignment_group);
+                incident.AssignedTo = allUsers.FirstOrDefault(u => u.id == incident.assigned_to);
+            }
+
+            var model = new IncidentVM
+            {
+                User = currentUser,
+                Inc = incList
+            };
+
+            return View(model);
+        }
+
     }
 }

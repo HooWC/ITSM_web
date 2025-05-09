@@ -22,273 +22,102 @@
     min-height: 100vh;
     }
 
-    /* 笔记活动容器滚动样式 */
-    .inc-cre-activity-container {
-    max-height: 400px;
-    overflow-y: auto;
-    padding-right: 8px;
-    }
-
-    .inc-cre-activity-container::-webkit-scrollbar {
-    width: 6px;
-    }
-
-    .inc-cre-activity-container::-webkit-scrollbar-track {
-    border-radius: 3px;
-    }
-
-    .inc-cre-activity-container::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 3px;
-    }
-
-    .inc-cre-activity-container::-webkit-scrollbar-thumb:hover {
-    background: #555;
-    }
-
-    .inc-cre-activity-item {
-    margin-bottom: 20px;
-    }
-
-    /* Resolve部分样式 */
-    .inc-cre-resolve-container {
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-    padding: 20px;
-    margin-bottom: 20px;
-    }
-
-    .inc-cre-resolve-input-area {
-    border: 1px solidrgba(156, 151, 151, 0.78);
-    border-radius: 6px;
-    padding: 15px;
-    margin-bottom: 20px;
-    }
-
-    .inc-cre-resolve-select {
-    margin-bottom: 15px;
-    padding: 5px;
-    border: 1px solid solidrgba(156, 151, 151, 0.78);
-    border-radius: 4px;
-    width: 100%;
-    font-size: 14px;
-    }
-
-    .inc-cre-btn-resolve {
-    background-color: #3a546e;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: 600;
-    }
-
-    .inc-cre-btn-resolve:hover {
-    background-color: #31465c;
-    }
-
-    .inc-cre-btn-closed {
-    background-color: #750b1c;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: 600;
-    }
-
-    .inc-cre-btn-closed:hover {
-    background-color: #5c0715;
-    }
-
-    .inc-cre-resolve-history-container {
-    max-height: 300px;
-    overflow-y: auto;
-    border-radius: 6px;
-    padding: 10px;
-    }
-
     .inc-cre-resolve-item {
-    display: flex;
-    padding: 12px;
-    border-bottom: 1px solid #eee;
+    background: linear-gradient(135deg, #2c3e50, #1a242f);
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    color: #fff;
+    transition: all 0.3s ease;
     }
 
-    .inc-cre-resolve-item:last-child {
-    border-bottom: none;
+    .inc-cre-resolve-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     }
 
     .inc-cre-resolve-content {
-    flex: 1;
+    width: 100%;
     }
 
     .inc-cre-resolve-header {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 5px;
+    align-items: center;
+    margin-bottom: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 8px;
     }
 
     .inc-cre-resolve-type {
-    font-weight: 600;
-    color: #28a745;
+    font-weight: bold;
+    color: #4caf50;
+    font-size: 16px;
     }
 
     .inc-cre-resolve-time {
-    color: #888;
-    font-size: 12px;
+    color: #bbb;
+    font-size: 13px;
     }
 
-    .inc-cre-resolve-details {
-    font-size: 14px;
-    color: #444;
-    }
-
-    .inc-cre-btn-submit-footer {
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: 600;
-    }
-
-    .inc-cre-btn-submit-footer:hover {
-    background-color:#3c8f3f;
-    }
-
-    .inc-cre-btn-resolve-footer {
-    background-color: #3a546e;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: 600;
-    }
-
-    .inc-cre-btn-resolve-footer:hover {
-    background-color: #31465c;
-    }
-
-    /* 已解决状态下的样式 */
-    .inc-cre-loading-spinner {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 20px;
-    }
-    
     .inc-cre-resolve-user {
-        margin-bottom: 8px;
-        font-weight: 500;
-        color: #fff;
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
     }
-    
-    /* 解决历史记录样式增强 */
-    .resolution-history-section {
-        display: none; /* 默认隐藏 */
-    }
-    
-    .inc-cre-section-title {
-        font-size: 18px;
-        font-weight: 600;
-        margin-bottom: 16px;
-        color: #fff;
-        padding-bottom: 8px;
-        border-bottom: 2px solid #4caf50;
-        display: inline-block;
-    }
-    
-    .inc-cre-resolve-item {
-        background: linear-gradient(135deg, #2c3e50, #1a242f);
-        border-radius: 10px;
-        padding: 15px;
-        margin-bottom: 15px;
-        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-        position: relative;
-        color: #fff;
-        transition: all 0.3s ease;
-    }
-    
-    .inc-cre-resolve-item:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    }
-    
-    .inc-cre-resolve-content {
-        width: 100%;
-    }
-    
-    .inc-cre-resolve-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 12px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        padding-bottom: 8px;
-    }
-    
-    .inc-cre-resolve-type {
-        font-weight: bold;
-        color: #4caf50;
-        font-size: 16px;
-    }
-    
-    .inc-cre-resolve-time {
-        color: #bbb;
-        font-size: 13px;
-    }
-    
-    .inc-cre-resolve-user {
-        display: flex;
-        align-items: center;
-        margin-bottom: 12px;
-    }
-    
+
     .inc-cre-resolve-user-avatar {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        margin-right: 10px;
-        border: 2px solid rgba(255, 255, 255, 0.2);
-    }
-    
-    .inc-cre-resolve-details {
-        line-height: 1.6;
-        font-size: 14px;
-        color: #fff;
-        background-color: rgba(255, 255, 255, 0.05);
-        padding: 10px;
-        border-radius: 6px;
-        border-left: 3px solid #4caf50;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-right: 10px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
     }
 
-    /* 聊天历史记录的样式增强 */
+    .inc-cre-resolve-details {
+    line-height: 1.6;
+    font-size: 14px;
+    color: #fff;
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 10px;
+    border-radius: 6px;
+    border-left: 3px solid #4caf50;
+    }
+
     .resolved-mode .inc-cre-activity-container {
-        border-radius: 10px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    padding: 15px;
     }
-    
+
     .resolved-mode .inc-cre-activities-section h3 {
-        font-size: 18px;
-        font-weight: 600;
-        margin-bottom: 16px;
-        color: #fff;
-        padding-bottom: 8px;
-        border-bottom: 2px solid #3a546e;
-        display: inline-block;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #fff;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #3a546e;
+    display: inline-block;
     }
-    
+
     .resolved-mode .inc-cre-activity-item {
-        transition: all 0.3s ease;
+    transition: all 0.3s ease;
     }
-    
+
     .resolved-mode .inc-cre-activity-item:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    .inc-cre-btn-closed{
+    background-color: #6b0e0e;
+    transition:all .2s ease-in-out;
+    }
+
+    .inc-cre-btn-closed:hover{
+    background-color: #590d0d;
     }
 </style>
 
@@ -323,11 +152,15 @@
                 </svg>
             </button>
 
-            @if (Model.Inc.state != "Resolved")
+            @if (Model.Inc.state != "Resolved" && Model.Inc.state != "Closed")
             {
-                <button class="inc-cre-btn inc-cre-btn-closed">Closed</button>
+                <button class="inc-cre-btn inc-cre-btn-closed" id="close-button">Closed</button>
                 <button class="inc-cre-btn inc-cre-btn-resolve" id="resolve-button">Resolve</button>
                 <button class="inc-cre-btn inc-cre-btn-submit" onclick="document.getElementById('incidentForm').submit();">Save</button>
+            }
+            else if (Model.Inc.state == "Closed")
+            {
+                <button class="inc-cre-btn inc-cre-btn-closed" id="reopen-button">Reopened</button>
             }
             <div class="nav-item navbar-dropdown dropdown-user dropdown open-button">
                 <a class="nav-link dropdown-toggle hide-arrow p-0"
@@ -466,6 +299,10 @@
                             {
                                 <option value="Resolved" selected="@(Model.Inc.state == "Resolved")">Resolved</option>
                             }
+                            else if (Model.Inc.state == "Closed")
+                            {
+                                <option value="Closed" selected="@(Model.Inc.state == "Closed")">Closed</option>
+                            }
                             else
                             {
                                 <option value="Pedding" selected="@(Model.Inc.state == "Pedding")">Pedding</option>
@@ -561,7 +398,7 @@
             <div class="inc-cre-form-group inc-cre-short-description-group">
                 <label for="short-description" class="inc-cre-form-label inc-cre-required">Short description</label>
                 <div class="inc-cre-input-with-actions">
-                    @if (Model.Inc.state != "Resolved")
+                    @if (Model.Inc.state != "Resolved" && Model.Inc.state != "Closed")
                     {
                         <input type="text" maxlength="100" id="short-description" name="short_description" class="inc-cre-form-control" value="@Model.Inc.short_description" required>
                     }
@@ -583,7 +420,7 @@
 
             <div class="inc-cre-form-group inc-cre-full-width">
                 <label for="description" class="inc-cre-form-label">Description</label>
-                @if (Model.Inc.state != "Resolved")
+                @if (Model.Inc.state != "Resolved" && Model.Inc.state != "Closed")
                 {
                     <textarea id="description" name="describe" class="inc-cre-form-control inc-cre-description-textarea" rows="5">@Model.Inc.describe</textarea>
                 }
@@ -634,7 +471,7 @@
                         <h3 class="inc-cre-section-title">Activities: <span id="activity-count">0</span></h3>
 
                         <div class="inc-cre-activity-container">
-                            <!-- 活动条目将通过JavaScript动态添加 -->
+                            <!-- Char History -->
                         </div>
                     </div>
                 </div>
@@ -676,31 +513,29 @@
                         <textarea id="resolve-notes" name="resolveNotes" class="inc-cre-notes-textarea" placeholder="Enter resolution details..."></textarea>
                     </div>
 
-                    <div class="inc-cre-resolve-history-section resolution-history-section" id="resolution-history-section">
-                        <h3 class="inc-cre-section-title">Resolution Information</h3>
-
-                        <div class="inc-cre-resolve-history-container">
-                            <div class="inc-cre-loading-spinner" id="resolution-loading">
-                                <div class="spinner-border text-primary" role="status">
-                                    <span class="visually-hidden">加载中...</span>
+                    @if (Model.Inc.state == "Resolved" || Model.Inc.state == "Closed")
+                    {
+                        <div class="inc-cre-resolve-history-section resolution-history-section" id="resolution-history-section">
+                            <h3 class="inc-cre-section-title">Resolution Information</h3>
+                            <div class="inc-cre-resolve-history-container">
+                                <div id="resolution-history-content">
+                                    <!-- Resolved History -->
                                 </div>
                             </div>
-                            <div id="resolution-history-content">
-                                <!-- 解决历史将由AJAX加载 -->
-                            </div>
                         </div>
-                    </div>
+                    }
                 </div>
             </div>
         </div>
     </div>
 
-    @if (Model.Inc.state != "Resolved")
+    @if (Model.Inc.state != "Resolved" && Model.Inc.state != "Closed")
     {
         <footer class="inc-cre-form-footer">
             <div class="inc-cre-footer-buttons">
                 <button type="button" class="inc-cre-btn inc-cre-btn-submit-footer" onclick="document.getElementById('incidentForm').submit();">Save</button>
                 <button type="button" class="inc-cre-btn inc-cre-btn-resolve-footer" id="resolve-button-footer">Resolve</button>
+                <button type="button" class="inc-cre-btn inc-cre-btn-closed-footer" id="close-button-footer">Closed</button>
             </div>
         </footer>
     }
@@ -709,7 +544,7 @@
 <div id="inc-cre-modal" class="inc-cre-modal">
     <div class="inc-cre-modal-content">
         <div class="inc-cre-modal-header">
-            <h3 id="inc-cre-modal-title">选择项</h3>
+            <h3 id="inc-cre-modal-title">Select</h3>
             <button type="button" class="inc-cre-modal-close">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -731,12 +566,11 @@
                 <table class="inc-cre-modal-table">
                     <thead>
                         <tr>
-                            <th>名称</th>
-                            <th>描述</th>
+                            <th>Name</th>
+                            <th>Desc</th>
                         </tr>
                     </thead>
                     <tbody id="inc-cre-modal-table-body">
-                        <!-- 表格内容会通过JavaScript动态填充 -->
                     </tbody>
                 </table>
             </div>
@@ -755,32 +589,33 @@
 
         $('#Incidents_menu_all').addClass("active");
 
-      // 检查是否为已解决状态
+      // Check if it is resolved or closed
       var isResolved = "@Model.Inc.state" === "Resolved";
+      var isClosed = "@Model.Inc.state" === "Closed";
       
-      // 如果已解决，禁用所有表单元素并显示解决历史
-      if (isResolved) {
-          // 禁用所有选择框
+      // If resolved or closed, disable all form elements and show resolution history
+      if (isResolved || isClosed) {
+          // Disable all checkboxes
           $("#category, #subcategory, #state, #impact, #urgency").prop("disabled", true);
           
-          // 禁用Assignment group和Assigned to的搜索按钮
+          // Disable the search buttons for Assignment group and Assigned to
           $("#assignment-group-search, #assigned-to-search").prop("disabled", true);
           
-          // 只隐藏Work notes输入区域，保留历史记录
+          // Hide only the Work notes input area and keep the history
           $(".inc-cre-work-notes-area").hide();
-          $(".inc-cre-watch-list").hide(); // 隐藏Work notes list标题
+          $(".inc-cre-watch-list").hide(); // Hide Work notes list title
           
-          // 为聊天历史添加已解决模式的样式
+          // Added resolved mode styles to chat history
           $(".inc-cre-activities-section").addClass("resolved-mode");
           $(".inc-cre-activities-section h3").text("Chat History");
           
-          // 修改Notes标签页的标题
+          // Modify the title of the Notes tab
           $(".inc-cre-tab-section:first .inc-cre-tab").text("Chat History");
           
-          // 如果是已解决状态，隐藏整个Resolve部分
+          // If it is in the resolved state, hide the entire Resolve section
           $(".inc-cre-resolve-container .inc-cre-notes-header").hide();
           
-          // 隐藏resolve输入区域，显示历史区域并添加额外样式
+          // Hide the resolve input area, show the history area and add additional styles
           $("#resolve-input-area").hide();
           $("#resolution-history-section").show().css({
               'padding': '20px',
@@ -789,18 +624,18 @@
               'box-shadow': '0 2px 5px rgba(0,0,0,0.05)'
           });
           
-          // 修改Resolve标签页的标题
+          // Modify the title of the Resolve tab
           $(".inc-cre-tab-section:last .inc-cre-tab").text("Resolution Details");
           
-          // 加载解决历史
+          // Load Solution History
           loadResolutionHistory();
       }
 
-      // 更新Priority逻辑
+      // Update Priority Logic
       function updatePriority() {
           var impact = $("#impact").val();
           var urgency = $("#urgency").val();
-          var priority = "5 - Planning"; // 默认值
+          var priority = "5 - Planning"; // default value
 
           if (impact === "1 - High" && urgency === "1 - High") {
               priority = "1 - Critical";
@@ -822,15 +657,15 @@
           $("#priority-hidden").val(priority);
       }
 
-      // 当Impact或Urgency改变时更新Priority
+      // Update Priority when Impact or Urgency changes
       $("#impact, #urgency").change(function() {
           updatePriority();
       });
 
-      // 页面加载时初始化Priority
+      // Initialize Priority when the page loads
       updatePriority();
 
-      // 定义每个Category对应的Subcategory选项
+      // Define the Subcategory options for each Category
       var subcategories = {
           "Hardware": [
               "Laptop/Desktop",
@@ -889,16 +724,16 @@
           ]
       };
 
-      // 初始化Subcategory
+      // Initialize Subcategory
       function updateSubcategories() {
           var category = $("#category").val();
           var $subcategory = $("#subcategory");
-          var currentSubcategory = "@Model.Inc.subcategory"; // 保存当前子类别值
+          var currentSubcategory = "@Model.Inc.subcategory"; // Save the current subcategory value
 
-          // 清空现有选项
+          // Clear existing options
           $subcategory.empty();
 
-          // 添加新选项
+          // Add New Options
           if (subcategories[category]) {
               $.each(subcategories[category], function(index, value) {
                   var isSelected = (value === currentSubcategory) ? 'selected' : '';
@@ -907,21 +742,21 @@
           }
       }
 
-      // 页面加载时初始化
+      // Initialized when the page loads
       updateSubcategories();
 
-      // 当Category选择变化时更新Subcategory
+      // Update Subcategory when Category selection changes
       $("#category").change(function() {
           updateSubcategories();
       });
 
-      // 模态框功能
+      // Modal box function
       var currentInputField = null;
       var selectedDepartmentId = @(Model.Inc.assignment_group > 0 ? Model.Inc.assignment_group : "null");
       var departmentList = [];
       var usersByDepartment = {};
 
-      // 从服务器获取部门数据
+      // Get department data from the server
       function loadDepartments() {
           $.ajax({
               url: '/Ajax/DepartmentData',
@@ -929,18 +764,18 @@
               dataType: 'json',
               success: function(data) {
                   departmentList = data;
-                  console.log("部门数据加载成功:", data);
+                  console.log("Department data loaded successfully:", data);
               },
               error: function(xhr, status, error) {
-                  console.error("加载部门数据失败:", error);
+                  console.error("Failed to load department data:", error);
               }
           });
       }
 
-      // 加载部门数据
+      // Loading department data
       loadDepartments();
 
-      // 根据部门ID获取用户数据
+      // Get user data based on department ID
       function loadUsersByDepartment(departmentId) {
           $.ajax({
               url: '/Ajax/AssignedToData',
@@ -950,30 +785,30 @@
               success: function(data) {
                   if (data && Array.isArray(data)) {
                       usersByDepartment[departmentId] = data;
-                      openModal("选择分配人员", data, $("#assigned-to"));
+                      openModal("Select Assign Person", data, $("#assigned-to"));
                   } else if (data && data.success === false) {
-                      console.error("获取用户数据失败:", data.message);
-                      alert("获取用户数据失败: " + data.message);
+                      console.error("Failed to obtain user data:", data.message);
+                      //alert("Failed to obtain user data: " + data.message);
                   } else {
-                      console.error("获取用户数据格式不正确");
-                      alert("获取用户数据格式不正确");
+                      console.error("The format of the obtained user data is incorrect");
+                      //alert("The format of the obtained user data is incorrect");
                   }
               },
               error: function(xhr, status, error) {
-                  console.error("获取用户数据请求失败:", error);
-                  alert("获取用户数据请求失败: " + error);
+                  console.error("Failed to obtain user data request:", error);
+                  //alert("Failed to obtain user data request: " + error);
               }
           });
       }
 
-      // 打开模态框
+      // Open modal
       function openModal(title, data, targetInput) {
           currentInputField = targetInput;
 
-          // 设置标题
+          // Title
           $("#inc-cre-modal-title").text(title);
 
-          // 清空并填充表格
+          // Clear and fill the table
           var tableBody = $("#inc-cre-modal-table-body");
           tableBody.empty();
 
@@ -990,68 +825,68 @@
               );
           });
 
-          // 显示模态框
+          // Show modal
           $("#inc-cre-modal").fadeIn(200);
       }
 
-      // 关闭模态框
+      // Close the modal
       function closeModal() {
           $("#inc-cre-modal").fadeOut(200);
           currentInputField = null;
       }
 
-      // 点击Assignment Group搜索按钮
+      // Click the Assignment Group search button
       $("#assignment-group-search").on('click', function() {
           if (isResolved) {
-              return; // 如果已解决，不执行操作
+              return; // If resolved, do nothing
           }
           
           if (departmentList && departmentList.length > 0) {
-              openModal("选择分配组", departmentList, $("#assignment-group"));
+              openModal("Select Assignment Group", departmentList, $("#assignment-group"));
           } else {
-              loadDepartments(); // 如果数据还未加载，重新加载
+              loadDepartments(); // If the data has not been loaded, reload it
               setTimeout(function() {
                   if (departmentList && departmentList.length > 0) {
-                      openModal("选择分配组", departmentList, $("#assignment-group"));
+                      openModal("Select Assignment Group", departmentList, $("#assignment-group"));
                   } else {
-                      alert("无法加载部门数据，请刷新页面重试");
+                      // Unable to load department data, please refresh the page and try againalert("无法加载部门数据，请刷新页面重试");
                   }
               }, 500);
           }
       });
 
-      // 点击Assigned To搜索按钮
+      // Click the Assigned To search button
       $("#assigned-to-search").on('click', function() {
           if (isResolved) {
-              return; // 如果已解决，不执行操作
+              return; // If resolved, do nothing
           }
       
           if (!selectedDepartmentId) {
-              alert("请先选择分配组");
+              // alert("Please select the allocation group first");
               return;
           }
 
-          // 检查是否已有缓存的用户数据
+          // Check if there is already cached user data
           if (usersByDepartment[selectedDepartmentId]) {
-              openModal("选择分配人员", usersByDepartment[selectedDepartmentId], $("#assigned-to"));
+              openModal("Select Assign Person", usersByDepartment[selectedDepartmentId], $("#assigned-to"));
           } else {
               loadUsersByDepartment(selectedDepartmentId);
           }
       });
 
-      // 点击模态框关闭按钮
+      // Click the modal box close button
       $(".inc-cre-modal-close").click(function() {
           closeModal();
       });
 
-      // 点击模态框外部关闭
+      // Click outside the modal to close it
       $(document).on('click', '.inc-cre-modal', function(e) {
           if ($(e.target).hasClass('inc-cre-modal')) {
               closeModal();
           }
       });
 
-      // 选择表格行
+      // Select table rows
       $(document).on('click', '.inc-cre-modal-table tbody tr', function() {
           var selectedName = $(this).data('name');
           var selectedId = $(this).data('id');
@@ -1059,15 +894,14 @@
           if (currentInputField) {
               currentInputField.val(selectedName);
 
-              // 如果选择的是部门，则启用Assigned to
+              // If you select a department, enable Assigned to
               if (currentInputField.attr('id') === 'assignment-group') {
                   selectedDepartmentId = selectedId;
-                  $("#assignment-group-id").val(selectedId); // 将ID保存到隐藏输入框
+                  $("#assignment-group-id").val(selectedId); // Save the ID to a hidden input box
                   $("#assigned-to-search").prop('disabled', false);
-                  $("#assigned-to").val(''); // 清空之前选择的用户
-                  $("#assigned-to-id").val(''); // 清空之前选择的用户ID
+                  $("#assigned-to").val(''); // Clear previously selected users
+                  $("#assigned-to-id").val(''); // Clear the previously selected user ID
               } else if (currentInputField.attr('id') === 'assigned-to') {
-                  // 如果选择的是用户，保存用户ID
                   $("#assigned-to-id").val(selectedId);
               }
           }
@@ -1075,7 +909,7 @@
           closeModal();
       });
 
-      // 模态框中的搜索功能
+      // Search functionality in a modal
       $("#inc-cre-search-input").on('keyup', function() {
           var value = $(this).val().toLowerCase();
           $(".inc-cre-modal-table tbody tr").filter(function() {
@@ -1083,36 +917,36 @@
           });
       });
 
-      // 加载部门数据
+      // Loading department data
       loadDepartments();
 
-      // Notes部分功能
-      // 更新活动数量
+      // Notes Some functions
+      // Update activity quantity
       function updateActivityCount() {
           var count = $(".inc-cre-activity-container .inc-cre-activity-item").length;
           $("#activity-count").text(count);
       }
 
-      // 初始化更新活动数量
+      // Initialize update activity count
       updateActivityCount();
 
-      // 发布工作笔记
+      // Post work notes
       $("#post-note-btn").click(function() {
           if (isResolved) {
-              alert("此事件已解决，无法添加新的工作笔记");
+              // alert("This incident has been resolved and new work notes cannot be added");
               return;
           }
           
           var workNotes = $("#work-notes").val().trim();
           
           if (workNotes) {
-              // 禁用按钮，防止重复提交
+              // Disable button to prevent duplicate submission
               $(this).prop("disabled", true);
               
-              // 获取当前事件ID
+              // Get the current event ID
               var incidentId = $("#id").val();
               
-              // 通过AJAX调用后端API添加笔记
+              // Add notes via AJAX calls to the backend API
               $.ajax({
                   url: '/Ajax/AddNote',
                   type: 'POST',
@@ -1125,10 +959,10 @@
                       $("#post-note-btn").prop("disabled", false);
                       
                       if (response.success) {
-                          // 获取当前时间
+                          // Get the current time
                           var dateString = response.note.create_date;
                           
-                          // 创建新的活动项
+                          // Create a new activity item
                           var newActivity = $('<div class="inc-cre-activity-item">' +
                               '<div class="inc-cre-user-avatar">' +
                                   '<img src="' + (response.note.user_avatar ? 'data:image/jpeg;base64,' + response.note.user_avatar : 'https://www.diydoutu.com/touxiang/20201222-1.jpg') + '" alt="' + response.note.user_name + '">' +
@@ -1144,35 +978,35 @@
                               '</div>' +
                           '</div>');
                           
-                          // 添加到活动容器的顶部
+                          // Add to the top of the active container
                           $(".inc-cre-activity-container").prepend(newActivity);
                           
-                          // 清空文本框
+                          // Clear text box
                           $("#work-notes").val('');
                           
-                          // 更新活动数量
+                          // Update activity quantity
                           updateActivityCount();
                       } else {
-                          alert("添加笔记失败: " + response.message);
+                          // alert("Failed to add note: " + response.message);
                       }
                   },
                   error: function(xhr, status, error) {
-                      // 重新启用按钮
+                      // Re-enable button
                       $("#post-note-btn").prop("disabled", false);
-                      console.error("添加笔记请求失败:", error);
-                      alert("添加笔记请求失败: " + error);
+                      console.error("Add note request failed:", error);
+                      // alert("Add note request failed: " + error);
                   }
               });
           } else {
-              alert("请输入工作笔记内容");
+              // alert("Please enter the work notes content");
           }
       });
 
-      // 加载事件的所有笔记
+      // Load all notes for an event
       function loadNotes() {
           var incidentId = $("#id").val();
           
-          // 通过AJAX获取现有的笔记
+          // Through AJAX Get existing notes
           $.ajax({
               url: '/Ajax/GetNotesByIncident',
               type: 'GET',
@@ -1180,10 +1014,17 @@
               dataType: 'json',
               success: function(response) {
                   if (response.success && response.notes) {
-                      // 清空活动容器
+                      // Clear the activity container
                       $(".inc-cre-activity-container").empty();
                       
-                      // 添加每个笔记到活动容器
+                      // 如果是已解决或已关闭状态，并且没有聊天记录，显示无聊天记录的消息
+                      var isResolvedOrClosed = "@Model.Inc.state" === "Resolved" || "@Model.Inc.state" === "Closed";
+                      if (isResolvedOrClosed && (!response.notes || response.notes.length === 0)) {
+                          $(".inc-cre-activity-container").html('<div class="inc-cre-no-history" style="text-align: center; padding: 30px; color: #6c757d; font-style: italic;">No chat history available</div>');
+                          return;
+                      }
+                      
+                      // Add each note to the active container
                       $.each(response.notes, function(i, note) {
                           var noteItem = $('<div class="inc-cre-activity-item">' +
                               '<div class="inc-cre-user-avatar">' +
@@ -1203,26 +1044,26 @@
                           $(".inc-cre-activity-container").append(noteItem);
                       });
                       
-                      // 更新活动数量
+                      // Update activity quantity
                       updateActivityCount();
                   } else if (!response.success) {
-                      console.error("加载笔记失败:", response.message);
+                      console.error("Failed to load note:", response.message);
                   }
               },
               error: function(xhr, status, error) {
-                  console.error("加载笔记请求失败:", error);
+                  console.error("Load note request failed:", error);
               }
           });
       }
       
-      // 页面加载时加载现有笔记
+      // Load existing notes on page load
       loadNotes();
       
-      // Resolve功能相关代码
+      // Resolve function related code
       $("#resolve-button, #resolve-button-footer").click(function() {
-          // 如果已解决，不执行操作
+          // If resolved, do nothing
           if (isResolved) {
-              alert("此事件已解决，无法再次解决");
+              // alert("This incident has been resolved and cannot be resolved again");
               return;
           }
           
@@ -1239,9 +1080,9 @@
               return;
           }
           
-          // 获取表单数据
+          // Get form data
           var formData = $("#incidentForm").serialize();
-          // 添加resolve相关数据
+          // Add resolve related data
           formData += "&resolveType=" + encodeURIComponent(resolveType);
           formData += "&resolveNotes=" + encodeURIComponent(resolveNotes);
           
@@ -1262,7 +1103,7 @@
           });
       });
 
-      // 加载解决历史信息
+      // Load solution history information
       function loadResolutionHistory() {
           var incidentId = $("#id").val();
           
@@ -1294,17 +1135,66 @@
                       
                       $("#resolution-history-content").html(historyItem);
                   } else {
-                      $("#resolution-history-content").html('<div class="text-center">无法加载解决历史</div>');
-                      console.error("加载解决历史失败:", response.message);
+                      $("#resolution-history-content").html('<div class="text-center">Unable to load solution history</div>');
+                      console.error("Failed to load solution history:", response.message);
                   }
               },
               error: function(xhr, status, error) {
                   $("#resolution-loading").hide();
-                  $("#resolution-history-content").html('<div class="text-center">加载失败</div>');
-                  console.error("加载解决历史请求失败:", error);
+                  $("#resolution-history-content").html('<div class="text-center">Loading failed</div>');
+                  console.error("Failed to load solution history request:", error);
               }
           });
       }
+
+      // Close button click event
+      $("#close-button, #close-button-footer").click(function() {
+          // If already resolved or closed, do nothing
+          if (isResolved || isClosed) {
+              return;
+          }
+          
+          // Get form data
+          var formData = $("#incidentForm").serialize();
+          
+          $.ajax({
+              url: '/Ajax/CloseIncident',
+              type: 'POST',
+              data: formData,
+              success: function(response) {
+                  if (response.success) {
+                      window.location.href = '/IncidentManagement/All';
+                  } else {
+                      alert("关闭事件失败: " + response.message);
+                  }
+              },
+              error: function(xhr, status, error) {
+                  alert("错误: " + error);
+              }
+          });
+      });
+      
+      // Reopen button click event (for closed incidents)
+      $("#reopen-button").click(function() {
+          // Get form data
+          var formData = $("#incidentForm").serialize();
+          
+          $.ajax({
+              url: '/Ajax/ReopenIncident',
+              type: 'POST',
+              data: formData,
+              success: function(response) {
+                  if (response.success) {
+                      window.location.href = '/IncidentManagement/All';
+                  } else {
+                      alert("重新打开事件失败: " + response.message);
+                  }
+              },
+              error: function(xhr, status, error) {
+                  alert("错误: " + error);
+              }
+          });
+      });
     });
 </script>
 

@@ -1,7 +1,7 @@
 ﻿@using ITSM_DomainModelEntity.ViewModels
 @model IncidentVM
 @{
-    ViewData["Title"] = "Inc_List";
+    ViewData["Title"] = "Assigned_To_Group";
     Layout = "_Layout";
 }
 
@@ -146,8 +146,9 @@
     </div>
 </div>
 
-<span style="display:none" id="forAjaxGetFunctionName_search">SearchIncident</span>
-<span style="display:none" id="forAjaxGetFunctionName_sort">SortIncident</span>
+<span style="display:none" id="forAjaxGetFunctionName_search">Assigned_to_team_Assigned_SearchIncident</span>
+<span style="display:none" id="forAjaxGetFunctionName_sort">Assigned_to_team_Assigned_SortIncident</span>
+<span style="display:none" id="forAjaxGetFunctionName_filter">Assigned_to_team_Assigned_FilterIncident</span>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="~/js/List/AllList.js"></script>
@@ -159,6 +160,7 @@
             $target.addClass('active open');
         }
 
-        $('#Incidents_menu_all').addClass("active");
+        $('#Incidents_menu_assigned_to_team').addClass("active");
     });
 </script>
+

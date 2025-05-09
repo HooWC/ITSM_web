@@ -26399,7 +26399,7 @@ html:not(.layout-footer-fixed) .content-wrapper {
     .layout-overlay {
         position: fixed;
         display: none;
-        background: #22303e;
+        /*background: #22303e;*/
         block-size: 100% !important;
         cursor: pointer;
         inset-block-start: 0;

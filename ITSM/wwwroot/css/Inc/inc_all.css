@@ -470,3 +470,98 @@ input[type="checkbox"] {
         margin-top: 5px;
     }
 }
+
+/*All*/
+
+.inc-tab-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.inc-tab-dropdown-menu {
+    position: absolute;
+    background-color: #323436;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    border-radius: 4px;
+    margin-top: 5px;
+}
+
+.inc-tab-dropdown-item {
+    color: white;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+    .inc-tab-dropdown-item:hover {
+        color: white;
+        text-decoration: none;
+        background-color: #575859;
+    }
+
+.inc-tab-incidents-table th.number-column {
+    width: 9%;
+}
+
+.inc-tab-incidents-table th.short-column {
+    width: 16%;
+}
+
+.inc-tab-incidents-table th.create-date-column {
+    width: 9%;
+}
+
+.inc-tab-incidents-table th.update-date-column {
+    width: 9%;
+}
+
+.inc-tab-incidents-table th.priority-column {
+    width: 12%;
+}
+
+.inc-tab-incidents-table th.state-column {
+    width: 9%;
+}
+
+.inc-tab-incidents-table th.category-column {
+    width: 12%;
+}
+
+.inc-tab-incidents-table th.assignment-group-column {
+    width: 12%;
+}
+
+.inc-tab-incidents-table th.assigned-to-column {
+    width: 12%;
+}
+
+.item-delete-btn {
+    background: #6b0421;
+}
+
+    .item-delete-btn:hover {
+        background: #4f0217;
+    }
+
+.inc-tab-pagination-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.todo-page {
+    display: none;
+}
+
+    .todo-page.active {
+        display: table-row;
+    }
+
+.inc-tab-incident-number a {
+    text-decoration: none;
+}
+
+    .inc-tab-incident-number a:hover {
+        text-decoration: none;
+    }

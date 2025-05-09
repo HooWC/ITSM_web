@@ -59,10 +59,12 @@ namespace ITSM.Controllers
             var todo_all_count = todo.Count;
 
             var allIncident = await incidentTask;
-            var incident = allIncident.Where(x => x.sender == currentUser.id).ToList();
+            var incident = allIncident.Where(x => x.sender == currentUser.id).OrderByDescending(y => y.id).ToList();
             var incident_list = incident.Take(9).ToList();
             var incident_r_count = incident.Count(x => x.state == "Resolved");
-            var incident_p_count = incident.Count(x => x.state == "Pending");
+            var incident_p_count = incident.Count(x => x.state == "Pedding");
+            var incident_i_count = incident.Count(x => x.state == "In Progress");
+            var incident_o_count = incident.Count(x => x.state == "On-Hold");
             var incident_all_count = incident.Count;
 
             var allUser = await userTask;
@@ -98,6 +100,8 @@ namespace ITSM.Controllers
                 CompletedInc = incident_r_count,
                 AllReq = req_all_count,
                 ApplyReq = req_p_count,
+                InProgressInc = incident_i_count,
+                OnHoldInc = incident_o_count,
                 CompletedReq = req_r_count,
                 AllKnowledge = knowledge_count,
                 AllFeedback = feedback_count,
@@ -121,7 +125,7 @@ namespace ITSM.Controllers
 
             // get todo list data
             var allTodo = await todoTask;
-            var todo = allTodo.Where(x => x.user_id == currentUser.id).ToList();
+            var todo = allTodo.Where(x => x.user_id == currentUser.id).OrderByDescending(y => y.id).ToList();
 
             // return to view data
             var model = new TodoVM

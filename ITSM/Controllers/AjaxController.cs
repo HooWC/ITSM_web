@@ -60,7 +60,7 @@ namespace ITSM.Controllers
                 return Json(new { success = false, message = "Not logged in" });
 
             var allTodos = await _todoApi.GetAllTodo_API();
-            var userTodos = allTodos.Where(x => x.user_id == currentUser.id).ToList();
+            var userTodos = allTodos.Where(x => x.user_id == currentUser.id).OrderByDescending(y => y.id).ToList();
 
             List<Todo> filteredTodos;
 
@@ -113,7 +113,7 @@ namespace ITSM.Controllers
                 return Json(new { success = false, message = "Not logged in" });
 
             var allTodos = await _todoApi.GetAllTodo_API();
-            var userTodos = allTodos.Where(x => x.user_id == currentUser.id).ToList();
+            var userTodos = allTodos.Where(x => x.user_id == currentUser.id).OrderByDescending(y => y.id).ToList();
 
             List<Todo> filteredTodos;
 
@@ -156,7 +156,7 @@ namespace ITSM.Controllers
                 return Json(new { success = false, message = "Not logged in" });
 
             var allTodos = await _todoApi.GetAllTodo_API();
-            var userTodos = allTodos.Where(x => x.user_id == currentUser.id).ToList();
+            var userTodos = allTodos.Where(x => x.user_id == currentUser.id).OrderByDescending(y => y.id).ToList();
 
             List<Todo> sortedTodos;
             if (sortOrder.ToLower() == "desc")
@@ -274,7 +274,7 @@ namespace ITSM.Controllers
         /// <param name="searchTerm">Search keyword</param>
         /// <param name="filterBy">Filter field, can be number/title/create_date</param>
         /// <returns>Matched Incident list</returns>
-        public async Task<IActionResult> SearchIncident(string searchTerm, string filterBy = "number")
+        public async Task<IActionResult> SearchIncident(string searchWord, string searchTerm, string filterBy = "number")
         {
             if (string.IsNullOrEmpty(searchTerm))
                 return Json(new List<Incident>());
@@ -283,7 +283,17 @@ namespace ITSM.Controllers
                 return Json(new { success = false, message = "Not logged in" });
 
             var allIncs = await _incApi.GetAllIncident_API();
-            var userIncs= allIncs.Where(x => x.sender == currentUser.id).ToList();
+            var userIncs = new List<Incident>();
+            if (searchWord == "resolve")
+                userIncs = allIncs.Where(x => x.assigned_to == currentUser.id || x.updated_by == currentUser.id && x.state == "Resolved").OrderByDescending(y => y.id).ToList();
+            else if (searchWord == "closed")
+                userIncs = allIncs.Where(x => (x.assigned_to == currentUser.id || x.updated_by == currentUser.id) && x.state == "Closed").OrderByDescending(y => y.id).ToList();
+            else if (searchWord == "tome")
+                userIncs = allIncs.Where(x => x.assigned_to == currentUser.id).OrderByDescending(y => y.id).ToList();
+            else if (searchWord == "toteam")
+                userIncs = allIncs.Where(x => x.assignment_group == currentUser.department_id).OrderByDescending(y => y.id).ToList();
+            else
+                userIncs = allIncs.Where(x => x.sender == currentUser.id).OrderByDescending(y => y.id).ToList();
 
             var allDepartments = await _departmentApi.GetAllDepartment_API();
             var allUsers = await _userApi.GetAllUser_API();
@@ -354,13 +364,20 @@ namespace ITSM.Controllers
         /// </summary>
         /// <param name="status">Status to filter: all/doing/completed</param>
         /// <returns>Filtered Incident list</returns>
-        public async Task<IActionResult> FilterIncidentByStatus(string status = "all")
+        public async Task<IActionResult> FilterIncidentByStatus(string filterword, string status = "all")
         {
             if (!IsUserLoggedIn(out var currentUser))
                 return Json(new { success = false, message = "Not logged in" });
 
             var allIncs = await _incApi.GetAllIncident_API();
-            var userIncs = allIncs.Where(x => x.sender == currentUser.id).ToList();
+
+            var userIncs = new List<Incident>();
+            if (filterword == "tome")
+                userIncs = allIncs.Where(x => x.assigned_to == currentUser.id).OrderByDescending(y => y.id).ToList();
+            else if (filterword == "toteam")
+                userIncs = allIncs.Where(x => x.assignment_group == currentUser.department_id).OrderByDescending(y => y.id).ToList();
+            else
+                userIncs = allIncs.Where(x => x.sender == currentUser.id).OrderByDescending(y => y.id).ToList();
 
             var allDepartments = await _departmentApi.GetAllDepartment_API();
             var allUsers = await _userApi.GetAllUser_API();
@@ -370,26 +387,23 @@ namespace ITSM.Controllers
             switch (status.ToLower())
             {
                 case "pedding":
-                    filteredIncs = allIncs.Where(t => t.state == "Pedding").ToList();
+                    filteredIncs = userIncs.Where(t => t.state == "Pedding").ToList();
                     break;
                 case "inprogress":
-                    filteredIncs = allIncs.Where(t => t.state == "In Progress").ToList();
+                    filteredIncs = userIncs.Where(t => t.state == "In Progress").ToList();
                     break;
                 case "onhold":
-                    filteredIncs = allIncs.Where(t => t.state == "On-Hold").ToList();
+                    filteredIncs = userIncs.Where(t => t.state == "On-Hold").ToList();
                     break;
                 case "resolved":
-                    filteredIncs = allIncs.Where(t => t.state == "Resolved").ToList();
+                    filteredIncs = userIncs.Where(t => t.state == "Resolved").ToList();
                     break;
                 case "closed":
-                    filteredIncs = allIncs.Where(t => t.state == "Closed").ToList();
-                    break;
-                case "cancelled":
-                    filteredIncs = allIncs.Where(t => t.state == "Cancelled").ToList();
+                    filteredIncs = userIncs.Where(t => t.state == "Closed").ToList();
                     break;
                 case "all":
                 default:
-                    filteredIncs = allIncs;
+                    filteredIncs = userIncs;
                     break;
             }
 
@@ -415,22 +429,32 @@ namespace ITSM.Controllers
         /// </summary>
         /// <param name="sortOrder">Sorting method: asc (ascending)/desc (descending)</param>
         /// <returns>The sorted Incident list</returns>
-        public async Task<IActionResult> SortIncident(string sortOrder = "asc")
+        public async Task<IActionResult> SortIncident(string sortWord, string sortOrder = "asc")
         {
             if (!IsUserLoggedIn(out var currentUser))
                 return Json(new { success = false, message = "Not logged in" });
 
             var allIncs = await _incApi.GetAllIncident_API();
-            var userIncs = allIncs.Where(x => x.sender == currentUser.id).ToList();
+            var userIncs = new List<Incident>();
+            if (sortWord == "resolve")
+                userIncs = allIncs.Where(x => x.assigned_to == currentUser.id || x.updated_by == currentUser.id && x.state == "Resolved").OrderByDescending(y => y.id).ToList();
+            else if (sortWord == "closed")
+                userIncs = allIncs.Where(x => (x.assigned_to == currentUser.id || x.updated_by == currentUser.id) && x.state == "Closed").OrderByDescending(y => y.id).ToList();
+            else if (sortWord == "tome")
+                userIncs = allIncs.Where(x => x.assigned_to == currentUser.id).ToList();
+            else if (sortWord == "toteam")
+                userIncs = allIncs.Where(x => x.assignment_group == currentUser.department_id).ToList();
+            else
+                userIncs = allIncs.Where(x => x.sender == currentUser.id).OrderByDescending(y => y.id).ToList();
 
             var allDepartments = await _departmentApi.GetAllDepartment_API();
             var allUsers = await _userApi.GetAllUser_API();
 
             List<Incident> sortedIncidents;
             if (sortOrder.ToLower() == "desc")
-                sortedIncidents = userIncs.OrderByDescending(x => x.id).ToList();
-            else
                 sortedIncidents = userIncs.OrderBy(x => x.id).ToList();
+            else
+                sortedIncidents = userIncs.OrderByDescending(x => x.id).ToList();
 
             var result = sortedIncidents.Select(t => new {
                 t.id,
@@ -508,35 +532,35 @@ namespace ITSM.Controllers
         }
 
         /// <summary>
-        /// 添加事件工作笔记
+        /// IncidentManagement/Inc_Info_Form
         /// </summary>
-        /// <param name="incidentId">事件ID</param>
-        /// <param name="message">笔记内容</param>
-        /// <returns>操作结果和新创建的笔记详情</returns>
+        /// <param name="incidentId">Event ID</param>
+        /// <param name="message">Note content</param>
+        /// <returns>Operation results and newly created note details</returns>
         [HttpPost]
         public async Task<IActionResult> AddNote(int incidentId, string message)
         {
             if (string.IsNullOrEmpty(message))
-                return Json(new { success = false, message = "笔记内容不能为空" });
+                return Json(new { success = false, message = "Note content cannot be empty" });
 
             if (!IsUserLoggedIn(out var currentUser))
                 return Json(new { success = false, message = "Not logged in" });
 
             try
             {
-                // 获取所有笔记以生成新的笔记编号
+                // Get all notes to generate new note numbers
                 var allNotes = await _noteApi.GetAllNote_API();
                 string noteNumber = "NOT0001";
-                
-                // 如果存在笔记，则基于最大编号生成新编号
+
+                // If a note exists, generate a new number based on the maximum number
                 if (allNotes.Any())
                 {
                     var maxNoteNumber = allNotes
-                        .Where(n => n.note_number != null && n.note_number.StartsWith("NOT"))
-                        .Select(n => n.note_number)
-                        .DefaultIfEmpty("NOT0000")
-                        .Max();
-                    
+                    .Where(n => n.note_number != null && n.note_number.StartsWith("NOT"))
+                    .Select(n => n.note_number)
+                    .DefaultIfEmpty("NOT0000")
+                    .Max();
+
                     if (maxNoteNumber != null && maxNoteNumber.Length >= 7)
                     {
                         if (int.TryParse(maxNoteNumber.Substring(3), out int numberPart))
@@ -546,7 +570,7 @@ namespace ITSM.Controllers
                     }
                 }
 
-                // 创建新笔记
+                // Create a new note
                 var newNote = new ITSM_DomainModelEntity.Models.Note
                 {
                     note_number = noteNumber,
@@ -555,7 +579,7 @@ namespace ITSM.Controllers
                     message = message
                 };
 
-                // 调用API创建笔记
+                // Call API to create a note
                 bool result = await _noteApi.CreateNote_API(newNote);
                 
                 if (result)
@@ -563,7 +587,7 @@ namespace ITSM.Controllers
                     return Json(new
                     {
                         success = true,
-                        message = "笔记添加成功",
+                        message = "Note added successfully",
                         note = new
                         {
                             note_number = noteNumber,
@@ -576,20 +600,20 @@ namespace ITSM.Controllers
                 }
                 else
                 {
-                    return Json(new { success = false, message = "笔记添加失败" });
+                    return Json(new { success = false, message = "Note addition failed" });
                 }
             }
             catch (Exception ex)
             {
-                return Json(new { success = false, message = $"错误: {ex.Message}" });
+                return Json(new { success = false, message = $"Error: {ex.Message}" });
             }
         }
 
         /// <summary>
-        /// 获取指定事件的所有工作笔记
+        /// IncidentManagement/Inc_Info_Form
         /// </summary>
-        /// <param name="incidentId">事件ID</param>
-        /// <returns>工作笔记列表</returns>
+        /// <param name="incidentId">Event ID</param>
+        /// <returns>Work note list</returns>
         public async Task<IActionResult> GetNotesByIncident(int incidentId)
         {
             if (!IsUserLoggedIn(out var currentUser))
@@ -603,7 +627,7 @@ namespace ITSM.Controllers
                     .OrderByDescending(n => n.create_date)
                     .ToList();
 
-                // 获取所有相关用户信息
+                // Get all relevant user information
                 var userIds = incidentNotes.Select(n => n.user_id).Distinct().ToList();
                 var allUsers = await _userApi.GetAllUser_API();
                 var relatedUsers = allUsers.Where(u => userIds.Contains(u.id)).ToList();
@@ -627,10 +651,15 @@ namespace ITSM.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new { success = false, message = $"错误: {ex.Message}" });
+                return Json(new { success = false, message = $"Error: {ex.Message}" });
             }
         }
 
+        /// <summary>
+        /// IncidentManagement/Inc_Info_Form
+        /// </summary>
+        /// <param name="incidentId">Incident ID</param>
+        /// <returns>Resolution history information</returns>
         [HttpPost]
         public async Task<JsonResult> ResolveIncident(Incident inc, string resolveType, string resolveNotes)
         {
@@ -686,10 +715,10 @@ namespace ITSM.Controllers
         }
 
         /// <summary>
-        /// 获取事件的解决历史
+        /// IncidentManagement/Inc_Info_Form
         /// </summary>
-        /// <param name="incidentId">事件ID</param>
-        /// <returns>解决历史信息</returns>
+        /// <param name="incidentId">Incident ID</param>
+        /// <returns>Resolution history information</returns>
         public async Task<IActionResult> GetResolutionHistory(int incidentId)
         {
             if (!IsUserLoggedIn(out var currentUser))
@@ -697,22 +726,22 @@ namespace ITSM.Controllers
 
             try
             {
-                // 获取事件信息
+                // Get incident information
                 var incident = await _incApi.FindByIDIncident_API(incidentId);
-                
+
                 if (incident == null)
                     return Json(new { success = false, message = "Incident not found" });
-                
+
                 if (incident.state != "Resolved")
                     return Json(new { success = false, message = "Incident is not resolved yet" });
 
-                // 获取解决人信息
+                // Get resolver information
                 var resolvedBy = new ITSM_DomainModelEntity.Models.User();
                 if (incident.resolved_by.HasValue)
                     resolvedBy = await _userApi.FindByIDUser_API(incident.resolved_by.Value);
                 var resolvedByName = resolvedBy != null ? resolvedBy.fullname : "Unknown";
-                
-                // 组织返回数据
+
+                // Organize return data
                 var resolutionData = new
                 {
                     incident.id,
@@ -731,5 +760,107 @@ namespace ITSM.Controllers
                 return Json(new { success = false, message = $"Error: {ex.Message}" });
             }
         }
+
+        /// <summary>
+        /// IncidentManagement/Inc_Info_Form
+        /// Close the incident
+        /// </summary>
+        /// <param name="inc">Incident form data</param>
+        /// <returns>Operation results</returns>
+        [HttpPost]
+        public async Task<JsonResult> CloseIncident(Incident inc)
+        {
+            if (!IsUserLoggedIn(out var currentUser))
+                return Json(new { success = false, message = "Not logged in" });
+
+            try
+            {
+                // Get the original event data
+                var incData = await _incApi.FindByIDIncident_API(inc.id);
+
+                if (incData == null)
+                    return Json(new { success = false, message = "No event found" });
+
+                // Update all event fields in the form
+                incData.short_description = inc.short_description;
+                incData.describe = inc.describe;
+                incData.impact = inc.impact;
+                incData.urgency = inc.urgency;
+                incData.priority = inc.priority;
+                incData.category = inc.category;
+                incData.subcategory = inc.subcategory;
+                incData.assignment_group = inc.assignment_group;
+                incData.assigned_to = inc.assigned_to == 0 ? null : inc.assigned_to;
+
+                // Set closing information
+                incData.close_date = DateTime.Now;
+                incData.state = "Closed";
+                incData.updated_by = currentUser.id;
+
+                bool result = await _incApi.UpdateIncident_API(incData);
+
+                if (result)
+                    return Json(new { success = true });
+                else
+                    return Json(new { success = false, message = "Failed to update the event" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// IncidentManagement/Inc_Info_Form
+        /// Reopen a closed incident
+        /// </summary>
+        /// <param name="inc">Incident form data</param>
+        /// <returns>Operation results</returns>
+        [HttpPost]
+        public async Task<JsonResult> ReopenIncident(Incident inc)
+        {
+            if (!IsUserLoggedIn(out var currentUser))
+                return Json(new { success = false, message = "Not logged in" });
+
+            try
+            {
+                // Get the original event data
+                var incData = await _incApi.FindByIDIncident_API(inc.id);
+
+                if (incData == null)
+                    return Json(new { success = false, message = "No event found" });
+
+                // Make sure the event is currently closed
+                if (incData.state != "Closed")
+                    return Json(new { success = false, message = "Only closed events can be reopened" });
+
+                // Update all event fields in the form
+                incData.short_description = inc.short_description;
+                incData.describe = inc.describe;
+                incData.impact = inc.impact;
+                incData.urgency = inc.urgency;
+                incData.priority = inc.priority;
+                incData.category = inc.category;
+                incData.subcategory = inc.subcategory;
+                incData.assignment_group = inc.assignment_group;
+                incData.assigned_to = inc.assigned_to == 0 ? null : inc.assigned_to;
+
+                //Change status to Pedding
+                incData.state = "Pedding";
+                incData.updated_by = currentUser.id;
+
+                bool result = await _incApi.UpdateIncident_API(incData);
+
+                if (result)
+                    return Json(new { success = true });
+                else
+                    return Json(new { success = false, message = "Failed to reopen event" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
     }
 }

@@ -1493,134 +1493,296 @@ img {
 
 /* 手机版本响应式设计 */
 @media screen and (max-width: 768px) {
-    /* 整体容器调整为纵向排列 */
-    .pro-file-container {
-        flex-direction: column;
-        height: auto;
-        overflow: auto;
+    /* 在移动视图中强制显示视图切换按钮 */
+    #mobile-toggle-menu {
+        display: flex !important;
     }
 
-    /* 调整三个主要部分的显示顺序 */
+    /* 重写现有样式 */
+    .pro-file-container {
+        flex-direction: column;
+        overflow-y: auto;
+        height: auto;
+        padding: 0;
+    }
+
     .pro-file-main-area {
-        order: 2;
-        width: 100%;
+        width: 100% !important;
+        flex-direction: column;
+        order: 1;
     }
 
     .pro-file-user-profile-area {
+        width: 100% !important;
         order: 3;
-        width: 100%;
+        border-left: none;
         border-right: none;
         border-top: 1px solid var(--border-color);
     }
 
-    /* 确保Incident History在顶部 */
-    .pro-file-msg_title.pro-file-msg-department {
-        order: 1;
-        width: 100%;
-        text-align: center;
-        padding: 15px 0;
-        font-size: 20px;
-        font-weight: bold;
-        margin-bottom: 15px;
-    }
-
-    /* 主容器布局调整 */
     .pro-file-main-container {
         flex-direction: column;
-        height: auto;
+        width: 100% !important;
     }
 
-    /* 收件箱容器调整 */
     .pro-file-inbox-container {
-        width: 100%;
+        width: 100% !important;
+        max-height: none;
+        order: 2;
         margin-bottom: 20px;
+        display: none; /* 默认隐藏，通过JavaScript控制显示 */
     }
 
-    /* 邮件详情容器调整 */
-    .pro-file-mail-detail {
-        width: 100%;
-        border-left: none;
-        border-top: 1px solid var(--border-color);
-        padding-top: 20px;
+    .col-xxl-8 {
+        display: block; /* 默认显示统计部分 */
     }
 
-    /* 日历容器调整 */
-    .pro-file-calendar-container {
-        width: 100%;
-        padding-top: 20px;
+    /* 调整卡片布局 */
+    .col-xl-4, .col-lg-4, .col-md-4, .col-sm-6 {
+        padding: 0 8px;
     }
 
-    /* 日历调整 */
-    .pro-file-calendar {
-        grid-template-columns: repeat(7, 1fr);
+    .row.g-4 {
+        margin: 0;
+        padding: 10px;
     }
 
-    .pro-file-day {
-        height: 40px;
-        font-size: 12px;
+    .card {
+        min-height: 120px;
+        margin-bottom: 16px;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+    
+    .card-title.mb-2 {
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem !important;
     }
 
-    /* 消息内容扩展到最大宽度 */
+    /* 调整头像和用户信息显示 */
+    .pro-file-user-photo {
+        width: 60px;
+        height: 60px;
+    }
+
+    .pro-file-side-wrapper {
+        padding: 15px 20px;
+    }
+
+    .pro-file-team-member {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    /* 使消息列表更紧凑 */
+    .pro-file-msg {
+        padding: 10px;
+    }
+
     .pro-file-msg-content {
+        padding: 5px 10px;
         width: 100%;
-        flex-grow: 1;
     }
 
-    /* 隐藏邮件成员图片 */
-    .pro-file-mail-members {
-        display: none;
+    .pro-file-msg-title {
+        font-size: 14px;
     }
 
-    /* Profile部分调整 */
-    .pro-file-task-manager {
+    .pro-file-msg-short-content {
+        font-size: 12px;
+        -webkit-line-clamp: 2;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    
+    /* 改进按钮样式 */
+    .pro-file-add-task {
+        padding: 10px;
+    }
+    
+    .pro-file-add-button {
+        padding: 8px 12px;
+        font-size: 14px;
+        margin: 0 5px;
+    }
+    
+    /* 调整Incident History标题 */
+    .pro-file-msg_title.pro-file-msg-department {
+        padding: 15px;
         text-align: center;
-        padding: 15px 0;
-        font-size: 20px;
-        font-weight: bold;
-        margin-bottom: 15px;
+        font-size: 18px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
     }
 
-    /* 任务状态调整为两列 */
+    /* 改进侧边菜单按钮 */
+    #mobile-menu-toggle {
+        cursor: pointer;
+    }
+    
+    #mobile-menu-toggle svg {
+        transition: all 0.3s ease;
+    }
+    
+    #mobile-menu-toggle:hover svg {
+        transform: scale(1.1);
+    }
+}
+
+/* 添加视图转换动画 */
+.pro-file-inbox-container, .pro-file-user-profile-area, .col-xxl-8 {
+    transition: all 0.3s ease;
+}
+
+/* 更小屏幕的优化 */
+@media screen and (max-width: 480px) {
+    .pro-file-side-wrapper {
+        padding: 10px 15px;
+    }
+
+    .card {
+        min-height: 100px;
+    }
+
+    .card-title.mb-2 {
+        font-size: 20px;
+    }
+
+    .pro-file-add-button {
+        padding: 8px 12px;
+        font-size: 14px;
+        width: calc(50% - 10px);
+    }
+
     .pro-file-task-status {
         flex-wrap: wrap;
     }
 
     .pro-file-task-stat {
-        width: calc(50% - 10px);
+        width: 50%;
         margin-bottom: 10px;
     }
-
-    /* 按钮调整 */
-    button, .pro-file-add-button {
-        min-width: 100px;
-        padding: 8px 12px;
+    
+    /* 简化头部设计 */
+    .pro-file-task-manager {
+        height: 60px;
+        line-height: 60px;
+        font-size: 16px;
     }
-
-    /* 触控友好的表单元素 */
-    input[type="checkbox"] + label {
-        min-width: 20px;
-        min-height: 20px;
+    
+    .pro-file-msg_title.pro-file-msg-department {
+        padding: 12px;
+        font-size: 16px;
     }
-
-    /* Team member adjustments for mobile */
-    .pro-file-team-member {
-        grid-template-columns: repeat(4, 1fr);
-        padding: 8px;
-        gap: 8px;
+    
+    /* 优化团队成员显示 */
+    .pro-file-member-item {
+        margin-bottom: 5px;
     }
-
-    .pro-file-members {
-        width: 38px;
-        height: 38px;
+    
+    /* 缩小移动端菜单按钮 */
+    #mobile-toggle-menu {
+        width: 45px;
+        height: 45px;
+        bottom: 15px;
+        right: 15px;
     }
+}
 
-    .pro-file-member-title {
-        font-size: 9px;
-        padding: 4px 8px;
+/* 超小屏幕优化 */
+@media screen and (max-width: 360px) {
+    .pro-file-task-stat {
+        width: 100%;
     }
+    
+    .pro-file-add-button {
+        width: 100%;
+        margin: 5px 0;
+    }
+    
+    .card-body {
+        padding: 0.75rem;
+    }
+    
+    .avatar.flex-shrink-0 img {
+        width: 30px;
+        height: 30px;
+    }
+    
+    /* 进一步缩小移动端菜单按钮 */
+    #mobile-toggle-menu {
+        width: 40px;
+        height: 40px;
+        bottom: 10px;
+        right: 10px;
+    }
+    
+    #mobile-toggle-menu i {
+        font-size: 20px !important;
+    }
+}
 
-    .pro-file-member-role {
-        font-size: 7px;
+/* 添加标题样式，限制为一行并添加省略号 */
+.fw-medium.d-block.mb-1 {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    display: block;
+}
+
+/* 确保所有box保持相同大小 */
+.card {
+    height: 100%;
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.avatar img {
+    transition: all 0.3s ease;
+}
+
+.card:hover .avatar img {
+    transform: scale(1.1);
+}
+
+/* 改进区块间距和布局 */
+.row.g-4 {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -10px;
+}
+
+.col-xl-4, .col-lg-4, .col-md-4, .col-sm-6 {
+    padding: 0 10px;
+}
+
+/* 改进移动端样式 */
+@media screen and (max-width: 992px) {
+    /* 调整卡片布局 */
+    .card {
+        min-height: 130px;
+    }
+    
+    .card-title.mb-2 {
+        font-size: 1.5rem;
+    }
+    
+    .fw-medium.d-block.mb-1 {
+        font-size: 0.9rem;
     }
 }
 
@@ -1988,4 +2150,99 @@ img {
     z-index: 10;
     backdrop-filter: blur(5px);
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 确保所有box保持相同大小 */
+.card {
+    height: 100%;
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* 移动端菜单按钮样式 */
+#mobile-toggle-menu {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #696cff;
+    border: none;
+    color: white;
+    display: flex !important; /* 强制显示 */
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 999;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+}
+
+#mobile-toggle-menu:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+}
+
+#mobile-toggle-menu:active {
+    transform: scale(0.95);
+}
+
+/* 确保在移动设备上显示 */
+@media (max-width: 768px) {
+    #mobile-toggle-menu {
+        display: flex !important;
+        opacity: 1 !important;
+    }
+    
+    .menu-toggle-icon {
+        display: block !important;
+        width: 24px !important;
+        height: 24px !important;
+    }
+    
+    /* 侧边栏菜单样式增强 */
+    .layout-menu {
+        transition: transform 0.3s ease !important;
+    }
+    
+    .layout-menu-collapsed .layout-menu {
+        transform: translateX(-100%) !important;
+    }
+    
+    /* 加强菜单按钮的视觉效果 */
+    #fixed-menu-toggle {
+        transition: all 0.3s ease;
+    }
+    
+    #fixed-menu-toggle:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    }
+    
+    #fixed-menu-toggle:active {
+        transform: scale(0.95);
+    }
+}
+
+/* 添加样式确保右侧菜单按钮正常显示 */
+.open-button {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* 确保模态菜单能正常显示 */
+#menuModal.active_open_menu {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
 }

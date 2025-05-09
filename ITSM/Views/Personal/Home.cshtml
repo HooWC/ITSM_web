@@ -14,6 +14,22 @@
     .dropdown-item:hover{
         text-decoration: none;
     }
+    
+    @@media screen and (max-width: 768px) {
+        .col-md-4 {
+            width: 50%;
+        }
+        
+        .mobile-full-width {
+            width: 100% !important;
+        }
+    }
+    
+    @@media screen and (max-width: 480px) {
+        .col-md-4 {
+            width: 100%;
+        }
+    }
 </style>
 
 <div class="pro-file-container" style="width: 100%; display: flex;">
@@ -21,7 +37,7 @@
     <div class="pro-file-main-area" style="width: 75%; display: flex;">
 
         <div class="pro-file-main-container" style="width: 100%; display: flex;">
-            <div class="pro-file-inbox-container" style="width: 40%; max-height: 100vh; overflow-y: auto;">
+            <div class="pro-file-inbox-container mobile-full-width" style="width: 40%; max-height: 100vh; overflow-y: auto;">
                 <div class="pro-file-inbox">
                     <div class="pro-file-msg_title pro-file-msg-department ">
                         Incident History
@@ -46,9 +62,10 @@
                     <button class="pro-file-add-button" id="refresh-button" onclick="location.reload();">Refresh</button>
                 </div>
             </div>
-            <div class="col-xxl-8 col-lg-12 col-md-12 order-1" style="max-height: 100vh; overflow-y: auto; padding:20px; width: 60%;">
+            <div class="col-xxl-8 col-lg-12 col-md-12 order-1 mobile-full-width" style="max-height: 100vh; overflow-y: auto; padding:20px; width: 60%;">
                 <div class="row g-4">
-                    <!-- Row: Inc / Inc Pedding / Inc Resolved -->
+
+                    <!-- Row: Inc / Inc Pedding / Inc In Progress -->
                     <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 mb-0">
                         <div class="card">
                             <div class="card-body">
@@ -70,7 +87,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <span class="fw-medium d-block mb-1">All Incidents</span>
+                                <span class="fw-medium d-block mb-1" title="All Incidents">All Incidents</span>
                                 <h3 class="card-title mb-2">@Model.AllInc</h3>
                             </div>
                         </div>
@@ -83,8 +100,36 @@
                                         <img src="~/assets/img/icons/unicons/cc-primary.png" alt="Credit Card" class="rounded" />
                                     </div>
                                 </div>
-                                <span class="fw-medium d-block mb-1">Incidents Pedding</span>
+                                <span class="fw-medium d-block mb-1" title="Incidents Pedding">Incidents Pedding</span>
                                 <h3 class="card-title mb-2">@Model.ApplyInc</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 mb-0">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="card-title d-flex align-items-start justify-content-between">
+                                    <div class="avatar flex-shrink-0">
+                                        <img src="~/assets/img/icons/unicons/cc-primary.png" alt="Credit Card" class="rounded" />
+                                    </div>
+                                </div>
+                                <span class="fw-medium d-block mb-1" title="Incidents In Progress">Incidents In Progress</span>
+                                <h3 class="card-title mb-2">@Model.InProgressInc</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Row: Inc On-Hold / Inc Resolved / Req -->
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 mb-0">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="card-title d-flex align-items-start justify-content-between">
+                                    <div class="avatar flex-shrink-0">
+                                        <img src="~/assets/img/icons/unicons/cc-primary.png" alt="Credit Card" class="rounded" />
+                                    </div>
+                                </div>
+                                <span class="fw-medium d-block mb-1" title="Incidents On-Hold">Incidents On-Hold</span>
+                                <h3 class="card-title mb-2">@Model.OnHoldInc</h3>
                             </div>
                         </div>
                     </div>
@@ -98,13 +143,11 @@
                                              class="rounded" />
                                     </div>
                                 </div>
-                                <span class="fw-medium d-block mb-1">Incidents Resolved</span>
+                                <span class="fw-medium d-block mb-1" title="Incidents Resolved">Incidents Resolved</span>
                                 <h3 class="card-title mb-2">@Model.CompletedInc</h3>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Row: Req / Req Pedding / Req Resolved -->
                     <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 mb-0">
                         <div class="card">
                             <div class="card-body">
@@ -126,11 +169,13 @@
                                         </div>
                                     </div>
                                 </div>
-                                <span class="fw-medium d-block mb-1">All Requests</span>
+                                <span class="fw-medium d-block mb-1" title="All Requests">All Requests</span>
                                 <h3 class="card-title mb-2">@Model.AllReq</h3>
                             </div>
                         </div>
                     </div>
+                    
+                    <!-- Row: Req Pedding / Req Resolved / Knowledges -->
                     <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 mb-0">
                         <div class="card">
                             <div class="card-body">
@@ -139,7 +184,7 @@
                                         <img src="~/assets/img/icons/unicons/cc-primary.png" alt="Credit Card" class="rounded" />
                                     </div>
                                 </div>
-                                <span class="fw-medium d-block mb-1">Requests Pedding</span>
+                                <span class="fw-medium d-block mb-1" title="Requests Pedding">Requests Pedding</span>
                                 <h3 class="card-title mb-2">@Model.ApplyReq</h3>
                             </div>
                         </div>
@@ -152,13 +197,11 @@
                                         <img src="~/assets/img/icons/unicons/chart.png" alt="Todos" class="rounded" />
                                     </div>
                                 </div>
-                                <span class="fw-medium d-block mb-1">Requests Resolved</span>
+                                <span class="fw-medium d-block mb-1" title="Requests Resolved">Requests Resolved</span>
                                 <h3 class="card-title mb-2">@Model.CompletedReq</h3>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Row: Feedback / Knowledge -->
                     <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 mb-0">
                         <div class="card">
                             <div class="card-body">
@@ -182,11 +225,13 @@
                                         </div>
                                     </div>
                                 </div>
-                                <span class="fw-medium d-block mb-1">Knowledges</span>
+                                <span class="fw-medium d-block mb-1" title="Knowledges">Knowledges</span>
                                 <h3 class="card-title mb-2">@Model.AllKnowledge</h3>
                             </div>
                         </div>
                     </div>
+                    
+                    <!-- Row: Feedback -->
                     <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 mb-0">
                         <div class="card">
                             <div class="card-body">
@@ -210,7 +255,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <span class="fw-medium d-block mb-1">Feedback</span>
+                                <span class="fw-medium d-block mb-1" title="Feedback">Feedback</span>
                                 <h3 class="card-title mb-2">@Model.AllFeedback</h3>
                             </div>
                         </div>
@@ -233,13 +278,13 @@
                 <div class="pro-file-user-mail">@Model.User.email</div>
                 <div class="pro-file-user-role">@Model.RoleName</div>
                 <div class="pro-file-user-title">@Model.DepartmentName</div>
-
             </div>
             <div class="pro-file-user-notification">
                 <div class="pro-file-notify">
                     <a href="~/Home/Index">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" fill="currentColor">
-                            <path d="M280.4 148.3L96 300.1V464c0 8.8 7.2 16 16 16l112-.3c8.8 0 16-7.2 16-16V368c0-8.8 7.2-16 16-16h64c8.8 0 16 7.2 16 16v95.7c0 8.8 7.2 16 16 16l112 .3c8.8 0 16-7.2 16-16V300L295.7 148.3a12.2 12.2 0 0 0-15.3 0zM571.6 251.5l-61.6-53.6V48c0-8.8-7.2-16-16-16h-48c-8.8 0-16 7.2-16 16v72.6L318.5 43.2c-27.6-24-68.4-24-96 0L4.3 251.5c-6.6 5.8-7.2 16-1.4 22.6l21.4 24.6c5.6 6.5 15.3 7.1 21.8 1.4L64 281.2V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V281.2l17.9 18.8c6.5 5.7 16.2 5.1 21.8-1.4l21.4-24.6c5.8-6.6 5.2-16.8-1.3-22.5z" />
+                            <pat
+h d="M280.4 148.3L96 300.1V464c0 8.8 7.2 16 16 16l112-.3c8.8 0 16-7.2 16-16V368c0-8.8 7.2-16 16-16h64c8.8 0 16 7.2 16 16v95.7c0 8.8 7.2 16 16 16l112 .3c8.8 0 16-7.2 16-16V300L295.7 148.3a12.2 12.2 0 0 0-15.3 0zM571.6 251.5l-61.6-53.6V48c0-8.8-7.2-16-16-16h-48c-8.8 0-16 7.2-16 16v72.6L318.5 43.2c-27.6-24-68.4-24-96 0L4.3 251.5c-6.6 5.8-7.2 16-1.4 22.6l21.4 24.6c5.6 6.5 15.3 7.1 21.8 1.4L64 281.2V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V281.2l17.9 18.8c6.5 5.7 16.2 5.1 21.8-1.4l21.4-24.6c5.8-6.6 5.2-16.8-1.3-22.5z" />
                         </svg>
                     </a>
                 </div>
@@ -337,6 +382,45 @@
 
       $('#Prosonal_menu_profile').addClass("active");
       
+      // 处理所有卡片的高度一致
+      function adjustCardHeights() {
+        // 重置所有卡片高度
+        $('.card').height('auto');
+        
+        // 手机视图不处理等高卡片，每个卡片单独适应内容
+        if ($(window).width() <= 480) {
+          return;
+        }
+        
+        // 按行分组调整高度
+        var rows = [];
+        var currentTop = -1;
+        var currentRow = -1;
+        
+        // 将卡片按行分组
+        $('.card').each(function(i) {
+          var top = $(this).offset().top;
+          if (Math.abs(top - currentTop) > 10) {
+            currentRow++;
+            rows[currentRow] = [];
+            currentTop = top;
+          }
+          rows[currentRow].push($(this));
+        });
+        
+        // 为每一行设置相同高度
+        for (var i = 0; i < rows.length; i++) {
+          var maxHeight = 0;
+          for (var j = 0; j < rows[i].length; j++) {
+            var height = rows[i][j].height();
+            maxHeight = height > maxHeight ? height : maxHeight;
+          }
+          for (var j = 0; j < rows[i].length; j++) {
+            rows[i][j].height(maxHeight);
+          }
+        }
+      }
+      
       $(window).resize(function() {
         if ($(window).width() < 768) {
           $('.pro-file-main-area').css('width', '100%');
@@ -345,6 +429,9 @@
           $('.pro-file-main-area').css('width', '75%');
           $('.pro-file-user-profile-area').css('width', '25%');
         }
+        
+        // 延迟调整卡片高度，确保布局已完成
+        setTimeout(adjustCardHeights, 100);
       });
       
       $(window).trigger('resize');
@@ -363,6 +450,9 @@
       }
       
       updateProgressBar();
+      
+      // 在DOM加载完后调整高度
+      setTimeout(adjustCardHeights, 500);
     });
 </script>
 
