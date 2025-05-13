@@ -97,6 +97,7 @@
                     <a href="#" class="inc-tab-dropdown-item" data-filter="number">Number</a>
                     <a href="#" class="inc-tab-dropdown-item" data-filter="title">Title</a>
                     <a href="#" class="inc-tab-dropdown-item" data-filter="create_date">Create Date</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-filter="update_date">Update Date</a>
                 </div>
             </div>
             <div class="inc-tab-search-container">
@@ -150,10 +151,10 @@
                 <tr>
                     <th class="inc-tab-checkbox-column"></th>
                     <th class="inc-tab-sortable number-column" id="sortByNumber">Number <i class="fas fa-arrow-up" id="sortIcon"></i></th>
-                    <th class="title-column">title</th>
-                    <th class="create-date-column">create_date</th>
-                    <th class="update-date-column">update_date</th>
-                    <th class="active-column">active</th>
+                    <th class="title-column">Title</th>
+                    <th class="create-date-column">Create date</th>
+                    <th class="update-date-column">Update date</th>
+                    <th class="active-column">Active</th>
                 </tr>
             </thead>
             <tbody id="todoTableBody">
@@ -197,7 +198,7 @@
       $('#Prosonal_menu_todo').addClass("active");
       
       var currentPage = 1;
-      var itemsPerPage = 10;
+      var itemsPerPage = 18;
       var totalItems = $('.todo-item').length;
       var totalPages = Math.ceil(totalItems / itemsPerPage);
 

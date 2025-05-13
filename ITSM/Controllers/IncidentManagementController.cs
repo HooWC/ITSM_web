@@ -35,7 +35,8 @@ namespace ITSM.Controllers
         // ????
         //public async Task<IActionResult> Admin_All()
         //{
-
+        // 要开发的界面，admin的界面，看所有的incident
+        // allInc.OrderByDescending(y => y.id).ToList();
         //}
 
         public async Task<IActionResult> All()

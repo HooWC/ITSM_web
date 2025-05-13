@@ -12,39 +12,39 @@ using Newtonsoft.Json;
 
 namespace ITSM_Insfrastruture.Repository.Api
 {
-    public class Feedback_api
+    public class Product_api
     {
-        private readonly string _allFeedbackUrl = Api_Link.FeedbackLink;
-        private readonly string _sudFeedbackUrl = Api_Link.FeedbackSUDLink;
+        private readonly string _allProductUrl = Api_Link.ProductLink;
+        private readonly string _sudProductUrl = Api_Link.ProductSUDLink;
         private readonly HttpClient _client;
         private readonly TokenService _tokenService;
 
-        public Feedback_api(IHttpContextAccessor httpContextAccessor)
+        public Product_api(IHttpContextAccessor httpContextAccessor)
         {
             _client = new HttpClient();
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             _tokenService = new TokenService(httpContextAccessor);
         }
 
-        public async Task<List<Feedback>> GetAllFeedback_API()
+        public async Task<List<Product>> GetAllProduct_API()
         {
             try
             {
                 var tokenModel = _tokenService.GetToken();
-                if (tokenModel == null) return new List<Feedback>();
+                if (tokenModel == null) return new List<Product>();
 
                 _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenModel.Token);
-                string jsonStr = await _client.GetStringAsync(_allFeedbackUrl);
-                return JsonConvert.DeserializeObject<List<Feedback>>(jsonStr) ?? new List<Feedback>();
+                string jsonStr = await _client.GetStringAsync(_allProductUrl);
+                return JsonConvert.DeserializeObject<List<Product>>(jsonStr) ?? new List<Product>();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"EX GetAllFeedback_API: {ex.Message}");
-                return new List<Feedback>();
+                Console.WriteLine($"EX GetAllProduct_API: {ex.Message}");
+                return new List<Product>();
             }
         }
 
-        public async Task<Feedback> FindByIDFeedback_API(int id)
+        public async Task<Product> FindByIDProduct_API(int id)
         {
             try
             {
@@ -52,19 +52,19 @@ namespace ITSM_Insfrastruture.Repository.Api
                 if (tokenModel == null) return null;
 
                 _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenModel.Token);
-                var jsonStr = await _client.GetStringAsync($"{_sudFeedbackUrl}{id}");
-                
-                var feedbackList = JsonConvert.DeserializeObject<List<Feedback>>(jsonStr);
-                return feedbackList?.FirstOrDefault();
+                var jsonStr = await _client.GetStringAsync($"{_sudProductUrl}{id}");
+
+                var ProductList = JsonConvert.DeserializeObject<List<Product>>(jsonStr);
+                return ProductList?.FirstOrDefault();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"EX FindByIDFeedback_API: {ex.Message}");
+                Console.WriteLine($"EX FindByIDProduct_API: {ex.Message}");
                 return null;
             }
         }
 
-        public async Task<bool> UpdateFeedback_API(Feedback feedback)
+        public async Task<bool> UpdateProduct_API(Product Product)
         {
             try
             {
@@ -72,19 +72,19 @@ namespace ITSM_Insfrastruture.Repository.Api
                 if (tokenModel == null) return false;
 
                 _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenModel.Token);
-                var jsonStr = new StringContent(JsonConvert.SerializeObject(feedback), Encoding.UTF8, "application/json");
-                var response = await _client.PutAsync($"{_sudFeedbackUrl}{feedback.id}", jsonStr);
+                var jsonStr = new StringContent(JsonConvert.SerializeObject(Product), Encoding.UTF8, "application/json");
+                var response = await _client.PutAsync($"{_sudProductUrl}{Product.id}", jsonStr);
 
                 return response.IsSuccessStatusCode;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"EX UpdateFeedback_API: {ex.Message}");
+                Console.WriteLine($"EX UpdateProduct_API: {ex.Message}");
                 return false;
             }
         }
 
-        public async Task<bool> CreateFeedback_API(Feedback feedback)
+        public async Task<bool> CreateProduct_API(Product Product)
         {
             try
             {
@@ -92,19 +92,19 @@ namespace ITSM_Insfrastruture.Repository.Api
                 if (tokenModel == null) return false;
 
                 _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenModel.Token);
-                var jsonStr = new StringContent(JsonConvert.SerializeObject(feedback), Encoding.UTF8, "application/json");
-                var response = await _client.PostAsync(_allFeedbackUrl, jsonStr);
+                var jsonStr = new StringContent(JsonConvert.SerializeObject(Product), Encoding.UTF8, "application/json");
+                var response = await _client.PostAsync(_allProductUrl, jsonStr);
 
                 return response.IsSuccessStatusCode;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"EX CreateFeedback_API: {ex.Message}");
+                Console.WriteLine($"EX CreateProduct_API: {ex.Message}");
                 return false;
             }
         }
 
-        public async Task<bool> DeleteFeedback_API(int id)
+        public async Task<bool> DeleteProduct_API(int id)
         {
             try
             {
@@ -112,13 +112,13 @@ namespace ITSM_Insfrastruture.Repository.Api
                 if (tokenModel == null) return false;
 
                 _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenModel.Token);
-                var response = await _client.DeleteAsync($"{_sudFeedbackUrl}{id}");
+                var response = await _client.DeleteAsync($"{_sudProductUrl}{id}");
 
                 return response.IsSuccessStatusCode;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"EX DeleteFeedback_API: {ex.Message}");
+                Console.WriteLine($"EX DeleteProduct_API: {ex.Message}");
                 return false;
             }
         }

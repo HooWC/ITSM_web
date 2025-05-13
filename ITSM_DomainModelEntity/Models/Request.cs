@@ -33,12 +33,12 @@ namespace ITSM_DomainModelEntity.Models
 
         public string? description { get; set; }
 
-        public DateTime create_date { get; set; } = DateTime.Now;
+        public DateTime create_date { get; set; }
 
         [ForeignKey("AssignmentGroup")]
         public int assignment_group { get; set; }
 
-        public DateTime? update_date { get; set; }
+        public DateTime update_date { get; set; }
 
         [ForeignKey("UpdatedBy")]
         public int? updated_by { get; set; }

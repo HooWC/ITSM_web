@@ -230,6 +230,13 @@ namespace ITSM.Controllers
 
             // Get Todo
             var edit_todo = await _todoApi.FindByIDTodo_API(todo.id);
+
+            if (todo.title == null)
+            {
+                ViewBag.Error = "Please fill in all required fields";
+                return View(edit_todo);
+            }
+
             if(edit_todo != null)
             {
                 // Update Todo Data
@@ -241,10 +248,13 @@ namespace ITSM.Controllers
                 if (result)
                     return RedirectToAction("Todo_List", "Personal");
                 else
-                    return View();
+                {
+                    ViewBag.Error = "Update Todo Error";
+                    return View(edit_todo);
+                }
             }
 
-            return View();
+            return View(todo);
         }
 
         public IActionResult Incident_List()

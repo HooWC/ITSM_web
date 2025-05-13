@@ -9,7 +9,6 @@ body {
     background: #f5f5f5;
     min-height: 100vh;
     overflow-x: hidden;
-    /* 保持滚动条始终可见 */
     overflow-y: scroll;
 }
 
@@ -49,11 +48,10 @@ h1 {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    z-index: 1200;
+    z-index: 99000;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.3s ease;
-    /* 防止滚动穿透 */
     overscroll-behavior: contain;
 }
 
@@ -64,20 +62,23 @@ h1 {
 
 /* Game Container */
 .game-container {
-    position: relative;
-    width: 450px; /* Slightly narrower like in the reference */
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 450px;
     height: 100%;
     max-height: 100vh;
     box-shadow: -3px 0 15px rgba(255, 255, 255, 0.5);
     overflow: hidden;
-    background: rgba(25, 25, 35, 0.95); /* Slightly transparent dark background */
+    background: rgba(25, 25, 35, 0.95);
     backdrop-filter: blur(10px);
-    transform: translateX(100%); /* Start positioned off-screen to the right */
+    transform: translateX(100%);
     transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 1001;
 }
 
 .modal-overlay.active_open_menu .game-container {
-    transform: translateX(0); /* Slide in from right */
+    transform: translateX(0);
 }
 
 /* Status Bar */
@@ -156,7 +157,8 @@ h1 {
 }
 
 .active_open_menu {
-    border: 1px solid rgba(130, 180, 255, 0.7);
+    border-color: rgba(130, 180, 255, 0.7);
+    transition: border-color 0.3s ease;
 }
 
 .icon-image {

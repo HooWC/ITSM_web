@@ -1,4 +1,6 @@
-﻿using ITSM_DomainModelEntity.ViewModels;
+﻿using System.Runtime.Intrinsics.Arm;
+using ITSM_DomainModelEntity.Models;
+using ITSM_DomainModelEntity.ViewModels;
 using ITSM_Insfrastruture.Repository.Api;
 using ITSM_Insfrastruture.Repository.Token;
 using Microsoft.AspNetCore.Mvc;
@@ -30,44 +32,160 @@ namespace ITSM.Controllers
             _roleApi = new Role_api(httpContextAccessor);
         }
 
+        public async Task<IActionResult> All_Feedback_List()
+        {
+            var feedList = await GetCommonFeedbackData(null);  
+            return View(feedList);  
+        }
+
         public async Task<IActionResult> Feedback_List()
+        {
+            var tokenService = new TokenService(_httpContextAccessor);
+            var currentUser = tokenService.GetUserInfo();
+
+            var feedList = await GetCommonFeedbackData(currentUser);  
+            return View(feedList);  
+        }
+
+        private async Task<FeedbackVM> GetCommonFeedbackData(User? user_token)
+        {
+            var tokenService = new TokenService(_httpContextAccessor);
+            var currentUser = tokenService.GetUserInfo();
+
+            var feedTask = _feedbackApi.GetAllFeedback_API();
+            var userTask = _userApi.GetAllUser_API();
+            await Task.WhenAll(feedTask, userTask);
+
+            var allFeed = await feedTask;
+            var allUsers = await userTask;
+
+            var feedList = user_token == null
+                ? allFeed.OrderByDescending(y => y.id).ToList()
+                : allFeed.Where(x => x.user_id == user_token.id).OrderByDescending(y => y.id).ToList();
+
+            foreach (var feedback in feedList)
+                feedback.User = allUsers.FirstOrDefault(x => x.id == feedback.user_id);
+
+            return new FeedbackVM
+            {
+                User = currentUser,
+                Feedback = feedList
+            };
+        }
+
+        public IActionResult Feedback_Create()
         {
             // current user info
             var tokenService = new TokenService(_httpContextAccessor);
             var currentUser = tokenService.GetUserInfo();
 
-            // Making concurrent API requests
-            var feed = _feedbackApi.GetAllFeedback_API();
+            ViewBag.CurrentUser = currentUser.fullname;
+            ViewBag.Photo = currentUser.photo;
 
-            // Wait for all tasks to complete
-            await Task.WhenAll(feed);
-
-            // get incident list data
-            var allFeed = await feed;
-            var incList = allFeed.Where(x => x.user_id == currentUser.id).OrderByDescending(y => y.id).ToList();
-
-            // get user and department data
-            var allDepartments = await dep;
-            var allUsers = await user;
-
-            foreach (var incident in incList)
-            {
-                incident.AssignmentGroup = allDepartments.FirstOrDefault(d => d.id == incident.assignment_group);
-                incident.AssignedTo = allUsers.FirstOrDefault(u => u.id == incident.assigned_to);
-            }
-
-            var model = new IncidentVM
-            {
-                User = currentUser,
-                Inc = incList
-            };
-
-            return View(model);
+            return View();
         }
 
-        public IActionResult Feedback_Create()
+        [HttpPost]
+        public async Task<IActionResult> Feedback_Create(Feedback feed)
         {
-            return View();
+            // current user info
+            var tokenService = new TokenService(_httpContextAccessor);
+            var currentUser = tokenService.GetUserInfo();
+
+            ViewBag.CurrentUser = currentUser.fullname;
+            ViewBag.Photo = currentUser.photo;
+
+            if (feed.message == null)
+            {
+                ViewBag.Error = "Please fill in all required fields";
+                return View();
+            }
+
+            // Making concurrent API requests
+            var FeedTask = _feedbackApi.GetAllFeedback_API();
+
+            // get todo new id
+            var allFeed = await FeedTask;
+
+            string newId = "";
+            if (allFeed.Count > 0)
+            {
+                var last_feed = allFeed.Last();
+                string f_id_up = last_feed.fb_number;
+                string prefix = new string(f_id_up.TakeWhile(char.IsLetter).ToArray());
+                string numberPart = new string(f_id_up.SkipWhile(char.IsLetter).ToArray());
+                int number = int.Parse(numberPart);
+                newId = prefix + (number + 1);
+            }
+            else
+                newId = "FBK1";
+
+            // Create New Feedback
+            Feedback new_feedback = new Feedback()
+            {
+                fb_number = newId,
+                user_id = currentUser.id,
+                message = feed.message
+            };
+
+            // API requests
+            bool result = await _feedbackApi.CreateFeedback_API(new_feedback);
+
+            if (result)
+                return RedirectToAction("Feedback_List", "Feedback");
+            else
+            {
+                ViewBag.Error = "Create Feedback Error";
+                return View();
+            }
+        }
+
+        public async Task<IActionResult> Feedback_Info(int id)
+        {
+            var tokenService = new TokenService(_httpContextAccessor);
+            var currentUser = tokenService.GetUserInfo();
+
+            ViewBag.CurrentUser = currentUser.fullname;
+            ViewBag.Photo = currentUser.photo;
+
+            // Get Feedback
+            var feedback = await _feedbackApi.FindByIDFeedback_API(id);
+
+            return View(feedback);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Feedback_Info(Feedback feed)
+        {
+            // current user info
+            var tokenService = new TokenService(_httpContextAccessor);
+            var currentUser = tokenService.GetUserInfo();
+
+            ViewBag.CurrentUser = currentUser.fullname;
+            ViewBag.Photo = currentUser.photo;
+
+            // Making concurrent API requests
+            var feedback = await _feedbackApi.FindByIDFeedback_API(feed.id);
+
+            if (feed.message == null)
+            {
+                ViewBag.Error = "Please fill in all required fields";
+                return View(feedback);
+            }
+
+            // Update New Feedback
+            feedback.message = feed.message;
+
+            // API requests
+            bool result = await _feedbackApi.UpdateFeedback_API(feedback);
+
+            if (result)
+                return RedirectToAction("Feedback_List", "Feedback");
+            else
+            {
+                ViewBag.Error = "Update Feedback Error";
+                return View(feedback);
+            }
         }
     }
 }

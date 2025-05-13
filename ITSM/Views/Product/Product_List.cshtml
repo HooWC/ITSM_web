@@ -1,29 +1,37 @@
 ﻿@using ITSM_DomainModelEntity.ViewModels
-@model FeedbackVM
+@model ProductVM
 @{
-    ViewData["Title"] = "Feedback_List";
+    ViewData["Title"] = "Product_List";
     Layout = "_Layout";
 }
 
 <style>
     .inc-tab-incidents-table th.number-column {
-        width: 10%;
+        width: 8%;
     }
 
-    .inc-tab-incidents-table th.message {
-        width: 30%;
+    .inc-tab-incidents-table th.p_title {
+        width: 16%;
     }
 
-    .inc-tab-incidents-table th.user {
-        width: 20%;
+    .inc-tab-incidents-table th.p_description {
+        width: 26%;
     }
 
-    .inc-tab-incidents-table th.create-date {
-        width: 20%;
+    .inc-tab-incidents-table th.p_category {
+        width: 15%;
     }
 
-    .inc-tab-incidents-table th.update-date {
-        width: 20%;
+    .inc-tab-incidents-table th.p_responsible {
+        width: 15%;
+    }
+
+    .inc-tab-incidents-table th.p_quantity {
+        width: 11%;
+    }
+
+    .inc-tab-incidents-table th.p_active {
+        width: 9%;
     }
 </style>
 
@@ -33,15 +41,16 @@
             <button class="inc-tab-icon-button">
                 <i class="fas fa-list"></i>
             </button>
-            <h2 class="all-title-header-front">Feedbacks</h2>
+            <h2 class="all-title-header-front">Products</h2>
             <div class="inc-tab-dropdown">
                 <button class="inc-tab-dropdown-toggle" id="filterDropdown">Number <i class="fas fa-chevron-down"></i></button>
                 <div class="inc-tab-dropdown-menu" id="filterMenu" style="display:none;">
                     <a href="#" class="inc-tab-dropdown-item" data-filter="number">Number</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="message">Message</a>
-                    @* <a href="#" class="inc-tab-dropdown-item" data-filter="user">User</a> *@
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="create_date">Create Date</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="update_date">Update Date</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-filter="title">Title</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-filter="description">Description</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-filter="category">Category</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-filter="responsible">Responsible</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-filter="quantity">Quantity</a>
                 </div>
             </div>
             <div class="inc-tab-search-container">
@@ -60,7 +69,7 @@
                 </svg>
             </button>
             <button class="inc-tab-new-button item-delete-btn" id="deleteButton" disabled>Delete</button>
-            <button class="inc-tab-new-button" onclick="window.location.href='/Feedback/Feedback_Create';">New</button>
+            <button class="inc-tab-new-button" onclick="window.location.href='/Product/Product_Create';">New</button>
             <div class="nav-item navbar-dropdown dropdown-user dropdown open-button">
                 <a class="nav-link dropdown-toggle hide-arrow p-0"
                    href="javascript:void(0);"
@@ -86,26 +95,30 @@
             <thead>
                 <tr>
                     <th class="inc-tab-checkbox-column"></th>
-                    <th class="inc-tab-sortable number-column" id="sortByNumber">Number <i class="fas fa-arrow-up" id="sortIcon"></i></th>
-                    <th class="message">Message</th>
-                    <th class="user">User</th>
-                    <th class="create-date">Create date</th>
-                    <th class="update-date">Update date</th>
+                    <th class="inc-tab-sortable number-column">Number</th>
+                    <th class="p_title">Title</th>
+                    <th class="p_description">Description</th>
+                    <th class="p_category">Category</th>
+                    <th class="p_responsible">Responsible</th>
+                    <th class="p_quantity">Quantity</th>
+                    <th class="p_active">Active</th>
                 </tr>
             </thead>
             <tbody id="incTableBody">
 
-                @foreach (var i in Model.Feedback)
+                @foreach (var i in Model.Product)
                 {
                     <tr class="incident-item" data-id="@i.id">
                         <td><input type="checkbox" class="item-checkbox"></td>
                         <td class="inc-tab-incident-number" data-label="Number">
-                            <a href="~/Feedback/Feedback_Info?id=@i.id">@i.fb_number</a>
+                            <a href="~/Category/Category_Info?id=@i.id">@i.pro_number</a>
                         </td>
-                        <td data-label="message">@i.message</td>
-                        <td data-label="fullname">@i.User.fullname</td>
-                        <td data-label="create date">@i.create_date.ToString("yyyy-MM-dd HH:mm:ss")</td>
-                        <td data-label="update date">@i.update_date.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                        <td data-label="Description">@i.item_title</td>
+                        <td data-label="Description">@i.description</td>
+                        <td data-label="Description">@i.Category.title</td>
+                        <td data-label="Description">@i.ResponsibleDepartment.name</td>
+                        <td data-label="Description">@i.quantity</td>
+                        <td data-label="Description">@(i.active ? "Active" : "Inactive")</td>
                     </tr>
                 }
 
@@ -122,21 +135,17 @@
     </div>
 </div>
 
-<span style="display:none" id="forAjaxGetFunctionName_search">SearchFeedback_User</span>
-<span style="display:none" id="forAjaxGetFunctionName_sort">SortFeedback_User</span>
-<span style="display:none" id="forAjaxGetFunctionName_delete">Delete_Item_User</span>
-
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="~/js/List/Feedback_List.js"></script>
+<script src="~/js/List/Category_List.js"></script>
 <script>
       $(function () {
-        var $target = $('#Feedback_menu');
+        var $target = $('#Product_menu');
         if (!$target.hasClass('active') || !$target.hasClass('open')) {
             $('.menu-item').removeClass('active open');
             $target.addClass('active open');
         }
 
-        $('#Feedback_menu_all').addClass("active");
+        $('#Product_menu_all').addClass("active");
     });
 </script>
 

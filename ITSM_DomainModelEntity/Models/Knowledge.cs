@@ -29,9 +29,9 @@ namespace ITSM_DomainModelEntity.Models
         [ForeignKey("Category")]
         public int category_id { get; set; }
 
-        public DateTime create_date { get; set; } = DateTime.Now;
+        public DateTime create_date { get; set; }
 
-        public DateTime? updated { get; set; }
+        public DateTime updated { get; set; }
 
         public bool active { get; set; } = true;
 

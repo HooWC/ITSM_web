@@ -1,6 +1,6 @@
-﻿@model ITSM_DomainModelEntity.Models.Todo
+﻿
 @{
-    ViewData["Title"] = "Todo_Edit";
+    ViewData["Title"] = "Category_Create";
     Layout = "_Layout";
 }
 
@@ -20,10 +20,6 @@
         margin: 0;
         min-height: 100vh;
     }
-
-    .inc-cre-form-wrapper {
-        box-shadow: none !important;
-    }
 </style>
 
 <div class="inc-cre-container">
@@ -37,12 +33,12 @@
                 </svg>
             </button>
             <div class="inc-cre-title-group">
-                <div class="inc-cre-title">Todo Information</div>
-                <div class="inc-cre-subtitle">@Model.todo_id</div>
+                <div class="inc-cre-title">Category</div>
+                <div class="inc-cre-subtitle">New record</div>
             </div>
         </div>
         <div class="inc-cre-header-right">
-            <button class="inc-cre-btn inc-cre-btn-icon" onclick="location.href='/Personal/Todo_List'">
+            <button class="inc-cre-btn inc-cre-btn-icon" onclick="location.href='/Category/Category_List'">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="4" y1="6" x2="20" y2="6"></line>
                     <line x1="4" y1="12" x2="20" y2="12"></line>
@@ -56,7 +52,7 @@
                     <line x1="12" y1="17" x2="12.01" y2="17"></line>
                 </svg>
             </button>
-            <button class="inc-cre-btn inc-cre-btn-submit" onclick="document.getElementById('incidentForm').submit();">Save</button>
+            <button class="inc-cre-btn inc-cre-btn-submit" onclick="document.getElementById('incidentForm').submit();">Submit</button>
             <div class="nav-item navbar-dropdown dropdown-user dropdown open-button">
                 <a class="nav-link dropdown-toggle hide-arrow p-0"
                    href="javascript:void(0);"
@@ -97,40 +93,19 @@
             </div>
         }
 
-        <form id="incidentForm" class="inc-cre-incident-form" action="~/Personal/Todo_Edit" method="post">
-            <input type="text" name="id" id="id" class="inc-cre-form-control" value="@Model.id" style="display:none;" readonly>
-            <div class="inc-cre-form-grid">
-                <div class="inc-cre-form-column">
-                    <div class="inc-cre-form-group">
-                        <label for="number" class="inc-cre-form-label">Number</label>
-                        <input type="text" name="todo_id" id="number" class="inc-cre-form-control" value="@Model.todo_id" readonly>
-                    </div>
-                </div>
-
-                <div class="inc-cre-form-column">
-                    <div class="inc-cre-form-group">
-                        <label for="channel" class="inc-cre-form-label">Active</label>
-                        <select id="channel" name="active_word" class="inc-cre-form-control">
-                            <option value="Doing" selected="@(Model != null && Model.active == false)">Doing</option>
-                            <option value="Completed" selected="@(Model != null && Model.active == true)">Completed</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
+        <form id="incidentForm" class="inc-cre-incident-form" action="~/Category/Category_Create" method="post">
 
             <div class="inc-cre-form-group inc-cre-short-description-group">
                 <label for="short-description" class="inc-cre-form-label inc-cre-required">Title</label>
                 <div class="inc-cre-input-with-actions">
-                    <input type="text" name="title" value="@Model.title" id="short-description" class="inc-cre-form-control" required>
-                    <div class="inc-cre-action-buttons">
-                        <button type="button" class="inc-cre-btn-help">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                                <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                            </svg>
-                        </button>
-                    </div>
+                    <input type="text" name="title" id="title" class="inc-cre-form-control" required>
+                </div>
+            </div>
+
+            <div class="inc-cre-form-group inc-cre-short-description-group">
+                <label for="short-description" class="inc-cre-form-label">Description</label>
+                <div class="inc-cre-input-with-actions">
+                    <input type="text" name="description" id="description" class="inc-cre-form-control" required>
                 </div>
             </div>
         </form>
@@ -140,13 +115,13 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
     $(function () {
-      var $target = $('#Prosonal_menu');
+      var $target = $('#Category_menu');
       if (!$target.hasClass('active') || !$target.hasClass('open')) {
           $('.menu-item').removeClass('active open');
           $target.addClass('active open');
       }
 
-      $('#Prosonal_menu_todo').addClass("active");
+      $('#Category_menu_create').addClass("active");
     });
 </script>
 

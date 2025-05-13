@@ -5,7 +5,8 @@ var IncidentPages = Math.ceil(IncidentItems / itemsPerPage);
 
 let searchFunctionName = $('#forAjaxGetFunctionName_search').text();
 let sortFunctionName = $('#forAjaxGetFunctionName_sort').text();
-let filterFunctionName = $('#forAjaxGetFunctionName_filter').text();
+/*let filterFunctionName = $('#forAjaxGetFunctionName_filter').text();*/
+let DeleteFunctionName = $('#forAjaxGetFunctionName_delete').text();
 
 // Set default filter field and status
 var currentFilter = 'number';
@@ -48,7 +49,7 @@ $('.inc-tab-dropdown-item[data-filter]').click(function (e) {
 
     // If search box is not empty, perform search
     if ($('#searchInput').val().trim() !== '') {
-        searchIncidents();
+        searchFeedbacks();
     }
 });
 
@@ -115,7 +116,7 @@ $('#lastPageBtn').click(function () {
 
 // Search box input event
 $('#searchInput').on('keyup', function () {
-    searchIncidents();
+    searchFeedbacks();
 });
 
 // Refresh button click event
@@ -159,26 +160,20 @@ $('#sortByNumber').click(function () {
 // Sort todos function
 function sortIncidents() {
     var word = "";
-    if (sortFunctionName.includes("Resolved_Assigned_SortIncident"))
-        word = "resolve";
-    else if (sortFunctionName.includes("Closed_Assigned_SortIncident"))
-        word = "closed";
-    else if (sortFunctionName.includes("Assigned_to_me_Closed_Assigned_SortIncident"))
-        word = "tome";
-    else if (sortFunctionName.includes("Assigned_to_team_Assigned_SortIncident"))
-        word = "toteam";
+    if (sortFunctionName.includes("SortFeedback_User"))
+        word = "_user";
     else
-        word = "sort_basic";
+        word = "_admin";
 
     $.ajax({
-        url: '/Ajax/SortIncident',
+        url: '/Ajax/SortFeedback',
         method: 'GET',
         data: {
             sortOrder: currentSortOrder,
             sortWord: word
         },
         success: function (data) {
-            updateIncidentTable(data);
+            updateFeedbackTable(data);
 
             // Reset pagination
             resetPagination();
@@ -235,12 +230,21 @@ $('#deleteButton').click(function () {
         return;
     }
 
+    var word = "";
+    if (DeleteFunctionName.includes("Delete_Item_User"))
+        word = "user";
+    else
+        word = "admin";
+
     // Send delete request
     $.ajax({
-        url: '/Ajax/DeleteIncidents',
+        url: '/Ajax/DeleteFeedbacks',
         method: 'POST',
         contentType: 'application/json',
-        data: JSON.stringify(selectedIds),
+        data: JSON.stringify({
+            word: word,
+            ids: selectedIds
+        }),
         success: function (response) {
             if (response.success) {
                 // Remove deleted items from table
@@ -320,7 +324,7 @@ function updatePaginationButtons() {
 }
 
 // Search Todo List Function
-function searchIncidents() {
+function searchFeedbacks() {
     var searchTerm = $('#searchInput').val().trim();
     if (searchTerm === '') {
         // If the search box is empty, refresh the page
@@ -329,10 +333,10 @@ function searchIncidents() {
     }
 
     var word = "";
-    if (searchFunctionName.includes("Resolved_Assigned_SearchIncident"))
-        word = "resolve";
+    if (searchFunctionName.includes("SearchFeedback_User"))
+        word = "_user";
     else if (searchFunctionName.includes("Closed_Assigned_SearchIncident"))
-        word = "closed";
+        word = "_all";
     else if (searchFunctionName.includes("Assigned_to_me_Assigned_SearchIncident"))
         word = "tome";
     else if (searchFunctionName.includes("Assigned_to_team_Assigned_SearchIncident"))
@@ -341,7 +345,7 @@ function searchIncidents() {
         word = "search_basic";
 
     $.ajax({
-        url: '/Ajax/SearchIncident',
+        url: '/Ajax/SearchFeedback',
         method: 'GET',
         data: {
             searchTerm: searchTerm,
@@ -349,7 +353,7 @@ function searchIncidents() {
             searchWord: word
         },
         success: function (data) {
-            updateIncidentTable(data);
+            updateFeedbackTable(data);
             if (currentStatus !== 'all') {
                 filterTableByStatus(currentStatus);
             }
@@ -369,7 +373,7 @@ function filterByStatus() {
     if (currentStatus === 'all') {
         // Filter All active
         if ($('#searchInput').val().trim() !== '') {
-            searchIncidents();
+            searchFeedbacks();
         } else {
             location.reload();
         }
@@ -385,14 +389,14 @@ function filterByStatus() {
         word = "filter_basic";
 
     $.ajax({
-        url: '/Ajax/FilterIncidentByStatus',
+        url: '/Ajax/FilterFeedbackByStatus',
         method: 'GET',
         data: {
             status: currentStatus,
             filterword: word
         },
         success: function (data) {
-            updateIncidentTable(data);
+            updateFeedbackTable(data);
 
             // Reset pagination
             resetPagination();
@@ -423,25 +427,13 @@ function filterTableByStatus(status) {
     resetPagination();
 }
 
-function formatDate(dateString) {
-    if (!dateString) return '-';
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    const seconds = String(date.getSeconds()).padStart(2, '0');
-    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-}
-
 // Update Todo table function
-function updateIncidentTable(data) {
+function updateFeedbackTable(data) {
     var tableBody = $('#incTableBody');
     tableBody.empty();
 
     if (data.length === 0) {
-        tableBody.append('<tr><td colspan="10" class="text-center">No matching Incidents found</td></tr>');
+        tableBody.append('<tr><td colspan="6" class="text-center">No matching Feedbacks found</td></tr>');
         IncidentItems = 0;
         IncidentPages = 0;
         updatePaginationInfo();
@@ -449,34 +441,17 @@ function updateIncidentTable(data) {
         return;
     }
 
-    $.each(data, function (index, inc) {
-        let priorityClass = "inc-tab-priority ";
-        if (inc.priority === "1 - Critical") {
-            priorityClass += "priority-1";
-        } else if (inc.priority === "2 - High") {
-            priorityClass += "priority-2";
-        } else if (inc.priority === "3 - Moderate") {
-            priorityClass += "priority-3";
-        } else if (inc.priority === "4 - Low") {
-            priorityClass += "priority-4";
-        } else if (inc.priority === "5 - Planning") {
-            priorityClass += "priority-5";
-        }
-
+    $.each(data, function (index, feed) {
         var row = `
-                    <tr class="incident-item" data-id="${inc.id}">
+                    <tr class="incident-item" data-id="${feed.id}">
                         <td><input type="checkbox" class="item-checkbox"></td>
                         <td class="inc-tab-incident-number" data-label="Number">
-                            <a href="/IncidentManagement/Inc_Info_Form?id=${inc.id}">${inc.inc_number}</a>
+                            <a href="/Feedback/Feedback_Info?id=${feed.id}">${feed.fb_number}</a>
                         </td>
-                        <td data-label="short description">${inc.short_description}</td>
-                        <td data-label="priority"><span class="${priorityClass}">${inc.priority}</span></td>
-                        <td data-label="state">${inc.state}</td>
-                        <td data-label="category">${inc.category}</td>
-                        <td data-label="assignment group">${inc.assignment_group}</td>
-                        <td data-label="assigned to">${inc.assigned_to}</td>
-                        <td data-label="create date">${inc.create_date}</td>
-                        <td data-label="update date">${inc.update_date}</td>
+                        <td data-label="message">${feed.message}</td>
+                        <td data-label="fullname">${feed.user}</td>
+                        <td data-label="create date">${feed.create_date}</td>
+                        <td data-label="update date">${feed.update_date}</td>
                     </tr>
                 `;
         tableBody.append(row);

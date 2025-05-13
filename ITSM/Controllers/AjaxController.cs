@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using System.Collections.Generic;
 using System;
+using ITSM_DomainModelEntity.FunctionModels;
 
 namespace ITSM.Controllers
 {
@@ -18,6 +19,8 @@ namespace ITSM.Controllers
         private readonly User_api _userApi;
         private readonly Incident_api _incApi;
         private readonly Note_api _noteApi;
+        private readonly Feedback_api _feedApi;
+        private readonly Category_api _categoryApi;
 
         public AjaxController(IHttpContextAccessor httpContextAccessor)
         {
@@ -27,6 +30,8 @@ namespace ITSM.Controllers
             _userApi = new User_api(httpContextAccessor);
             _incApi = new Incident_api(httpContextAccessor);
             _noteApi = new Note_api(httpContextAccessor);
+            _feedApi = new Feedback_api(httpContextAccessor);
+            _categoryApi = new Category_api(httpContextAccessor);
         }
 
         private bool IsUserLoggedIn(out User currentUser)
@@ -46,11 +51,6 @@ namespace ITSM.Controllers
 
         /// <summary>
         /// Personal/Todo
-        /// Search Todo list
-        /// </summary>
-        /// <param name="searchTerm">Search keyword</param>
-        /// <param name="filterBy">Filter field, can be number/title/create_date</param>
-        /// <returns>Matched Todo list</returns>
         public async Task<IActionResult> SearchTodo(string searchTerm, string filterBy = "number")
         {
             if (string.IsNullOrEmpty(searchTerm))
@@ -78,7 +78,12 @@ namespace ITSM.Controllers
                     break;
                 case "create_date":
                     filteredTodos = userTodos
-                        .Where(t => t.create_date.ToString("yyyy-MM-dd").Contains(searchTerm))
+                        .Where(t => t.create_date.ToString("yyyy-MM-dd HH:mm:ss").Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                        .ToList();
+                    break;
+                case "update_date":
+                    filteredTodos = userTodos
+                        .Where(t => t.update_date.ToString("yyyy-MM-dd HH:mm:ss").Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
                         .ToList();
                     break;
                 default:
@@ -103,10 +108,6 @@ namespace ITSM.Controllers
 
         /// <summary>
         /// Personal/Todo
-        /// Filter the Todo list by status
-        /// </summary>
-        /// <param name="status">Status to filter: all/doing/completed</param>
-        /// <returns>Filtered Todo list</returns>
         public async Task<IActionResult> FilterTodoByStatus(string status = "all")
         {
             if (!IsUserLoggedIn(out var currentUser))
@@ -146,10 +147,6 @@ namespace ITSM.Controllers
 
         /// <summary>
         /// Personal/Todo
-        /// Sort the Todo list
-        /// </summary>
-        /// <param name="sortOrder">Sorting method: asc (ascending)/desc (descending)</param>
-        /// <returns>The sorted Todo list</returns>
         public async Task<IActionResult> SortTodo(string sortOrder = "asc")
         {
             if (!IsUserLoggedIn(out var currentUser))
@@ -178,10 +175,6 @@ namespace ITSM.Controllers
 
         /// <summary>
         /// Personal/Todo
-        /// Delete multiple Todo items
-        /// </summary>
-        /// <param name="ids">Todo item ID list to be deleted</param>
-        /// <returns>Operation results</returns>
         [HttpPost]
         public async Task<IActionResult> DeleteTodos([FromBody] List<int> ids)
         {
@@ -233,6 +226,8 @@ namespace ITSM.Controllers
             }
         }
 
+        /// <summary>
+        /// Get all department data
         public async Task<IActionResult> DepartmentData()
         {
             if (!IsUserLoggedIn(out var currentUser))
@@ -245,9 +240,6 @@ namespace ITSM.Controllers
 
         /// <summary>
         /// Get user data based on department ID
-        /// </summary>
-        /// <param name="departmentId">Department ID</param>
-        /// <returns>User list under the department</returns>
         [HttpPost]
         public async Task<IActionResult> AssignedToData(int departmentId)
         {
@@ -269,11 +261,6 @@ namespace ITSM.Controllers
 
         /// <summary>
         /// IncidentManagement/All
-        /// Search Incident list
-        /// </summary>
-        /// <param name="searchTerm">Search keyword</param>
-        /// <param name="filterBy">Filter field, can be number/title/create_date</param>
-        /// <returns>Matched Incident list</returns>
         public async Task<IActionResult> SearchIncident(string searchWord, string searchTerm, string filterBy = "number")
         {
             if (string.IsNullOrEmpty(searchTerm))
@@ -334,6 +321,16 @@ namespace ITSM.Controllers
                                     join u in filterUsers on i.assigned_to equals u.id
                                     select i).ToList();
                     break;
+                case "opened":
+                    filteredIncs = userIncs
+                        .Where(t => t.create_date != null && t.create_date.ToString("yyyy-MM-dd HH:mm:ss").Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                        .ToList();
+                    break;
+                case "updated":
+                    filteredIncs = userIncs
+                        .Where(t => t.updated != null && t.updated.ToString("yyyy-MM-dd HH:mm:ss").Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                        .ToList();
+                    break;
                 case "number":
                 default:
                     filteredIncs = userIncs
@@ -360,10 +357,6 @@ namespace ITSM.Controllers
 
         /// <summary>
         /// IncidentManagement/All
-        /// Filter the Incident list by status
-        /// </summary>
-        /// <param name="status">Status to filter: all/doing/completed</param>
-        /// <returns>Filtered Incident list</returns>
         public async Task<IActionResult> FilterIncidentByStatus(string filterword, string status = "all")
         {
             if (!IsUserLoggedIn(out var currentUser))
@@ -425,10 +418,6 @@ namespace ITSM.Controllers
 
         /// <summary>
         /// IncidentManagement/All
-        /// Sort the Incident list
-        /// </summary>
-        /// <param name="sortOrder">Sorting method: asc (ascending)/desc (descending)</param>
-        /// <returns>The sorted Incident list</returns>
         public async Task<IActionResult> SortIncident(string sortWord, string sortOrder = "asc")
         {
             if (!IsUserLoggedIn(out var currentUser))
@@ -474,10 +463,6 @@ namespace ITSM.Controllers
 
         /// <summary>
         /// IncidentManagement/All
-        /// Delete multiple Incident items
-        /// </summary>
-        /// <param name="ids">Incident item ID list to be deleted</param>
-        /// <returns>Operation results</returns>
         [HttpPost]
         public async Task<IActionResult> DeleteIncidents([FromBody] List<int> ids)
         {
@@ -533,10 +518,6 @@ namespace ITSM.Controllers
 
         /// <summary>
         /// IncidentManagement/Inc_Info_Form
-        /// </summary>
-        /// <param name="incidentId">Event ID</param>
-        /// <param name="message">Note content</param>
-        /// <returns>Operation results and newly created note details</returns>
         [HttpPost]
         public async Task<IActionResult> AddNote(int incidentId, string message)
         {
@@ -611,9 +592,6 @@ namespace ITSM.Controllers
 
         /// <summary>
         /// IncidentManagement/Inc_Info_Form
-        /// </summary>
-        /// <param name="incidentId">Event ID</param>
-        /// <returns>Work note list</returns>
         public async Task<IActionResult> GetNotesByIncident(int incidentId)
         {
             if (!IsUserLoggedIn(out var currentUser))
@@ -657,9 +635,6 @@ namespace ITSM.Controllers
 
         /// <summary>
         /// IncidentManagement/Inc_Info_Form
-        /// </summary>
-        /// <param name="incidentId">Incident ID</param>
-        /// <returns>Resolution history information</returns>
         [HttpPost]
         public async Task<JsonResult> ResolveIncident(Incident inc, string resolveType, string resolveNotes)
         {
@@ -716,9 +691,6 @@ namespace ITSM.Controllers
 
         /// <summary>
         /// IncidentManagement/Inc_Info_Form
-        /// </summary>
-        /// <param name="incidentId">Incident ID</param>
-        /// <returns>Resolution history information</returns>
         public async Task<IActionResult> GetResolutionHistory(int incidentId)
         {
             if (!IsUserLoggedIn(out var currentUser))
@@ -763,10 +735,6 @@ namespace ITSM.Controllers
 
         /// <summary>
         /// IncidentManagement/Inc_Info_Form
-        /// Close the incident
-        /// </summary>
-        /// <param name="inc">Incident form data</param>
-        /// <returns>Operation results</returns>
         [HttpPost]
         public async Task<JsonResult> CloseIncident(Incident inc)
         {
@@ -812,10 +780,6 @@ namespace ITSM.Controllers
 
         /// <summary>
         /// IncidentManagement/Inc_Info_Form
-        /// Reopen a closed incident
-        /// </summary>
-        /// <param name="inc">Incident form data</param>
-        /// <returns>Operation results</returns>
         [HttpPost]
         public async Task<JsonResult> ReopenIncident(Incident inc)
         {
@@ -861,6 +825,262 @@ namespace ITSM.Controllers
                 return Json(new { success = false, message = ex.Message });
             }
         }
+
+        /// <summary>
+        /// Feedback/Feedback_List
+        public async Task<IActionResult> SearchFeedback(string searchWord, string searchTerm, string filterBy = "number")
+        {
+            if (string.IsNullOrEmpty(searchTerm))
+                return Json(new List<Feedback>());
+
+            if (!IsUserLoggedIn(out var currentUser))
+                return Json(new { success = false, message = "Not logged in" });
+
+            var allFeedbacks = await _feedApi.GetAllFeedback_API();
+            var userFeed = new List<Feedback>();
+            if (searchWord == "_user")
+                userFeed = allFeedbacks.Where(x => x.user_id == currentUser.id).OrderByDescending(y => y.id).ToList();
+            else
+                userFeed = allFeedbacks.OrderByDescending(y => y.id).ToList();
+
+            var allUsers = await _userApi.GetAllUser_API();
+
+            List<Feedback> filteredFeeds;
+
+            switch (filterBy.ToLower())
+            {
+                case "message":
+                    filteredFeeds = userFeed
+                        .Where(t => t.message != null && t.message.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                        .ToList();
+                    break;
+                case "user":
+                    var filterUsers = allUsers.Where(x => x.fullname.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+                    filteredFeeds = (from i in userFeed
+                                    join u in filterUsers on i.user_id equals u.id
+                                    select i).ToList();
+                    break;
+                case "create_date":
+                    filteredFeeds = userFeed
+                        .Where(t => t.create_date != null && t.create_date.ToString("yyyy-MM-dd HH:mm:ss").Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                        .ToList();
+                    break;
+                case "update_date":
+                    filteredFeeds = userFeed
+                        .Where(t => t.update_date != null && t.update_date.ToString("yyyy-MM-dd HH:mm:ss").Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                        .ToList();
+                    break;
+                case "number":
+                default:
+                    filteredFeeds = userFeed
+                        .Where(t => t.fb_number != null && t.fb_number.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                        .ToList();
+                    break;
+            }
+
+            var result = filteredFeeds.Select(t => new {
+                t.id,
+                t.fb_number,
+                t.message,
+                user = allUsers.FirstOrDefault(u => u.id == t.user_id)?.fullname ?? "",
+                create_date = t.create_date.ToString("yyyy-MM-dd HH:mm:ss"),
+                update_date = t.update_date.ToString("yyyy-MM-dd HH:mm:ss")
+            });
+
+            return Json(result);
+        }
+
+        /// <summary>
+        /// Feedback/Feedback_List
+        public async Task<IActionResult> SortFeedback(string sortWord, string sortOrder = "asc")
+        {
+            if (!IsUserLoggedIn(out var currentUser))
+                return Json(new { success = false, message = "Not logged in" });
+
+            var allFeeds = await _feedApi.GetAllFeedback_API();
+            var userFeeds = new List<Feedback>();
+            if (sortWord == "_user")
+                userFeeds = allFeeds.Where(x => x.user_id == currentUser.id).OrderByDescending(y => y.id).ToList();
+            else
+                userFeeds = allFeeds.OrderByDescending(y => y.id).ToList();
+
+            var allUsers = await _userApi.GetAllUser_API();
+
+            List<Feedback> sortedFeedbacks;
+            if (sortOrder.ToLower() == "desc")
+                sortedFeedbacks = userFeeds.OrderBy(x => x.id).ToList();
+            else
+                sortedFeedbacks = userFeeds.OrderByDescending(x => x.id).ToList();
+
+            var result = sortedFeedbacks.Select(t => new {
+                t.id,
+                t.fb_number,
+                t.message,
+                user = allUsers.FirstOrDefault(u => u.id == t.user_id)?.fullname ?? "",
+                create_date = t.create_date.ToString("yyyy-MM-dd HH:mm:ss"),
+                update_date = t.update_date.ToString("yyyy-MM-dd HH:mm:ss")
+            });
+
+            return Json(result);
+        }
+
+        /// <summary>
+        /// Feedback/Feedback_List
+        [HttpPost]
+        public async Task<IActionResult> DeleteFeedbacks([FromBody] DeleteFeedbackRequestFM request)
+        {
+            var word = request.word;
+            var ids = request.ids;
+
+            if (ids == null || !ids.Any())
+                return Json(new { success = false, message = "No items selected for deletion" });
+
+            // Get current user information
+            if (!IsUserLoggedIn(out var currentUser))
+                return Json(new { success = false, message = "Not logged in" });
+
+            try
+            {
+                int successCount = 0;
+
+                // Traverse all selected IDs and delete them one by one
+                foreach (var id in ids)
+                {
+                    // Confirm that the Incident project exists and belongs to the current user
+                    var allFeeds = await _feedApi.GetAllFeedback_API();
+                    var incToDelete = new Feedback();
+                    if (word == "user")
+                        incToDelete = allFeeds.FirstOrDefault(x => x.id == id && x.user_id == currentUser.id);
+                    else
+                        incToDelete = allFeeds.FirstOrDefault(x => x.id == id);
+
+                    if (incToDelete != null)
+                    {
+                        // Call API to delete Incident
+                        bool result = await _feedApi.DeleteFeedback_API(id);
+                        if (result)
+                            successCount++;
+                    }
+                }
+
+                if (successCount > 0)
+                {
+                    return Json(new
+                    {
+                        success = true,
+                        message = $"Successfully deleted {successCount} item(s)"
+                    });
+                }
+                else
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Failed to delete items. Items may not exist or you don't have permission"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = $"Error: {ex.Message}" });
+            }
+        }
+
+        /// <summary>
+        /// Category/Category_List
+        public async Task<IActionResult> SearchCategory(string searchTerm, string filterBy = "number")
+        {
+            if (string.IsNullOrEmpty(searchTerm))
+                return Json(new List<Category>());
+
+            if (!IsUserLoggedIn(out var currentUser))
+                return Json(new { success = false, message = "Not logged in" });
+
+            var allCategorys = await _categoryApi.GetAllCategory_API();
+            var userCategory = new List<Category>();
+            userCategory = allCategorys.OrderByDescending(y => y.id).ToList();
+
+            List<Category> filteredCategorys;
+
+            switch (filterBy.ToLower())
+            {
+   
+                case "description":
+                    filteredCategorys = userCategory
+                        .Where(x => x.description != null && x.description.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                        .ToList();
+                    break;
+                case "title":
+                default:
+                    filteredCategorys = userCategory
+                        .Where(t => t.title != null && t.title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                        .ToList();
+                    break;
+            }
+
+            var result = filteredCategorys.Select(t => new {
+                t.title,
+                t.description
+            });
+
+            return Json(result);
+        }
+
+        /// <summary>
+        /// Category/Category_List
+        [HttpPost]
+        public async Task<IActionResult> DeleteCategory([FromBody] List<int> ids)
+        {
+            if (ids == null || !ids.Any())
+                return Json(new { success = false, message = "No items selected for deletion" });
+
+            // Get current user information
+            if (!IsUserLoggedIn(out var currentUser))
+                return Json(new { success = false, message = "Not logged in" });
+
+            try
+            {
+                int successCount = 0;
+
+                // Traverse all selected IDs and delete them one by one
+                foreach (var id in ids)
+                {
+                    // Confirm that the Incident project exists and belongs to the current user
+                    var allCategorys = await _categoryApi.GetAllCategory_API();
+                    var CategoryToDelete = allCategorys.FirstOrDefault(x => x.id == id);
+
+                    if (CategoryToDelete != null)
+                    {
+                        // Call API to delete Incident
+                        bool result = await _categoryApi.DeleteCategory_API(id);
+                        if (result)
+                            successCount++;
+                    }
+                }
+
+                if (successCount > 0)
+                {
+                    return Json(new
+                    {
+                        success = true,
+                        message = $"Successfully deleted {successCount} item(s)"
+                    });
+                }
+                else
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Failed to delete items. Items may not exist or you don't have permission"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = $"Error: {ex.Message}" });
+            }
+        }
+
 
     }
 }
