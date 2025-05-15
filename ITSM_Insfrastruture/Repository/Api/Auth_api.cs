@@ -153,7 +153,9 @@ namespace ITSM_Insfrastruture.Repository.Api
                 race = apiUser.race,
                 update_date = apiUser.update_date,
                 create_date = apiUser.create_date ?? DateTime.Now,
-                active = apiUser.active
+                active = apiUser.active,
+                photo = apiUser.photo,
+                photo_type = apiUser.photo_type
             };
 
             return user;

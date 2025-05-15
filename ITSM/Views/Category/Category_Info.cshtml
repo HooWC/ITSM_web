@@ -52,14 +52,14 @@
                     <line x1="12" y1="17" x2="12.01" y2="17"></line>
                 </svg>
             </button>
-            <button class="inc-cre-btn inc-cre-btn-submit" onclick="document.getElementById('incidentForm').submit();">Submit</button>
+            <button class="inc-cre-btn inc-cre-btn-submit" onclick="document.getElementById('incidentForm').submit();">Save</button>
             <div class="nav-item navbar-dropdown dropdown-user dropdown open-button">
                 <a class="nav-link dropdown-toggle hide-arrow p-0"
                    href="javascript:void(0);"
                    data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
-                        <img src="@(ViewBag.Photo != null ? "data:image/jpeg;base64," + Convert.ToBase64String(ViewBag.Photo) :
-                        Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 h-auto rounded-circle" />
+                        <img src="@(ViewBag.Photo != null ? $"data:{ViewBag.PhotoType};base64,{Convert.ToBase64String(ViewBag.Photo)}" :
+                            Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 h-auto rounded-circle" />
                     </div>
                 </a>
             </div>

@@ -43,7 +43,9 @@ namespace ITSM.Controllers
         {
             // current user info
             var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser = tokenService.GetUserInfo();
+            var currentUser_token = tokenService.GetUserInfo();
+
+            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
 
             // Making concurrent API requests
             var inc = _incApi.GetAllIncident_API();
@@ -76,14 +78,17 @@ namespace ITSM.Controllers
             return View(model);
         }
 
-        public IActionResult Create_Form()
+        public async Task<IActionResult> Create_Form()
         {
             // current user info
             var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser = tokenService.GetUserInfo();
+            var currentUser_token = tokenService.GetUserInfo();
+
+            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
 
             ViewBag.CurrentUser = currentUser.fullname;
             ViewBag.Photo = currentUser.photo;
+            ViewBag.PhotoType = currentUser.photo_type;
 
             return View();
         }
@@ -93,10 +98,13 @@ namespace ITSM.Controllers
         {
             // current user info
             var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser = tokenService.GetUserInfo();
+            var currentUser_token = tokenService.GetUserInfo();
+
+            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
 
             ViewBag.CurrentUser = currentUser.fullname;
             ViewBag.Photo = currentUser.photo;
+            ViewBag.PhotoType = currentUser.photo_type;
 
             if (inc.short_description == null && inc.AssignmentGroup == null)
             {
@@ -159,7 +167,9 @@ namespace ITSM.Controllers
         {
             // current user info
             var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser = tokenService.GetUserInfo();
+            var currentUser_token = tokenService.GetUserInfo();
+
+            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
 
             // Making concurrent API requests
             var departmentTask = _depApi.GetAllDepartment_API();
@@ -193,7 +203,9 @@ namespace ITSM.Controllers
         {
             // current user info
             var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser = tokenService.GetUserInfo();
+            var currentUser_token = tokenService.GetUserInfo();
+
+            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
 
             // Making concurrent API requests
             var departmentTask = _depApi.GetAllDepartment_API();
@@ -267,7 +279,9 @@ namespace ITSM.Controllers
         {
             // current user info
             var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser = tokenService.GetUserInfo();
+            var currentUser_token = tokenService.GetUserInfo();
+
+            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
 
             // Making concurrent API requests
             var inc = _incApi.GetAllIncident_API();
@@ -304,7 +318,9 @@ namespace ITSM.Controllers
         {
             // current user info
             var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser = tokenService.GetUserInfo();
+            var currentUser_token = tokenService.GetUserInfo();
+
+            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
 
             // Making concurrent API requests
             var inc = _incApi.GetAllIncident_API();
@@ -341,7 +357,9 @@ namespace ITSM.Controllers
         {
             // current user info
             var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser = tokenService.GetUserInfo();
+            var currentUser_token = tokenService.GetUserInfo();
+
+            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
 
             // Making concurrent API requests
             var inc = _incApi.GetAllIncident_API();
@@ -378,7 +396,9 @@ namespace ITSM.Controllers
         {
             // current user info
             var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser = tokenService.GetUserInfo();
+            var currentUser_token = tokenService.GetUserInfo();
+
+            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
 
             // Making concurrent API requests
             var inc = _incApi.GetAllIncident_API();

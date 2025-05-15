@@ -25510,6 +25510,7 @@ li:not(:first-child) .dropdown-item, .dropdown-menu .dropdown-item:not(:first-ch
         overflow: hidden;
         flex: 0 1 100%;
         flex-direction: row;
+        margin-bottom:15px;
     }
 
         .menu-horizontal .menu-inner .menu-item:not(.menu-item-closing) > .menu-sub {

@@ -5,6 +5,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Json.Serialization;
+using ITSM_DomainModelEntity.Function;
 
 namespace ITSM_DomainModelEntity.Models
 {
@@ -23,6 +25,7 @@ namespace ITSM_DomainModelEntity.Models
         [ForeignKey("ResponsibleDepartment")]
         public int responsible { get; set; }
 
+        [JsonConverter(typeof(Base64ToByteArrayConverter))]
         public byte[]? photo { get; set; }
 
         [Required]
@@ -34,7 +37,9 @@ namespace ITSM_DomainModelEntity.Models
 
         public int quantity { get; set; }
 
-        public bool active { get; set; } = true;
+        public bool active { get; set; }
+
+        public string? photo_type {  get; set; }
 
         // Navigation properties
         public virtual Category? Category { get; set; }

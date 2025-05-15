@@ -4,6 +4,10 @@ using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
 using ITSM_DomainModelEntity.Models;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using Newtonsoft.Json;
+using ITSM_Insfrastruture.Repository.Config;
 
 namespace ITSM_Insfrastruture.Repository.Token
 {
@@ -23,6 +27,7 @@ namespace ITSM_Insfrastruture.Repository.Token
         private const string CookieTokenKey = "AuthTokenCookie";
         private const string CookieUserInfoKey = "UserInfoCookie";
         private const int CookieDaysValid = 36500; // 100-year validity period
+        private readonly string _F_U_UserUrl = Api_Link.User_F_U_Link;
 
         public TokenService(IHttpContextAccessor httpContextAccessor)
         {
@@ -35,7 +40,7 @@ namespace ITSM_Insfrastruture.Repository.Token
             {
                 try
                 {
-                    var tokenJson = JsonSerializer.Serialize(tokenModel);
+                    var tokenJson = System.Text.Json.JsonSerializer.Serialize(tokenModel);
                     // Console.WriteLine($"Token Json: {tokenJson}");
                     
                     // Save To Session
@@ -119,7 +124,7 @@ namespace ITSM_Insfrastruture.Repository.Token
                     {
                         if (_httpContextAccessor.HttpContext.Session != null)
                         {
-                            var tokenJson = JsonSerializer.Serialize(cookieToken);
+                            var tokenJson = System.Text.Json.JsonSerializer.Serialize(cookieToken);
                             _httpContextAccessor.HttpContext.Session.SetString(TokenKey, tokenJson);
                             // Console.WriteLine("The cookie token has been synchronized to the Session");
                         }
@@ -152,7 +157,7 @@ namespace ITSM_Insfrastruture.Repository.Token
             {
                 try
                 {
-                    return JsonSerializer.Deserialize<TokenModel>(tokenJson);
+                    return System.Text.Json.JsonSerializer.Deserialize<TokenModel>(tokenJson);
                 }
                 catch
                 {
@@ -175,7 +180,7 @@ namespace ITSM_Insfrastruture.Repository.Token
             {
                 try
                 {
-                    return JsonSerializer.Deserialize<TokenModel>(tokenJson);
+                    return System.Text.Json.JsonSerializer.Deserialize<TokenModel>(tokenJson);
                 }
                 catch
                 {
@@ -251,7 +256,16 @@ namespace ITSM_Insfrastruture.Repository.Token
             {
                 try
                 {
-                    var userInfoJson = JsonSerializer.Serialize(userInfo);
+                    // 创建不包含photo的用户对象副本进行序列化
+                    var userInfoForStorage = CreateUserWithoutPhoto(userInfo);
+                    
+                    // 序列化不包含photo的用户对象
+                    var options = new JsonSerializerOptions { 
+                        WriteIndented = false,
+                        IgnoreNullValues = false
+                    };
+                    
+                    var userInfoJson = System.Text.Json.JsonSerializer.Serialize(userInfoForStorage, options);
                     
                     // Save to Session
                     try
@@ -261,6 +275,12 @@ namespace ITSM_Insfrastruture.Repository.Token
                             _httpContextAccessor.HttpContext.Session.Set("SessionTest", new byte[] { 1 });
                         }
                         _httpContextAccessor.HttpContext.Session.SetString(UserInfoKey, userInfoJson);
+                        
+                        // 单独存储photo_type，用于指示有photo数据
+                        if (userInfo.photo_type != null)
+                        {
+                            _httpContextAccessor.HttpContext.Session.SetString("UserPhotoType", userInfo.photo_type);
+                        }
                         // Console.WriteLine("User info saved to Session");
                     }
                     catch (Exception ex)
@@ -268,7 +288,7 @@ namespace ITSM_Insfrastruture.Repository.Token
                         Console.WriteLine($"Error saving user info to Session: {ex.Message}");
                     }
                     
-                    // Save to Cookie
+                    // Save to Cookie (不包含photo数据)
                     try
                     {
                         _httpContextAccessor.HttpContext.Response.Cookies.Append(
@@ -299,6 +319,35 @@ namespace ITSM_Insfrastruture.Repository.Token
                 Console.WriteLine("Cannot save user info, HttpContext is null or user info is null");
             }
         }
+        
+        // 创建不包含photo的User对象副本
+        private User CreateUserWithoutPhoto(User original)
+        {
+            if (original == null) return null;
+            
+            return new User
+            {
+                id = original.id,
+                emp_id = original.emp_id,
+                prefix = original.prefix,
+                fullname = original.fullname,
+                email = original.email,
+                gender = original.gender,
+                department_id = original.department_id,
+                title = original.title,
+                business_phone = original.business_phone,
+                mobile_phone = original.mobile_phone,
+                role_id = original.role_id,
+                username = original.username,
+                password = original.password,
+                race = original.race,
+                update_date = original.update_date,
+                create_date = original.create_date,
+                active = original.active,
+                photo = null, // 不存储photo数据
+                photo_type = original.photo_type // 但保留类型信息
+            };
+        }
 
         // Get current user's complete information
         public User GetUserInfo()
@@ -309,10 +358,12 @@ namespace ITSM_Insfrastruture.Repository.Token
                 return null;
             }
             
+            User userInfo = null;
+            
             // Try to get from Session
             try
             {
-                var userInfo = GetUserInfoFromSession();
+                userInfo = GetUserInfoFromSession();
                 if (userInfo != null)
                 {
                     // Console.WriteLine("Successfully retrieved user info from Session");
@@ -327,7 +378,7 @@ namespace ITSM_Insfrastruture.Repository.Token
             // Try to get from Cookie
             try
             {
-                var userInfo = GetUserInfoFromCookie();
+                userInfo = GetUserInfoFromCookie();
                 if (userInfo != null)
                 {
                     // Console.WriteLine("Successfully retrieved user info from Cookie");
@@ -337,7 +388,9 @@ namespace ITSM_Insfrastruture.Repository.Token
                     {
                         if (_httpContextAccessor.HttpContext.Session != null)
                         {
-                            var userInfoJson = JsonSerializer.Serialize(userInfo);
+                            // 创建不包含photo的用户对象副本进行序列化
+                            var userInfoForStorage = CreateUserWithoutPhoto(userInfo);
+                            var userInfoJson = System.Text.Json.JsonSerializer.Serialize(userInfoForStorage);
                             _httpContextAccessor.HttpContext.Session.SetString(UserInfoKey, userInfoJson);
                             // Console.WriteLine("User info from Cookie synchronized to Session");
                         }
@@ -350,6 +403,27 @@ namespace ITSM_Insfrastruture.Repository.Token
             catch (Exception ex)
             {
                 Console.WriteLine($"Error getting user info from Cookie: {ex.Message}");
+            }
+            
+            // 如果Session和Cookie中都没有用户信息，尝试从API获取
+            try
+            {
+                var tokenModel = GetToken();
+                if (tokenModel != null && tokenModel.UserId > 0)
+                {
+                    // 异步获取用户信息并等待结果
+                    userInfo = FetchUserInfoFromApiAsync(tokenModel).GetAwaiter().GetResult();
+                    if (userInfo != null)
+                    {
+                        // 保存获取到的用户信息
+                        SaveUserInfo(userInfo);
+                        return userInfo;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error fetching user info from API: {ex.Message}");
             }
             
             Console.WriteLine("No valid user information found");
@@ -370,7 +444,11 @@ namespace ITSM_Insfrastruture.Repository.Token
             {
                 try
                 {
-                    return JsonSerializer.Deserialize<User>(userInfoJson);
+                    var options = new JsonSerializerOptions { 
+                        WriteIndented = false,
+                        IgnoreNullValues = false
+                    };
+                    return System.Text.Json.JsonSerializer.Deserialize<User>(userInfoJson, options);
                 }
                 catch
                 {
@@ -393,12 +471,61 @@ namespace ITSM_Insfrastruture.Repository.Token
             {
                 try
                 {
-                    return JsonSerializer.Deserialize<User>(userInfoJson);
+                    var options = new JsonSerializerOptions { 
+                        WriteIndented = false,
+                        IgnoreNullValues = false
+                    };
+                    return System.Text.Json.JsonSerializer.Deserialize<User>(userInfoJson, options);
                 }
                 catch
                 {
                     return null;
                 }
+            }
+            
+            return null;
+        }
+
+        private async Task<User> FetchUserInfoFromApiAsync(TokenModel tokenModel)
+        {
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenModel.Token);
+                    
+                    // 从API获取用户信息
+                    var response = await client.GetAsync($"{_F_U_UserUrl}{tokenModel.UserId}");
+                    
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var jsonResponse = await response.Content.ReadAsStringAsync();
+                        
+                        // 处理数组格式返回
+                        if (jsonResponse.TrimStart().StartsWith("["))
+                        {
+                            var users = JsonConvert.DeserializeObject<User[]>(jsonResponse);
+                            if (users != null && users.Length > 0)
+                            {
+                                return users[0];
+                            }
+                        }
+                        // 处理单个对象格式返回
+                        else
+                        {
+                            var user = JsonConvert.DeserializeObject<User>(jsonResponse);
+                            if (user != null)
+                            {
+                                return user;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to fetch user info from API: {ex.Message}");
             }
             
             return null;

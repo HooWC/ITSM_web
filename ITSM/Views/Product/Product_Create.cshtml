@@ -1,23 +1,28 @@
-﻿
+﻿@using ITSM_DomainModelEntity.ViewModels
+@model Category_DepartmentVM
 @{
     ViewData["Title"] = "Product_Create";
 }
 
 <style>
     * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
     }
 
     body {
-        font-family: 'Segoe UI', Arial, sans-serif;
-        background-color: var(--background-color);
-        color: var(--text-color);
-        line-height: 1.5;
-        padding: 10px;
-        margin: 0;
-        min-height: 100vh;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.5;
+    padding: 10px;
+    margin: 0;
+    min-height: 100vh;
+    }
+
+    .inc-file-cre-form-padding{
+        padding:5px 0px 0px 5px;
     }
 </style>
 
@@ -32,7 +37,7 @@
                 </svg>
             </button>
             <div class="inc-cre-title-group">
-                <div class="inc-cre-title">Feedback</div>
+                <div class="inc-cre-title">Product</div>
                 <div class="inc-cre-subtitle">New record</div>
             </div>
         </div>
@@ -54,11 +59,11 @@
             <button class="inc-cre-btn inc-cre-btn-submit" onclick="document.getElementById('incidentForm').submit();">Submit</button>
             <div class="nav-item navbar-dropdown dropdown-user dropdown open-button">
                 <a class="nav-link dropdown-toggle hide-arrow p-0"
-                   href="javascript:void(0);"
-                   data-bs-toggle="dropdown">
+                href="javascript:void(0);"
+                data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
-                        <img src="@(ViewBag.Photo != null ? "data:image/jpeg;base64," + Convert.ToBase64String(ViewBag.Photo) :
-                        Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 h-auto rounded-circle" />
+                        <img src="@(ViewBag.Photo != null ? $"data:{ViewBag.PhotoType};base64,{Convert.ToBase64String(ViewBag.Photo)}" :
+                            Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 h-auto rounded-circle" />
                     </div>
                 </a>
             </div>
@@ -92,27 +97,71 @@
             </div>
         }
 
-        <form id="incidentForm" class="inc-cre-incident-form" action="~/Feedback/Feedback_Create" method="post">
+        <form id="incidentForm" class="inc-cre-incident-form" action="~/Product/Product_Create" method="post" enctype="multipart/form-data">
             <div class="inc-cre-form-grid">
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="number" class="inc-cre-form-label">Number</label>
-                        <input type="text" name="todo_id" id="number" class="inc-cre-form-control" value="FBK_TBD" readonly>
+                        <input type="text" name="pro_number" id="pro_number" class="inc-cre-form-control" value="PRO_TBD" readonly>
                     </div>
                 </div>
 
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
-                        <label for="number" class="inc-cre-form-label">User</label>
-                        <input type="text" name="name" id="name" class="inc-cre-form-control" value="@ViewBag.CurrentUser" readonly>
+                        <label for="number" class="inc-cre-form-label inc-cre-required">Quantity</label>
+                        <input type="number" name="quantity" id="quantity" class="inc-cre-form-control" value="1" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="inc-cre-form-grid">
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="number" class="inc-cre-form-label inc-cre-required">Title</label>
+                        <input type="text" name="item_title" id="item_title" class="inc-cre-form-control" required>
+                    </div>
+                </div>
+
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="number" class="inc-cre-form-label">Picture</label>
+                        <input type="file" name="file" id="file" class="inc-cre-form-control inc-file-cre-form-padding">
+                    </div>
+                </div>
+            </div>
+
+            <div class="inc-cre-form-grid">
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="channel" class="inc-cre-form-label">Category</label>
+                        <select id="channel" name="category_id" class="inc-cre-form-control">
+                            @foreach (var item in Model.category)
+                            {
+                                var isSelected = item == Model.category.First() ? "selected" : "";
+                                <option value="@item.id" isSelected>@item.title</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="channel" class="inc-cre-form-label">Responsible</label>
+                        <select id="channel" name="responsible" class="inc-cre-form-control">
+                            @foreach (var item in Model.department)
+                            {
+                                var isSelected = item == Model.department.First() ? "selected" : "";
+                                <option value="@item.id" isSelected>@item.name</option>
+                            }
+                        </select>
                     </div>
                 </div>
             </div>
 
             <div class="inc-cre-form-group inc-cre-short-description-group">
-                <label for="short-description" class="inc-cre-form-label inc-cre-required">Message</label>
+                <label for="short-description" class="inc-cre-form-label inc-cre-required">Description</label>
                 <div class="inc-cre-input-with-actions">
-                    <input type="text" name="message" id="message" class="inc-cre-form-control" required>
+                    <input type="text" name="description" id="description" class="inc-cre-form-control" required>
                 </div>
             </div>
         </form>
@@ -122,13 +171,13 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
     $(function () {
-      var $target = $('#Feedback_menu');
+      var $target = $('#Product_menu');
       if (!$target.hasClass('active') || !$target.hasClass('open')) {
           $('.menu-item').removeClass('active open');
           $target.addClass('active open');
       }
 
-      $('#Feedback_menu_create').addClass("active");
+      $('#Product_menu_create').addClass("active");
     });
 </script>
 

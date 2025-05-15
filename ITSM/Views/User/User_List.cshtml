@@ -1,0 +1,117 @@
+﻿@using ITSM_DomainModelEntity.ViewModels
+@model UserVM
+@{
+    ViewData["Title"] = "User_List";
+}
+
+<style>
+    .inc-tab-incidents-table th.title-column {
+        width: 20%;
+    }
+
+    .inc-tab-incidents-table th.c_description {
+        width: 80%;
+    }
+</style>
+
+<div class="inc-tab-container">
+    <header>
+        <div class="inc-tab-header-left">
+            <button class="inc-tab-icon-button">
+                <i class="fas fa-list"></i>
+            </button>
+            <h2 class="all-title-header-front">Department</h2>
+            <div class="inc-tab-dropdown">
+                <button class="inc-tab-dropdown-toggle" id="filterDropdown">Name <i class="fas fa-chevron-down"></i></button>
+                <div class="inc-tab-dropdown-menu" id="filterMenu" style="display:none;">
+                    <a href="#" class="inc-tab-dropdown-item" data-filter="name">Name</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-filter="description">Description</a>
+                </div>
+            </div>
+            <div class="inc-tab-search-container">
+                <input type="text" placeholder="Search" class="inc-tab-search-input" id="searchInput">
+            </div>
+        </div>
+        <div class="inc-tab-header-right">
+            <button class="inc-tab-icon-button" id="refreshButton">
+                <i class="fas fa-sync-alt"></i>
+            </button>
+            <button class="inc-cre-btn inc-cre-btn-icon" onclick="window.open('/Info/Info_Personal_Todo', '_blank')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+            </button>
+            <button class="inc-tab-new-button item-delete-btn" id="deleteButton" disabled>Delete</button>
+            <button class="inc-tab-new-button" onclick="window.location.href='/Department/Department_Create';">New</button>
+            <div class="nav-item navbar-dropdown dropdown-user dropdown open-button">
+                <a class="nav-link dropdown-toggle hide-arrow p-0"
+                   href="javascript:void(0);"
+                   data-bs-toggle="dropdown">
+                    <div class="avatar avatar-online">
+                        <img src="@(Model.User.photo != null ? $"data:{Model.User.photo_type};base64," +  Convert.ToBase64String(Model.User.photo) :
+                            Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 h-auto rounded-circle" />
+                    </div>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="inc-tab-table-options">
+        <div class="inc-tab-checkbox-container">
+            <input type="checkbox" id="select-all">
+        </div>
+        <span class="inc-tab-all-text">All</span>
+    </div>
+
+    <div class="inc-tab-table-container">
+        <table class="inc-tab-incidents-table">
+            <thead>
+                <tr>
+                    <th class="inc-tab-checkbox-column"></th>
+                    <th class="inc-tab-sortable title-column">Name</th>
+                    <th class="c_description">Description</th>
+                </tr>
+            </thead>
+            <tbody id="incTableBody">
+
+                @foreach (var i in Model.UserList)
+                {
+                    <tr class="incident-item" data-id="@i.id">
+                        <td><input type="checkbox" class="item-checkbox"></td>
+                        <td class="inc-tab-incident-number" data-label="Name">
+                            <a href="~/Department/Department_Info?id=@i.id">@i.emp_id</a>
+                        </td>
+                        <td data-label="Description">@i.fullname</td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+
+    <div class="inc-tab-pagination">
+        <button class="inc-tab-pagination-button" id="firstPageBtn" disabled><i class="fas fa-angle-double-left"></i></button>
+        <button class="inc-tab-pagination-button" id="prevPageBtn" disabled><i class="fas fa-angle-left"></i></button>
+        <span class="inc-tab-pagination-info" id="paginationInfo">-</span>
+        <button class="inc-tab-pagination-button" id="nextPageBtn"><i class="fas fa-angle-right"></i></button>
+        <button class="inc-tab-pagination-button" id="lastPageBtn"><i class="fas fa-angle-double-right"></i></button>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="~/js/List/Department_List.js"></script>
+<script>
+      $(function () {
+        var $target = $('#User_menu');
+        if (!$target.hasClass('active') || !$target.hasClass('open')) {
+            $('.menu-item').removeClass('active open');
+            $target.addClass('active open');
+        }
+
+        $('#User_menu_all').addClass("active");
+    });
+</script>
+
+

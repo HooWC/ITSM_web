@@ -33,7 +33,7 @@
                 </svg>
             </button>
             <div class="inc-cre-title-group">
-                <div class="inc-cre-title">Product</div>
+                <div class="inc-cre-title">Feedback</div>
                 <div class="inc-cre-subtitle">New record</div>
             </div>
         </div>
@@ -58,8 +58,8 @@
                    href="javascript:void(0);"
                    data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
-                        <img src="@(ViewBag.Photo != null ? "data:image/jpeg;base64," + Convert.ToBase64String(ViewBag.Photo) :
-                        Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 h-auto rounded-circle" />
+                        <img src="@(ViewBag.Photo != null ? $"data:{ViewBag.PhotoType};base64,{Convert.ToBase64String(ViewBag.Photo)}" :
+                            Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 h-auto rounded-circle" />
                     </div>
                 </a>
             </div>
@@ -123,13 +123,13 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
     $(function () {
-      var $target = $('#Product_menu');
+      var $target = $('#Feedback_menu');
       if (!$target.hasClass('active') || !$target.hasClass('open')) {
           $('.menu-item').removeClass('active open');
           $target.addClass('active open');
       }
 
-      $('#Product_menu_create').addClass("active");
+      $('#Feedback_menu_create').addClass("active");
     });
 </script>
 

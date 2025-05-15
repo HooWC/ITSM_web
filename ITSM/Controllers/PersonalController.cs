@@ -2,6 +2,7 @@
 using ITSM_DomainModelEntity.Models;
 using ITSM_DomainModelEntity.ViewModels;
 using ITSM_Insfrastruture.Repository.Api;
+using ITSM_Insfrastruture.Repository.Config;
 using ITSM_Insfrastruture.Repository.Token;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,6 +11,7 @@ namespace ITSM.Controllers
     public class PersonalController : Controller
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly Auth_api _authApi;
         private readonly User_api _userApi;
         private readonly Todo_api _todoApi;
         private readonly Feedback_api _feedbackApi;
@@ -18,10 +20,14 @@ namespace ITSM.Controllers
         private readonly Request_api _reqApi;
         private readonly Department_api _depApi;
         private readonly Role_api _roleApi;
-    
+        private readonly Category_api _categoryApi;
+        private readonly Product_api _productApi;
+        private readonly Department_api _departmentApi;
+
         public PersonalController(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
+            _authApi = new Auth_api(httpContextAccessor);
             _userApi = new User_api(httpContextAccessor);
             _todoApi = new Todo_api(httpContextAccessor);
             _feedbackApi = new Feedback_api(httpContextAccessor);
@@ -30,13 +36,18 @@ namespace ITSM.Controllers
             _reqApi = new Request_api(httpContextAccessor);
             _depApi = new Department_api(httpContextAccessor);
             _roleApi = new Role_api(httpContextAccessor);
+            _categoryApi = new Category_api(httpContextAccessor);
+            _productApi = new Product_api(httpContextAccessor);
+            _departmentApi = new Department_api(httpContextAccessor);
         }
 
         public async Task<IActionResult> Home()
         {
             // current user info
             var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser = tokenService.GetUserInfo();
+            var currentUser_token = tokenService.GetUserInfo();
+
+            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
 
             // Making concurrent API requests
             var todoTask = _todoApi.GetAllTodo_API();
@@ -118,7 +129,9 @@ namespace ITSM.Controllers
         {
             // current user info
             var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser = tokenService.GetUserInfo();
+            var currentUser_token = tokenService.GetUserInfo();
+
+            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
 
             // Making concurrent API requests
             var todoTask = _todoApi.GetAllTodo_API();
@@ -141,9 +154,12 @@ namespace ITSM.Controllers
         {
             // current user info
             var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser = tokenService.GetUserInfo();
+            var currentUser_token = tokenService.GetUserInfo();
+
+            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
 
             ViewBag.Photo = currentUser.photo;
+            ViewBag.PhotoType = currentUser.photo_type;
 
             return View();
         }
@@ -153,9 +169,12 @@ namespace ITSM.Controllers
         {
             // current user info
             var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser = tokenService.GetUserInfo();
+            var currentUser_token = tokenService.GetUserInfo();
+
+            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
 
             ViewBag.Photo = currentUser.photo;
+            ViewBag.PhotoType = currentUser.photo_type;
 
             if (todo.title == null)
             {
@@ -209,9 +228,12 @@ namespace ITSM.Controllers
         {
             // current user info
             var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser = tokenService.GetUserInfo();
+            var currentUser_token = tokenService.GetUserInfo();
+
+            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
 
             ViewBag.Photo = currentUser.photo;
+            ViewBag.PhotoType = currentUser.photo_type;
 
             // Get Todo
             var todo = await _todoApi.FindByIDTodo_API(id);
@@ -224,9 +246,12 @@ namespace ITSM.Controllers
         {
             // current user info
             var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser = tokenService.GetUserInfo();
+            var currentUser_token = tokenService.GetUserInfo();
+
+            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
 
             ViewBag.Photo = currentUser.photo;
+            ViewBag.PhotoType = currentUser.photo_type;
 
             // Get Todo
             var edit_todo = await _todoApi.FindByIDTodo_API(todo.id);
@@ -257,6 +282,227 @@ namespace ITSM.Controllers
             return View(todo);
         }
 
+        public async Task<IActionResult> User_Info()
+        {
+            // current user info
+            var tokenService = new TokenService(_httpContextAccessor);
+            var currentUser_token = tokenService.GetUserInfo();
+
+            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+
+            var departmentTask = _departmentApi.GetAllDepartment_API();
+            var roleTask = _roleApi.GetAllRole_API();
+            await Task.WhenAll(departmentTask, roleTask);
+
+            var allDepartment = await departmentTask;
+            var allRole = await roleTask;
+
+            currentUser.Department = allDepartment.Where(x => x.id == currentUser.department_id).FirstOrDefault();
+            currentUser.Role = allRole.Where(x => x.id == currentUser.role_id).FirstOrDefault();
+
+            var model = new User_Dep_RoleVM()
+            {
+                user = currentUser,
+                role = allRole,
+                department = allDepartment
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> User_Info(IFormFile file, User user, string role_code, string new_password)
+        {
+            // current user info
+            var tokenService = new TokenService(_httpContextAccessor);
+            var currentUser_token = tokenService.GetUserInfo();
+
+            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+
+            var departmentTask = _departmentApi.GetAllDepartment_API();
+            var roleTask = _roleApi.GetAllRole_API();
+            var userTask = _userApi.GetAllUser_API();
+            await Task.WhenAll(departmentTask, roleTask, userTask);
+
+            var allDepartment = await departmentTask;
+            var allRole = await roleTask;
+            var allUser = await userTask;
+
+            var info_user = await _userApi.FindByIDUser_API(user.id);
+
+            currentUser.Department = allDepartment.Where(x => x.id == currentUser.department_id).FirstOrDefault();
+            currentUser.Role = allRole.Where(x => x.id == currentUser.role_id).FirstOrDefault();
+
+            var model = new User_Dep_RoleVM()
+            {
+                user = info_user,
+                role = allRole,
+                department = allDepartment
+            };
+
+            if (!string.IsNullOrEmpty(user.fullname) &&
+                !string.IsNullOrEmpty(user.email) &&
+                !string.IsNullOrEmpty(user.title) &&
+                !string.IsNullOrEmpty(user.mobile_phone) &&
+                !string.IsNullOrEmpty(user.username))
+            {
+                byte[] fileBytes = null;
+
+                if (file != null && file.Length > 50_000_000)
+                {
+                    ViewBag.Error = "File size exceeds 50MB limit";
+                    return View(model);
+                }
+
+                if (file != null && file.Length > 0)
+                {
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await file.CopyToAsync(memoryStream);
+                        fileBytes = memoryStream.ToArray();
+                    }
+                }
+
+                if (user.password != null && new_password != null)
+                {
+                    if (user.password == new_password)
+                    {
+                        ViewBag.Error = "The old and new passwords cannot be the same. Please try again.";
+                        return View(model);
+                    }
+                    else if (new_password.Length <= 6)
+                    {
+                        ViewBag.Error = "The password must be at least 6 word. Please try again.";
+                        return View(model);
+                    }
+                    else
+                    {
+                        try
+                        {
+                            bool loginResult = await _authApi.LoginAsync(user.emp_id, user.username, user.password);
+
+                            if (loginResult)
+                                info_user.password = new_password;
+                            else
+                            {
+                                ViewBag.Error = "Wrong username or password. Try again.";
+                                return View(model);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Ex Message: {ex.Message}");
+                            Console.WriteLine($"Ex StackTrace: {ex.StackTrace}");
+                            ViewBag.Error = "An error occurred during login, please try again later";
+                            return View(model);
+                        }
+                    }
+                }
+
+                bool emailExists = allUser.Any(u => u.email == user.email && u.id != user.id);
+                bool usernameExists = allUser.Any(u => u.username == user.username && u.id != user.id);
+                bool mobilephoneExists = allUser.Any(u => u.mobile_phone == user.mobile_phone && u.id != user.id);
+                bool businessphoneExists = !string.IsNullOrWhiteSpace(user.business_phone) &&
+                                            allUser.Any(u => u.business_phone == user.business_phone && u.id != user.id);
+
+
+                if (emailExists)
+                {
+                    ViewBag.Error = "This email is already in use.";
+                    return View(model);
+                }
+
+                if (usernameExists)
+                {
+                    ViewBag.Error = "This username is already in use.";
+                    return View(model);
+                }
+
+                if (mobilephoneExists)
+                {
+                    ViewBag.Error = "This mobile phone is already in use.";
+                    return View(model);
+                }
+
+                if (businessphoneExists)
+                {
+                    ViewBag.Error = "This business phone is already in use.";
+                    return View(model);
+                }
+
+                info_user.gender = user.gender;
+                info_user.fullname = user.fullname;
+                info_user.department_id = user.department_id;
+                info_user.title = user.title;
+                info_user.race = user.race;
+                info_user.business_phone = user.business_phone;
+                info_user.mobile_phone = user.mobile_phone;
+                info_user.username = user.username;
+
+                // Prefix
+                if (user.gender == "Male")
+                    info_user.prefix = "Mr.";
+                else if (user.gender == "Female")
+                    info_user.prefix = "Ms.";
+                else
+                    info_user.prefix = "-";
+
+                // role
+                if (user.role_id != info_user.role_id)
+                {
+                    // Role Code
+                    string expectedRoleCode;
+                    switch (user.role_id)
+                    {
+                        case 1: // Admin
+                            expectedRoleCode = Info.AdminCode;
+                            break;
+                        case 2: // ITIL
+                            expectedRoleCode = Info.ITILCode;
+                            break;
+                        case 3: // User
+                            expectedRoleCode = Info.UserCode;
+                            break;
+                        default:
+                            ViewBag.Error = "Role Error";
+                            return View(model);
+                    }
+
+                    if (role_code != expectedRoleCode)
+                    {
+                        ViewBag.Error = "Role Code Error";
+                        return View(model);
+                    }
+
+                    info_user.role_id = user.role_id;
+                }
+
+                if (fileBytes != null)
+                {
+                    info_user.photo = fileBytes;
+                    info_user.photo_type = GetMimeTypeFromFileSignature(fileBytes);
+                }
+
+                bool result = await _userApi.UpdateUser_API(info_user);
+
+                if (result)
+                {
+                    tokenService.SaveUserInfo(info_user);
+                    return RedirectToAction("Home", "Personal");
+                }
+                else
+                {
+                    ViewBag.Error = "Update User Info Error";
+                    return View(model);
+                }
+            }
+            else
+            {
+                ViewBag.Error = "Please fill in all required fields";
+                return View(model);
+            }
+        }
+
         public IActionResult Incident_List()
         {
             return View();
@@ -275,6 +521,74 @@ namespace ITSM.Controllers
         public IActionResult Feedback_List()
         {
             return View();
+        }
+
+        private string GetMimeTypeFromFileSignature(byte[] fileBytes)
+        {
+            if (fileBytes.Length < 4) return "application/octet-stream";
+
+            // PNG
+            if (fileBytes[0] == 0x89 && fileBytes[1] == 0x50 &&
+                fileBytes[2] == 0x4E && fileBytes[3] == 0x47)
+                return "image/png";
+
+            // JPEG/JPG
+            if (fileBytes[0] == 0xFF && fileBytes[1] == 0xD8 && fileBytes[2] == 0xFF)
+                return "image/jpeg";
+
+            // GIF
+            if (fileBytes[0] == 0x47 && fileBytes[1] == 0x49 && fileBytes[2] == 0x46)
+                return "image/gif";
+
+            // WebP
+            if (fileBytes.Length >= 12 &&
+                fileBytes[0] == 0x52 && fileBytes[1] == 0x49 &&
+                fileBytes[2] == 0x46 && fileBytes[3] == 0x46 &&
+                fileBytes[8] == 0x57 && fileBytes[9] == 0x45 &&
+                fileBytes[10] == 0x42 && fileBytes[11] == 0x50)
+                return "image/webp";
+
+            // BMP
+            if (fileBytes[0] == 0x42 && fileBytes[1] == 0x4D)
+                return "image/bmp";
+
+            // TIFF (little endian)
+            if (fileBytes[0] == 0x49 && fileBytes[1] == 0x49 &&
+                fileBytes[2] == 0x2A && fileBytes[3] == 0x00)
+                return "image/tiff";
+
+            // TIFF (big endian)
+            if (fileBytes[0] == 0x4D && fileBytes[1] == 0x4D &&
+                fileBytes[2] == 0x00 && fileBytes[3] == 0x2A)
+                return "image/tiff";
+
+            // ICO
+            if (fileBytes[0] == 0x00 && fileBytes[1] == 0x00 &&
+                fileBytes[2] == 0x01 && fileBytes[3] == 0x00)
+                return "image/x-icon";
+
+            // HEIF (需要更多字节检查)
+            if (fileBytes.Length >= 12 &&
+                ((fileBytes[4] == 0x66 && fileBytes[5] == 0x74 &&
+                  fileBytes[6] == 0x79 && fileBytes[7] == 0x70 &&
+                  fileBytes[8] == 0x68 && fileBytes[9] == 0x65 &&
+                  fileBytes[10] == 0x69 && fileBytes[11] == 0x63) || // heic
+                 (fileBytes[4] == 0x66 && fileBytes[5] == 0x74 &&
+                  fileBytes[6] == 0x79 && fileBytes[7] == 0x70 &&
+                  fileBytes[8] == 0x6D && fileBytes[9] == 0x69 &&
+                  fileBytes[10] == 0x66 && fileBytes[11] == 0x31)))   // heif
+                return "image/heif";
+
+            // AVIF
+            if (fileBytes.Length >= 12 &&
+                fileBytes[4] == 0x66 && fileBytes[5] == 0x74 &&
+                fileBytes[6] == 0x79 && fileBytes[7] == 0x70 &&
+                fileBytes[8] == 0x61 && fileBytes[9] == 0x76 &&
+                fileBytes[10] == 0x69 && fileBytes[11] == 0x66)
+                return "image/avif";
+
+            // 默认
+            return "application/octet-stream";
         }
     }
 }

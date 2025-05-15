@@ -76,15 +76,13 @@
                     <div class="game-icon">
                         <a href="javascript:void(0);">
                             <i class="icon-image fa-solid fa-ban"></i>
-                            <div class="icon-name">Blacklist</div>
+                            <div class="icon-name">-</div>
                         </a>
                     </div>
-                    <div class="game-icon wide-icon">
-                        <a href="javascript:void(0);">
-                            <i class="icon-image fa-solid fa-user-shield"></i>
-                            <div class="icon-name">Profile</div>
-                        </a>
-                    </div>
+                    <a href="~/Personal/User_Info" class="game-icon wide-icon">
+                        <i class="icon-image fa-solid fa-user-shield"></i>
+                        <div class="icon-name">Profile</div>
+                    </a>
 
                     <!-- Row 2 -->
                     <div class="game-icon">
@@ -119,12 +117,10 @@
                             <div class="icon-name">New Request</div>
                         </a>
                     </div>
-                    <div class="game-icon">
-                        <a href="javascript:void(0);">
-                            <i class="icon-image fa-solid fa-user"></i>
-                            <div class="icon-name">Personal</div>
-                        </a>
-                    </div>
+                    <a href="~/Personal/Home" class="game-icon">
+                        <i class="icon-image fa-solid fa-user"></i>
+                        <div class="icon-name">Personal</div>
+                    </a>
                     <div class="game-icon">
                         <a href="javascript:void(0);">
                             <i class="icon-image fa-solid fa-list-check"></i>
@@ -168,12 +164,10 @@
                     </div>
 
                     <!-- Row 6 (bottom row) -->
-                    <div class="game-icon">
-                        <a href="~/OtherPage/Show_Session">
-                            <i class="icon-image fa-solid fa-gears"></i>
-                            <div class="icon-name">Session</div>
-                        </a>
-                    </div>
+                    <a href="~/OtherPage/Show_Session" class="game-icon">
+                        <i class="icon-image fa-solid fa-gears"></i>
+                        <div class="icon-name">Session</div>
+                    </a>
                     <div class="game-icon" id="log-outBtn">
                         <a href="javascript:void(0);">
                             <i class="icon-image fa-solid fa-power-off"></i>
@@ -266,6 +260,7 @@
                     <li class="menu-header small text-uppercase">
                         <span class="menu-header-text">EVENTS &amp; REQUEST</span>
                     </li>
+
                     <!-- Incidents -->
                     <li class="menu-item" id="Incidents_menu">
                         <a href="javascript:void(0);" class="menu-link menu-toggle">
@@ -290,7 +285,7 @@
                             </li>
                             <li class="menu-item" id="Incidents_menu_assigned_to_team">
                                 <a href="~/IncidentManagement/Assigned_To_Group" class="menu-link">
-                                    <div class="text-truncate" data-i18n="Notifications">Assigned to team</div>
+                                    <div class="text-truncate" data-i18n="Notifications">Assigned to us</div>
                                 </a>
                             </li>
                             <li class="menu-item" id="Incidents_menu_assigned_resolve">
@@ -305,6 +300,7 @@
                             </li>
                         </ul>
                     </li>
+                    
                     <!-- Requests -->
                     <li class="menu-item" id="Requests_menu">
                     <a href="javascript:void(0);" class="menu-link menu-toggle">
@@ -337,7 +333,8 @@
 
                 <!-- Components -->
                 <li class="menu-header small text-uppercase"><span class="menu-header-text">Components</span></li>
-                    <!-- Knowledge -->
+                    
+                <!-- Knowledge -->
                     <li class="menu-item" id="Knowledge_menu">
                     <a href="javascript:void(0)" class="menu-link menu-toggle">
                         <i class="menu-icon tf-icons bx bx-box"></i>
@@ -437,6 +434,69 @@
                     </ul>
                 </li>
 
+                <!-- Admin -->
+                <li class="menu-header small text-uppercase"><span class="menu-header-text">Admin</span></li>
+
+                    <!-- Role -->
+                    <li class="menu-item" id="Role_menu">
+                        <a href="javascript:void(0)" class="menu-link menu-toggle">
+                            <i class="menu-icon tf-icons bx bx-copy"></i>
+                            <div class="text-truncate" data-i18n="Extended UI">Role</div>
+                        </a>
+                        <ul class="menu-sub">
+                            <li class="menu-item" id="Role_menu_all">
+                                <a href="~/Product/Product_List" class="menu-link">
+                                    <div class="text-truncate" data-i18n="Perfect Scrollbar">All</div>
+                                </a>
+                            </li>
+                            <li class="menu-item" id="Role_menu_create">
+                                <a href="~/Product/Product_Create" class="menu-link">
+                                    <div class="text-truncate" data-i18n="Text Divider">Create New</div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <!-- User -->
+                    <li class="menu-item" id="User_menu">
+                        <a href="javascript:void(0)" class="menu-link menu-toggle">
+                            <i class="menu-icon tf-icons bx bx-copy"></i>
+                            <div class="text-truncate" data-i18n="Extended UI">User</div>
+                        </a>
+                        <ul class="menu-sub">
+                            <li class="menu-item" id="User_menu_all">
+                                <a href="~/Product/Product_List" class="menu-link">
+                                    <div class="text-truncate" data-i18n="Perfect Scrollbar">All</div>
+                                </a>
+                            </li>
+                            <li class="menu-item" id="User_menu_create">
+                                <a href="~/Product/Product_Create" class="menu-link">
+                                    <div class="text-truncate" data-i18n="Text Divider">Create New</div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <!-- Department -->
+                    <li class="menu-item" id="Department_menu">
+                        <a href="javascript:void(0)" class="menu-link menu-toggle">
+                            <i class="menu-icon tf-icons bx bx-copy"></i>
+                            <div class="text-truncate" data-i18n="Extended UI">Department</div>
+                        </a>
+                        <ul class="menu-sub">
+                            <li class="menu-item" id="Department_menu_all">
+                                <a href="~/Department/Department_List" class="menu-link">
+                                    <div class="text-truncate" data-i18n="Perfect Scrollbar">All</div>
+                                </a>
+                            </li>
+                            <li class="menu-item" id="Department_menu_create">
+                                <a href="~/Department/Department_Create" class="menu-link">
+                                    <div class="text-truncate" data-i18n="Text Divider">Create New</div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
                     <!-- Category -->
                     <li class="menu-item" id="Category_menu">
                         <a href="javascript:void(0)" class="menu-link menu-toggle">
@@ -477,8 +537,6 @@
                         </ul>
                     </li>
 
-                <!-- Forms & Tables -->
-                <li class="menu-header small text-uppercase"><span class="menu-header-text">Forms &amp; Tables</span></li>
                 <!-- Forms -->
                 </ul>
             </aside>

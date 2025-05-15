@@ -1,7 +1,298 @@
-﻿
+﻿@using ITSM_DomainModelEntity.ViewModels
+@model Pro_Cat_DepVM
+
 @{
     ViewData["Title"] = "Product_Info";
+    Layout = "_Layout";
 }
 
-<h1>Product_Info</h1>
+<style>
+    * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    }
 
+    body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.5;
+    padding: 10px;
+    margin: 0;
+    min-height: 100vh;
+    }
+
+    .inc-file-cre-form-padding {
+    padding: 5px 0px 0px 5px;
+    }
+
+    /* Product Image Styles */
+    .inc-cre-product-image-container {
+    margin-bottom: 1.25rem;
+    border-radius: 0.375rem;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+    max-width: 100%;
+    height: auto;
+    }
+
+    .inc-cre-product-image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 25%; /* Reduced height for rectangular images */
+    overflow: hidden;
+    background-color: #121212;
+    }
+
+    .inc-cre-product-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Changed from cover to contain */
+    transition: transform 0.5s ease;
+    background-color: #121212;
+    }
+
+    .inc-cre-product-image-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 50%, transparent 100%);
+    padding: 0.75rem 1.25rem;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    .inc-cre-product-title {
+    margin: 0 0 0.25rem 0;
+    font-weight: 600;
+    font-size: 1rem;
+    }
+
+    .inc-cre-product-description {
+    margin: 0;
+    opacity: 0.9;
+    font-size: 0.75rem;
+    }
+
+    .inc-cre-product-image-wrapper:hover .inc-cre-product-image {
+    transform: scale(1.03);
+    }
+
+    /* Add support for square images */
+    .inc-cre-product-image-wrapper.square {
+    padding-bottom: 25%; /* Keep same height for consistency */
+    }
+
+    /* Auto-detect and adjust for different image types */
+    .inc-cre-product-image.landscape {
+    object-position: center;
+    }
+
+    .inc-cre-product-image.portrait {
+    object-position: center;
+    }
+
+    @@media (max-width: 768px) {
+    .inc-cre-product-image-wrapper {
+    padding-bottom: 35%; /* Slightly taller on mobile but still compact */
+    }
+
+    .inc-cre-product-image-wrapper.square {
+    padding-bottom: 35%;
+    }
+    }
+</style>
+
+<div class="inc-cre-container">
+    <header class="inc-cre-header">
+        <div class="inc-cre-header-left">
+            <button class="inc-cre-menu-button">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+            <div class="inc-cre-title-group">
+                <div class="inc-cre-title">Product</div>
+                <div class="inc-cre-subtitle">@Model.product.pro_number</div>
+            </div>
+        </div>
+        <div class="inc-cre-header-right">
+            <button class="inc-cre-btn inc-cre-btn-icon" onclick="location.href='/Product/Product_List'">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="4" y1="6" x2="20" y2="6"></line>
+                    <line x1="4" y1="12" x2="20" y2="12"></line>
+                    <line x1="4" y1="18" x2="20" y2="18"></line>
+                </svg>
+            </button>
+            <button class="inc-cre-btn inc-cre-btn-icon" onclick="window.open('/Info/Info_Personal_Todo', '_blank')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+            </button>
+            <button class="inc-cre-btn inc-cre-btn-submit" onclick="document.getElementById('incidentForm').submit();">Save</button>
+            <div class="nav-item navbar-dropdown dropdown-user dropdown open-button">
+                <a class="nav-link dropdown-toggle hide-arrow p-0"
+                href="javascript:void(0);"
+                data-bs-toggle="dropdown">
+                    <div class="avatar avatar-online">
+                        <img src="@(ViewBag.Photo != null ? $"data:{ViewBag.PhotoType};base64,{Convert.ToBase64String(ViewBag.Photo)}" :
+                            Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 h-auto rounded-circle" />
+                    </div>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="inc-cre-form-wrapper">
+
+        @if (!string.IsNullOrEmpty(ViewBag.Error as string))
+        {
+            <div id="error-notification" class="error-notification">
+                <div class="error-notification-content">
+                    <div class="error-notification-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                    </div>
+                    <div class="error-notification-text">
+                        <div class="error-notification-title">Submission failed</div>
+                        <div class="error-notification-message" id="error-notification-message">@ViewBag.Error</div>
+                    </div>
+                </div>
+                <button type="button" class="error-notification-close" id="error-notification-close">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+        }
+
+        <form id="incidentForm" class="inc-cre-incident-form" action="~/Product/Product_Info" method="post" enctype="multipart/form-data">
+            <input type="text" name="id" id="id" class="inc-cre-form-control" value="@Model.product.id" style="display:none;" readonly>
+            <div class="inc-cre-product-image-container">
+                <div class="inc-cre-product-image-wrapper">
+                    <img src="@(Model.product.photo != null ? $"data:{Model.product.photo_type};base64,{Convert.ToBase64String(Model.product.photo)}" : 
+                         "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80")"
+                    alt="Selected Product"
+                    class="inc-cre-product-image" />
+                    <div class="inc-cre-product-image-overlay">
+                        <h4 class="inc-cre-product-title">@Model.product.item_title</h4>
+                        <p class="inc-cre-product-description">@Model.product.description</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="inc-cre-form-grid">
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="number" class="inc-cre-form-label">Number</label>
+                        <input type="text" name="pro_number" id="pro_number" class="inc-cre-form-control" value="@Model.product.pro_number" readonly>
+                    </div>
+                </div>
+
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="number" class="inc-cre-form-label inc-cre-required">Quantity</label>
+                        <input type="number" name="quantity" id="quantity" class="inc-cre-form-control" value="@Model.product.quantity" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="inc-cre-form-grid">
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="number" class="inc-cre-form-label inc-cre-required">Title</label>
+                        <input type="text" name="item_title" id="item_title" class="inc-cre-form-control" value="@Model.product.item_title" required>
+                    </div>
+                </div>
+
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="number" class="inc-cre-form-label">Picture</label>
+                        <input type="file" name="file" id="file" class="inc-cre-form-control inc-file-cre-form-padding">
+                    </div>
+                </div>
+            </div>
+
+            <div class="inc-cre-form-grid">
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="channel" class="inc-cre-form-label">Category</label>
+                        <select id="channel" name="category_id" class="inc-cre-form-control">
+                            @{
+                                var selectCategory = Model.product.Category.title;
+                            }
+                            @foreach (var item in Model.category)
+                            {
+                                <option value="@item.id" selected="@(item.title == selectCategory)">@item.title</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="channel" class="inc-cre-form-label">Responsible</label>
+                        <select id="channel" name="responsible" class="inc-cre-form-control">
+                            @{
+                                var selectDepartment = Model.product.ResponsibleDepartment.name;
+                            }
+                            @foreach (var item in Model.department)
+                            {
+                                <option value="@item.id" selected="@(item.name == selectDepartment)">@item.name</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="inc-cre-form-grid">
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="channel" class="inc-cre-form-label">Active</label>
+                        <select id="active" name="active" class="inc-cre-form-control">
+                            @{
+                                var selectActive = Model.product.active;
+                            }
+                            <option value="true" selected="@(selectActive ? "selected" : null)">Active</option>
+                            <option value="false" selected="@(selectActive == false ? "selected" : null)">Inactive</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="inc-cre-form-group inc-cre-short-description-group">
+                <label for="short-description" class="inc-cre-form-label inc-cre-required">Description</label>
+                <div class="inc-cre-input-with-actions">
+                    <input type="text" name="description" id="description" value="@Model.product.description" class="inc-cre-form-control" required>
+                </div>
+            </div>
+        </form>
+    </main>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+    $(function () {
+      var $target = $('#Product_menu');
+      if (!$target.hasClass('active') || !$target.hasClass('open')) {
+          $('.menu-item').removeClass('active open');
+          $target.addClass('active open');
+      }
+
+      $('#Product_menu_all').addClass("active");
+    });
+</script>

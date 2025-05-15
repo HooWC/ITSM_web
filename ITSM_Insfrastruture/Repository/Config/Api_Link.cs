@@ -65,6 +65,8 @@ namespace ITSM_Insfrastruture.Repository.Config
         public static readonly string ProductLink = $"{BaseUrl}/products";
         // search by id & update && delete Product  (ID) (need token)
         public static readonly string ProductSUDLink = $"{BaseUrl}/products/";
+        // Product photo upload endpoint
+        public static readonly string ProductPhotoLink = $"{BaseUrl}/products/photo";
         // === For Product Part ===
 
         // ============================================================================

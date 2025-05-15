@@ -34,34 +34,35 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> All_Feedback_List()
         {
-            var feedList = await GetCommonFeedbackData(null);  
+            var feedList = await GetCommonFeedbackData();  
             return View(feedList);  
         }
 
         public async Task<IActionResult> Feedback_List()
         {
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser = tokenService.GetUserInfo();
-
-            var feedList = await GetCommonFeedbackData(currentUser);  
+            var feedList = await GetCommonFeedbackData();  
             return View(feedList);  
         }
 
-        private async Task<FeedbackVM> GetCommonFeedbackData(User? user_token)
+        private async Task<FeedbackVM> GetCommonFeedbackData()
         {
             var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser = tokenService.GetUserInfo();
+            var currentUser_token = tokenService.GetUserInfo();
+
+            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
 
             var feedTask = _feedbackApi.GetAllFeedback_API();
             var userTask = _userApi.GetAllUser_API();
-            await Task.WhenAll(feedTask, userTask);
+            var roleTask = _roleApi.GetAllRole_API();
+            await Task.WhenAll(feedTask, userTask, roleTask);
 
             var allFeed = await feedTask;
             var allUsers = await userTask;
+            var allRoles = await roleTask;
 
-            var feedList = user_token == null
-                ? allFeed.OrderByDescending(y => y.id).ToList()
-                : allFeed.Where(x => x.user_id == user_token.id).OrderByDescending(y => y.id).ToList();
+            var feedList = currentUser.role_id == allRoles.Where(x => x.role == "User").FirstOrDefault()?.id
+                ? allFeed.Where(x => x.user_id == currentUser.id).OrderByDescending(y => y.id).ToList()
+                : allFeed.OrderByDescending(y => y.id).ToList();
 
             foreach (var feedback in feedList)
                 feedback.User = allUsers.FirstOrDefault(x => x.id == feedback.user_id);
@@ -73,14 +74,17 @@ namespace ITSM.Controllers
             };
         }
 
-        public IActionResult Feedback_Create()
+        public async Task<IActionResult> Feedback_Create()
         {
             // current user info
             var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser = tokenService.GetUserInfo();
+            var currentUser_token = tokenService.GetUserInfo();
+
+            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
 
             ViewBag.CurrentUser = currentUser.fullname;
             ViewBag.Photo = currentUser.photo;
+            ViewBag.PhotoType = currentUser.photo_type;
 
             return View();
         }
@@ -90,10 +94,13 @@ namespace ITSM.Controllers
         {
             // current user info
             var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser = tokenService.GetUserInfo();
+            var currentUser_token = tokenService.GetUserInfo();
+
+            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
 
             ViewBag.CurrentUser = currentUser.fullname;
             ViewBag.Photo = currentUser.photo;
+            ViewBag.PhotoType = currentUser.photo_type;
 
             if (feed.message == null)
             {
@@ -143,13 +150,17 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Feedback_Info(int id)
         {
             var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser = tokenService.GetUserInfo();
+            var currentUser_token = tokenService.GetUserInfo();
 
-            ViewBag.CurrentUser = currentUser.fullname;
-            ViewBag.Photo = currentUser.photo;
+            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
 
             // Get Feedback
             var feedback = await _feedbackApi.FindByIDFeedback_API(id);
+            var feedbackUser = await _userApi.FindByIDUser_API(feedback.user_id);
+            feedback.User = feedbackUser;
+
+            ViewBag.Photo = currentUser.photo;
+            ViewBag.PhotoType = currentUser.photo_type;
 
             return View(feedback);
         }
@@ -159,13 +170,17 @@ namespace ITSM.Controllers
         {
             // current user info
             var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser = tokenService.GetUserInfo();
+            var currentUser_token = tokenService.GetUserInfo();
 
-            ViewBag.CurrentUser = currentUser.fullname;
-            ViewBag.Photo = currentUser.photo;
+            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
 
-            // Making concurrent API requests
+            // Get Feedback
             var feedback = await _feedbackApi.FindByIDFeedback_API(feed.id);
+            var feedbackUser = await _userApi.FindByIDUser_API(feedback.user_id);
+            feedback.User = feedbackUser;
+
+            ViewBag.Photo = currentUser.photo;
+            ViewBag.PhotoType = currentUser.photo_type;
 
             if (feed.message == null)
             {

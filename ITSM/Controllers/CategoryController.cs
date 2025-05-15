@@ -36,7 +36,9 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Category_List()
         {
             var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser = tokenService.GetUserInfo();
+            var currentUser_token = tokenService.GetUserInfo();
+
+            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
 
             var categoryTask = _categoryApi.GetAllCategory_API();
             await Task.WhenAll(categoryTask);
@@ -54,13 +56,16 @@ namespace ITSM.Controllers
             return View(model);
         }
 
-        public IActionResult Category_Create()
+        public async Task<IActionResult> Category_Create()
         {
             // current user info
             var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser = tokenService.GetUserInfo();
+            var currentUser_token = tokenService.GetUserInfo();
+
+            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
 
             ViewBag.Photo = currentUser.photo;
+            ViewBag.PhotoType = currentUser.photo_type;
 
             return View();
         }
@@ -70,9 +75,12 @@ namespace ITSM.Controllers
         {
             // current user info
             var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser = tokenService.GetUserInfo();
+            var currentUser_token = tokenService.GetUserInfo();
+
+            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
 
             ViewBag.Photo = currentUser.photo;
+            ViewBag.PhotoType = currentUser.photo_type;
 
             if (category.title == null)
             {
@@ -102,9 +110,12 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Category_Info(int id)
         {
             var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser = tokenService.GetUserInfo();
+            var currentUser_token = tokenService.GetUserInfo();
+
+            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
 
             ViewBag.Photo = currentUser.photo;
+            ViewBag.PhotoType = currentUser.photo_type;
 
             // Get Category
             var category = await _categoryApi.FindByIDCategory_API(id);
@@ -117,9 +128,12 @@ namespace ITSM.Controllers
         {
             // current user info
             var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser = tokenService.GetUserInfo();
+            var currentUser_token = tokenService.GetUserInfo();
+
+            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
 
             ViewBag.Photo = currentUser.photo;
+            ViewBag.PhotoType = currentUser.photo_type;
 
             // Making concurrent API requests
             var categoryTask = await _categoryApi.FindByIDCategory_API(c.id);

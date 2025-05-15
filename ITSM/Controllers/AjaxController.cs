@@ -21,6 +21,7 @@ namespace ITSM.Controllers
         private readonly Note_api _noteApi;
         private readonly Feedback_api _feedApi;
         private readonly Category_api _categoryApi;
+        private readonly Product_api _productApi;
 
         public AjaxController(IHttpContextAccessor httpContextAccessor)
         {
@@ -32,6 +33,7 @@ namespace ITSM.Controllers
             _noteApi = new Note_api(httpContextAccessor);
             _feedApi = new Feedback_api(httpContextAccessor);
             _categoryApi = new Category_api(httpContextAccessor);
+            _productApi = new Product_api(httpContextAccessor);
         }
 
         private bool IsUserLoggedIn(out User currentUser)
@@ -988,7 +990,7 @@ namespace ITSM.Controllers
 
         /// <summary>
         /// Category/Category_List
-        public async Task<IActionResult> SearchCategory(string searchTerm, string filterBy = "number")
+        public async Task<IActionResult> SearchCategory(string searchTerm, string filterBy = "title")
         {
             if (string.IsNullOrEmpty(searchTerm))
                 return Json(new List<Category>());
@@ -1081,6 +1083,310 @@ namespace ITSM.Controllers
             }
         }
 
+        /// <summary>
+        /// Product/Product_List
+        public async Task<IActionResult> SearchProduct(string searchTerm, string filterBy = "number")
+        {
+            if (string.IsNullOrEmpty(searchTerm))
+                return Json(new List<Product>());
 
+            if (!IsUserLoggedIn(out var currentUser))
+                return Json(new { success = false, message = "Not logged in" });
+
+            var categoryTask = _categoryApi.GetAllCategory_API();
+            var departmentTask = _departmentApi.GetAllDepartment_API();
+            var productTask = _productApi.GetAllProduct_API();
+            await Task.WhenAll(categoryTask, departmentTask, productTask);
+
+            var allCategory = await categoryTask;
+            var allDepartment = await departmentTask;
+            var allProduct = await productTask;
+
+            var selectProduct = new List<Product>();
+            selectProduct = allProduct.OrderByDescending(y => y.id).ToList();
+
+            List<Product> filteredProduct;
+
+            switch (filterBy.ToLower())
+            {
+                case "title":
+                    filteredProduct = selectProduct
+                        .Where(x => x.item_title != null && x.item_title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                        .ToList();
+                    break;
+                case "description":
+                    filteredProduct = selectProduct
+                        .Where(x => x.description != null && x.description.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                        .ToList();
+                    break;
+                case "category":
+                    var filteredCategoryData = allCategory.Where(x => x.title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+                    filteredProduct = (from i in selectProduct
+                                    join c in filteredCategoryData on i.category_id equals c.id
+                                    select i).ToList();
+                    break;
+                case "responsible":
+                    var filteredDepartmentData = allDepartment.Where(x => x.name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+                    filteredProduct = (from i in selectProduct
+                                       join d in filteredDepartmentData on i.responsible equals d.id
+                                       select i).ToList();
+                    break;
+                case "quantity":
+                    filteredProduct = selectProduct
+                        .Where(x => x.quantity.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                        .ToList();
+                    break;
+                case "number":
+                default:
+                    filteredProduct = selectProduct
+                        .Where(t => t.pro_number != null && t.pro_number.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                        .ToList();
+                    break;
+            }
+
+            var result = filteredProduct.Select(t => new {
+                t.pro_number,
+                t.item_title,
+                t.description,
+                t.quantity,
+                active = t.active ? "Active" : "Inactive",
+                category_name = allCategory.FirstOrDefault(c => c.id == t.category_id)?.title ?? "",
+                department_name = allDepartment.FirstOrDefault(d => d.id == t.responsible)?.name ?? ""
+            });
+
+            return Json(result);
+        }
+
+        /// <summary>
+        /// Product/Product_List
+        public async Task<IActionResult> SortProduct(string sortOrder = "asc")
+        {
+            if (!IsUserLoggedIn(out var currentUser))
+                return Json(new { success = false, message = "Not logged in" });
+
+            var productTask = _productApi.GetAllProduct_API();
+            var categoryTask = _categoryApi.GetAllCategory_API();
+            var departmentTask = _departmentApi.GetAllDepartment_API();
+            await Task.WhenAll(productTask, categoryTask, departmentTask);
+
+            var allProduct = await productTask;
+            var allCategory = await categoryTask;
+            var allDepartment = await departmentTask;
+
+            var SelectProduct = new List<Product>();
+            SelectProduct = allProduct.OrderByDescending(y => y.id).ToList();
+
+            List<Product> sortedProducts;
+            if (sortOrder.ToLower() == "desc")
+                sortedProducts = SelectProduct.OrderBy(x => x.id).ToList();
+            else
+                sortedProducts = SelectProduct.OrderByDescending(x => x.id).ToList();
+
+            var result = sortedProducts.Select(t => new {
+                t.pro_number,
+                t.item_title,
+                t.description,
+                t.quantity,
+                active = t.active ? "Active" : "Inactive",
+                category_name = allCategory.FirstOrDefault(c => c.id == t.category_id)?.title ?? "",
+                department_name = allDepartment.FirstOrDefault(d => d.id == t.responsible)?.name ?? ""
+            });
+
+            return Json(result);
+        }
+
+        /// <summary>
+        /// Product/Product_List
+        public async Task<IActionResult> FilterProductByStatus(string status = "all")
+        {
+            if (!IsUserLoggedIn(out var currentUser))
+                return Json(new { success = false, message = "Not logged in" });
+
+            var productTask = _productApi.GetAllProduct_API();
+            var categoryTask = _categoryApi.GetAllCategory_API();
+            var departmentTask = _departmentApi.GetAllDepartment_API();
+            await Task.WhenAll(productTask, categoryTask, departmentTask);
+
+            var allProduct = await productTask;
+            var allCategory = await categoryTask;
+            var allDepartment = await departmentTask;
+
+            var SelectProduct = new List<Product>();
+            SelectProduct = allProduct.OrderByDescending(y => y.id).ToList();
+
+            List<Product> filteredProducts;
+
+            switch (status.ToLower())
+            {
+                case "active":
+                    filteredProducts = SelectProduct.Where(t => t.active == true).ToList();
+                    break;
+                case "inactive":
+                    filteredProducts = SelectProduct.Where(t => t.active == false).ToList();
+                    break;
+                case "all":
+                default:
+                    filteredProducts = SelectProduct;
+                    break;
+            }
+
+            var result = filteredProducts.Select(t => new {
+                t.pro_number,
+                t.item_title,
+                t.description,
+                t.quantity,
+                active = t.active ? "Active" : "Inactive",
+                category_name = allCategory.FirstOrDefault(c => c.id == t.category_id)?.title ?? "",
+                department_name = allDepartment.FirstOrDefault(d => d.id == t.responsible)?.name ?? ""
+            });
+
+            return Json(result);
+        }
+
+        /// <summary>
+        /// Product/Product_List
+        [HttpPost]
+        public async Task<IActionResult> DeleteProduct([FromBody] List<int> ids)
+        {
+            if (ids == null || !ids.Any())
+                return Json(new { success = false, message = "No items selected for deletion" });
+
+            if (!IsUserLoggedIn(out var currentUser))
+                return Json(new { success = false, message = "Not logged in" });
+
+            try
+            {
+                int successCount = 0;
+
+                var productTask = _productApi.GetAllProduct_API();
+                await Task.WhenAll(productTask);
+
+                var allProduct = await productTask;
+
+                foreach (var id in ids)
+                {
+                    var ProductToDelete = allProduct.FirstOrDefault(x => x.id == id);
+
+                    if (ProductToDelete != null)
+                    {
+                        bool result = await _productApi.DeleteProduct_API(id);
+                        if (result)
+                            successCount++;
+                    }
+                }
+
+                if (successCount > 0)
+                {
+                    return Json(new
+                    {
+                        success = true,
+                        message = $"Successfully deleted {successCount} item(s)"
+                    });
+                }
+                else
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Failed to delete items. Items may not exist or you don't have permission"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = $"Error: {ex.Message}" });
+            }
+        }
+
+        /// <summary>
+        /// Department/Department_List
+        public async Task<IActionResult> SearchDepartment(string searchTerm, string filterBy = "title")
+        {
+            if (string.IsNullOrEmpty(searchTerm))
+                return Json(new List<Department>());
+
+            if (!IsUserLoggedIn(out var currentUser))
+                return Json(new { success = false, message = "Not logged in" });
+
+            var allDepartment = await _departmentApi.GetAllDepartment_API();
+            var AllDepartment = new List<Department>();
+            AllDepartment = allDepartment.OrderByDescending(y => y.id).ToList();
+
+            List<Department> filteredDepartments;
+
+            switch (filterBy.ToLower())
+            {
+
+                case "description":
+                    filteredDepartments = AllDepartment
+                        .Where(x => x.description != null && x.description.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                        .ToList();
+                    break;
+                case "name":
+                default:
+                    filteredDepartments = AllDepartment
+                        .Where(t => t.name != null && t.name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                        .ToList();
+                    break;
+            }
+
+            var result = filteredDepartments.Select(t => new {
+                t.name,
+                t.description
+            });
+
+            return Json(result);
+        }
+
+        /// <summary>
+        /// Department/Department_List
+        [HttpPost]
+        public async Task<IActionResult> DeleteDepartment([FromBody] List<int> ids)
+        {
+            if (ids == null || !ids.Any())
+                return Json(new { success = false, message = "No items selected for deletion" });
+
+            if (!IsUserLoggedIn(out var currentUser))
+                return Json(new { success = false, message = "Not logged in" });
+
+            try
+            {
+                int successCount = 0;
+
+                foreach (var id in ids)
+                {
+                    var alDepartments = await _departmentApi.GetAllDepartment_API();
+                    var DepartmentToDelete = alDepartments.FirstOrDefault(x => x.id == id);
+
+                    if (DepartmentToDelete != null)
+                    {
+                        bool result = await _departmentApi.DeleteDepartment_API(id);
+                        if (result)
+                            successCount++;
+                    }
+                }
+
+                if (successCount > 0)
+                {
+                    return Json(new
+                    {
+                        success = true,
+                        message = $"Successfully deleted {successCount} item(s)"
+                    });
+                }
+                else
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Failed to delete items. Items may not exist or you don't have permission"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = $"Error: {ex.Message}" });
+            }
+        }
     }
 }

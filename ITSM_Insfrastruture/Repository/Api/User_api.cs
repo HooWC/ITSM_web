@@ -36,15 +36,15 @@ namespace ITSM_Insfrastruture.Repository.Api
         {
             try
             {
-                var jsonStr = new StringContent(JsonConvert.SerializeObject(user),Encoding.UTF8,"application/json");
+                var jsonStr = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
 
                 // Output request content for debugging
                 // Console.WriteLine($"Json Content: {await jsonStr.ReadAsStringAsync()}");
 
                 var response = await _client.PostAsync(_registerUrl, jsonStr);
-                
+
                 var responseContent = await response.Content.ReadAsStringAsync();
-                
+
                 if (response.IsSuccessStatusCode)
                 {
                     try
@@ -63,17 +63,17 @@ namespace ITSM_Insfrastruture.Repository.Api
                             };
 
                             _tokenService.SaveToken(tokenModel);
-                            
+
                             // Register success then save user infomation
                             await FetchAndSaveUserInfo(registerResult.user.id);
-                            
+
                             return new RegisterResult { Success = true };
                         }
                         else
                         {
-                            return new RegisterResult 
-                            { 
-                                Success = false, 
+                            return new RegisterResult
+                            {
+                                Success = false,
                                 Message = "Registration was successful but no valid token was received"
                             };
                         }
@@ -81,9 +81,9 @@ namespace ITSM_Insfrastruture.Repository.Api
                     catch (Exception ex)
                     {
                         Console.WriteLine($"Ex Error: {ex.Message}");
-                        return new RegisterResult 
-                        { 
-                            Success = false, 
+                        return new RegisterResult
+                        {
+                            Success = false,
                             Message = "Unable to parse server response"
                         };
                     }
@@ -91,7 +91,7 @@ namespace ITSM_Insfrastruture.Repository.Api
 
                 // Handling registration failures
                 string errorMessage = "Registration failed";
-                
+
                 if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
                 {
                     try
@@ -108,20 +108,20 @@ namespace ITSM_Insfrastruture.Repository.Api
                 {
                     errorMessage = "Username or employee ID already exists";
                 }
-                
-                return new RegisterResult 
-                { 
-                    Success = false, 
-                    Message = errorMessage 
+
+                return new RegisterResult
+                {
+                    Success = false,
+                    Message = errorMessage
                 };
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Ex Message: {ex.Message}");
-                return new RegisterResult 
-                { 
-                    Success = false, 
-                    Message = $"Register Ex Error: {ex.Message}" 
+                return new RegisterResult
+                {
+                    Success = false,
+                    Message = $"Register Ex Error: {ex.Message}"
                 };
             }
         }
@@ -182,6 +182,143 @@ namespace ITSM_Insfrastruture.Repository.Api
             }
         }
 
+        //public async Task<bool> UpdateUser_API(User user)
+        //{
+        //    try
+        //    {
+        //        var tokenModel = _tokenService.GetToken();
+        //        if (tokenModel == null) return false;
+
+        //        var originalUser = await FindByIDUser_API(user.id);
+        //        if (originalUser == null) return false;
+
+        //        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenModel.Token);
+
+        //        bool excludePassword = user.password == null;
+        //        bool excludeUsername = user.username == originalUser.username;
+
+        //        object userToSend;
+        //        if (excludePassword || excludeUsername)
+        //        {
+        //            var userDict = new Dictionary<string, object>
+        //            {
+        //                { "id", user.id },
+        //                { "emp_id", user.emp_id },
+        //                { "prefix", user.prefix },
+        //                { "fullname", user.fullname },
+        //                { "email", user.email },
+        //                { "gender", user.gender },
+        //                { "department_id", user.department_id },
+        //                { "title", user.title },
+        //                { "mobile_phone", user.mobile_phone },
+        //                { "role_id", user.role_id },
+        //                { "race", user.race },
+        //                { "active", user.active },
+        //                { "photo_type", user.photo_type ?? "" }
+        //            };
+
+        //            if (user.business_phone != null)
+        //                userDict["business_phone"] = user.business_phone;
+
+        //            if (user.update_date.HasValue)
+        //                userDict["update_date"] = user.update_date;
+
+        //            if (user.create_date != default(DateTime))
+        //                userDict["create_date"] = user.create_date;
+
+        //            if (!excludeUsername)
+        //                userDict["username"] = user.username;
+
+        //            if (!excludePassword && user.password != null)
+        //                userDict["password"] = user.password;
+
+        //            if (user.photo != null)
+        //            {
+        //                // 转换photo为Base64字符串
+        //                userDict["photo"] = Convert.ToBase64String(user.photo);
+        //            }
+
+        //            userToSend = userDict;
+        //        }
+        //        else
+        //        {
+        //            // 创建一个新对象并转换photo为Base64字符串
+        //            var userDict = new Dictionary<string, object>
+        //            {
+        //                { "id", user.id },
+        //                { "emp_id", user.emp_id },
+        //                { "username", user.username },
+        //                { "prefix", user.prefix },
+        //                { "fullname", user.fullname },
+        //                { "email", user.email },
+        //                { "gender", user.gender },
+        //                { "department_id", user.department_id },
+        //                { "title", user.title },
+        //                { "mobile_phone", user.mobile_phone },
+        //                { "role_id", user.role_id },
+        //                { "race", user.race },
+        //                { "active", user.active },
+        //                { "photo_type", user.photo_type ?? "" }
+        //            };
+
+        //            if (user.business_phone != null)
+        //                userDict["business_phone"] = user.business_phone;
+
+        //            if (user.update_date.HasValue)
+        //                userDict["update_date"] = user.update_date;
+
+        //            if (user.create_date != default(DateTime))
+        //                userDict["create_date"] = user.create_date;
+
+        //            if (user.password != null)
+        //                userDict["password"] = user.password;
+
+        //            if (user.photo != null)
+        //            {
+        //                userDict["photo"] = Convert.ToBase64String(user.photo);
+        //            }
+
+        //            userToSend = userDict;
+        //        }
+
+        //        Console.WriteLine($"Photo as Base64: {Convert.ToBase64String(user.photo).Substring(0, 50)}...");
+
+        //        //{[photo_type, image/webp]}
+        //        var jsonStr = new StringContent(JsonConvert.SerializeObject(userToSend), Encoding.UTF8, "application/json");
+        //        var response = await _client.PutAsync($"{_F_U_UserUrl}{user.id}", jsonStr);
+
+        //        var responseStr = await response.Content.ReadAsStringAsync();
+        //        Console.WriteLine($"RESPONSE: {responseStr}");
+
+        //        if (response.IsSuccessStatusCode)
+        //        {
+        //            // Update User Session Infomation
+        //            if (tokenModel.UserId == user.id)
+        //            {
+        //                // 获取最新的用户信息，包括photo字段
+        //                var updatedUser = await FindByIDUser_API(user.id);
+        //                if (updatedUser != null)
+        //                {
+        //                    _tokenService.SaveUserInfo(updatedUser);
+        //                }
+        //                else
+        //                {
+        //                    _tokenService.SaveUserInfo(user);
+        //                }
+        //            }
+        //            return true;
+        //        }
+
+        //        return false;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine($"EX UpdateUser_API: {ex.Message}");
+        //        return false;
+        //    }
+        //}
+
+
         public async Task<bool> UpdateUser_API(User user)
         {
             try
@@ -192,18 +329,11 @@ namespace ITSM_Insfrastruture.Repository.Api
                 _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenModel.Token);
                 var jsonStr = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
                 var response = await _client.PutAsync($"{_F_U_UserUrl}{user.id}", jsonStr);
-                
-                if (response.IsSuccessStatusCode)
-                {
-                    // Update User Session Infomation
-                    if (tokenModel.UserId == user.id)
-                    {
-                        _tokenService.SaveUserInfo(user);
-                    }
-                    return true;
-                }
-                
-                return false;
+
+                //var responseStr = await response.Content.ReadAsStringAsync();
+                //Console.WriteLine($"RESPONSE: {responseStr}");
+
+                return response.IsSuccessStatusCode;
             }
             catch (Exception ex)
             {
@@ -251,7 +381,7 @@ namespace ITSM_Insfrastruture.Repository.Api
         {
             try
             {
-                var userVerificationData = new 
+                var userVerificationData = new
                 {
                     emp_id = user.emp_id,
                     username = user.username
@@ -259,7 +389,7 @@ namespace ITSM_Insfrastruture.Repository.Api
 
                 var jsonStr = new StringContent(JsonConvert.SerializeObject(userVerificationData), Encoding.UTF8, "application/json");
                 var response = await _client.PostAsync(_UserNoTokenUrl, jsonStr);
-                
+
                 return response.IsSuccessStatusCode;
             }
             catch (Exception ex)
@@ -273,7 +403,7 @@ namespace ITSM_Insfrastruture.Repository.Api
         {
             try
             {
-                var passwordResetData = new 
+                var passwordResetData = new
                 {
                     emp_id = user.emp_id,
                     username = user.username,
@@ -282,7 +412,7 @@ namespace ITSM_Insfrastruture.Repository.Api
 
                 var jsonStr = new StringContent(JsonConvert.SerializeObject(passwordResetData), Encoding.UTF8, "application/json");
                 var response = await _client.PostAsync(_UserForgotPasswordUrl, jsonStr);
-                
+
                 return response.IsSuccessStatusCode;
             }
             catch (Exception ex)

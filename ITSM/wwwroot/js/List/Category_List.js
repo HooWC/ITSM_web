@@ -4,7 +4,7 @@ var IncidentItems = $('.incident-item').length;
 var IncidentPages = Math.ceil(IncidentItems / itemsPerPage);
 
 // Set default filter field and status
-var currentFilter = 'number';
+var currentFilter = 'title';
 var currentStatus = 'all';
 
 // Initialize pagination
