@@ -58,7 +58,7 @@
                 data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
                         <img src="@(ViewBag.Photo != null ? $"data:{ViewBag.PhotoType};base64,{Convert.ToBase64String(ViewBag.Photo)}" :
-                            Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 h-auto rounded-circle" />
+                            Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 rounded-circle" />
                     </div>
                 </a>
             </div>
@@ -154,7 +154,7 @@
                             </button>
                         </label>
                         <div class="inc-cre-input-with-icon">
-                            <input type="text" id="assignment-group" class="inc-cre-form-control" readonly>
+                            <input type="text" id="assignment-group" autocomplete="off" class="inc-cre-form-control" readonly>
                             <input type="hidden" id="assignment-group-id" name="assignment_group" value="">
                             <button type="button" class="inc-cre-icon-search" id="assignment-group-search">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -269,7 +269,7 @@
             <div class="inc-cre-form-group inc-cre-short-description-group">
                 <label for="short-description" class="inc-cre-form-label inc-cre-required">Short description</label>
                 <div class="inc-cre-input-with-actions">
-                    <input type="text" id="short-description" name="short_description" class="inc-cre-form-control" required>
+                    <input autocomplete="off" type="text" id="short-description" name="short_description" class="inc-cre-form-control" required>
                     <div class="inc-cre-action-buttons">
                         <button type="button" class="inc-cre-btn-help">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -284,7 +284,7 @@
 
             <div class="inc-cre-form-group inc-cre-full-width">
                 <label for="description" class="inc-cre-form-label">Description</label>
-                <textarea id="description" name="describe" class="inc-cre-form-control inc-cre-description-textarea" rows="5"></textarea>
+                <textarea id="description" autocomplete="off" name="describe" class="inc-cre-form-control inc-cre-description-textarea" rows="5"></textarea>
             </div>
         </form>
     </main>
@@ -294,7 +294,7 @@
 <div id="inc-cre-modal" class="inc-cre-modal">
     <div class="inc-cre-modal-content">
         <div class="inc-cre-modal-header">
-            <h3 id="inc-cre-modal-title">选择项</h3>
+            <h3 id="inc-cre-modal-title">Select</h3>
             <button type="button" class="inc-cre-modal-close">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -304,7 +304,7 @@
         </div>
         <div class="inc-cre-modal-body">
             <div class="inc-cre-search-wrapper">
-                <input type="text" id="inc-cre-search-input" class="inc-cre-form-control" placeholder="搜索...">
+                <input type="text" id="inc-cre-search-input" class="inc-cre-form-control" placeholder="Search...">
                 <button type="button" class="inc-cre-search-btn">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="11" cy="11" r="8"></circle>
@@ -316,12 +316,11 @@
                 <table class="inc-cre-modal-table">
                     <thead>
                         <tr>
-                            <th>名称</th>
-                            <th>描述</th>
+                            <th>Name</th>
+                            <th>Desc</th>
                         </tr>
                     </thead>
                     <tbody id="inc-cre-modal-table-body">
-                        <!-- 表格内容会通过JavaScript动态填充 -->
                     </tbody>
                 </table>
             </div>

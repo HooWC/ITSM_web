@@ -313,9 +313,7 @@ function updatePaginationButtons() {
 function searchDepartments() {
     var searchTerm = $('#searchInput').val().trim();
     if (searchTerm === '') {
-        // If the search box is empty, refresh the page
-        location.reload();
-        return;
+        searchTerm = "re_entrynovalue";
     }
 
     $.ajax({

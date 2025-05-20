@@ -168,7 +168,7 @@
                 data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
                         <img src="@(Model.User.photo != null ? $"data:{Model.User.photo_type};base64," +  Convert.ToBase64String(Model.User.photo) :
-                            Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 h-auto rounded-circle" />
+                            Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 rounded-circle" />
                     </div>
                 </a>
             </div>
@@ -205,6 +205,7 @@
 
         <form id="incidentForm" class="inc-cre-incident-form" action="~/IncidentManagement/Inc_Info_Form" method="post">
             <input type="text" name="id" id="id" class="inc-cre-form-control" value="@Model.Inc.id" style="display:none;" readonly>
+            <input type="text" name="roleBack" id="roleBack" class="inc-cre-form-control" value="@ViewBag.roleBack" style="display:none;" readonly>
             <div class="inc-cre-form-grid">
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
@@ -215,7 +216,7 @@
                     <div class="inc-cre-form-group">
                         <label for="caller" class="inc-cre-form-label">Caller</label>
                         <div class="inc-cre-input-with-icon">
-                            <input type="text" name="sender" id="caller" class="inc-cre-form-control" value="@Model.User.fullname" readonly required>
+                            <input type="text" name="sender" id="caller" class="inc-cre-form-control" autocomplete="off" value="@Model.User.fullname" readonly required>
                         </div>
                     </div>
 
@@ -268,7 +269,7 @@
                             </button>
                         </label>
                         <div class="inc-cre-input-with-icon">
-                            <input type="text" id="assignment-group" class="inc-cre-form-control" readonly value="@(Model.Inc.AssignmentGroup?.name ?? "")">
+                            <input type="text" id="assignment-group" autocomplete="off" class="inc-cre-form-control" readonly value="@(Model.Inc.AssignmentGroup?.name ?? "")">
                             <input type="hidden" id="assignment-group-id" name="assignment_group" value="@Model.Inc.assignment_group">
                             <button type="button" class="inc-cre-icon-search" id="assignment-group-search">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -361,7 +362,7 @@
                         </label>
                         <div class="inc-cre-priority-display">
                             <span id="priority-value" class="inc-cre-priority-value">@Model.Inc.priority</span>
-                            <input type="hidden" id="priority-hidden" name="priority" value="@Model.Inc.priority">
+                            <input type="hidden" id="priority-hidden" autocomplete="off" name="priority" value="@Model.Inc.priority">
                             <svg class="inc-cre-info-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <circle cx="12" cy="12" r="10"></circle>
                                 <line x1="12" y1="16" x2="12" y2="12"></line>
@@ -400,11 +401,11 @@
                 <div class="inc-cre-input-with-actions">
                     @if (Model.Inc.state != "Resolved" && Model.Inc.state != "Closed")
                     {
-                        <input type="text" maxlength="100" id="short-description" name="short_description" class="inc-cre-form-control" value="@Model.Inc.short_description" required>
+                        <input type="text" autocomplete="off" maxlength="100" id="short-description" name="short_description" class="inc-cre-form-control" value="@Model.Inc.short_description" required>
                     }
                     else
                     {
-                        <input type="text" maxlength="100" id="short-description" name="short_description" class="inc-cre-form-control" value="@Model.Inc.short_description" readonly required>
+                        <input type="text" autocomplete="off" maxlength="100" id="short-description" name="short_description" class="inc-cre-form-control" value="@Model.Inc.short_description" readonly required>
                     }
                     <div class="inc-cre-action-buttons">
                         <button type="button" class="inc-cre-btn-help">
@@ -422,11 +423,11 @@
                 <label for="description" class="inc-cre-form-label">Description</label>
                 @if (Model.Inc.state != "Resolved" && Model.Inc.state != "Closed")
                 {
-                    <textarea id="description" name="describe" class="inc-cre-form-control inc-cre-description-textarea" rows="5">@Model.Inc.describe</textarea>
+                    <textarea id="description" autocomplete="off" name="describe" class="inc-cre-form-control inc-cre-description-textarea" rows="5">@Model.Inc.describe</textarea>
                 }
                 else
                 {
-                    <textarea id="description" name="describe" class="inc-cre-form-control inc-cre-description-textarea" rows="5" readonly>@Model.Inc.describe</textarea>
+                    <textarea id="description" autocomplete="off" name="describe" class="inc-cre-form-control inc-cre-description-textarea" rows="5" readonly>@Model.Inc.describe</textarea>
                 }
             </div>
         </form>
@@ -554,7 +555,7 @@
         </div>
         <div class="inc-cre-modal-body">
             <div class="inc-cre-search-wrapper">
-                <input type="text" id="inc-cre-search-input" class="inc-cre-form-control" placeholder="搜索...">
+                <input type="text" id="inc-cre-search-input" class="inc-cre-form-control" placeholder="Search...">
                 <button type="button" class="inc-cre-search-btn">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="11" cy="11" r="8"></circle>
@@ -586,6 +587,26 @@
             $('.menu-item').removeClass('active open');
             $target.addClass('active open');
         }
+
+      let roleBack = $('#roleBack').val();
+      if(roleBack.includes("Admin")){
+          $('#Incidents_menu_all').addClass("active");
+      }
+      else if(roleBack.includes("Resolved")){
+          $('#Incidents_menu_assigned_resolve').addClass("active");
+      }
+      else if(roleBack.includes("ToMe")){
+          $('#Incidents_menu_assigned').addClass("active");
+      }
+      else if(roleBack.includes("ToGroup")){
+          $('#Incidents_menu_assigned_to_team').addClass("active");
+      }
+      else if(roleBack.includes("Closed")){
+          $('#Incidents_menu_assigned_closed').addClass("active");
+      }
+      else{
+          $('#Incidents_menu_all_user').addClass("active");
+      }
 
         $('#Incidents_menu_all').addClass("active");
 

@@ -44,7 +44,7 @@
        data-bs-toggle="dropdown">
         <div class="avatar avatar-online">
             <img src="@(ViewBag.Photo != null ? $"data:{ViewBag.PhotoType};base64,{Convert.ToBase64String(ViewBag.Photo)}" :
-                Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 h-auto rounded-circle" />
+                Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 rounded-circle" />
         </div>
     </a>
 </div>

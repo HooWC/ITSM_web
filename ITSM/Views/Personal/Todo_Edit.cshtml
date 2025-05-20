@@ -66,7 +66,7 @@
                              $"data:{ViewBag.PhotoType};base64,{Convert.ToBase64String(ViewBag.Photo)}" :
                              Url.Content("~/img/avatar/user_avatar.jpg"))"
                              alt="avatar"
-                             class="w-px-40 h-auto rounded-circle" />
+                             class="w-px-40 rounded-circle" />
                     </div>
                 </a>
             </div>
@@ -124,7 +124,7 @@
             <div class="inc-cre-form-group inc-cre-short-description-group">
                 <label for="short-description" class="inc-cre-form-label inc-cre-required">Title</label>
                 <div class="inc-cre-input-with-actions">
-                    <input type="text" name="title" value="@Model.title" id="short-description" class="inc-cre-form-control" required>
+                    <input type="text" name="title" value="@Model.title" id="short-description" class="inc-cre-form-control" autocomplete="off" required>
                     <div class="inc-cre-action-buttons">
                         <button type="button" class="inc-cre-btn-help">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

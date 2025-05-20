@@ -8,6 +8,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System;
 using ITSM_DomainModelEntity.FunctionModels;
+using System.Data;
 
 namespace ITSM.Controllers
 {
@@ -22,6 +23,8 @@ namespace ITSM.Controllers
         private readonly Feedback_api _feedApi;
         private readonly Category_api _categoryApi;
         private readonly Product_api _productApi;
+        private readonly Role_api _roleApi;
+        private readonly Request_api _reqApi;
 
         public AjaxController(IHttpContextAccessor httpContextAccessor)
         {
@@ -34,6 +37,8 @@ namespace ITSM.Controllers
             _feedApi = new Feedback_api(httpContextAccessor);
             _categoryApi = new Category_api(httpContextAccessor);
             _productApi = new Product_api(httpContextAccessor);
+            _roleApi = new Role_api(httpContextAccessor);
+            _reqApi = new Request_api(httpContextAccessor);
         }
 
         private bool IsUserLoggedIn(out User currentUser)
@@ -66,36 +71,44 @@ namespace ITSM.Controllers
 
             List<Todo> filteredTodos;
 
-            switch (filterBy.ToLower())
+            if (searchTerm == "re_entrynovalue")
             {
-                case "number":
-                    filteredTodos = userTodos
-                        .Where(t => t.todo_id != null && t.todo_id.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                        .ToList();
-                    break;
-                case "title":
-                    filteredTodos = userTodos
-                        .Where(t => t.title != null && t.title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                        .ToList();
-                    break;
-                case "create_date":
-                    filteredTodos = userTodos
-                        .Where(t => t.create_date.ToString("yyyy-MM-dd HH:mm:ss").Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                        .ToList();
-                    break;
-                case "update_date":
-                    filteredTodos = userTodos
-                        .Where(t => t.update_date.ToString("yyyy-MM-dd HH:mm:ss").Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                        .ToList();
-                    break;
-                default:
-                    filteredTodos = userTodos
-                        .Where(t => t.todo_id != null && t.todo_id.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                        .ToList();
-                    break;
+                filteredTodos = userTodos;
+            }
+            else
+            {
+                switch (filterBy.ToLower())
+                {
+                    case "number":
+                        filteredTodos = userTodos
+                            .Where(t => t.todo_id != null && t.todo_id.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                    case "title":
+                        filteredTodos = userTodos
+                            .Where(t => t.title != null && t.title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                    case "create_date":
+                        filteredTodos = userTodos
+                            .Where(t => t.create_date.ToString("yyyy-MM-dd HH:mm:ss").Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                    case "update_date":
+                        filteredTodos = userTodos
+                            .Where(t => t.update_date.ToString("yyyy-MM-dd HH:mm:ss").Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                    default:
+                        filteredTodos = userTodos
+                            .Where(t => t.todo_id != null && t.todo_id.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                }
             }
 
-            var result = filteredTodos.Select(t => new {
+            var result = filteredTodos.Select(t => new
+            {
                 t.id,
                 t.todo_id,
                 t.title,
@@ -281,78 +294,89 @@ namespace ITSM.Controllers
                 userIncs = allIncs.Where(x => x.assigned_to == currentUser.id).OrderByDescending(y => y.id).ToList();
             else if (searchWord == "toteam")
                 userIncs = allIncs.Where(x => x.assignment_group == currentUser.department_id).OrderByDescending(y => y.id).ToList();
-            else
+            else if (searchWord == "user")
                 userIncs = allIncs.Where(x => x.sender == currentUser.id).OrderByDescending(y => y.id).ToList();
+            else
+                userIncs = allIncs.OrderByDescending(y => y.id).ToList();
 
             var allDepartments = await _departmentApi.GetAllDepartment_API();
             var allUsers = await _userApi.GetAllUser_API();
 
             List<Incident> filteredIncs;
 
-            switch (filterBy.ToLower())
+            if(searchTerm == "re_entrynovalue")
             {
-                case "short_description":
-                    filteredIncs = userIncs
-                        .Where(t => t.short_description != null && t.short_description.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                        .ToList();
-                    break;
-                case "priority":
-                    filteredIncs = userIncs
-                        .Where(t => t.priority != null && t.priority.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                        .ToList();
-                    break;
-                case "state":
-                    filteredIncs = userIncs
-                        .Where(t => t.state != null && t.state.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                        .ToList();
-                    break;
-                case "category":
-                    filteredIncs = userIncs
-                        .Where(t => t.category != null && t.category.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                        .ToList();
-                    break;
-                case "assignment_group":
-                    var filterDepartments = allDepartments.Where(x => x.name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
-                    filteredIncs = (from i in userIncs
-                                    join d in filterDepartments on i.assignment_group equals d.id
-                                    select i).ToList();
-                    break;
-                case "assigned_to":
-                    var filterUsers = allUsers.Where(x => x.fullname.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
-                    filteredIncs = (from i in userIncs
-                                    join u in filterUsers on i.assigned_to equals u.id
-                                    select i).ToList();
-                    break;
-                case "opened":
-                    filteredIncs = userIncs
-                        .Where(t => t.create_date != null && t.create_date.ToString("yyyy-MM-dd HH:mm:ss").Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                        .ToList();
-                    break;
-                case "updated":
-                    filteredIncs = userIncs
-                        .Where(t => t.updated != null && t.updated.ToString("yyyy-MM-dd HH:mm:ss").Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                        .ToList();
-                    break;
-                case "number":
-                default:
-                    filteredIncs = userIncs
-                        .Where(t => t.inc_number != null && t.inc_number.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                        .ToList();
-                    break;
+                filteredIncs = userIncs;
+            }
+            else
+            {
+                switch (filterBy.ToLower())
+                {
+                    case "short_description":
+                        filteredIncs = userIncs
+                            .Where(t => t.short_description != null && t.short_description.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                    case "priority":
+                        filteredIncs = userIncs
+                            .Where(t => t.priority != null && t.priority.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                    case "state":
+                        filteredIncs = userIncs
+                            .Where(t => t.state != null && t.state.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                    case "category":
+                        filteredIncs = userIncs
+                            .Where(t => t.category != null && t.category.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                    case "assignment_group":
+                        var filterDepartments = allDepartments.Where(x => x.name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+                        filteredIncs = (from i in userIncs
+                                        join d in filterDepartments on i.assignment_group equals d.id
+                                        select i).ToList();
+                        break;
+                    case "assigned_to":
+                        var filterUsers = allUsers.Where(x => x.fullname.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+                        filteredIncs = (from i in userIncs
+                                        join u in filterUsers on i.assigned_to equals u.id
+                                        select i).ToList();
+                        break;
+                    case "opened":
+                        filteredIncs = userIncs
+                            .Where(t => t.create_date != null && t.create_date.ToString("yyyy-MM-dd HH:mm:ss").Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                    case "updated":
+                        filteredIncs = userIncs
+                            .Where(t => t.updated != null && t.updated.ToString("yyyy-MM-dd HH:mm:ss").Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                    case "number":
+                    default:
+                        filteredIncs = userIncs
+                            .Where(t => t.inc_number != null && t.inc_number.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                }
             }
 
-            var result = filteredIncs.Select(t => new {
-                t.id,
-                t.inc_number,
-                t.short_description,
-                t.priority,
-                t.state,
-                t.category,
-                assignment_group = allDepartments.FirstOrDefault(d => d.id == t.assignment_group)?.name ?? "",
-                assigned_to = allUsers.FirstOrDefault(u => u.id == t.assigned_to)?.fullname ?? "",
-                create_date = t.create_date.ToString("yyyy-MM-dd HH:mm:ss"),
-                update_date = t.updated.ToString("yyyy-MM-dd HH:mm:ss")
-            });
+
+                var result = filteredIncs.Select(t => new
+                {
+                    t.id,
+                    t.inc_number,
+                    t.short_description,
+                    t.priority,
+                    t.state,
+                    t.category,
+                    assignment_group = allDepartments.FirstOrDefault(d => d.id == t.assignment_group)?.name ?? "",
+                    assigned_to = allUsers.FirstOrDefault(u => u.id == t.assigned_to)?.fullname ?? "",
+                    create_date = t.create_date.ToString("yyyy-MM-dd HH:mm:ss"),
+                    update_date = t.updated.ToString("yyyy-MM-dd HH:mm:ss")
+                });
 
             return Json(result);
         }
@@ -371,8 +395,10 @@ namespace ITSM.Controllers
                 userIncs = allIncs.Where(x => x.assigned_to == currentUser.id).OrderByDescending(y => y.id).ToList();
             else if (filterword == "toteam")
                 userIncs = allIncs.Where(x => x.assignment_group == currentUser.department_id).OrderByDescending(y => y.id).ToList();
-            else
+            else if (filterword == "user")
                 userIncs = allIncs.Where(x => x.sender == currentUser.id).OrderByDescending(y => y.id).ToList();
+            else
+                userIncs = allIncs.OrderByDescending(y => y.id).ToList();
 
             var allDepartments = await _departmentApi.GetAllDepartment_API();
             var allUsers = await _userApi.GetAllUser_API();
@@ -435,8 +461,10 @@ namespace ITSM.Controllers
                 userIncs = allIncs.Where(x => x.assigned_to == currentUser.id).ToList();
             else if (sortWord == "toteam")
                 userIncs = allIncs.Where(x => x.assignment_group == currentUser.department_id).ToList();
-            else
+            else if (sortWord == "user")
                 userIncs = allIncs.Where(x => x.sender == currentUser.id).OrderByDescending(y => y.id).ToList();
+            else
+                userIncs = allIncs.OrderByDescending(y => y.id).ToList();
 
             var allDepartments = await _departmentApi.GetAllDepartment_API();
             var allUsers = await _userApi.GetAllUser_API();
@@ -484,7 +512,7 @@ namespace ITSM.Controllers
                 {
                     // Confirm that the Incident project exists and belongs to the current user
                     var allIncs = await _incApi.GetAllIncident_API();
-                    var incToDelete = allIncs.FirstOrDefault(x => x.id == id && x.sender == currentUser.id);
+                    var incToDelete = allIncs.FirstOrDefault(x => x.id == id);
 
                     if (incToDelete != null)
                     {
@@ -849,35 +877,42 @@ namespace ITSM.Controllers
 
             List<Feedback> filteredFeeds;
 
-            switch (filterBy.ToLower())
+            if (searchTerm == "re_entrynovalue")
             {
-                case "message":
-                    filteredFeeds = userFeed
-                        .Where(t => t.message != null && t.message.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                        .ToList();
-                    break;
-                case "user":
-                    var filterUsers = allUsers.Where(x => x.fullname.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
-                    filteredFeeds = (from i in userFeed
-                                    join u in filterUsers on i.user_id equals u.id
-                                    select i).ToList();
-                    break;
-                case "create_date":
-                    filteredFeeds = userFeed
-                        .Where(t => t.create_date != null && t.create_date.ToString("yyyy-MM-dd HH:mm:ss").Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                        .ToList();
-                    break;
-                case "update_date":
-                    filteredFeeds = userFeed
-                        .Where(t => t.update_date != null && t.update_date.ToString("yyyy-MM-dd HH:mm:ss").Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                        .ToList();
-                    break;
-                case "number":
-                default:
-                    filteredFeeds = userFeed
-                        .Where(t => t.fb_number != null && t.fb_number.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                        .ToList();
-                    break;
+                filteredFeeds = userFeed;
+            }
+            else 
+            { 
+                switch (filterBy.ToLower())
+                {
+                    case "message":
+                        filteredFeeds = userFeed
+                            .Where(t => t.message != null && t.message.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                    case "user":
+                        var filterUsers = allUsers.Where(x => x.fullname.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+                        filteredFeeds = (from i in userFeed
+                                         join u in filterUsers on i.user_id equals u.id
+                                         select i).ToList();
+                        break;
+                    case "create_date":
+                        filteredFeeds = userFeed
+                            .Where(t => t.create_date != null && t.create_date.ToString("yyyy-MM-dd HH:mm:ss").Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                    case "update_date":
+                        filteredFeeds = userFeed
+                            .Where(t => t.update_date != null && t.update_date.ToString("yyyy-MM-dd HH:mm:ss").Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                    case "number":
+                    default:
+                        filteredFeeds = userFeed
+                            .Where(t => t.fb_number != null && t.fb_number.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                }
             }
 
             var result = filteredFeeds.Select(t => new {
@@ -1004,20 +1039,27 @@ namespace ITSM.Controllers
 
             List<Category> filteredCategorys;
 
-            switch (filterBy.ToLower())
+            if (searchTerm == "re_entrynovalue")
             {
-   
-                case "description":
-                    filteredCategorys = userCategory
-                        .Where(x => x.description != null && x.description.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                        .ToList();
-                    break;
-                case "title":
-                default:
-                    filteredCategorys = userCategory
-                        .Where(t => t.title != null && t.title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                        .ToList();
-                    break;
+                filteredCategorys = userCategory;
+            }
+            else
+            {
+                switch (filterBy.ToLower())
+                {
+
+                    case "description":
+                        filteredCategorys = userCategory
+                            .Where(x => x.description != null && x.description.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                    case "title":
+                    default:
+                        filteredCategorys = userCategory
+                            .Where(t => t.title != null && t.title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                }
             }
 
             var result = filteredCategorys.Select(t => new {
@@ -1107,48 +1149,62 @@ namespace ITSM.Controllers
 
             List<Product> filteredProduct;
 
-            switch (filterBy.ToLower())
+            if (searchTerm == "re_entrynovalue")
             {
-                case "title":
-                    filteredProduct = selectProduct
-                        .Where(x => x.item_title != null && x.item_title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                        .ToList();
-                    break;
-                case "description":
-                    filteredProduct = selectProduct
-                        .Where(x => x.description != null && x.description.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                        .ToList();
-                    break;
-                case "category":
-                    var filteredCategoryData = allCategory.Where(x => x.title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
-                    filteredProduct = (from i in selectProduct
-                                    join c in filteredCategoryData on i.category_id equals c.id
-                                    select i).ToList();
-                    break;
-                case "responsible":
-                    var filteredDepartmentData = allDepartment.Where(x => x.name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
-                    filteredProduct = (from i in selectProduct
-                                       join d in filteredDepartmentData on i.responsible equals d.id
-                                       select i).ToList();
-                    break;
-                case "quantity":
-                    filteredProduct = selectProduct
-                        .Where(x => x.quantity.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                        .ToList();
-                    break;
-                case "number":
-                default:
-                    filteredProduct = selectProduct
-                        .Where(t => t.pro_number != null && t.pro_number.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                        .ToList();
-                    break;
+                filteredProduct = selectProduct;
+            }
+            else
+            {
+                switch (filterBy.ToLower())
+                {
+                    case "title":
+                        filteredProduct = selectProduct
+                            .Where(x => x.item_title != null && x.item_title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                    case "description":
+                        filteredProduct = selectProduct
+                            .Where(x => x.description != null && x.description.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                    case "category":
+                        var filteredCategoryData = allCategory.Where(x => x.title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+                        filteredProduct = (from i in selectProduct
+                                           join c in filteredCategoryData on i.category_id equals c.id
+                                           select i).ToList();
+                        break;
+                    case "product_type":
+                        filteredProduct = selectProduct
+                            .Where(x => x.product_type != null && x.product_type.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                    case "responsible":
+                        var filteredDepartmentData = allDepartment.Where(x => x.name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+                        filteredProduct = (from i in selectProduct
+                                           join d in filteredDepartmentData on i.responsible equals d.id
+                                           select i).ToList();
+                        break;
+                    case "quantity":
+                        filteredProduct = selectProduct
+                            .Where(x => x.quantity.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                    case "number":
+                    default:
+                        filteredProduct = selectProduct
+                            .Where(t => t.pro_number != null && t.pro_number.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                }
             }
 
-            var result = filteredProduct.Select(t => new {
+            var result = filteredProduct.Select(t => new
+            {
                 t.pro_number,
                 t.item_title,
                 t.description,
                 t.quantity,
+                t.product_type,
                 active = t.active ? "Active" : "Inactive",
                 category_name = allCategory.FirstOrDefault(c => c.id == t.category_id)?.title ?? "",
                 department_name = allDepartment.FirstOrDefault(d => d.id == t.responsible)?.name ?? ""
@@ -1187,6 +1243,7 @@ namespace ITSM.Controllers
                 t.item_title,
                 t.description,
                 t.quantity,
+                t.product_type,
                 active = t.active ? "Active" : "Inactive",
                 category_name = allCategory.FirstOrDefault(c => c.id == t.category_id)?.title ?? "",
                 department_name = allDepartment.FirstOrDefault(d => d.id == t.responsible)?.name ?? ""
@@ -1235,6 +1292,7 @@ namespace ITSM.Controllers
                 t.item_title,
                 t.description,
                 t.quantity,
+                t.product_type,
                 active = t.active ? "Active" : "Inactive",
                 category_name = allCategory.FirstOrDefault(c => c.id == t.category_id)?.title ?? "",
                 department_name = allDepartment.FirstOrDefault(d => d.id == t.responsible)?.name ?? ""
@@ -1314,22 +1372,29 @@ namespace ITSM.Controllers
 
             List<Department> filteredDepartments;
 
-            switch (filterBy.ToLower())
+            if (searchTerm == "re_entrynovalue")
             {
-
-                case "description":
-                    filteredDepartments = AllDepartment
-                        .Where(x => x.description != null && x.description.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                        .ToList();
-                    break;
-                case "name":
-                default:
-                    filteredDepartments = AllDepartment
-                        .Where(t => t.name != null && t.name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                        .ToList();
-                    break;
+                filteredDepartments = AllDepartment;
             }
+            else
+            {
+                switch (filterBy.ToLower())
+                {
 
+                    case "description":
+                        filteredDepartments = AllDepartment
+                            .Where(x => x.description != null && x.description.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                    case "name":
+                    default:
+                        filteredDepartments = AllDepartment
+                            .Where(t => t.name != null && t.name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                }
+            }
+                
             var result = filteredDepartments.Select(t => new {
                 t.name,
                 t.description
@@ -1355,8 +1420,8 @@ namespace ITSM.Controllers
 
                 foreach (var id in ids)
                 {
-                    var alDepartments = await _departmentApi.GetAllDepartment_API();
-                    var DepartmentToDelete = alDepartments.FirstOrDefault(x => x.id == id);
+                    var allDepartments = await _departmentApi.GetAllDepartment_API();
+                    var DepartmentToDelete = allDepartments.FirstOrDefault(x => x.id == id);
 
                     if (DepartmentToDelete != null)
                     {
@@ -1386,6 +1451,755 @@ namespace ITSM.Controllers
             catch (Exception ex)
             {
                 return Json(new { success = false, message = $"Error: {ex.Message}" });
+            }
+        }
+
+        /// <summary>
+        /// Role/Role_List
+        public async Task<IActionResult> SearchRole(string searchTerm, string filterBy = "role")
+        {
+            if (string.IsNullOrEmpty(searchTerm))
+                return Json(new List<Role>());
+
+            if (!IsUserLoggedIn(out var currentUser))
+                return Json(new { success = false, message = "Not logged in" });
+
+            var RoleTask = await _roleApi.GetAllRole_API();
+            var AllRole = new List<Role>();
+            AllRole = RoleTask.ToList();
+
+            List<Role> filteredRole;
+
+            if (searchTerm == "re_entrynovalue")
+            {
+                filteredRole = AllRole;
+            }
+            else
+            {
+                switch (filterBy.ToLower())
+                {
+                    case "role":
+                    default:
+                        filteredRole = AllRole
+                            .Where(t => t.role != null && t.role.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                }
+            }
+
+            var result = filteredRole.Select(t => new {
+                t.role
+            });
+
+            return Json(result);
+        }
+
+        /// <summary>
+        /// Role/Role_List
+        [HttpPost]
+        public async Task<IActionResult> DeleteRole([FromBody] List<int> ids)
+        {
+            if (ids == null || !ids.Any())
+                return Json(new { success = false, message = "No items selected for deletion" });
+
+            if (!IsUserLoggedIn(out var currentUser))
+                return Json(new { success = false, message = "Not logged in" });
+
+            try
+            {
+                int successCount = 0;
+
+                foreach (var id in ids)
+                {
+                    var allRole = await _roleApi.GetAllRole_API();
+                    var RoleToDelete = allRole.FirstOrDefault(x => x.id == id);
+
+                    if (RoleToDelete != null)
+                    {
+                        bool result = await _roleApi.DeleteRole_API(id);
+                        if (result)
+                            successCount++;
+                    }
+                }
+
+                if (successCount > 0)
+                {
+                    return Json(new
+                    {
+                        success = true,
+                        message = $"Successfully deleted {successCount} item(s)"
+                    });
+                }
+                else
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Failed to delete items. Items may not exist or you don't have permission"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = $"Error: {ex.Message}" });
+            }
+        }
+
+        /// <summary>
+        /// User/User_List
+        public async Task<IActionResult> SearchUser(string searchTerm, string filterBy = "number")
+        {
+            if (string.IsNullOrEmpty(searchTerm))
+                return Json(new List<User>());
+
+            if (!IsUserLoggedIn(out var currentUser))
+                return Json(new { success = false, message = "Not logged in" });
+
+            var allUsers = await _userApi.GetAllUser_API();
+            var userList = allUsers.Where(x => x.id != currentUser.id).OrderByDescending(y => y.id).ToList();
+
+            var allDepartments = await _departmentApi.GetAllDepartment_API();
+            var allRoles = await _roleApi.GetAllRole_API();
+
+            List<User> filteredUsers;
+
+            if (searchTerm == "re_entrynovalue")
+            {
+                filteredUsers = userList;
+            }
+            else
+            {
+                switch (filterBy.ToLower())
+                {
+                    case "emp_id":
+                        filteredUsers = userList
+                            .Where(t => t.emp_id != null && t.emp_id.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                    case "fullname":
+                        filteredUsers = userList
+                            .Where(t => t.fullname != null && t.fullname.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                    case "email":
+                        filteredUsers = userList
+                            .Where(t => t.email != null && t.email.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                    case "department":
+                        var filterDepartments = allDepartments.Where(x => x.name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+                        filteredUsers = (from i in userList
+                                         join d in filterDepartments on i.department_id equals d.id
+                                         select i).ToList();
+                        break;
+                    case "title":
+                        filteredUsers = userList
+                            .Where(t => t.title != null && t.title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                    case "mobile":
+                        filteredUsers = userList
+                            .Where(t => t.mobile_phone != null && t.mobile_phone.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                    case "role":
+                        var filterRoles = allRoles.Where(x => x.role.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+                        filteredUsers = (from i in userList
+                                         join d in filterRoles on i.role_id equals d.id
+                                         select i).ToList();
+                        break;
+                    default:
+                        filteredUsers = userList;
+                        break;
+                }
+            }
+                
+            var result = filteredUsers.Select(t => new {
+                t.id,
+                t.emp_id,
+                t.fullname,
+                t.email,
+                t.gender,
+                departmentName = allDepartments.FirstOrDefault(d => d.id == t.department_id)?.name ?? "",
+                t.title,
+                t.mobile_phone,
+                role = allRoles.FirstOrDefault(d => d.id == t.role_id)?.role ?? "",
+                t.race,
+                active = t.active == true ? "Active" : "Blocked"
+            });
+
+            return Json(result);
+        }
+
+        /// <summary>
+        /// User/User_List
+        public async Task<IActionResult> FilterUserByStatus(string status = "all")
+        {
+            if (!IsUserLoggedIn(out var currentUser))
+                return Json(new { success = false, message = "Not logged in" });
+
+            var allUsers = await _userApi.GetAllUser_API();
+            var userList = allUsers.Where(x => x.id != currentUser.id).OrderByDescending(y => y.id).ToList();
+
+            var allDepartments = await _departmentApi.GetAllDepartment_API();
+            var allRoles = await _roleApi.GetAllRole_API();
+
+            List<User> filteredUsers;
+
+            switch (status.ToLower())
+            {
+                case "active":
+                    filteredUsers = userList.Where(t => t.active == true).ToList();
+                    break;
+                case "blocked":
+                    filteredUsers = userList.Where(t => t.active == false).ToList();
+                    break;
+                case "all":
+                default:
+                    filteredUsers = userList;
+                    break;
+            }
+
+            var result = filteredUsers.Select(t => new {
+                t.id,
+                t.emp_id,
+                t.fullname,
+                t.email,
+                t.gender,
+                departmentName = allDepartments.FirstOrDefault(d => d.id == t.department_id)?.name ?? "",
+                t.title,
+                t.mobile_phone,
+                role = allRoles.FirstOrDefault(d => d.id == t.role_id)?.role ?? "",
+                t.race,
+                active = t.active == true ? "Active" : "Blocked"
+            });
+
+            return Json(result);
+        }
+
+        /// <summary>
+        /// User/User_List
+        public async Task<IActionResult> SortUser(string sortOrder = "asc")
+        {
+            if (!IsUserLoggedIn(out var currentUser))
+                return Json(new { success = false, message = "Not logged in" });
+
+            var allUsers = await _userApi.GetAllUser_API();
+            var userList = allUsers.Where(x => x.id != currentUser.id).OrderByDescending(y => y.id).ToList();
+
+            var allDepartments = await _departmentApi.GetAllDepartment_API();
+            var allRoles = await _roleApi.GetAllRole_API();
+
+            List<User> sortedUsers;
+
+            if (sortOrder.ToLower() == "desc")
+                sortedUsers = userList.OrderBy(x => x.id).ToList();
+            else
+                sortedUsers = userList.OrderByDescending(x => x.id).ToList();
+
+            var result = sortedUsers.Select(t => new {
+                t.id,
+                t.emp_id,
+                t.fullname,
+                t.email,
+                t.gender,
+                departmentName = allDepartments.FirstOrDefault(d => d.id == t.department_id)?.name ?? "",
+                t.title,
+                t.mobile_phone,
+                role = allRoles.FirstOrDefault(d => d.id == t.role_id)?.role ?? "",
+                t.race,
+                active = t.active == true ? "Active" : "Blocked"
+            });
+
+            return Json(result);
+        }
+
+        /// <summary>
+        /// User/User_List
+        [HttpPost]
+        public async Task<IActionResult> BlockUsers([FromBody] List<int> ids)
+        {
+            if (ids == null || !ids.Any())
+                return Json(new { success = false, message = "No items selected for blocked" });
+
+            if (!IsUserLoggedIn(out var currentUser))
+                return Json(new { success = false, message = "Not logged in" });
+
+            var allUsers = await _userApi.GetAllUser_API();
+
+            foreach (var id in ids)
+            {
+                var userToBlock = allUsers.FirstOrDefault(t => t.id == id);
+
+                if (userToBlock != null)
+                {
+                    // Block User
+                    userToBlock.active = false;
+                    await _userApi.UpdateUser_API(userToBlock);
+                }
+            }
+
+            var allResetUsers = await _userApi.GetAllUser_API();
+            var userList = allUsers.Where(x => x.id != currentUser.id).OrderByDescending(y => y.id).ToList();
+
+            var allDepartments = await _departmentApi.GetAllDepartment_API();
+            var allRoles = await _roleApi.GetAllRole_API();
+
+            List<User> ReNewUsers = userList;
+
+            var result = ReNewUsers.Select(t => new {
+                t.id,
+                t.emp_id,
+                t.fullname,
+                t.email,
+                t.gender,
+                departmentName = allDepartments.FirstOrDefault(d => d.id == t.department_id)?.name ?? "",
+                t.title,
+                t.mobile_phone,
+                role = allRoles.FirstOrDefault(d => d.id == t.role_id)?.role ?? "",
+                t.race,
+                active = t.active == true ? "Active" : "Blocked"
+            });
+
+            return Json(result);
+        }
+
+        /// <summary>
+        /// User/User_List
+        [HttpPost]
+        public async Task<IActionResult> ActiveUsers([FromBody] List<int> ids)
+        {
+            if (ids == null || !ids.Any())
+                return Json(new { success = false, message = "No items selected for active" });
+
+            if (!IsUserLoggedIn(out var currentUser))
+                return Json(new { success = false, message = "Not logged in" });
+
+            var allUsers = await _userApi.GetAllUser_API();
+
+            foreach (var id in ids)
+            {
+                var userToBlock = allUsers.FirstOrDefault(t => t.id == id);
+
+                if (userToBlock != null)
+                {
+                    // Active User
+                    userToBlock.active = true;
+                    await _userApi.UpdateUser_API(userToBlock);
+                }
+            }
+
+            var allResetUsers = await _userApi.GetAllUser_API();
+            var userList = allUsers.Where(x => x.id != currentUser.id).OrderByDescending(y => y.id).ToList();
+
+            var allDepartments = await _departmentApi.GetAllDepartment_API();
+            var allRoles = await _roleApi.GetAllRole_API();
+
+            List<User> ReNewUsers = userList;
+
+            var result = ReNewUsers.Select(t => new {
+                t.id,
+                t.emp_id,
+                t.fullname,
+                t.email,
+                t.gender,
+                departmentName = allDepartments.FirstOrDefault(d => d.id == t.department_id)?.name ?? "",
+                t.title,
+                t.mobile_phone,
+                role = allRoles.FirstOrDefault(d => d.id == t.role_id)?.role ?? "",
+                t.race,
+                active = t.active == true ? "Active" : "Blocked"
+            });
+
+            return Json(result);
+        }
+
+        /// <summary>
+        /// Request/All
+        public async Task<IActionResult> SearchRequest(string searchWord, string searchTerm, string filterBy = "number")
+        {
+            if (string.IsNullOrEmpty(searchTerm))
+                return Json(new List<Incident>());
+
+            if (!IsUserLoggedIn(out var currentUser))
+                return Json(new { success = false, message = "Not logged in" });
+
+            var allReqs = await _reqApi.GetAllRequest_API();
+            var userReqs = new List<Request>();
+            if (searchWord == "req")
+                userReqs = allReqs.OrderByDescending(x => x.id).ToList();
+            else if (searchWord == "req_user")
+                userReqs = allReqs.Where(x => x.sender == currentUser.id).OrderByDescending(x => x.id).ToList();
+            else if (searchWord == "req_group")
+                userReqs = allReqs.Where(x => x.assignment_group == currentUser.department_id).OrderByDescending(x => x.id).ToList();
+            else
+                userReqs = allReqs.OrderByDescending(x => x.id).ToList();
+
+            var productTask = _productApi.GetAllProduct_API();
+            var userTask = _userApi.GetAllUser_API();
+            var departmentTask = _departmentApi.GetAllDepartment_API();
+            var requestTask = _reqApi.GetAllRequest_API();
+            await Task.WhenAll(productTask, userTask, departmentTask, requestTask);
+
+            var allProduct = await productTask;
+            var allUser = await userTask;
+            var allDepartment = await departmentTask;
+            var allRequest = await requestTask;
+
+            List<Request> filteredReqs;
+
+            if (searchTerm == "re_entrynovalue")
+            {
+                filteredReqs = userReqs;
+            }
+            else
+            {
+                switch (filterBy.ToLower())
+                {
+                    case "product_id":
+                        var filterProducts = allProduct.Where(x => x.pro_number.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+                        filteredReqs = (from i in userReqs
+                                        join p in filterProducts on i.pro_id equals p.id
+                                         select i).ToList();
+                        break;
+                    case "user":
+                        var filterUsers = allUser.Where(x => x.fullname.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+                        filteredReqs = (from i in userReqs
+                                        join u in filterUsers on i.sender equals u.id
+                                        select i).ToList();
+                        break;
+                    case "product_type":
+                        var filterProducts_type = allProduct.Where(x => x.product_type.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+                        filteredReqs = (from i in userReqs
+                                        join p in filterProducts_type on i.pro_id equals p.id
+                                        select i).ToList();
+                        break;
+                    case "assignment_group":
+                        var filterDepartments = allDepartment.Where(x => x.name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+                        filteredReqs = (from i in userReqs
+                                        join d in filterDepartments on i.assignment_group equals d.id
+                                        select i).ToList();
+                        break;
+                    case "quantity":
+                        filteredReqs = userReqs
+                            .Where(x => x.quantity.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                    case "updated_by":
+                        var filterUsers_Updated = allUser.Where(x => x.fullname.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+                        filteredReqs = (from i in userReqs
+                                        join u in filterUsers_Updated on i.updated_by equals u.id
+                                        select i).ToList();
+                        break;
+                    case "create_date":
+                        filteredReqs = userReqs
+                            .Where(t => t.create_date != null && t.create_date.ToString("yyyy-MM-dd HH:mm:ss").Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                    case "closed_date":
+                        filteredReqs = userReqs
+                            .Where(t => t.closed_date != null &&
+                                        t.closed_date.Value.ToString("yyyy-MM-dd HH:mm:ss")
+                                        .Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                    case "number":
+                    default:
+                        filteredReqs = userReqs
+                            .Where(t => t.req_id != null && t.req_id.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                }
+            }
+
+
+            var result = filteredReqs.Select(t => new
+            {
+                t.id,
+                t.req_id,
+                t.quantity,
+                t.state,
+                product_id = allProduct.FirstOrDefault(d => d.id == t.pro_id)?.pro_number ?? "",
+                user_name = allUser.FirstOrDefault(u => u.id == t.sender)?.fullname ?? "",
+                product_type = allProduct.FirstOrDefault(x => x.id == t.pro_id)?.product_type ?? "",
+                assignment_group = allDepartment.FirstOrDefault(x => x.id == t.assignment_group).name,
+                update_by = allUser.FirstOrDefault(x => x.id == t.updated_by)?.fullname ?? "",
+                create_date = t.create_date.ToString("yyyy-MM-dd HH:mm:ss"),
+                closed_date = t.closed_date != null ? t.closed_date?.ToString("yyyy-MM-dd HH:mm:ss") : "-"
+            });
+
+            return Json(result);
+        }
+
+        /// <summary>
+        /// Request/All
+        public async Task<IActionResult> FilterRequestByStatus(string filterword, string status = "all")
+        {
+            if (!IsUserLoggedIn(out var currentUser))
+                return Json(new { success = false, message = "Not logged in" });
+
+            var allReqs = await _reqApi.GetAllRequest_API();
+
+            var userReqs = new List<Request>();
+            if (filterword == "req_filter")
+                userReqs = allReqs.OrderByDescending(x => x.id).ToList();
+            else if (filterword == "req_filter_user")
+                userReqs = allReqs.Where(x => x.sender == currentUser.id).OrderByDescending(x => x.id).ToList();
+            else if (filterword == "req_filter_group")
+                userReqs = allReqs.Where(x => x.assignment_group == currentUser.department_id).OrderByDescending(x => x.id).ToList();
+            else
+                userReqs = allReqs.OrderByDescending(x => x.id).ToList();
+
+            var productTask = _productApi.GetAllProduct_API();
+            var userTask = _userApi.GetAllUser_API();
+            var departmentTask = _departmentApi.GetAllDepartment_API();
+            var requestTask = _reqApi.GetAllRequest_API();
+            await Task.WhenAll(productTask, userTask, departmentTask, requestTask);
+
+            var allProduct = await productTask;
+            var allUser = await userTask;
+            var allDepartment = await departmentTask;
+            var allRequest = await requestTask;
+
+            List<Request> filteredReqs;
+
+            switch (status.ToLower())
+            {
+                case "pedding":
+                    filteredReqs = userReqs.Where(t => t.state == "Pedding").ToList();
+                    break;
+                case "rejected":
+                    filteredReqs = userReqs.Where(t => t.state == "Rejected").ToList();
+                    break;
+                case "in_progress":
+                    filteredReqs = userReqs.Where(t => t.state == "In Progress").ToList();
+                    break;
+                case "on_hold":
+                    filteredReqs = userReqs.Where(t => t.state == "On Hold").ToList();
+                    break;
+                case "completed":
+                    filteredReqs = userReqs.Where(t => t.state == "Completed").ToList();
+                    break;
+                case "all":
+                default:
+                    filteredReqs = userReqs;
+                    break;
+            }
+
+            var result = filteredReqs.Select(t => new {
+                t.id,
+                t.req_id,
+                t.quantity,
+                t.state,
+                product_id = allProduct.FirstOrDefault(d => d.id == t.pro_id)?.pro_number ?? "",
+                user_name = allUser.FirstOrDefault(u => u.id == t.sender)?.fullname ?? "",
+                product_type = allProduct.FirstOrDefault(x => x.id == t.pro_id)?.product_type ?? "",
+                assignment_group = allDepartment.FirstOrDefault(x => x.id == t.assignment_group).name,
+                update_by = allUser.FirstOrDefault(x => x.id == t.updated_by)?.fullname ?? "",
+                create_date = t.create_date.ToString("yyyy-MM-dd HH:mm:ss"),
+                closed_date = t.closed_date != null ? t.closed_date?.ToString("yyyy-MM-dd HH:mm:ss") : "-"
+            });
+
+            return Json(result);
+        }
+
+        /// <summary>
+        /// Request/All
+        public async Task<IActionResult> SortRequest(string sortWord, string sortOrder = "asc")
+        {
+            if (!IsUserLoggedIn(out var currentUser))
+                return Json(new { success = false, message = "Not logged in" });
+
+            var allReqs = await _reqApi.GetAllRequest_API();
+            var userReqs = new List<Request>();
+            if (sortWord == "req_sort")
+                userReqs = allReqs.OrderByDescending(x => x.id).ToList();
+            else if (sortWord == "req_sort_user")
+                userReqs = allReqs.Where(x => x.sender == currentUser.id).OrderByDescending(x => x.id).ToList();
+            else if (sortWord == "req_sort_group")
+                userReqs = allReqs.Where(x => x.assignment_group == currentUser.department_id).OrderByDescending(x => x.id).ToList();
+            else
+                userReqs = allReqs.OrderByDescending(x => x.id).ToList();
+
+            var productTask = _productApi.GetAllProduct_API();
+            var userTask = _userApi.GetAllUser_API();
+            var departmentTask = _departmentApi.GetAllDepartment_API();
+            var requestTask = _reqApi.GetAllRequest_API();
+            await Task.WhenAll(productTask, userTask, departmentTask, requestTask);
+
+            var allProduct = await productTask;
+            var allUser = await userTask;
+            var allDepartment = await departmentTask;
+            var allRequest = await requestTask;
+
+            List<Request> sortedRequests;
+            if (sortOrder.ToLower() == "desc")
+                sortedRequests = userReqs.OrderBy(x => x.id).ToList();
+            else
+                sortedRequests = userReqs.OrderByDescending(x => x.id).ToList();
+
+            var result = sortedRequests.Select(t => new {
+                t.id,
+                t.req_id,
+                t.quantity,
+                t.state,
+                product_id = allProduct.FirstOrDefault(d => d.id == t.pro_id)?.pro_number ?? "",
+                user_name = allUser.FirstOrDefault(u => u.id == t.sender)?.fullname ?? "",
+                product_type = allProduct.FirstOrDefault(x => x.id == t.pro_id)?.product_type ?? "",
+                assignment_group = allDepartment.FirstOrDefault(x => x.id == t.assignment_group).name,
+                update_by = allUser.FirstOrDefault(x => x.id == t.updated_by)?.fullname ?? "",
+                create_date = t.create_date.ToString("yyyy-MM-dd HH:mm:ss"),
+                closed_date = t.closed_date != null ? t.closed_date?.ToString("yyyy-MM-dd HH:mm:ss") : "-"
+            });
+
+            return Json(result);
+        }
+
+        /// <summary>
+        /// Request/All
+        [HttpPost]
+        public async Task<IActionResult> DeleteRequests([FromBody] List<int> ids)
+        {
+            if (ids == null || !ids.Any())
+                return Json(new { success = false, message = "No items selected for deletion" });
+
+            if (!IsUserLoggedIn(out var currentUser))
+                return Json(new { success = false, message = "Not logged in" });
+
+            try
+            {
+                int successCount = 0;
+
+                foreach (var id in ids)
+                {
+                    var allReqs = await _reqApi.GetAllRequest_API();
+                    var reqToDelete = allReqs.FirstOrDefault(x => x.id == id);
+
+                    if (reqToDelete != null)
+                    {
+                        bool result = await _reqApi.DeleteRequest_API(id);
+                        if (result)
+                            successCount++;
+                    }
+                }
+
+                if (successCount > 0)
+                {
+                    return Json(new
+                    {
+                        success = true,
+                        message = $"Successfully deleted {successCount} item(s)"
+                    });
+                }
+                else
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Failed to delete items. Items may not exist or you don't have permission"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = $"Error: {ex.Message}" });
+            }
+        }
+
+
+        /// <summary>
+        /// Request/Req_Info
+        [HttpPost]
+        public async Task<JsonResult> CompletedRequest(int req_id)
+        {
+            if (!IsUserLoggedIn(out var currentUser))
+                return Json(new { success = false, message = "Not logged in" });
+
+            try
+            {
+                var reqData = await _reqApi.FindByIDRequest_API(req_id);
+
+                if (reqData == null)
+                    return Json(new { success = false, message = "Request not found" });
+
+                reqData.state = "Completed";
+                reqData.closed_date = DateTime.Now;
+                reqData.updated_by = currentUser.id;
+
+                bool result = await _reqApi.UpdateRequest_API(reqData);
+
+                if (result)
+                    return Json(new { success = true });
+                else
+                    return Json(new { success = false, message = "Failed to update request" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Request/Req_Info
+        [HttpPost]
+        public async Task<JsonResult> RejectedRequest(int req_id)
+        {
+            if (!IsUserLoggedIn(out var currentUser))
+                return Json(new { success = false, message = "Not logged in" });
+
+            try
+            {
+                var reqData = await _reqApi.FindByIDRequest_API(req_id);
+
+                if (reqData == null)
+                    return Json(new { success = false, message = "Request not found" });
+
+                reqData.state = "Rejected";
+                reqData.closed_date = DateTime.Now;
+                reqData.updated_by = currentUser.id;
+
+                bool result = await _reqApi.UpdateRequest_API(reqData);
+
+                if (result)
+                    return Json(new { success = true });
+                else
+                    return Json(new { success = false, message = "Failed to update request" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Request/Req_Info
+        [HttpPost]
+        public async Task<JsonResult> ReopenRequest(int req_id)
+        {
+            if (!IsUserLoggedIn(out var currentUser))
+                return Json(new { success = false, message = "Not logged in" });
+
+            try
+            {
+                var reqData = await _reqApi.FindByIDRequest_API(req_id);
+
+                if (reqData == null)
+                    return Json(new { success = false, message = "Request not found" });
+
+                reqData.state = "Pedding";
+                reqData.closed_date = null;
+                reqData.updated_by = currentUser.id;
+
+                bool result = await _reqApi.UpdateRequest_API(reqData);
+
+                if (result)
+                    return Json(new { success = true });
+                else
+                    return Json(new { success = false, message = "Failed to update request" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
             }
         }
     }

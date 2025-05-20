@@ -41,6 +41,8 @@ namespace ITSM_DomainModelEntity.Models
 
         public string? photo_type {  get; set; }
 
+        public string? product_type {  get; set; }
+
         // Navigation properties
         public virtual Category? Category { get; set; }
         public virtual Department? ResponsibleDepartment { get; set; }

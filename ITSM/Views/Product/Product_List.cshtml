@@ -9,29 +9,33 @@
     .inc-tab-incidents-table th.number-column {
         width: 8%;
     }
-
+    
     .inc-tab-incidents-table th.p_title {
-        width: 16%;
+        width: 14%;
     }
 
     .inc-tab-incidents-table th.p_description {
-        width: 26%;
+        width: 22%;
     }
 
     .inc-tab-incidents-table th.p_category {
-        width: 15%;
+        width: 14%;
     }
 
     .inc-tab-incidents-table th.p_responsible {
-        width: 15%;
+        width: 14%;
+    }
+
+    .inc-tab-incidents-table th.p_product_type {
+        width: 9%;
     }
 
     .inc-tab-incidents-table th.p_quantity {
-        width: 11%;
+        width: 9%;
     }
 
     .inc-tab-incidents-table th.p_active {
-        width: 9%;
+        width: 10%;
     }
 </style>
 
@@ -49,6 +53,7 @@
                     <a href="#" class="inc-tab-dropdown-item" data-filter="title">Title</a>
                     <a href="#" class="inc-tab-dropdown-item" data-filter="description">Description</a>
                     <a href="#" class="inc-tab-dropdown-item" data-filter="category">Category</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-filter="product_type">Product Type</a>
                     <a href="#" class="inc-tab-dropdown-item" data-filter="responsible">Responsible</a>
                     <a href="#" class="inc-tab-dropdown-item" data-filter="quantity">Quantity</a>
                 </div>
@@ -84,7 +89,7 @@
                    data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
                         <img src="@(Model.User.photo != null ? $"data:{Model.User.photo_type};base64," +  Convert.ToBase64String(Model.User.photo) :
-                            Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 h-auto rounded-circle" />
+                            Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 rounded-circle" />
                     </div>
                 </a>
             </div>
@@ -103,11 +108,12 @@
             <thead>
                 <tr>
                     <th class="inc-tab-checkbox-column"></th>
-                    <th class="inc-tab-sortable number-column">Number</th>
+                    <th class="inc-tab-sortable number-column" id="sortByNumber">Number <i class="fas fa-arrow-up" id="sortIcon"></i></th>
                     <th class="p_title">Title</th>
                     <th class="p_description">Description</th>
                     <th class="p_category">Category</th>
                     <th class="p_responsible">Responsible</th>
+                    <th class="p_product_type">Product Type</th>
                     <th class="p_quantity">Quantity</th>
                     <th class="p_active">Active</th>
                 </tr>
@@ -125,6 +131,7 @@
                         <td data-label="Description">@i.description</td>
                         <td data-label="C_Title">@i.Category.title</td>
                         <td data-label="R_Name">@i.ResponsibleDepartment.name</td>
+                        <td data-label="Product_Type">@i.product_type</td>
                         <td data-label="Quantity">@i.quantity</td>
                         <td data-label="Active">@(i.active ? "Active" : "Inactive")</td>
                     </tr>

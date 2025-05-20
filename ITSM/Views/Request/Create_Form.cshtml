@@ -1,10 +1,31 @@
-﻿
+﻿@using ITSM_DomainModelEntity.ViewModels
+@model ProductVM
 @{
     ViewData["Title"] = "Create_Form";
     Layout = "_Layout";
 }
 
 <style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: 'Segoe UI', Arial, sans-serif;
+        background-color: var(--background-color);
+        color: var(--text-color);
+        line-height: 1.5;
+        padding: 10px;
+        margin: 0;
+        min-height: 100vh;
+    }
+
+    .inc-file-cre-form-padding {
+        padding: 5px 0px 0px 5px;
+    }
+
     /* Product Image Styles */
     .inc-cre-product-image-container {
         margin-bottom: 1.25rem;
@@ -77,14 +98,13 @@
     }
 
     @@media (max-width: 768px) {
-        .inc-cre-product-image-wrapper
-        {
+        .inc-cre-product-image-wrapper {
             padding-bottom: 35%; /* Slightly taller on mobile but still compact */
         }
 
-        .inc-cre-product-image-wrapper.square {
-            padding-bottom: 35%;
-        }
+            .inc-cre-product-image-wrapper.square {
+                padding-bottom: 35%;
+            }
     }
 </style>
 
@@ -92,59 +112,97 @@
     <header class="inc-cre-header">
         <div class="inc-cre-header-left">
             <button class="inc-cre-menu-button">
-                <i class="fa-solid fa-plus"></i>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
             </button>
             <div class="inc-cre-title-group">
-                <div class="inc-cre-title">Request Form</div>
+                <div class="inc-cre-title">Requests</div>
                 <div class="inc-cre-subtitle">New record</div>
             </div>
         </div>
         <div class="inc-cre-header-right">
-            <button class="inc-cre-btn inc-cre-btn-icon">
+            <button class="inc-cre-btn inc-cre-btn-icon" onclick="window.open('/Info/Info_Personal_Todo', '_blank')">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"></path>
-                    <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
                 </svg>
             </button>
-            <button class="inc-cre-btn inc-cre-btn-icon">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="4" y1="6" x2="20" y2="6"></line>
-                    <line x1="4" y1="12" x2="20" y2="12"></line>
-                    <line x1="4" y1="18" x2="20" y2="18"></line>
-                </svg>
-            </button>
-            <button class="inc-cre-btn inc-cre-btn-icon">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="1"></circle>
-                    <circle cx="12" cy="5" r="1"></circle>
-                    <circle cx="12" cy="19" r="1"></circle>
-                </svg>
-            </button>
-            <button class="inc-cre-btn inc-cre-btn-submit">Submit</button>
+            <button class="inc-cre-btn inc-cre-btn-submit" onclick="document.getElementById('incidentForm').submit();">Submit</button>
             <div class="nav-item navbar-dropdown dropdown-user dropdown open-button">
                 <a class="nav-link dropdown-toggle hide-arrow p-0"
                    href="javascript:void(0);"
                    data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
-                        <img src="https://www.diydoutu.com/touxiang/20201222-1.jpg" alt class="w-px-40 h-auto rounded-circle" />
+                        <img src="@(Model.User.photo != null ? $"data:{Model.User.photo_type};base64," +  Convert.ToBase64String(Model.User.photo) :
+                            Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 rounded-circle" />
                     </div>
                 </a>
             </div>
-            <!-- <button class="inc-cre-btn inc-cre-btn-resolve">Resolve</button> -->
         </div>
     </header>
 
     <main class="inc-cre-form-wrapper">
-        <form id="incidentForm" class="inc-cre-incident-form">
-            <!-- Product Image Section -->
+
+        @if (!string.IsNullOrEmpty(ViewBag.Error as string))
+        {
+            <div id="error-notification" class="error-notification">
+                <div class="error-notification-content">
+                    <div class="error-notification-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                    </div>
+                    <div class="error-notification-text">
+                        <div class="error-notification-title">Submission failed</div>
+                        <div class="error-notification-message" id="error-notification-message">@ViewBag.Error</div>
+                    </div>
+                </div>
+                <button type="button" class="error-notification-close" id="error-notification-close">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+        }
+
+        <form id="incidentForm" class="inc-cre-incident-form" action="~/Request/Create_Form" method="post">
+            <input type="text" name="pro_id" id="pro_id" class="inc-cre-form-control" value="@Model.Info_Product.id" style="display:none;" readonly>
             <div class="inc-cre-product-image-container">
                 <div class="inc-cre-product-image-wrapper">
-                    <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80"
-                         alt="Selected Product"
-                         class="inc-cre-product-image">
+                    
+                    @if (Model.Info_Product.photo != null)
+                    {
+                        <img src="@(Model.Info_Product.photo != null ? $"data:{Model.Info_Product.photo_type};base64,{Convert.ToBase64String(Model.Info_Product.photo)}" :
+                         "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80")"
+                             alt="Selected Product"
+                             class="inc-cre-product-image" />
+                    }
+                    else
+                    {
+                        if (Model.Info_Product.product_type == "Product")
+                        {
+                            <img src="~/img/product/product_base.png"
+                                 alt="Selected Product"
+                                 class="inc-cre-product-image" />
+                        }
+                        else
+                        {
+                            <img src="~/img/product/service_base.png"
+                                 alt="Selected Product"
+                                 class="inc-cre-product-image" />
+                        }
+                    }
+
                     <div class="inc-cre-product-image-overlay">
-                        <h4 class="inc-cre-product-title">Modern Furniture Selection</h4>
-                        <p class="inc-cre-product-description">Office desk with minimalist design</p>
+                        <h4 class="inc-cre-product-title">@Model.Info_Product.item_title</h4>
+                        <p class="inc-cre-product-description">@Model.Info_Product.description</p>
                     </div>
                 </div>
             </div>
@@ -152,157 +210,54 @@
             <div class="inc-cre-form-grid">
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
-                        <label for="number" class="inc-cre-form-label">Number</label>
-                        <input type="text" id="number" class="inc-cre-form-control" value="INC0010005" readonly>
-                    </div>
-
-                    <div class="inc-cre-form-group">
-                        <label for="caller" class="inc-cre-form-label inc-cre-required">Caller</label>
-                        <div class="inc-cre-input-with-icon">
-                            <input type="text" id="caller" class="inc-cre-form-control" required>
-                            <button type="button" class="inc-cre-icon-search">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="11" cy="11" r="8"></circle>
-                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="inc-cre-form-group">
-                        <label for="category" class="inc-cre-form-label">Category</label>
-                        <select id="category" class="inc-cre-form-control">
-                            <option>-- None --</option>
-                            <option selected>Inquiry / Help</option>
-                            <option>Software</option>
-                            <option>Hardware</option>
-                            <option>Network</option>
-                        </select>
-                    </div>
-
-                    <div class="inc-cre-form-group">
-                        <label for="subcategory" class="inc-cre-form-label">Subcategory</label>
-                        <select id="subcategory" class="inc-cre-form-control">
-                            <option selected>-- None --</option>
-                        </select>
-                    </div>
-
-                    <div class="inc-cre-form-group">
-                        <label for="service" class="inc-cre-form-label">Service</label>
-                        <div class="inc-cre-input-with-icon">
-                            <input type="text" id="service" class="inc-cre-form-control">
-                            <button type="button" class="inc-cre-icon-search">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="11" cy="11" r="8"></circle>
-                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="inc-cre-form-group">
-                        <label for="service-offering" class="inc-cre-form-label">Service offering</label>
-                        <div class="inc-cre-input-with-icon">
-                            <input type="text" id="service-offering" class="inc-cre-form-control">
-                            <button type="button" class="inc-cre-icon-search">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="11" cy="11" r="8"></circle>
-                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="inc-cre-form-group">
-                        <label for="config-item" class="inc-cre-form-label">Configuration item</label>
-                        <div class="inc-cre-input-with-icon">
-                            <input type="text" id="config-item" class="inc-cre-form-control">
-                            <button type="button" class="inc-cre-icon-search">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="11" cy="11" r="8"></circle>
-                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                                </svg>
-                            </button>
-                        </div>
+                        <label for="number" class="inc-cre-form-label">Request Number</label>
+                        <input type="text" class="inc-cre-form-control" value="REQ_TBD" readonly>
                     </div>
                 </div>
 
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
-                        <label for="channel" class="inc-cre-form-label">Channel</label>
-                        <select id="channel" class="inc-cre-form-control">
-                            <option selected>-- None --</option>
-                            <option>Email</option>
-                            <option>Phone</option>
-                            <option>Web</option>
-                        </select>
+                        <label for="number" class="inc-cre-form-label">Product Number</label>
+                        <input type="text" class="inc-cre-form-control" value="@Model.Info_Product.pro_number" readonly>
                     </div>
+                </div>
+            </div>
 
+            <div class="inc-cre-form-grid">
+                <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
-                        <label for="state" class="inc-cre-form-label">State</label>
-                        <select id="state" class="inc-cre-form-control">
-                            <option selected>New</option>
-                            <option>In Progress</option>
-                            <option>On Hold</option>
-                            <option>Resolved</option>
-                            <option>Closed</option>
-                        </select>
+                        <label for="number" class="inc-cre-form-label">User</label>
+                        <input type="text" class="inc-cre-form-control" value="@Model.User.fullname" readonly>
                     </div>
+                </div>
 
+                <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
-                        <label for="impact" class="inc-cre-form-label">Impact</label>
-                        <select id="impact" class="inc-cre-form-control">
-                            <option>1 - High</option>
-                            <option>2 - Medium</option>
-                            <option selected>3 - Low</option>
-                        </select>
+                        <label for="number" class="inc-cre-form-label">Quantity</label>
+                        @if (Model.Info_Product.product_type == "Product")
+                        {
+                            <input type="number" name="quantity" id="quantity" class="inc-cre-form-control" value="1" min="1" max="@Model.Info_Product.quantity" required>
+                        }
+                        else
+                        {
+                            <input type="text" name="quantity" id="quantity" class="inc-cre-form-control" value="1" readonly>
+                        }
                     </div>
+                </div>
+            </div>
 
+            <div class="inc-cre-form-grid">
+                <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
-                        <label for="urgency" class="inc-cre-form-label">Urgency</label>
-                        <select id="urgency" class="inc-cre-form-control">
-                            <option>1 - High</option>
-                            <option>2 - Medium</option>
-                            <option selected>3 - Low</option>
-                        </select>
+                        <label for="channel" class="inc-cre-form-label">Category</label>
+                        <input type="text" class="inc-cre-form-control" value="@Model.Info_Product.Category.title" readonly>
                     </div>
+                </div>
 
+                <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
-                        <label for="priority" class="inc-cre-form-label">Priority</label>
-                        <div class="inc-cre-priority-display">
-                            <span id="priority-value" class="inc-cre-priority-value">5 - Planning</span>
-                            <svg class="inc-cre-info-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <line x1="12" y1="16" x2="12" y2="12"></line>
-                                <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                            </svg>
-                        </div>
-                    </div>
-
-                    <div class="inc-cre-form-group">
-                        <label for="assignment-group" class="inc-cre-form-label">Assignment group</label>
-                        <div class="inc-cre-input-with-icon">
-                            <input type="text" id="assignment-group" class="inc-cre-form-control">
-                            <button type="button" class="inc-cre-icon-search">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="11" cy="11" r="8"></circle>
-                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="inc-cre-form-group">
-                        <label for="assigned-to" class="inc-cre-form-label">Assigned to</label>
-                        <div class="inc-cre-input-with-icon">
-                            <input type="text" id="assigned-to" class="inc-cre-form-control">
-                            <button type="button" class="inc-cre-icon-search">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="11" cy="11" r="8"></circle>
-                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                                </svg>
-                            </button>
-                        </div>
+                        <label for="channel" class="inc-cre-form-label">Responsible</label>
+                        <input type="text" class="inc-cre-form-control" value="@Model.Info_Product.ResponsibleDepartment.name" readonly>
                     </div>
                 </div>
             </div>
@@ -310,7 +265,7 @@
             <div class="inc-cre-form-group inc-cre-short-description-group">
                 <label for="short-description" class="inc-cre-form-label inc-cre-required">Short description</label>
                 <div class="inc-cre-input-with-actions">
-                    <input type="text" id="short-description" class="inc-cre-form-control" required>
+                    <input autocomplete="off" type="text" id="short_description" name="short_description" class="inc-cre-form-control" required>
                     <div class="inc-cre-action-buttons">
                         <button type="button" class="inc-cre-btn-help">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -319,102 +274,16 @@
                                 <line x1="12" y1="17" x2="12.01" y2="17"></line>
                             </svg>
                         </button>
-                        <button type="button" class="inc-cre-btn-help">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <line x1="4" y1="6" x2="20" y2="6"></line>
-                                <line x1="4" y1="12" x2="20" y2="12"></line>
-                                <line x1="4" y1="18" x2="20" y2="18"></line>
-                            </svg>
-                        </button>
                     </div>
                 </div>
             </div>
 
             <div class="inc-cre-form-group inc-cre-full-width">
                 <label for="description" class="inc-cre-form-label">Description</label>
-                <textarea id="description" class="inc-cre-form-control inc-cre-description-textarea" rows="5"></textarea>
+                <textarea id="description" autocomplete="off" name="description" class="inc-cre-form-control inc-cre-description-textarea" rows="5"></textarea>
             </div>
         </form>
     </main>
-
-    <div class="inc-cre-related-search-container">
-        <button class="inc-cre-btn inc-cre-btn-related-search">
-            Related Search Results
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="6 9 12 15 18 9"></polyline>
-            </svg>
-        </button>
-    </div>
-
-    <div class="inc-cre-tab-section">
-        <div class="inc-cre-tabs">
-            <button class="inc-cre-tab active">Notes</button>
-            <button class="inc-cre-tab">Related Records</button>
-            <button class="inc-cre-tab">Resolution Information</button>
-        </div>
-
-        <div class="inc-cre-tab-content">
-            <div id="notes-tab" class="inc-cre-tab-pane active">
-                <div class="inc-cre-watch-list">
-                    <span>Watch list</span>
-                    <div class="inc-cre-list-actions">
-                        <button class="inc-cre-icon-button">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="12" cy="7" r="4"></circle>
-                            </svg>
-                        </button>
-                        <button class="inc-cre-icon-button">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="9" cy="7" r="4"></circle>
-                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-                <textarea class="inc-cre-notes-textarea"></textarea>
-
-                <div class="inc-cre-work-notes-list">
-                    <span>Work notes list</span>
-                    <div class="inc-cre-list-actions">
-                        <button class="inc-cre-icon-button">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="12" cy="7" r="4"></circle>
-                            </svg>
-                        </button>
-                        <button class="inc-cre-icon-button">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="9" cy="7" r="4"></circle>
-                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="inc-cre-notes-group">
-                    <label for="additional-comments">Additional comments</label>
-                    <textarea id="additional-comments" class="inc-cre-notes-textarea"></textarea>
-                </div>
-
-                <div class="inc-cre-notes-group">
-                    <label for="work-notes">Work notes</label>
-                    <textarea id="work-notes" class="inc-cre-notes-textarea inc-cre-work-notes-textarea"></textarea>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <footer class="inc-cre-form-footer">
-        <div class="inc-cre-footer-buttons">
-            <button type="button" class="inc-cre-btn inc-cre-btn-submit-footer">Submit</button>
-            <!-- <button type="button" class="inc-cre-btn inc-cre-btn-resolve-footer">Resolve</button> -->
-        </div>
-    </footer>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -426,7 +295,7 @@
           $target.addClass('active open');
       }
 
-      $('#Requests_child_create').addClass("active");
+      $('#Requests_child_service_catalog').addClass("active");
     });
 </script>
 

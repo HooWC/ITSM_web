@@ -146,7 +146,7 @@
                 data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
                         <img src="@(ViewBag.Photo != null ? $"data:{ViewBag.PhotoType};base64,{Convert.ToBase64String(ViewBag.Photo)}" :
-                            Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 h-auto rounded-circle" />
+                            Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 rounded-circle" />
                     </div>
                 </a>
             </div>
@@ -184,10 +184,30 @@
             <input type="text" name="id" id="id" class="inc-cre-form-control" value="@Model.product.id" style="display:none;" readonly>
             <div class="inc-cre-product-image-container">
                 <div class="inc-cre-product-image-wrapper">
-                    <img src="@(Model.product.photo != null ? $"data:{Model.product.photo_type};base64,{Convert.ToBase64String(Model.product.photo)}" : 
+
+                    @if (Model.product.photo != null)
+                    {
+                        <img src="@(Model.product.photo != null ? $"data:{Model.product.photo_type};base64,{Convert.ToBase64String(Model.product.photo)}" :
                          "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80")"
-                    alt="Selected Product"
-                    class="inc-cre-product-image" />
+                        alt="Selected Product"
+                        class="inc-cre-product-image" />
+                    }
+                    else
+                    {
+                        if (Model.product.product_type == "Product")
+                        {
+                            <img src="~/img/product/product_base.png"
+                                 alt="Selected Product"
+                                 class="inc-cre-product-image" />
+                        }
+                        else
+                        {
+                            <img src="~/img/product/service_base.png"
+                                 alt="Selected Product"
+                                 class="inc-cre-product-image" />
+                        }
+                    }
+
                     <div class="inc-cre-product-image-overlay">
                         <h4 class="inc-cre-product-title">@Model.product.item_title</h4>
                         <p class="inc-cre-product-description">@Model.product.description</p>
@@ -206,7 +226,7 @@
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="number" class="inc-cre-form-label inc-cre-required">Quantity</label>
-                        <input type="number" name="quantity" id="quantity" class="inc-cre-form-control" value="@Model.product.quantity" required>
+                        <input type="number" name="quantity" id="quantity" class="inc-cre-form-control" value="@Model.product.quantity" min="1" required>
                     </div>
                 </div>
             </div>
@@ -215,7 +235,7 @@
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="number" class="inc-cre-form-label inc-cre-required">Title</label>
-                        <input type="text" name="item_title" id="item_title" class="inc-cre-form-control" value="@Model.product.item_title" required>
+                        <input type="text" name="item_title" id="item_title" class="inc-cre-form-control" value="@Model.product.item_title" autocomplete="off" required>
                     </div>
                 </div>
 
@@ -262,6 +282,19 @@
             <div class="inc-cre-form-grid">
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
+                        <label for="channel" class="inc-cre-form-label">Server Type</label>
+                        <select id="product_type" name="product_type" class="inc-cre-form-control">
+                            @{
+                                var selectProduct_Type = Model.product.product_type;
+                            }
+                            <option value="Product" selected="@(selectProduct_Type == "Product" ? "selected" : null)">Product</option>
+                            <option value="Service" selected="@(selectProduct_Type == "Service" ? "selected" : null)">Service</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
                         <label for="channel" class="inc-cre-form-label">Active</label>
                         <select id="active" name="active" class="inc-cre-form-control">
                             @{
@@ -277,7 +310,7 @@
             <div class="inc-cre-form-group inc-cre-short-description-group">
                 <label for="short-description" class="inc-cre-form-label inc-cre-required">Description</label>
                 <div class="inc-cre-input-with-actions">
-                    <input type="text" name="description" id="description" value="@Model.product.description" class="inc-cre-form-control" required>
+                    <input type="text" name="description" id="description" value="@Model.product.description" class="inc-cre-form-control" autocomplete="off" required>
                 </div>
             </div>
         </form>
@@ -285,6 +318,7 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="~/js/Product/product_type_fc.js"></script>
 <script>
     $(function () {
       var $target = $('#Product_menu');

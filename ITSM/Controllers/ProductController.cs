@@ -163,7 +163,8 @@ namespace ITSM.Controllers
                     item_title = product.item_title,
                     description = product.description,
                     quantity = product.quantity,
-                    responsible = product.responsible
+                    responsible = product.responsible,
+                    product_type = product.product_type,
                 };
 
                 if (fileBytes != null)
@@ -278,6 +279,7 @@ namespace ITSM.Controllers
                 pro_info.category_id = product.category_id;
                 pro_info.responsible = product.responsible;
                 pro_info.active = product.active;
+                pro_info.product_type = product.product_type;
 
                 if (fileBytes != null)
                 {

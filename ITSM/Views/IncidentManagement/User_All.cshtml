@@ -1,7 +1,7 @@
 ﻿@using ITSM_DomainModelEntity.ViewModels
 @model IncidentVM
 @{
-    ViewData["Title"] = "Closed_Assigned_To_Me";
+    ViewData["Title"] = "User_All";
     Layout = "_Layout";
 }
 
@@ -42,8 +42,14 @@
                 </svg>
             </button>
             <div class="inc-tab-dropdown">
-                <button class="inc-tab-dropdown-toggle" id="statusDropdown">Closed <i class="fas fa-chevron-down"></i></button>
+                <button class="inc-tab-dropdown-toggle" id="statusDropdown">All <i class="fas fa-chevron-down"></i></button>
                 <div class="inc-tab-dropdown-menu" id="statusMenu" style="display:none;">
+                    <a href="#" class="inc-tab-dropdown-item" data-status="all">All</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-status="pedding">Pedding</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-status="inprogress">In Progress</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-status="onhold">On-Hold</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-status="resolved">Resolved</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-status="closed">Closed</a>
                 </div>
             </div>
             <button class="inc-tab-new-button item-delete-btn" id="deleteButton" disabled>Delete</button>
@@ -91,7 +97,7 @@
                     <tr class="incident-item" data-id="@i.id">
                         <td><input type="checkbox" class="item-checkbox"></td>
                         <td class="inc-tab-incident-number" data-label="Number">
-                            <a href="~/IncidentManagement/Inc_Info_Form?id=@i.id&role=Closed">@i.inc_number</a>
+                            <a href="~/IncidentManagement/Inc_Info_Form?id=@i.id&role=User">@i.inc_number</a>
                         </td>
                         <td data-label="short description">@i.short_description</td>
                         <td data-label="priority">
@@ -142,8 +148,9 @@
     </div>
 </div>
 
-<span style="display:none" id="forAjaxGetFunctionName_search">Closed_Assigned_SearchIncident</span>
-<span style="display:none" id="forAjaxGetFunctionName_sort">Closed_Assigned_SortIncident</span>
+<span style="display:none" id="forAjaxGetFunctionName_search">SearchIncident_user</span>
+<span style="display:none" id="forAjaxGetFunctionName_sort">SortIncident_user</span>
+<span style="display:none" id="forAjaxGetFunctionName_filter">FilterIncident_user</span>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="~/js/List/AllList.js"></script>
@@ -155,7 +162,7 @@
             $target.addClass('active open');
         }
 
-        $('#Incidents_menu_assigned_closed').addClass("active");
+        $('#Incidents_menu_all_user').addClass("active");
     });
 </script>
 

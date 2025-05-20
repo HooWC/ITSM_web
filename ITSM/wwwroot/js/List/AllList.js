@@ -167,6 +167,8 @@ function sortIncidents() {
         word = "tome";
     else if (sortFunctionName.includes("Assigned_to_team_Assigned_SortIncident"))
         word = "toteam";
+    else if (sortFunctionName.includes("SortIncident_user"))
+        word = "user";
     else
         word = "sort_basic";
 
@@ -323,9 +325,7 @@ function updatePaginationButtons() {
 function searchIncidents() {
     var searchTerm = $('#searchInput').val().trim();
     if (searchTerm === '') {
-        // If the search box is empty, refresh the page
-        location.reload();
-        return;
+        searchTerm = "re_entrynovalue";
     }
 
     var word = "";
@@ -337,6 +337,8 @@ function searchIncidents() {
         word = "tome";
     else if (searchFunctionName.includes("Assigned_to_team_Assigned_SearchIncident"))
         word = "toteam";
+    else if (searchFunctionName.includes("SearchIncident_user"))
+        word = "user";
     else
         word = "search_basic";
 
@@ -381,6 +383,8 @@ function filterByStatus() {
         word = "tome";
     else if (filterFunctionName.includes("Assigned_to_team_Assigned_FilterIncident"))
         word = "toteam";
+    else if (filterFunctionName.includes("FilterIncident_user"))
+        word = "user";
     else
         word = "filter_basic";
 

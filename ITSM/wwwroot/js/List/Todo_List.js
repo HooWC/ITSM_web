@@ -1,10 +1,11 @@
 ﻿var currentPage = 1;
 var itemsPerPage = 18;
-var IncidentItems = $('.incident-item').length;
-var IncidentPages = Math.ceil(IncidentItems / itemsPerPage);
+var totalItems = $('.todo-item').length;
+var totalPages = Math.ceil(totalItems / itemsPerPage);
 
 // Set default filter field and status
-var currentFilter = 'role';
+var currentFilter = 'number';
+var currentStatus = 'all';
 
 // Initialize pagination
 initPagination();
@@ -43,7 +44,7 @@ $('.inc-tab-dropdown-item[data-filter]').click(function (e) {
 
     // If search box is not empty, perform search
     if ($('#searchInput').val().trim() !== '') {
-        searchRole();
+        searchTodos();
     }
 });
 
@@ -102,7 +103,7 @@ $('#nextPageBtn').click(function () {
 
 $('#lastPageBtn').click(function () {
     if ($(this).prop('disabled')) return;
-    currentPage = IncidentPages;
+    currentPage = totalPages;
     applyPagination();
     updatePaginationInfo();
     updatePaginationButtons();
@@ -110,7 +111,7 @@ $('#lastPageBtn').click(function () {
 
 // Search box input event
 $('#searchInput').on('keyup', function () {
-    searchRole();
+    searchTodos();
 });
 
 // Refresh button click event
@@ -121,8 +122,8 @@ $('#refreshButton').click(function () {
 // Initialize the paging system
 function initPagination() {
     // Calculate total items and pages
-    IncidentItems = $('.incident-item').length;
-    IncidentPages = Math.ceil(IncidentItems / itemsPerPage);
+    totalItems = $('.todo-item').length;
+    totalPages = Math.ceil(totalItems / itemsPerPage);
 
     // Show first page content
     applyPagination();
@@ -130,6 +131,46 @@ function initPagination() {
     // Update paging information and button status
     updatePaginationInfo();
     updatePaginationButtons();
+}
+
+// Sort variable
+var currentSortOrder = 'asc'; // Default ascending order
+
+// Sort by Number click event
+$('#sortByNumber').click(function () {
+    // Toggle sort order
+    currentSortOrder = currentSortOrder === 'asc' ? 'desc' : 'asc';
+
+    // Update sort icon
+    if (currentSortOrder === 'asc') {
+        $('#sortIcon').removeClass('fa-arrow-down').addClass('fa-arrow-up');
+    } else {
+        $('#sortIcon').removeClass('fa-arrow-up').addClass('fa-arrow-down');
+    }
+
+    // Call the sort API
+    sortTodos();
+});
+
+// Sort todos function
+function sortTodos() {
+    $.ajax({
+        url: '/Ajax/SortTodo',
+        method: 'GET',
+        data: {
+            sortOrder: currentSortOrder
+        },
+        success: function (data) {
+            updateTodoTable(data);
+
+            // Reset pagination
+            resetPagination();
+        },
+        error: function (error) {
+            errorLogin(error);
+            // console.error('Sort Error:', error);
+        }
+    });
 }
 
 // Check selection and toggle delete button
@@ -179,7 +220,7 @@ $('#deleteButton').click(function () {
 
     // Send delete request
     $.ajax({
-        url: '/Ajax/DeleteRole',
+        url: '/Ajax/DeleteTodos',
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(selectedIds),
@@ -208,14 +249,14 @@ $('#deleteButton').click(function () {
 // Apply paging Function
 function applyPagination() {
     // Hide all items
-    $('.incident-item').hide();
+    $('.todo-item').hide();
 
     // Calculate the start and end index of the current page
     var start = (currentPage - 1) * itemsPerPage;
     var end = start + itemsPerPage;
 
     // Show only items on the current page
-    $('.incident-item').each(function (index) {
+    $('.todo-item').each(function (index) {
         if (index >= start && index < end) {
             $(this).show();
         }
@@ -225,19 +266,19 @@ function applyPagination() {
 // Update paging information Function
 function updatePaginationInfo() {
     // Calculates the range of items currently displayed
-    var IncidentItems = $('.incident-item').length;
+    var totalItems = $('.todo-item').length;
 
-    if (IncidentItems === 0) {
+    if (totalItems === 0) {
         $('#paginationInfo').text('0 items');
         return;
     }
 
     // Calculate the range of items displayed on the current page
     var start = (currentPage - 1) * itemsPerPage + 1;
-    var end = Math.min(currentPage * itemsPerPage, IncidentItems);
+    var end = Math.min(currentPage * itemsPerPage, totalItems);
 
     // Total items
-    $('#paginationInfo').text(start + ' to ' + end + ' of ' + IncidentItems);
+    $('#paginationInfo').text(start + ' to ' + end + ' of ' + totalItems);
 }
 
 // Reset pagination Function
@@ -246,8 +287,8 @@ function resetPagination() {
     currentPage = 1;
 
     // Recalculate total items and pages
-    IncidentItems = $('.incident-item').length;
-    IncidentPages = Math.ceil(IncidentItems / itemsPerPage);
+    totalItems = $('.todo-item').length;
+    totalPages = Math.ceil(totalItems / itemsPerPage);
 
     // Apply paging
     applyPagination();
@@ -258,25 +299,25 @@ function resetPagination() {
 // Update the paging button status
 function updatePaginationButtons() {
     $('#firstPageBtn, #prevPageBtn').prop('disabled', currentPage === 1);
-    $('#nextPageBtn, #lastPageBtn').prop('disabled', currentPage === IncidentPages || IncidentItems === 0);
+    $('#nextPageBtn, #lastPageBtn').prop('disabled', currentPage === totalPages || totalItems === 0);
 }
 
 // Search Todo List Function
-function searchRole() {
+function searchTodos() {
     var searchTerm = $('#searchInput').val().trim();
     if (searchTerm === '') {
         searchTerm = "re_entrynovalue";
     }
 
     $.ajax({
-        url: '/Ajax/SearchRole',
+        url: '/Ajax/SearchTodo',
         method: 'GET',
         data: {
             searchTerm: searchTerm,
             filterBy: currentFilter
         },
         success: function (data) {
-            updateRoleTable(data);
+            updateTodoTable(data);
             if (currentStatus !== 'all') {
                 filterTableByStatus(currentStatus);
             }
@@ -291,29 +332,96 @@ function searchRole() {
     });
 }
 
+// Filter Select
+function filterByStatus() {
+    if (currentStatus === 'all') {
+        // Filter All active
+        if ($('#searchInput').val().trim() !== '') {
+            searchTodos();
+        } else {
+            location.reload();
+        }
+        return;
+    }
+
+    $.ajax({
+        url: '/Ajax/FilterTodoByStatus',
+        method: 'GET',
+        data: {
+            status: currentStatus
+        },
+        success: function (data) {
+            updateTodoTable(data);
+
+            // Reset pagination
+            resetPagination();
+        },
+        error: function (error) {
+            errorLogin(error);
+            // console.error('Filter Error:', error);
+        }
+    });
+}
+
+// Filter Active
+function filterTableByStatus(status) {
+    if (status === 'all') return;
+
+    var rows = $('#todoTableBody tr');
+    rows.each(function () {
+        var statusCell = $(this).find('td:last-child').text().trim();
+        if ((status === 'doing' && statusCell === 'Doing') ||
+            (status === 'completed' && statusCell === 'Completed')) {
+            $(this).show();
+        } else {
+            $(this).hide();
+        }
+    });
+
+    // Reset pagination
+    resetPagination();
+}
+
+// 添加日期格式化函数
+function formatDate(dateString) {
+    if (!dateString) return '-';
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
+
 // Update Todo table function
-function updateRoleTable(data) {
-    var tableBody = $('#incTableBody');
+function updateTodoTable(data) {
+    var tableBody = $('#todoTableBody');
     tableBody.empty();
 
     if (data.length === 0) {
-        tableBody.append('<tr><td colspan="6" class="text-center">No matching Role found</td></tr>');
-        IncidentItems = 0;
-        IncidentPages = 0;
+        tableBody.append('<tr><td colspan="6" class="text-center">No matching todos found</td></tr>');
+        totalItems = 0;
+        totalPages = 0;
         updatePaginationInfo();
         updatePaginationButtons();
         return;
     }
 
-    $.each(data, function (index, role) {
+    $.each(data, function (index, todo) {
         var row = `
-                    <tr class="incident-item" data-id="${role.id}">
-                        <td><input type="checkbox" class="item-checkbox"></td>
-                        <td class="inc-tab-incident-number" data-label="Role">
-                            <a href="/Role/Role_Info?id=${role.id}">${role.role}</a>
-                        </td>
-                    </tr>
-                `;
+                  <tr class="todo-item" data-id="${todo.id}">
+                      <td><input type="checkbox" class="item-checkbox"></td>
+                      <td class="inc-tab-incident-number" data-label="Number">
+                          <a href="/Personal/Todo_Edit?id=${todo.id}">${todo.todo_id}
+                      </td>
+                      <td data-label="title">${todo.title}</td>
+                      <td data-label="create_date">${formatDate(todo.create_date)}</td>
+                      <td data-label="update_date">${todo.update_date}</td>
+                      <td data-label="active">${todo.active ? "Completed" : "Doing"}</td>
+                  </tr>
+              `;
         tableBody.append(row);
     });
 

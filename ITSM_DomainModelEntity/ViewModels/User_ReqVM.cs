@@ -7,11 +7,10 @@ using ITSM_DomainModelEntity.Models;
 
 namespace ITSM_DomainModelEntity.ViewModels
 {
-    public class User_Dep_RoleVM
+    public class User_ReqVM
     {
         public User? user { get; set; }
-        public List<Role>? role { get; set; }
-        public List<Department>? department { get; set; }
-        public User? Info_User { get; set; }
+        public List<Request>? requests { get; set; }
+        public Request? req { get; set; }
     }
 }

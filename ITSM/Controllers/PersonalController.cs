@@ -340,7 +340,8 @@ namespace ITSM.Controllers
                 department = allDepartment
             };
 
-            if (!string.IsNullOrEmpty(user.fullname) &&
+            if (!string.IsNullOrEmpty(user.emp_id) &&
+                !string.IsNullOrEmpty(user.fullname) &&
                 !string.IsNullOrEmpty(user.email) &&
                 !string.IsNullOrEmpty(user.title) &&
                 !string.IsNullOrEmpty(user.mobile_phone) &&
@@ -372,7 +373,7 @@ namespace ITSM.Controllers
                     }
                     else if (new_password.Length <= 6)
                     {
-                        ViewBag.Error = "The password must be at least 6 word. Please try again.";
+                        ViewBag.Error = "The mew password must be at least 6 word. Please try again.";
                         return View(model);
                     }
                     else
@@ -399,12 +400,18 @@ namespace ITSM.Controllers
                     }
                 }
 
+                bool emailEmpid = allUser.Any(u => u.emp_id.ToLower() == user.emp_id.ToLower());
                 bool emailExists = allUser.Any(u => u.email == user.email && u.id != user.id);
                 bool usernameExists = allUser.Any(u => u.username == user.username && u.id != user.id);
                 bool mobilephoneExists = allUser.Any(u => u.mobile_phone == user.mobile_phone && u.id != user.id);
                 bool businessphoneExists = !string.IsNullOrWhiteSpace(user.business_phone) &&
                                             allUser.Any(u => u.business_phone == user.business_phone && u.id != user.id);
 
+                if (emailEmpid)
+                {
+                    ViewBag.Error = "This Emp Id is already in use.";
+                    return View(model);
+                }
 
                 if (emailExists)
                 {
@@ -430,6 +437,8 @@ namespace ITSM.Controllers
                     return View(model);
                 }
 
+                info_user.emp_id = user.emp_id;
+                info_user.email = user.email;
                 info_user.gender = user.gender;
                 info_user.fullname = user.fullname;
                 info_user.department_id = user.department_id;

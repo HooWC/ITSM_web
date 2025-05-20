@@ -59,7 +59,7 @@
                    data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
                         <img src="@(ViewBag.Photo != null ? $"data:{ViewBag.PhotoType};base64,{Convert.ToBase64String(ViewBag.Photo)}" :
-                            Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 h-auto rounded-circle" />
+                            Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 rounded-circle" />
                     </div>
                 </a>
             </div>
@@ -113,7 +113,7 @@
             <div class="inc-cre-form-group inc-cre-short-description-group">
                 <label for="short-description" class="inc-cre-form-label inc-cre-required">Message</label>
                 <div class="inc-cre-input-with-actions">
-                    <input type="text" name="message" id="message" class="inc-cre-form-control" required>
+                    <input type="text" autocomplete="off" name="message" id="message" class="inc-cre-form-control" required>
                 </div>
             </div>
         </form>

@@ -307,9 +307,7 @@ function updatePaginationButtons() {
 function searchProducts() {
     var searchTerm = $('#searchInput').val().trim();
     if (searchTerm === '') {
-        // If the search box is empty, refresh the page
-        location.reload();
-        return;
+        searchTerm = "re_entrynovalue";
     }
 
     $.ajax({
@@ -391,7 +389,7 @@ function updateProductTable(data) {
     tableBody.empty();
 
     if (data.length === 0) {
-        tableBody.append('<tr><td colspan="8" class="text-center">No matching Product found</td></tr>');
+        tableBody.append('<tr><td colspan="9" class="text-center">No matching Product found</td></tr>');
         IncidentItems = 0;
         IncidentPages = 0;
         updatePaginationInfo();
@@ -410,6 +408,7 @@ function updateProductTable(data) {
                         <td data-label="Description">${product.description}</td>
                         <td data-label="C_Title">${product.category_name}</td>
                         <td data-label="R_Name">${product.department_name}</td>
+                        <td data-label="Product_Type">${product.product_type}</td>
                         <td data-label="Quantity">${product.quantity}</td>
                         <td data-label="Active">${product.active}</td>
                     </tr>

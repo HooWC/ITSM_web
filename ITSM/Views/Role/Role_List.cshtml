@@ -46,7 +46,7 @@
                    data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
                         <img src="@(Model.User.photo != null ? $"data:{Model.User.photo_type};base64," +  Convert.ToBase64String(Model.User.photo) :
-                            Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 h-auto rounded-circle" />
+                            Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 rounded-circle" />
                     </div>
                 </a>
             </div>
@@ -94,7 +94,7 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="~/js/List/Department_List.js"></script>
+<script src="~/js/List/Role_List.js"></script>
 <script>
       $(function () {
         var $target = $('#Role_menu');

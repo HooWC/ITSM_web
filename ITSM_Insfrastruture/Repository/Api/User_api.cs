@@ -11,6 +11,7 @@ using ITSM_Insfrastruture.Repository.Config;
 using ITSM_Insfrastruture.Repository.Token;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace ITSM_Insfrastruture.Repository.Api
 {
@@ -126,6 +127,86 @@ namespace ITSM_Insfrastruture.Repository.Api
             }
         }
 
+        public async Task<RegisterResult> AdminCreateUser(User user)
+        {
+            try
+            {
+                var jsonStr = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
+
+                var response = await _client.PostAsync(_registerUrl, jsonStr);
+
+                //var responseStr = await response.Content.ReadAsStringAsync();
+                //Console.WriteLine($"RESPONSE: {responseStr}");
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+
+                if (response.IsSuccessStatusCode)
+                {
+                    try
+                    {
+                        var registerResult = JsonConvert.DeserializeObject<AuthResponse>(responseContent);
+
+                        if (registerResult != null && !string.IsNullOrEmpty(registerResult.token))
+                        {
+                            // When the administrator creates a user, the token is not saved and automatic login is not performed.
+                            return new RegisterResult { Success = true };
+                        }
+                        else
+                        {
+                            return new RegisterResult
+                            {
+                                Success = false,
+                                Message = "User created successfully but no valid token received"
+                            };
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Ex Error: {ex.Message}");
+                        return new RegisterResult
+                        {
+                            Success = false,
+                            Message = "Unable to parse server response"
+                        };
+                    }
+                }
+
+                // Register fail
+                string errorMessage = "Failed to create user";
+
+                if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+                {
+                    try
+                    {
+                        var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(responseContent);
+                        errorMessage = errorResponse?.message ?? "Invalid request";
+                    }
+                    catch
+                    {
+                        errorMessage = $"Invalid request: {responseContent}";
+                    }
+                }
+                else if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
+                {
+                    errorMessage = "Username or employee ID already exists";
+                }
+                return new RegisterResult
+                {
+                    Success = false,
+                    Message = errorMessage
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ex Message: {ex.Message}");
+                return new RegisterResult
+                {
+                    Success = false,
+                    Message = $"Create user exception error: {ex.Message}"
+                };
+            }
+        }
+
         private class AuthResponse
         {
             public UserInfo user { get; set; }
@@ -181,143 +262,6 @@ namespace ITSM_Insfrastruture.Repository.Api
                 return null;
             }
         }
-
-        //public async Task<bool> UpdateUser_API(User user)
-        //{
-        //    try
-        //    {
-        //        var tokenModel = _tokenService.GetToken();
-        //        if (tokenModel == null) return false;
-
-        //        var originalUser = await FindByIDUser_API(user.id);
-        //        if (originalUser == null) return false;
-
-        //        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenModel.Token);
-
-        //        bool excludePassword = user.password == null;
-        //        bool excludeUsername = user.username == originalUser.username;
-
-        //        object userToSend;
-        //        if (excludePassword || excludeUsername)
-        //        {
-        //            var userDict = new Dictionary<string, object>
-        //            {
-        //                { "id", user.id },
-        //                { "emp_id", user.emp_id },
-        //                { "prefix", user.prefix },
-        //                { "fullname", user.fullname },
-        //                { "email", user.email },
-        //                { "gender", user.gender },
-        //                { "department_id", user.department_id },
-        //                { "title", user.title },
-        //                { "mobile_phone", user.mobile_phone },
-        //                { "role_id", user.role_id },
-        //                { "race", user.race },
-        //                { "active", user.active },
-        //                { "photo_type", user.photo_type ?? "" }
-        //            };
-
-        //            if (user.business_phone != null)
-        //                userDict["business_phone"] = user.business_phone;
-
-        //            if (user.update_date.HasValue)
-        //                userDict["update_date"] = user.update_date;
-
-        //            if (user.create_date != default(DateTime))
-        //                userDict["create_date"] = user.create_date;
-
-        //            if (!excludeUsername)
-        //                userDict["username"] = user.username;
-
-        //            if (!excludePassword && user.password != null)
-        //                userDict["password"] = user.password;
-
-        //            if (user.photo != null)
-        //            {
-        //                // 转换photo为Base64字符串
-        //                userDict["photo"] = Convert.ToBase64String(user.photo);
-        //            }
-
-        //            userToSend = userDict;
-        //        }
-        //        else
-        //        {
-        //            // 创建一个新对象并转换photo为Base64字符串
-        //            var userDict = new Dictionary<string, object>
-        //            {
-        //                { "id", user.id },
-        //                { "emp_id", user.emp_id },
-        //                { "username", user.username },
-        //                { "prefix", user.prefix },
-        //                { "fullname", user.fullname },
-        //                { "email", user.email },
-        //                { "gender", user.gender },
-        //                { "department_id", user.department_id },
-        //                { "title", user.title },
-        //                { "mobile_phone", user.mobile_phone },
-        //                { "role_id", user.role_id },
-        //                { "race", user.race },
-        //                { "active", user.active },
-        //                { "photo_type", user.photo_type ?? "" }
-        //            };
-
-        //            if (user.business_phone != null)
-        //                userDict["business_phone"] = user.business_phone;
-
-        //            if (user.update_date.HasValue)
-        //                userDict["update_date"] = user.update_date;
-
-        //            if (user.create_date != default(DateTime))
-        //                userDict["create_date"] = user.create_date;
-
-        //            if (user.password != null)
-        //                userDict["password"] = user.password;
-
-        //            if (user.photo != null)
-        //            {
-        //                userDict["photo"] = Convert.ToBase64String(user.photo);
-        //            }
-
-        //            userToSend = userDict;
-        //        }
-
-        //        Console.WriteLine($"Photo as Base64: {Convert.ToBase64String(user.photo).Substring(0, 50)}...");
-
-        //        //{[photo_type, image/webp]}
-        //        var jsonStr = new StringContent(JsonConvert.SerializeObject(userToSend), Encoding.UTF8, "application/json");
-        //        var response = await _client.PutAsync($"{_F_U_UserUrl}{user.id}", jsonStr);
-
-        //        var responseStr = await response.Content.ReadAsStringAsync();
-        //        Console.WriteLine($"RESPONSE: {responseStr}");
-
-        //        if (response.IsSuccessStatusCode)
-        //        {
-        //            // Update User Session Infomation
-        //            if (tokenModel.UserId == user.id)
-        //            {
-        //                // 获取最新的用户信息，包括photo字段
-        //                var updatedUser = await FindByIDUser_API(user.id);
-        //                if (updatedUser != null)
-        //                {
-        //                    _tokenService.SaveUserInfo(updatedUser);
-        //                }
-        //                else
-        //                {
-        //                    _tokenService.SaveUserInfo(user);
-        //                }
-        //            }
-        //            return true;
-        //        }
-
-        //        return false;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine($"EX UpdateUser_API: {ex.Message}");
-        //        return false;
-        //    }
-        //}
-
 
         public async Task<bool> UpdateUser_API(User user)
         {

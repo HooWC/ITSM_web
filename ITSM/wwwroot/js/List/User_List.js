@@ -3,8 +3,14 @@ var itemsPerPage = 18;
 var IncidentItems = $('.incident-item').length;
 var IncidentPages = Math.ceil(IncidentItems / itemsPerPage);
 
+let searchFunctionName = $('#forAjaxGetFunctionName_search').text();
+let sortFunctionName = $('#forAjaxGetFunctionName_sort').text();
+/*let filterFunctionName = $('#forAjaxGetFunctionName_filter').text();*/
+let DeleteFunctionName = $('#forAjaxGetFunctionName_delete').text();
+
 // Set default filter field and status
-var currentFilter = 'role';
+var currentFilter = 'emp_id';
+var currentStatus = 'all';
 
 // Initialize pagination
 initPagination();
@@ -43,7 +49,7 @@ $('.inc-tab-dropdown-item[data-filter]').click(function (e) {
 
     // If search box is not empty, perform search
     if ($('#searchInput').val().trim() !== '') {
-        searchRole();
+        searchUsers();
     }
 });
 
@@ -110,7 +116,7 @@ $('#lastPageBtn').click(function () {
 
 // Search box input event
 $('#searchInput').on('keyup', function () {
-    searchRole();
+    searchUsers();
 });
 
 // Refresh button click event
@@ -132,10 +138,50 @@ function initPagination() {
     updatePaginationButtons();
 }
 
+// Sort variable
+var currentSortOrder = 'asc'; // Default ascending order
+
+// Sort by Number click event
+$('#sortByNumber').click(function () {
+    // Toggle sort order
+    currentSortOrder = currentSortOrder === 'asc' ? 'desc' : 'asc';
+
+    // Update sort icon
+    if (currentSortOrder === 'asc') {
+        $('#sortIcon').removeClass('fa-arrow-down').addClass('fa-arrow-up');
+    } else {
+        $('#sortIcon').removeClass('fa-arrow-up').addClass('fa-arrow-down');
+    }
+
+    // Call the sort API
+    sortUsers();
+});
+
+// Sort todos function
+function sortUsers() {
+
+    $.ajax({
+        url: '/Ajax/SortUser',
+        method: 'GET',
+        data: {
+            sortOrder: currentSortOrder
+        },
+        success: function (data) {
+            updateUserTable(data);
+            resetPagination();
+        },
+        error: function (error) {
+            errorLogin(error);
+            // console.error('Sort Error:', error);
+        }
+    });
+}
+
 // Check selection and toggle delete button
 function checkSelection() {
     var hasChecked = $('.item-checkbox:checked').length > 0;
-    $('#deleteButton').prop('disabled', !hasChecked);
+    $('#blockButton').prop('disabled', !hasChecked);
+    $('#activeButton').prop('disabled', !hasChecked);
 }
 
 // Handle checkbox changes
@@ -159,11 +205,10 @@ $(document).on('change', '#table-select-all, #select-all', function () {
     checkSelection();
 });
 
-// Delete button click event
-$('#deleteButton').click(function () {
+// Block button click event
+$('#blockButton').click(function () {
     if ($(this).prop('disabled')) return;
 
-    // Get all selected todo IDs
     var selectedIds = [];
     $('.item-checkbox:checked').each(function () {
         var todoId = $(this).closest('tr').attr('data-id');
@@ -172,31 +217,50 @@ $('#deleteButton').click(function () {
         }
     });
 
-    // If no items selected, do nothing
     if (selectedIds.length === 0) {
         return;
     }
 
-    // Send delete request
     $.ajax({
-        url: '/Ajax/DeleteRole',
+        url: '/Ajax/BlockUsers',
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(selectedIds),
-        success: function (response) {
-            if (response.success) {
-                // Remove deleted items from table
-                $('.item-checkbox:checked').closest('tr').remove();
+        success: function (data) {
+            updateUserTable(data);
+            resetPagination();
+        },
+        error: function (error) {
+            errorLogin(error);
+            // console.error('Delete Error:', error);
+        }
+    });
+});
 
-                // Uncheck select-all checkboxes
-                $('#select-all, #table-select-all').prop('checked', false);
+// Active button click event
+$('#activeButton').click(function () {
+    if ($(this).prop('disabled')) return;
 
-                // Disable delete button
-                $('#deleteButton').prop('disabled', true);
+    var selectedIds = [];
+    $('.item-checkbox:checked').each(function () {
+        var todoId = $(this).closest('tr').attr('data-id');
+        if (todoId) {
+            selectedIds.push(parseInt(todoId));
+        }
+    });
 
-                // Reset pagination
-                resetPagination();
-            }
+    if (selectedIds.length === 0) {
+        return;
+    }
+
+    $.ajax({
+        url: '/Ajax/ActiveUsers',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(selectedIds),
+        success: function (data) {
+            updateUserTable(data);
+            resetPagination();
         },
         error: function (error) {
             errorLogin(error);
@@ -262,21 +326,21 @@ function updatePaginationButtons() {
 }
 
 // Search Todo List Function
-function searchRole() {
+function searchUsers() {
     var searchTerm = $('#searchInput').val().trim();
     if (searchTerm === '') {
         searchTerm = "re_entrynovalue";
     }
 
     $.ajax({
-        url: '/Ajax/SearchRole',
+        url: '/Ajax/SearchUser',
         method: 'GET',
         data: {
             searchTerm: searchTerm,
             filterBy: currentFilter
         },
         success: function (data) {
-            updateRoleTable(data);
+            updateUserTable(data);
             if (currentStatus !== 'all') {
                 filterTableByStatus(currentStatus);
             }
@@ -291,13 +355,63 @@ function searchRole() {
     });
 }
 
+// Filter Select
+function filterByStatus() {
+    if (currentStatus === 'all') {
+        // Filter All active
+        if ($('#searchInput').val().trim() !== '') {
+            searchUsers();
+        } else {
+            location.reload();
+        }
+        return;
+    }
+
+    $.ajax({
+        url: '/Ajax/FilterUserByStatus',
+        method: 'GET',
+        data: {
+            status: currentStatus
+        },
+        success: function (data) {
+            updateUserTable(data);
+
+            // Reset pagination
+            resetPagination();
+        },
+        error: function (error) {
+            errorLogin(error);
+            // console.error('Filter Error:', error);
+        }
+    });
+}
+
+// Filter Active
+function filterTableByStatus(status) {
+    if (status === 'all') return;
+
+    var rows = $('#incTableBody tr');
+    rows.each(function () {
+        var statusCell = $(this).find('td:last-child').text().trim();
+        if ((status === 'doing' && statusCell === 'Doing') ||
+            (status === 'completed' && statusCell === 'Completed')) {
+            $(this).show();
+        } else {
+            $(this).hide();
+        }
+    });
+
+    // Reset pagination
+    resetPagination();
+}
+
 // Update Todo table function
-function updateRoleTable(data) {
+function updateUserTable(data) {
     var tableBody = $('#incTableBody');
     tableBody.empty();
 
     if (data.length === 0) {
-        tableBody.append('<tr><td colspan="6" class="text-center">No matching Role found</td></tr>');
+        tableBody.append('<tr><td colspan="11" class="text-center">No matching User found</td></tr>');
         IncidentItems = 0;
         IncidentPages = 0;
         updatePaginationInfo();
@@ -305,13 +419,22 @@ function updateRoleTable(data) {
         return;
     }
 
-    $.each(data, function (index, role) {
+    $.each(data, function (index, u) {
         var row = `
-                    <tr class="incident-item" data-id="${role.id}">
+                    <tr class="incident-item" data-id="${u.id}">
                         <td><input type="checkbox" class="item-checkbox"></td>
-                        <td class="inc-tab-incident-number" data-label="Role">
-                            <a href="/Role/Role_Info?id=${role.id}">${role.role}</a>
+                        <td class="inc-tab-incident-number" data-label="Number">
+                            <a href="/User/User_Info?id=${u.id}">${u.emp_id}</a>
                         </td>
+                        <td data-label="Fullname">${u.fullname}</td>
+                        <td data-label="Email">${u.email}</td>
+                        <td data-label="Gender">${u.gender}</td>
+                        <td data-label="D_Name">${u.departmentName}</td>
+                        <td data-label="Title">${u.title}</td>
+                        <td data-label="Mobile_Phone">${u.mobile_phone}</td>
+                        <td data-label="R_Role">${u.role}</td>
+                        <td data-label="Race">${u.race}</td>
+                        <td data-label="Active">${u.active}</td>
                     </tr>
                 `;
         tableBody.append(row);

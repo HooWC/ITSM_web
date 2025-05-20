@@ -7,10 +7,11 @@ using ITSM_DomainModelEntity.Models;
 
 namespace ITSM_DomainModelEntity.ViewModels
 {
-    public class ProductVM
+    public class User_Dep_Cat_ProVM
     {
-        public User? User { get; set; }
-        public List<Product>? Product { get; set; }
-        public Product? Info_Product { get; set; }
+        public User? user {  get; set; }
+        public List<Product>? products { get; set; }
+        public List<Category>? categorys { get; set; }
+
     }
 }

@@ -147,12 +147,14 @@ namespace ITSM.Controllers
             }
         }
 
-        public async Task<IActionResult> Feedback_Info(int id)
+        public async Task<IActionResult> Feedback_Info(int id, string role)
         {
             var tokenService = new TokenService(_httpContextAccessor);
             var currentUser_token = tokenService.GetUserInfo();
 
             var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+
+            ViewBag.roleBack = role;
 
             // Get Feedback
             var feedback = await _feedbackApi.FindByIDFeedback_API(id);
@@ -166,7 +168,7 @@ namespace ITSM.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Feedback_Info(Feedback feed)
+        public async Task<IActionResult> Feedback_Info(Feedback feed, string roleBack)
         {
             // current user info
             var tokenService = new TokenService(_httpContextAccessor);
@@ -195,7 +197,14 @@ namespace ITSM.Controllers
             bool result = await _feedbackApi.UpdateFeedback_API(feedback);
 
             if (result)
-                return RedirectToAction("Feedback_List", "Feedback");
+            {
+                if (roleBack == "Admin")
+                    return RedirectToAction("All", "Request");
+                else if (roleBack == "Group")
+                    return RedirectToAction("Assigned_To_Us", "Request");
+                else
+                    return RedirectToAction("Feedback_List", "Feedback");
+            }
             else
             {
                 ViewBag.Error = "Update Feedback Error";

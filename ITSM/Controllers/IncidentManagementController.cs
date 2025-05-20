@@ -1,4 +1,5 @@
-﻿using Humanizer;
+﻿using System.Reflection;
+using Humanizer;
 using ITSM_DomainModelEntity.Models;
 using ITSM_DomainModelEntity.ViewModels;
 using ITSM_Insfrastruture.Repository.Api;
@@ -40,6 +41,45 @@ namespace ITSM.Controllers
         //}
 
         public async Task<IActionResult> All()
+        {
+            // current user info
+            var tokenService = new TokenService(_httpContextAccessor);
+            var currentUser_token = tokenService.GetUserInfo();
+
+            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+
+            // Making concurrent API requests
+            var inc = _incApi.GetAllIncident_API();
+            var dep = _depApi.GetAllDepartment_API();
+            var user = _userApi.GetAllUser_API();
+
+            // Wait for all tasks to complete
+            await Task.WhenAll(inc, dep, user);
+
+            // get incident list data
+            var allInc = await inc;
+            var incList = allInc.OrderByDescending(y => y.id).ToList();
+
+            // get user and department data
+            var allDepartments = await dep;
+            var allUsers = await user;
+
+            foreach (var incident in incList)
+            {
+                incident.AssignmentGroup = allDepartments.FirstOrDefault(d => d.id == incident.assignment_group);
+                incident.AssignedTo = allUsers.FirstOrDefault(u => u.id == incident.assigned_to);
+            }
+
+            var model = new IncidentVM
+            {
+                User = currentUser,
+                Inc = incList
+            };
+
+            return View(model);
+        }
+
+        public async Task<IActionResult> User_All()
         {
             // current user info
             var tokenService = new TokenService(_httpContextAccessor);
@@ -163,13 +203,15 @@ namespace ITSM.Controllers
             }       
         }
 
-        public async Task<IActionResult> Inc_Info_Form(int id)
+        public async Task<IActionResult> Inc_Info_Form(int id, string role)
         {
             // current user info
             var tokenService = new TokenService(_httpContextAccessor);
             var currentUser_token = tokenService.GetUserInfo();
 
             var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+
+            ViewBag.roleBack = role;
 
             // Making concurrent API requests
             var departmentTask = _depApi.GetAllDepartment_API();
@@ -199,7 +241,7 @@ namespace ITSM.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Inc_Info_Form(Incident inc)
+        public async Task<IActionResult> Inc_Info_Form(Incident inc, string roleBack)
         {
             // current user info
             var tokenService = new TokenService(_httpContextAccessor);
@@ -221,19 +263,18 @@ namespace ITSM.Controllers
             // Get Inc Data
             var incData = await _incApi.FindByIDIncident_API(inc.id);
 
+            incData.AssignmentGroup = allDepartment.FirstOrDefault(x => x.id == incData.assignment_group);
+            incData.AssignedTo = incData.assigned_to == null ? null : allUser.FirstOrDefault(x => x.id == incData.assigned_to);
+
+            var model = new IncidentInfoVM()
+            {
+                User = currentUser,
+                Inc = incData
+            };
+
             if (inc.short_description == null && inc.AssignmentGroup == null)
             {
                 ViewBag.Error = "Please fill in all required fields";
-
-                incData.AssignmentGroup = allDepartment.FirstOrDefault(x => x.id == incData.assignment_group);
-                incData.AssignedTo = incData.assigned_to == null ? null : allUser.FirstOrDefault(x => x.id == incData.assigned_to);
-
-                var model = new IncidentInfoVM()
-                {
-                    User = currentUser,
-                    Inc = incData
-                };
-
                 return View(model);
             }
 
@@ -254,25 +295,31 @@ namespace ITSM.Controllers
                 bool result = await _incApi.UpdateIncident_API(incData);
 
                 if (result)
-                    return RedirectToAction("All", "IncidentManagement");
+                {
+                    if (roleBack == "Admin")
+                        return RedirectToAction("All", "IncidentManagement");
+                    else if (roleBack == "Resolved")
+                        return RedirectToAction("Resolved_Assigned_To_Me", "IncidentManagement");
+                    else if (roleBack == "ToMe")
+                        return RedirectToAction("Assigned_To_Me", "IncidentManagement");
+                    else if (roleBack == "ToGroup")
+                        return RedirectToAction("Assigned_To_Group", "IncidentManagement");
+                    else if (roleBack == "Closed")
+                        return RedirectToAction("Closed_Assigned_To_Me", "IncidentManagement");
+                    else
+                        return RedirectToAction("User_All", "IncidentManagement");
+                }
                 else
                 {
                     ViewBag.Error = "Update event failed";
-
-                    incData.AssignmentGroup = allDepartment.FirstOrDefault(x => x.id == incData.assignment_group);
-                    incData.AssignedTo = incData.assigned_to == null ? null : allUser.FirstOrDefault(x => x.id == incData.assigned_to);
-
-                    var model = new IncidentInfoVM()
-                    {
-                        User = currentUser,
-                        Inc = incData
-                    };
-
                     return View(model);
                 }
             }
-
-            return RedirectToAction("All", "IncidentManagement");
+            else
+            {
+                ViewBag.Error = "Update Incident Error";
+                return View(model);
+            }
         }
 
         public async Task<IActionResult> Assigned_To_Me()

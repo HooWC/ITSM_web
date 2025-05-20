@@ -3,8 +3,13 @@ var itemsPerPage = 18;
 var IncidentItems = $('.incident-item').length;
 var IncidentPages = Math.ceil(IncidentItems / itemsPerPage);
 
+let searchFunctionName = $('#forAjaxGetFunctionName_search').text();
+let sortFunctionName = $('#forAjaxGetFunctionName_sort').text();
+let filterFunctionName = $('#forAjaxGetFunctionName_filter').text();
+
 // Set default filter field and status
-var currentFilter = 'role';
+var currentFilter = 'number';
+var currentStatus = 'all';
 
 // Initialize pagination
 initPagination();
@@ -43,7 +48,7 @@ $('.inc-tab-dropdown-item[data-filter]').click(function (e) {
 
     // If search box is not empty, perform search
     if ($('#searchInput').val().trim() !== '') {
-        searchRole();
+        searchIncidents();
     }
 });
 
@@ -110,7 +115,7 @@ $('#lastPageBtn').click(function () {
 
 // Search box input event
 $('#searchInput').on('keyup', function () {
-    searchRole();
+    searchIncidents();
 });
 
 // Refresh button click event
@@ -130,6 +135,57 @@ function initPagination() {
     // Update paging information and button status
     updatePaginationInfo();
     updatePaginationButtons();
+}
+
+// Sort variable
+var currentSortOrder = 'asc'; // Default ascending order
+
+// Sort by Number click event
+$('#sortByNumber').click(function () {
+    // Toggle sort order
+    currentSortOrder = currentSortOrder === 'asc' ? 'desc' : 'asc';
+
+    // Update sort icon
+    if (currentSortOrder === 'asc') {
+        $('#sortIcon').removeClass('fa-arrow-down').addClass('fa-arrow-up');
+    } else {
+        $('#sortIcon').removeClass('fa-arrow-up').addClass('fa-arrow-down');
+    }
+
+    // Call the sort API
+    sortRequests();
+});
+
+// Sort todos function
+function sortRequests() {
+    var word = "";
+    if (sortFunctionName.includes("SortRequest"))
+        word = "req_sort";
+    else if (sortFunctionName.includes("S_User"))
+        word = "req_sort_user";
+    else if (sortFunctionName.includes("S_Group"))
+        word = "req_sort_group";
+    else
+        word = "sort_basic";
+
+    $.ajax({
+        url: '/Ajax/SortRequest',
+        method: 'GET',
+        data: {
+            sortOrder: currentSortOrder,
+            sortWord: word
+        },
+        success: function (data) {
+            updateRequestTable(data);
+
+            // Reset pagination
+            resetPagination();
+        },
+        error: function (error) {
+            errorLogin(error);
+            // console.error('Sort Error:', error);
+        }
+    });
 }
 
 // Check selection and toggle delete button
@@ -179,7 +235,7 @@ $('#deleteButton').click(function () {
 
     // Send delete request
     $.ajax({
-        url: '/Ajax/DeleteRole',
+        url: '/Ajax/DeleteRequests',
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(selectedIds),
@@ -262,21 +318,32 @@ function updatePaginationButtons() {
 }
 
 // Search Todo List Function
-function searchRole() {
+function searchIncidents() {
     var searchTerm = $('#searchInput').val().trim();
     if (searchTerm === '') {
         searchTerm = "re_entrynovalue";
     }
 
+    var word = "";
+    if (searchFunctionName.includes("SearchRequest"))
+        word = "req";
+    else if (searchFunctionName.includes("S_User"))
+        word = "req_user";
+    else if (searchFunctionName.includes("S_Group"))
+        word = "req_group";
+    else
+        word = "search_basic";
+
     $.ajax({
-        url: '/Ajax/SearchRole',
+        url: '/Ajax/SearchRequest',
         method: 'GET',
         data: {
             searchTerm: searchTerm,
-            filterBy: currentFilter
+            filterBy: currentFilter,
+            searchWord: word
         },
         success: function (data) {
-            updateRoleTable(data);
+            updateRequestTable(data);
             if (currentStatus !== 'all') {
                 filterTableByStatus(currentStatus);
             }
@@ -291,13 +358,74 @@ function searchRole() {
     });
 }
 
+// Filter Select
+function filterByStatus() {
+    if (currentStatus === 'all') {
+        // Filter All active
+        if ($('#searchInput').val().trim() !== '') {
+            searchIncidents();
+        } else {
+            location.reload();
+        }
+        return;
+    }
+
+    var word = "";
+    if (filterFunctionName.includes("FilterRequest"))
+        word = "req_filter";
+    else if (filterFunctionName.includes("F_User"))
+        word = "req_filter_user";
+    else if (filterFunctionName.includes("F_Group"))
+        word = "req_filter_group";
+    else
+        word = "filter_basic";
+
+    $.ajax({
+        url: '/Ajax/FilterRequestByStatus',
+        method: 'GET',
+        data: {
+            status: currentStatus,
+            filterword: word
+        },
+        success: function (data) {
+            updateRequestTable(data);
+
+            // Reset pagination
+            resetPagination();
+        },
+        error: function (error) {
+            errorLogin(error);
+            // console.error('Filter Error:', error);
+        }
+    });
+}
+
+// Filter Active
+function filterTableByStatus(status) {
+    if (status === 'all') return;
+
+    var rows = $('#incTableBody tr');
+    rows.each(function () {
+        var statusCell = $(this).find('td:last-child').text().trim();
+        if ((status === 'doing' && statusCell === 'Doing') ||
+            (status === 'completed' && statusCell === 'Completed')) {
+            $(this).show();
+        } else {
+            $(this).hide();
+        }
+    });
+
+    // Reset pagination
+    resetPagination();
+}
+
 // Update Todo table function
-function updateRoleTable(data) {
+function updateRequestTable(data) {
     var tableBody = $('#incTableBody');
     tableBody.empty();
 
     if (data.length === 0) {
-        tableBody.append('<tr><td colspan="6" class="text-center">No matching Role found</td></tr>');
+        tableBody.append('<tr><td colspan="11" class="text-center">No matching Request found</td></tr>');
         IncidentItems = 0;
         IncidentPages = 0;
         updatePaginationInfo();
@@ -305,13 +433,23 @@ function updateRoleTable(data) {
         return;
     }
 
-    $.each(data, function (index, role) {
+    $.each(data, function (index, req) {
+
         var row = `
-                    <tr class="incident-item" data-id="${role.id}">
+                    <tr class="incident-item" data-id="${req.id}">
                         <td><input type="checkbox" class="item-checkbox"></td>
-                        <td class="inc-tab-incident-number" data-label="Role">
-                            <a href="/Role/Role_Info?id=${role.id}">${role.role}</a>
+                        <td class="inc-tab-incident-number" data-label="Number">
+                            <a href="/Request/Req_Info?id=${req.id}">${req.req_id}</a>
                         </td>
+                        <td data-label="Product_Number">${req.product_id}</td>
+                        <td data-label="Full_Name">${req.user_name}</td>
+                        <td data-label="Product_Type">${req.product_type}</td>
+                        <td data-label="State">${req.state}</td>
+                        <td data-label="AssignmentGroup">${req.assignment_group}</td>
+                        <td data-label="Quantity">${req.quantity}</td>
+                        <td data-label="Updated_By">${req.update_by}</td>
+                        <td data-label="Create_Date">${req.create_date}</td>
+                        <td data-label="Closed_date">${req.closed_date}</td>
                     </tr>
                 `;
         tableBody.append(row);

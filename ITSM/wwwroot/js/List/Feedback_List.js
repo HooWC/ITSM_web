@@ -5,7 +5,6 @@ var IncidentPages = Math.ceil(IncidentItems / itemsPerPage);
 
 let searchFunctionName = $('#forAjaxGetFunctionName_search').text();
 let sortFunctionName = $('#forAjaxGetFunctionName_sort').text();
-/*let filterFunctionName = $('#forAjaxGetFunctionName_filter').text();*/
 let DeleteFunctionName = $('#forAjaxGetFunctionName_delete').text();
 
 // Set default filter field and status
@@ -232,9 +231,9 @@ $('#deleteButton').click(function () {
 
     var word = "";
     if (DeleteFunctionName.includes("Delete_Item_User"))
-        word = "user";
+        word = "_user";
     else
-        word = "admin";
+        word = "_admin";
 
     // Send delete request
     $.ajax({
@@ -327,20 +326,14 @@ function updatePaginationButtons() {
 function searchFeedbacks() {
     var searchTerm = $('#searchInput').val().trim();
     if (searchTerm === '') {
-        // If the search box is empty, refresh the page
-        location.reload();
-        return;
+        searchTerm = "re_entrynovalue";
     }
 
     var word = "";
     if (searchFunctionName.includes("SearchFeedback_User"))
         word = "_user";
-    else if (searchFunctionName.includes("Closed_Assigned_SearchIncident"))
-        word = "_all";
-    else if (searchFunctionName.includes("Assigned_to_me_Assigned_SearchIncident"))
-        word = "tome";
-    else if (searchFunctionName.includes("Assigned_to_team_Assigned_SearchIncident"))
-        word = "toteam";
+    else if (searchFunctionName.includes("SearchFeedback_Admin"))
+        word = "_admin";
     else
         word = "search_basic";
 

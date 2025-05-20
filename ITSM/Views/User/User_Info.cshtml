@@ -1,7 +1,399 @@
-﻿
+﻿@using ITSM_DomainModelEntity.ViewModels
+@model User_Dep_RoleVM
 @{
     ViewData["Title"] = "User_Info";
+    Layout = "_Layout";
 }
 
-<h1>User_Info</h1>
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: 'Segoe UI', Arial, sans-serif;
+        background-color: var(--background-color);
+        color: var(--text-color);
+        line-height: 1.5;
+        padding: 10px;
+        margin: 0;
+        min-height: 100vh;
+    }
+
+    .inc-file-cre-form-padding {
+        padding: 4px 0px 0px 5px;
+    }
+
+    /* Product Image Styles */
+    .inc-cre-product-image-container {
+        margin-bottom: 1.25rem;
+        border-radius: 0.375rem;
+        overflow: hidden;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+        max-width: 100%;
+        height: auto;
+    }
+
+    .inc-cre-product-image-wrapper {
+        position: relative;
+        width: 100%;
+        height: 0;
+        padding-bottom: 25%; /* Reduced height for rectangular images */
+        overflow: hidden;
+        background-color: #121212;
+    }
+
+    .inc-cre-product-image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: contain; /* Changed from cover to contain */
+        transition: transform 0.5s ease;
+        background-color: #121212;
+    }
+
+    .inc-cre-product-image-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 50%, transparent 100%);
+        padding: 0.75rem 1.25rem;
+        color: white;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    .inc-cre-product-title {
+        margin: 0 0 0.25rem 0;
+        font-weight: 600;
+        font-size: 1rem;
+    }
+
+    .inc-cre-product-description {
+        margin: 0;
+        opacity: 0.9;
+        font-size: 0.75rem;
+    }
+
+    .inc-cre-product-image-wrapper:hover .inc-cre-product-image {
+        transform: scale(1.03);
+    }
+
+    /* Add support for square images */
+    .inc-cre-product-image-wrapper.square {
+        padding-bottom: 25%; /* Keep same height for consistency */
+    }
+
+    /* Auto-detect and adjust for different image types */
+    .inc-cre-product-image.landscape {
+        object-position: center;
+    }
+
+    .inc-cre-product-image.portrait {
+        object-position: center;
+    }
+
+    .inc-cre-short-description-group {
+        margin-top: 0px;
+    }
+
+    @@media (max-width: 768px) {
+        .inc-cre-product-image-wrapper {
+            padding-bottom: 35%; /* Slightly taller on mobile but still compact */
+        }
+
+            .inc-cre-product-image-wrapper.square {
+                padding-bottom: 35%;
+            }
+    }
+</style>
+
+<div class="inc-cre-container">
+    <header class="inc-cre-header">
+        <div class="inc-cre-header-left">
+            <button class="inc-cre-menu-button">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+            <div class="inc-cre-title-group">
+                <div class="inc-cre-title">User Info</div>
+                <div class="inc-cre-subtitle">@Model.Info_User.emp_id</div>
+            </div>
+        </div>
+        <div class="inc-cre-header-right">
+            <button class="inc-cre-btn inc-cre-btn-icon" onclick="location.href='/Personal/Home'">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"
+                     xmlns="http://www.w3.org/2000/svg">
+                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+                </svg>
+            </button>
+            <button class="inc-cre-btn inc-cre-btn-icon" onclick="window.open('/Info/Info_Personal_Todo', '_blank')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+            </button>
+            <button class="inc-cre-btn inc-cre-btn-submit" onclick="document.getElementById('incidentForm').submit();">Save</button>
+            <div class="nav-item navbar-dropdown dropdown-user dropdown open-button">
+                <a class="nav-link dropdown-toggle hide-arrow p-0"
+                   href="javascript:void(0);"
+                   data-bs-toggle="dropdown">
+                    <div class="avatar avatar-online">
+                        <img src="@(Model.user.photo != null ? $"data:{Model.user.photo_type};base64," + Convert.ToBase64String(Model.user.photo) :
+                                  Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 rounded-circle" />
+                    </div>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="inc-cre-form-wrapper">
+
+        @if (!string.IsNullOrEmpty(ViewBag.Error as string))
+        {
+            <div id="error-notification" class="error-notification">
+                <div class="error-notification-content">
+                    <div class="error-notification-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                    </div>
+                    <div class="error-notification-text">
+                        <div class="error-notification-title">Submission failed</div>
+                        <div class="error-notification-message" id="error-notification-message">@ViewBag.Error</div>
+                    </div>
+                </div>
+                <button type="button" class="error-notification-close" id="error-notification-close">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+        }
+
+        <form id="incidentForm" class="inc-cre-incident-form" action="~/User/User_Info" method="post">
+            <input type="text" name="id" id="id" class="inc-cre-form-control" value="@Model.Info_User.id" style="display:none;" readonly>
+            <div class="inc-cre-form-grid">
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="number" class="inc-cre-form-label">Employee Number</label>
+                        <input type="text" name="emp_id" id="emp_id" class="inc-cre-form-control" value="@Model.Info_User.emp_id">
+                    </div>
+                </div>
+
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="channel" class="inc-cre-form-label">Gender</label>
+                        <select id="gender" name="gender" class="inc-cre-form-control">
+                            @{
+                                var selectGender = Model.Info_User.gender;
+                            }
+                            <option value="Male" selected="@(selectGender == "Male" ? "selected" : null)">Male</option>
+                            <option value="Female" selected="@(selectGender == "Female" ? "selected" : null)">Female</option>
+                            <option value="Other" selected="@(selectGender == "Other" ? "selected" : null)">Other</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="inc-cre-form-grid">
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="number" class="inc-cre-form-label inc-cre-required">Full Name</label>
+                        <input type="text" name="fullname" id="fullname" class="inc-cre-form-control" value="@Model.Info_User.fullname" autocomplete="off" required>
+                    </div>
+                </div>
+
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="number" class="inc-cre-form-label inc-cre-required">Email</label>
+                        <input type="email" name="email" id="email" class="inc-cre-form-control" value="@Model.Info_User.email" autocomplete="off" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="inc-cre-form-grid">
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="channel" class="inc-cre-form-label">Department</label>
+                        <select id="department_id" name="department_id" class="inc-cre-form-control">
+                            @{
+                                var selectDepartment = Model.Info_User.department_id;
+                            }
+                            @foreach (var item in Model.department)
+                            {
+                                <option value="@item.id" selected="@(item.id == selectDepartment)">@item.name</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="channel" class="inc-cre-form-label">Role</label>
+                        <select id="role_id" name="role_id" class="inc-cre-form-control">
+                            @{
+                                var selectRole = Model.Info_User.role_id;
+                            }
+                            @foreach (var item in Model.role)
+                            {
+                                <option value="@item.id" selected="@(item.id == selectRole)">@item.role</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="inc-cre-form-group inc-cre-short-description-group">
+                <label for="short-description" class="inc-cre-form-label">
+                    Role Code (If you change the new Role)
+                    <button type="button" class="inc-cre-btn-help">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                    </button>
+                </label>
+                <div class="inc-cre-input-with-actions">
+                    <input type="text" name="role_code" id="role_code" autocomplete="off" class="inc-cre-form-control">
+                </div>
+            </div>
+
+            <div class="inc-cre-form-grid">
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="number" class="inc-cre-form-label inc-cre-required">Title</label>
+                        <input type="text" name="title" id="title" class="inc-cre-form-control" autocomplete="off" value="@Model.Info_User.title" required>
+                    </div>
+                </div>
+
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="number" class="inc-cre-form-label">Race</label>
+                        <select id="race" name="race" class="inc-cre-form-control">
+                            @{
+                                var selectRace = Model.Info_User.race;
+                            }
+                            <option value="Malay" selected="@(selectRace == "Malay")">Malay</option>
+                            <option value="Indian" selected="@(selectRace == "Indian")">Indian</option>
+                            <option value="Chinese" selected="@(selectRace == "Chinese")">Chinese</option>
+                            <option value="Other" selected="@(selectRace == "Other")">Other</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="inc-cre-form-grid">
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="number" class="inc-cre-form-label">Business Phone</label>
+                        <input type="text" name="business_phone" id="business_phone" autocomplete="off" class="inc-cre-form-control" value="@Model.Info_User.business_phone">
+                    </div>
+                </div>
+
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="number" class="inc-cre-form-label inc-cre-required">Mobile Phone</label>
+                        <input type="email" name="mobile_phone" id="mobile_phone" autocomplete="off" class="inc-cre-form-control" value="@Model.Info_User.mobile_phone" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="inc-cre-form-grid">
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="number" class="inc-cre-form-label inc-cre-required">Username</label>
+                        <input type="text" name="username" minlength="6" autocomplete="off" id="username" class="inc-cre-form-control" value="@Model.Info_User.username" required>
+                    </div>
+                </div>
+
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="number" class="inc-cre-form-label">Active</label>
+                        <select id="active" name="active" class="inc-cre-form-control">
+                            @{
+                                var selectActive = Model.Info_User.active;
+                            }
+                            <option value="true" selected="@(selectActive ? "selected" : null)">Active</option>
+                            <option value="false" selected="@(selectActive == false ? "selected" : null)">Blocked</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="inc-cre-form-grid">
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="number" class="inc-cre-form-label">
+                            Old Password
+                            <button type="button" class="inc-cre-btn-help">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                </svg>
+                            </button>
+                        </label>
+                        <input type="password" name="password" id="password" class="inc-cre-form-control" autocomplete="off" required>
+                    </div>
+                </div>
+
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="number" class="inc-cre-form-label">
+                            New Password (Required old password)
+                            <button type="button" class="inc-cre-btn-help">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                </svg>
+                            </button>
+                        </label>
+                        <input type="password" name="new_password" id="new_password" autocomplete="off" class="inc-cre-form-control" required>
+                    </div>
+                </div>
+
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="number" class="inc-cre-form-label">Create Date</label>
+                        <input type="text" name="cd" id="cd" autocomplete="off" class="inc-cre-form-control" value="@Model.Info_User.create_date.ToString("yyyy-MM-dd HH:mm:ss")" readonly>
+                    </div>
+                </div>
+
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="number" class="inc-cre-form-label">Update Date</label>
+                        <input type="email" name="ud" id="ud" autocomplete="off" class="inc-cre-form-control" value="@Model.Info_User.update_date?.ToString("yyyy-MM-dd HH:mm:ss")" readonly>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </main>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+    $(function () {
+      var $target = $('#User_menu');
+      if (!$target.hasClass('active') || !$target.hasClass('open')) {
+          $('.menu-item').removeClass('active open');
+          $target.addClass('active open');
+      }
+
+      $('#User_menu_all').addClass("active");
+    });
+</script>
 

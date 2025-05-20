@@ -1,8 +1,51 @@
-﻿
+﻿@using ITSM_DomainModelEntity.ViewModels
+@model User_ReqVM
 @{
-    ViewData["Title"] = "Assigned_To_Us";
+    ViewData["Title"] = "User_All";
     Layout = "_Layout";
 }
+
+<style>
+    .inc-tab-incidents-table th.number-column {
+        width: 8%;
+    }
+
+    .inc-tab-incidents-table th.r_product_id {
+        width: 8%;
+    }
+
+    .inc-tab-incidents-table th.r_user {
+        width: 11%;
+    }
+
+    .inc-tab-incidents-table th.r_product_type {
+        width: 9%;
+    }
+
+    .inc-tab-incidents-table th.r_state {
+        width: 10%;
+    }
+
+    .inc-tab-incidents-table th.r_assignment_group {
+        width: 12%;
+    }
+
+    .inc-tab-incidents-table th.r_quantity {
+        width: 9%;
+    }
+
+    .inc-tab-incidents-table th.r_update_by {
+        width: 11%;
+    }
+
+    .inc-tab-incidents-table th.r_create_date {
+        width: 11%;
+    }
+
+    .inc-tab-incidents-table th.r_closed_date {
+        width: 11%;
+    }
+</style>
 
 <div class="inc-tab-container">
     <header>
@@ -97,7 +140,7 @@
                     <tr class="incident-item" data-id="@i.id">
                         <td><input type="checkbox" class="item-checkbox"></td>
                         <td class="inc-tab-incident-number" data-label="Number">
-                            <a href="~/Request/Req_Info?id=@i.id&role=Group">@i.req_id</a>
+                            <a href="~/Request/Req_Info?id=@i.id&role=User">@i.req_id</a>
                         </td>
                         <td data-label="Product_Number">@i.Product.pro_number</td>
                         <td data-label="Full_Name">@i.Sender.fullname</td>
@@ -124,9 +167,9 @@
     </div>
 </div>
 
-<span style="display:none" id="forAjaxGetFunctionName_search">S_Group</span>
-<span style="display:none" id="forAjaxGetFunctionName_sort">S_Group</span>
-<span style="display:none" id="forAjaxGetFunctionName_filter">F_Group</span>
+<span style="display:none" id="forAjaxGetFunctionName_search">S_User</span>
+<span style="display:none" id="forAjaxGetFunctionName_sort">S_User</span>
+<span style="display:none" id="forAjaxGetFunctionName_filter">F_User</span>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="~/js/List/Req_List.js"></script>
@@ -138,7 +181,8 @@
             $target.addClass('active open');
         }
 
-        $('#Requests_child_assigned').addClass("active");
+        $('#Requests_child_all_User').addClass("active");
     });
 </script>
+
 

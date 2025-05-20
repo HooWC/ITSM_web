@@ -26702,6 +26702,7 @@ body:not(.modal-open) .layout-content-navbar .layout-navbar {
     .avatar img {
         block-size: 100%;
         inline-size: 100%;
+        object-fit: cover;
     }
 
     .avatar.avatar-online::after {

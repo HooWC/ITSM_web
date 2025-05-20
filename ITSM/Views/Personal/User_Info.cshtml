@@ -23,7 +23,7 @@
     }
 
     .inc-file-cre-form-padding {
-        padding: 5px 0px 0px 5px;
+        padding: 4px 0px 0px 5px;
     }
 
     /* Product Image Styles */
@@ -148,7 +148,7 @@
                    data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
                         <img src="@(Model.user.photo != null ? $"data:{Model.user.photo_type};base64," + Convert.ToBase64String(Model.user.photo) :
-                                  Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 h-auto rounded-circle" />
+                                  Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 rounded-circle" />
                     </div>
                 </a>
             </div>
@@ -188,7 +188,7 @@
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="number" class="inc-cre-form-label">Employee Number</label>
-                        <input type="text" name="emp_id" id="emp_id" class="inc-cre-form-control" value="@Model.user.emp_id" readonly>
+                        <input type="text" name="emp_id" id="emp_id" class="inc-cre-form-control" value="@Model.user.emp_id">
                     </div>
                 </div>
 
@@ -201,6 +201,7 @@
                             }
                             <option value="Male" selected="@(selectGender == "Male" ? "selected" : null)">Male</option>
                             <option value="Female" selected="@(selectGender == "Female" ? "selected" : null)">Female</option>
+                            <option value="Other" selected="@(selectGender == "Other" ? "selected" : null)">Other</option>
                         </select>
                     </div>
                 </div>
@@ -210,14 +211,14 @@
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="number" class="inc-cre-form-label inc-cre-required">Full Name</label>
-                        <input type="text" name="fullname" id="fullname" class="inc-cre-form-control" value="@Model.user.fullname" required>
+                        <input type="text" name="fullname" id="fullname" class="inc-cre-form-control" value="@Model.user.fullname" autocomplete="off" required>
                     </div>
                 </div>
 
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="number" class="inc-cre-form-label inc-cre-required">Email</label>
-                        <input type="email" name="email" id="email" class="inc-cre-form-control" value="@Model.user.email" required>
+                        <input type="email" name="email" id="email" class="inc-cre-form-control" value="@Model.user.email" autocomplete="off" required>
                     </div>
                 </div>
             </div>
@@ -266,7 +267,7 @@
                     </button>
                 </label>
                 <div class="inc-cre-input-with-actions">
-                    <input type="text" name="role_code" id="role_code" class="inc-cre-form-control">
+                    <input type="text" name="role_code" id="role_code" autocomplete="off" class="inc-cre-form-control">
                 </div>
             </div>
 
@@ -274,7 +275,7 @@
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="number" class="inc-cre-form-label inc-cre-required">Title</label>
-                        <input type="text" name="title" id="title" class="inc-cre-form-control" value="@Model.user.title" required>
+                        <input type="text" name="title" id="title" class="inc-cre-form-control" autocomplete="off" value="@Model.user.title" required>
                     </div>
                 </div>
 
@@ -298,14 +299,14 @@
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="number" class="inc-cre-form-label">Business Phone</label>
-                        <input type="text" name="business_phone" id="business_phone" class="inc-cre-form-control" value="@Model.user.business_phone" required>
+                        <input type="text" name="business_phone" id="business_phone" autocomplete="off" class="inc-cre-form-control" value="@Model.user.business_phone">
                     </div>
                 </div>
 
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="number" class="inc-cre-form-label inc-cre-required">Mobile Phone</label>
-                        <input type="email" name="mobile_phone" id="mobile_phone" class="inc-cre-form-control" value="@Model.user.mobile_phone" required>
+                        <input type="email" name="mobile_phone" id="mobile_phone" autocomplete="off" class="inc-cre-form-control" value="@Model.user.mobile_phone" required>
                     </div>
                 </div>
             </div>
@@ -314,7 +315,7 @@
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="number" class="inc-cre-form-label inc-cre-required">Username</label>
-                        <input type="text" name="username" minlength="6" id="username" class="inc-cre-form-control" value="@Model.user.username" required>
+                        <input type="text" name="username" minlength="6" autocomplete="off" id="username" class="inc-cre-form-control" value="@Model.user.username" required>
                     </div>
                 </div>
 
@@ -348,7 +349,7 @@
                                 </svg>
                             </button>
                         </label>
-                        <input type="text" name="password" id="password" class="inc-cre-form-control" required>
+                        <input type="password" name="password" id="password" class="inc-cre-form-control" autocomplete="off" required>
                     </div>
                 </div>
 
@@ -364,7 +365,23 @@
                                 </svg>
                             </button>
                         </label>
-                        <input type="email" name="new_password" id="new_password" class="inc-cre-form-control" required>
+                        <input type="password" name="new_password" id="new_password" autocomplete="off" class="inc-cre-form-control" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="inc-cre-form-grid">
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="number" class="inc-cre-form-label">Create Date</label>
+                        <input type="text" name="cd" id="cd" autocomplete="off" class="inc-cre-form-control" value="@Model.user.create_date.ToString("yyyy-MM-dd HH:mm:ss")" readonly>
+                    </div>
+                </div>
+
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="number" class="inc-cre-form-label inc-cre-required">Update Date</label>
+                        <input type="email" name="ud" id="ud" autocomplete="off" class="inc-cre-form-control" value="@Model.user.update_date?.ToString("yyyy-MM-dd HH:mm:ss")" readonly>
                     </div>
                 </div>
             </div>

@@ -39,7 +39,6 @@
                 <div class="inc-tab-dropdown-menu" id="filterMenu" style="display:none;">
                     <a href="#" class="inc-tab-dropdown-item" data-filter="number">Number</a>
                     <a href="#" class="inc-tab-dropdown-item" data-filter="message">Message</a>
-                    @* <a href="#" class="inc-tab-dropdown-item" data-filter="user">User</a> *@
                     <a href="#" class="inc-tab-dropdown-item" data-filter="create_date">Create Date</a>
                     <a href="#" class="inc-tab-dropdown-item" data-filter="update_date">Update Date</a>
                 </div>
@@ -67,7 +66,7 @@
                    data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
                         <img src="@(Model.User.photo != null ? $"data:{Model.User.photo_type};base64," +  Convert.ToBase64String(Model.User.photo) :
-                            Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 h-auto rounded-circle" />
+                            Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 rounded-circle" />
                     </div>
                 </a>
             </div>
@@ -100,7 +99,7 @@
                     <tr class="incident-item" data-id="@i.id">
                         <td><input type="checkbox" class="item-checkbox"></td>
                         <td class="inc-tab-incident-number" data-label="Number">
-                            <a href="~/Feedback/Feedback_Info?id=@i.id">@i.fb_number</a>
+                            <a href="~/Feedback/Feedback_Info?id=@i.id&role=User">@i.fb_number</a>
                         </td>
                         <td data-label="message">@i.message</td>
                         <td data-label="fullname">@i.User.fullname</td>
@@ -136,7 +135,7 @@
             $target.addClass('active open');
         }
 
-        $('#Feedback_menu_all').addClass("active");
+        $('#Feedback_menu_all_User').addClass("active");
     });
 </script>
 

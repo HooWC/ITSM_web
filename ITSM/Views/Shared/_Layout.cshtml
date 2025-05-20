@@ -270,7 +270,12 @@
                         <ul class="menu-sub">
                             <li class="menu-item" id="Incidents_menu_all">
                                 <a href="~/IncidentManagement/All" class="menu-link">
-                                    <div class="text-truncate" data-i18n="Connections">All</div>
+                                    <div class="text-truncate" data-i18n="Connections">All (Admin)</div>
+                                </a>
+                            </li>
+                            <li class="menu-item" id="Incidents_menu_all_user">
+                                <a href="~/IncidentManagement/User_All" class="menu-link">
+                                    <div class="text-truncate" data-i18n="Connections">All (User)</div>
                                 </a>
                             </li>
                             <li class="menu-item" id="Incidents_menu_create">
@@ -310,24 +315,24 @@
                     <ul class="menu-sub">
                             <li class="menu-item" id="Requests_child_all">
                                 <a href="~/Request/All" class="menu-link">
-                                <div class="text-truncate" data-i18n="Connections">All</div>
-                            </a>
-                        </li>
+                                    <div class="text-truncate" data-i18n="Connections">All (Admin)</div>
+                                </a>
+                           </li>
+                            <li class="menu-item" id="Requests_child_all_User">
+                                <a href="~/Request/User_All" class="menu-link">
+                                    <div class="text-truncate" data-i18n="Connections">All (User)</div>
+                                </a>
+                            </li>
                             <li class="menu-item" id="Requests_child_service_catalog">
                                 <a href="~/Request/Service_Catalog" class="menu-link">
                                     <div class="text-truncate" data-i18n="Connections">Service Catalog</div>
                                 </a>
                             </li>
-                            <li class="menu-item" id="Requests_child_create">
-                                <a href="~/Request/Create_Form" class="menu-link">
-                                <div class="text-truncate" data-i18n="Account">Create New</div>
-                            </a>
-                        </li>
                             <li class="menu-item" id="Requests_child_assigned">
                                 <a href="~/Request/Assigned_To_Us" class="menu-link">
-                                <div class="text-truncate" data-i18n="Notifications">Assigned to us</div>
-                            </a>
-                        </li>
+                                    <div class="text-truncate" data-i18n="Notifications">Assigned to us</div>
+                                </a>
+                           </li>
                     </ul>
                 </li>
 
@@ -382,14 +387,19 @@
                     </a>
                     <ul class="menu-sub">
                             <li class="menu-item" id="Feedback_menu_all">
-                            <a href="~/Feedback/Feedback_List" class="menu-link">
-                                <div class="text-truncate" data-i18n="Perfect Scrollbar">All</div>
-                            </a>
-                        </li>
+                                <a href="~/Feedback/All_Feedback_List" class="menu-link">
+                                    <div class="text-truncate" data-i18n="Perfect Scrollbar">All (Admin)</div>
+                                </a>
+                            </li>
+                            <li class="menu-item" id="Feedback_menu_all_User">
+                                <a href="~/Feedback/Feedback_List" class="menu-link">
+                                    <div class="text-truncate" data-i18n="Perfect Scrollbar">All (User)</div>
+                                </a>
+                            </li>
                             <li class="menu-item" id="Feedback_menu_create">
                                 <a href="~/Feedback/Feedback_Create" class="menu-link">
-                                <div class="text-truncate" data-i18n="Text Divider">Create New</div>
-                            </a>
+                                    <div class="text-truncate" data-i18n="Text Divider">Create New</div>
+                                </a>
                         </li>
                     </ul>
                 </li>
@@ -445,12 +455,12 @@
                         </a>
                         <ul class="menu-sub">
                             <li class="menu-item" id="Role_menu_all">
-                                <a href="~/Product/Product_List" class="menu-link">
+                                <a href="~/Role/Role_List" class="menu-link">
                                     <div class="text-truncate" data-i18n="Perfect Scrollbar">All</div>
                                 </a>
                             </li>
                             <li class="menu-item" id="Role_menu_create">
-                                <a href="~/Product/Product_Create" class="menu-link">
+                                <a href="~/Role/Role_Create" class="menu-link">
                                     <div class="text-truncate" data-i18n="Text Divider">Create New</div>
                                 </a>
                             </li>
@@ -465,12 +475,12 @@
                         </a>
                         <ul class="menu-sub">
                             <li class="menu-item" id="User_menu_all">
-                                <a href="~/Product/Product_List" class="menu-link">
+                                <a href="~/User/User_List" class="menu-link">
                                     <div class="text-truncate" data-i18n="Perfect Scrollbar">All</div>
                                 </a>
                             </li>
                             <li class="menu-item" id="User_menu_create">
-                                <a href="~/Product/Product_Create" class="menu-link">
+                                <a href="~/User/UserCreate" class="menu-link">
                                     <div class="text-truncate" data-i18n="Text Divider">Create New</div>
                                 </a>
                             </li>

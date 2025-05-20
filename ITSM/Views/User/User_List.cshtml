@@ -2,15 +2,57 @@
 @model UserVM
 @{
     ViewData["Title"] = "User_List";
+    Layout = "_Layout";
 }
 
 <style>
-    .inc-tab-incidents-table th.title-column {
-        width: 20%;
+    .inc-tab-incidents-table th.number-column {
+        width: 8%;
     }
 
-    .inc-tab-incidents-table th.c_description {
-        width: 80%;
+    .inc-tab-incidents-table th.u_fullname {
+        width: 17%;
+    }
+
+    .inc-tab-incidents-table th.u_email {
+        width: 15%;
+    }
+
+    .inc-tab-incidents-table th.u_gender {
+        width: 6%;
+    }
+
+    .inc-tab-incidents-table th.u_department {
+        width: 12%;
+    }
+
+    .inc-tab-incidents-table th.u_title {
+        width: 14%;
+    }
+
+    .inc-tab-incidents-table th.u_mobilephone {
+        width: 10%;
+    }
+
+    .inc-tab-incidents-table th.u_role {
+        width: 6%;
+    }
+
+    .inc-tab-incidents-table th.u_race {
+        width: 6%;
+    }
+
+    .inc-tab-incidents-table th.u_active {
+        width: 6%;
+    }
+
+    .item-active-btn{
+        background: #0f6135;
+        transition:all .2s ease-in-out;
+    }
+
+    .item-active-btn:hover{
+            background: #0b522c;
     }
 </style>
 
@@ -20,12 +62,17 @@
             <button class="inc-tab-icon-button">
                 <i class="fas fa-list"></i>
             </button>
-            <h2 class="all-title-header-front">Department</h2>
+            <h2 class="all-title-header-front">Users</h2>
             <div class="inc-tab-dropdown">
-                <button class="inc-tab-dropdown-toggle" id="filterDropdown">Name <i class="fas fa-chevron-down"></i></button>
+                <button class="inc-tab-dropdown-toggle" id="filterDropdown">EMP ID<i class="fas fa-chevron-down"></i></button>
                 <div class="inc-tab-dropdown-menu" id="filterMenu" style="display:none;">
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="name">Name</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="description">Description</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-filter="emp_id">EMP ID</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-filter="fullname">Full Name</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-filter="email">Email</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-filter="department">Department</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-filter="title">Title</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-filter="mobile">Mobile Phone</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-filter="role">Role</a>
                 </div>
             </div>
             <div class="inc-tab-search-container">
@@ -43,15 +90,24 @@
                     <line x1="12" y1="17" x2="12.01" y2="17"></line>
                 </svg>
             </button>
-            <button class="inc-tab-new-button item-delete-btn" id="deleteButton" disabled>Delete</button>
-            <button class="inc-tab-new-button" onclick="window.location.href='/Department/Department_Create';">New</button>
+            <div class="inc-tab-dropdown">
+                <button class="inc-tab-dropdown-toggle" id="statusDropdown">All <i class="fas fa-chevron-down"></i></button>
+                <div class="inc-tab-dropdown-menu" id="statusMenu" style="display:none;">
+                    <a href="#" class="inc-tab-dropdown-item" data-status="all">All</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-status="active">Active</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-status="blocked">Blocked </a>
+                </div>
+            </div>
+            <button class="inc-tab-new-button item-active-btn" id="activeButton" disabled>Active</button>
+            <button class="inc-tab-new-button item-delete-btn" id="blockButton" disabled>Blocked</button>
+            <button class="inc-tab-new-button" onclick="window.location.href='/User/UserCreate';">New</button>
             <div class="nav-item navbar-dropdown dropdown-user dropdown open-button">
                 <a class="nav-link dropdown-toggle hide-arrow p-0"
                    href="javascript:void(0);"
                    data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
                         <img src="@(Model.User.photo != null ? $"data:{Model.User.photo_type};base64," +  Convert.ToBase64String(Model.User.photo) :
-                            Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 h-auto rounded-circle" />
+                            Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 rounded-circle" />
                     </div>
                 </a>
             </div>
@@ -70,8 +126,16 @@
             <thead>
                 <tr>
                     <th class="inc-tab-checkbox-column"></th>
-                    <th class="inc-tab-sortable title-column">Name</th>
-                    <th class="c_description">Description</th>
+                    <th class="inc-tab-sortable number-column" id="sortByNumber">EMP ID <i class="fas fa-arrow-up" id="sortIcon"></i></th>
+                    <th class="u_fullname">Full Name</th>
+                    <th class="u_email">Email</th>
+                    <th class="u_gender">Gender</th>
+                    <th class="u_department">Department</th>
+                    <th class="u_title">Title</th>
+                    <th class="u_mobilephone">Mobile Phone</th>
+                    <th class="u_role">Role</th>
+                    <th class="u_race">Race</th>
+                    <th class="u_active">Active</th>
                 </tr>
             </thead>
             <tbody id="incTableBody">
@@ -80,10 +144,18 @@
                 {
                     <tr class="incident-item" data-id="@i.id">
                         <td><input type="checkbox" class="item-checkbox"></td>
-                        <td class="inc-tab-incident-number" data-label="Name">
-                            <a href="~/Department/Department_Info?id=@i.id">@i.emp_id</a>
+                        <td class="inc-tab-incident-number" data-label="Number">
+                            <a href="~/User/User_Info?id=@i.id">@i.emp_id</a>
                         </td>
-                        <td data-label="Description">@i.fullname</td>
+                        <td data-label="Fullname">@i.fullname</td>
+                        <td data-label="Email">@i.email</td>
+                        <td data-label="Gender">@i.gender</td>
+                        <td data-label="D_Name">@i.Department.name</td>
+                        <td data-label="Title">@i.title</td>
+                        <td data-label="Mobile_Phone">@i.mobile_phone</td>
+                        <td data-label="R_Role">@i.Role.role</td>
+                        <td data-label="Race">@i.race</td>
+                        <td data-label="Active">@(i.active ? "Active" : "Blocked")</td>
                     </tr>
                 }
 
@@ -101,7 +173,7 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="~/js/List/Department_List.js"></script>
+<script src="~/js/List/User_List.js"></script>
 <script>
       $(function () {
         var $target = $('#User_menu');

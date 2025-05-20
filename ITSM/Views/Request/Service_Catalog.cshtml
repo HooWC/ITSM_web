@@ -1,4 +1,5 @@
-﻿
+﻿@using ITSM_DomainModelEntity.ViewModels
+@model User_Dep_Cat_ProVM
 @{
     ViewData["Title"] = "Service_Catalog";
     Layout = "_Layout";
@@ -6,22 +7,26 @@
 
 <style>
     * {
-        box-sizing: border-box;
+    box-sizing: border-box;
     }
 
     body, html {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        width: 100%;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
     }
 
     body {
-        overflow: hidden;
-        font-family: 'Poppins', sans-serif;
-        background-color: var(--app-bg);
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
+    overflow: hidden;
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--app-bg);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    }
+
+    .line_item_none:hover{
+        text-decoration:none;
     }
 </style>
 
@@ -32,10 +37,11 @@
             <h1 class="ser-cat-app-content-headerText">Service Catalog</h1>
             <div class="nav-item navbar-dropdown dropdown-user dropdown open-button">
                 <a class="nav-link dropdown-toggle hide-arrow p-0"
-                   href="javascript:void(0);"
-                   data-bs-toggle="dropdown">
+                href="javascript:void(0);"
+                data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
-                        <img src="https://www.diydoutu.com/touxiang/20201222-1.jpg" alt class="w-px-40 h-auto rounded-circle" />
+                        <img src="@(Model.user.photo != null ? $"data:{Model.user.photo_type};base64," +  Convert.ToBase64String(Model.user.photo) :
+                            Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 rounded-circle" />
                     </div>
                 </a>
             </div>
@@ -47,18 +53,18 @@
                     <button class="ser-cat-action-button ser-cat-filter ser-cat-jsFilter"><span>Filter</span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-filter"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" /></svg></button>
                     <div class="ser-cat-filter-menu">
                         <label>Category</label>
-                        <select>
-                            <option>All Categories</option>
-                            <option>Furniture</option>
-                            <option>Decoration</option>
-                            <option>Kitchen</option>
-                            <option>Bathroom</option>
+                        <select class="ser-cat-category-filter">
+                            <option value="all">All Categories</option>
+                            @foreach(var i in Model.categorys)
+                            {
+                                <option value="@i.id">@i.title</option>
+                            }
                         </select>
                         <label>Status</label>
-                        <select>
-                            <option>All Status</option>
-                            <option>Active</option>
-                            <option>Disabled</option>
+                        <select class="ser-cat-status-filter">
+                            <option value="all">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
                         </select>
                         <div class="ser-cat-filter-menu-buttons">
                             <button class="ser-cat-filter-button ser-cat-reset">
@@ -70,6 +76,9 @@
                         </div>
                     </div>
                 </div>
+                <button class="ser-cat-action-button" id="refreshButton">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
                 <button class="ser-cat-action-button ser-cat-list ser-cat-active" title="List View">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-list"><line x1="8" y1="6" x2="21" y2="6" /><line x1="8" y1="12" x2="21" y2="12" /><line x1="8" y1="18" x2="21" y2="18" /><line x1="3" y1="6" x2="3.01" y2="6" /><line x1="3" y1="12" x2="3.01" y2="12" /><line x1="3" y1="18" x2="3.01" y2="18" /></svg>
                 </button>
@@ -81,258 +90,76 @@
         <div class="ser-cat-products-area-wrapper ser-cat-tableView">
             <div class="ser-cat-products-header">
                 <div class="ser-cat-product-cell ser-cat-image">
-                    Items
+                    Items@* 
                     <button class="ser-cat-sort-button">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 512 512"><path fill="currentColor" d="M496.1 138.3L375.7 17.9c-7.9-7.9-20.6-7.9-28.5 0L226.9 138.3c-7.9 7.9-7.9 20.6 0 28.5 7.9 7.9 20.6 7.9 28.5 0l85.7-85.7v352.8c0 11.3 9.1 20.4 20.4 20.4 11.3 0 20.4-9.1 20.4-20.4V81.1l85.7 85.7c7.9 7.9 20.6 7.9 28.5 0 7.9-7.8 7.9-20.6 0-28.5zM287.1 347.2c-7.9-7.9-20.6-7.9-28.5 0l-85.7 85.7V80.1c0-11.3-9.1-20.4-20.4-20.4-11.3 0-20.4 9.1-20.4 20.4v352.8l-85.7-85.7c-7.9-7.9-20.6-7.9-28.5 0-7.9 7.9-7.9 20.6 0 28.5l120.4 120.4c7.9 7.9 20.6 7.9 28.5 0l120.4-120.4c7.8-7.9 7.8-20.7-.1-28.5z" /></svg>
-                    </button>
+                    </button> *@
                 </div>
                 <div class="ser-cat-product-cell ser-cat-category">
-                    Category<button class="ser-cat-sort-button">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 512 512"><path fill="currentColor" d="M496.1 138.3L375.7 17.9c-7.9-7.9-20.6-7.9-28.5 0L226.9 138.3c-7.9 7.9-7.9 20.6 0 28.5 7.9 7.9 20.6 7.9 28.5 0l85.7-85.7v352.8c0 11.3 9.1 20.4 20.4 20.4 11.3 0 20.4-9.1 20.4-20.4V81.1l85.7 85.7c7.9 7.9 20.6 7.9 28.5 0 7.9-7.8 7.9-20.6 0-28.5zM287.1 347.2c-7.9-7.9-20.6-7.9-28.5 0l-85.7 85.7V80.1c0-11.3-9.1-20.4-20.4-20.4-11.3 0-20.4 9.1-20.4 20.4v352.8l-85.7-85.7c-7.9-7.9-20.6-7.9-28.5 0-7.9 7.9-7.9 20.6 0 28.5l120.4 120.4c7.9 7.9 20.6 7.9 28.5 0l120.4-120.4c7.8-7.9 7.8-20.7-.1-28.5z" /></svg>
-                    </button>
+                    Name
                 </div>
                 <div class="ser-cat-product-cell ser-cat-status-cell">
-                    Status<button class="ser-cat-sort-button">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 512 512"><path fill="currentColor" d="M496.1 138.3L375.7 17.9c-7.9-7.9-20.6-7.9-28.5 0L226.9 138.3c-7.9 7.9-7.9 20.6 0 28.5 7.9 7.9 20.6 7.9 28.5 0l85.7-85.7v352.8c0 11.3 9.1 20.4 20.4 20.4 11.3 0 20.4-9.1 20.4-20.4V81.1l85.7 85.7c7.9 7.9 20.6 7.9 28.5 0 7.9-7.8 7.9-20.6 0-28.5zM287.1 347.2c-7.9-7.9-20.6-7.9-28.5 0l-85.7 85.7V80.1c0-11.3-9.1-20.4-20.4-20.4-11.3 0-20.4 9.1-20.4 20.4v352.8l-85.7-85.7c-7.9-7.9-20.6-7.9-28.5 0-7.9 7.9-7.9 20.6 0 28.5l120.4 120.4c7.9 7.9 20.6 7.9 28.5 0l120.4-120.4c7.8-7.9 7.8-20.7-.1-28.5z" /></svg>
-                    </button>
+                    Category
                 </div>
                 <div class="ser-cat-product-cell ser-cat-sales">
-                    Sales<button class="ser-cat-sort-button">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 512 512"><path fill="currentColor" d="M496.1 138.3L375.7 17.9c-7.9-7.9-20.6-7.9-28.5 0L226.9 138.3c-7.9 7.9-7.9 20.6 0 28.5 7.9 7.9 20.6 7.9 28.5 0l85.7-85.7v352.8c0 11.3 9.1 20.4 20.4 20.4 11.3 0 20.4-9.1 20.4-20.4V81.1l85.7 85.7c7.9 7.9 20.6 7.9 28.5 0 7.9-7.8 7.9-20.6 0-28.5zM287.1 347.2c-7.9-7.9-20.6-7.9-28.5 0l-85.7 85.7V80.1c0-11.3-9.1-20.4-20.4-20.4-11.3 0-20.4 9.1-20.4 20.4v352.8l-85.7-85.7c-7.9-7.9-20.6-7.9-28.5 0-7.9 7.9-7.9 20.6 0 28.5l120.4 120.4c7.9 7.9 20.6 7.9 28.5 0l120.4-120.4c7.8-7.9 7.8-20.7-.1-28.5z" /></svg>
-                    </button>
+                    Responsible
                 </div>
                 <div class="ser-cat-product-cell ser-cat-stock">
-                    Stock<button class="ser-cat-sort-button">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 512 512"><path fill="currentColor" d="M496.1 138.3L375.7 17.9c-7.9-7.9-20.6-7.9-28.5 0L226.9 138.3c-7.9 7.9-7.9 20.6 0 28.5 7.9 7.9 20.6 7.9 28.5 0l85.7-85.7v352.8c0 11.3 9.1 20.4 20.4 20.4 11.3 0 20.4-9.1 20.4-20.4V81.1l85.7 85.7c7.9 7.9 20.6 7.9 28.5 0 7.9-7.8 7.9-20.6 0-28.5zM287.1 347.2c-7.9-7.9-20.6-7.9-28.5 0l-85.7 85.7V80.1c0-11.3-9.1-20.4-20.4-20.4-11.3 0-20.4 9.1-20.4 20.4v352.8l-85.7-85.7c-7.9-7.9-20.6-7.9-28.5 0-7.9 7.9-7.9 20.6 0 28.5l120.4 120.4c7.9 7.9 20.6 7.9 28.5 0l120.4-120.4c7.8-7.9 7.8-20.7-.1-28.5z" /></svg>
-                    </button>
+                    Stock
                 </div>
                 <div class="ser-cat-product-cell ser-cat-price">
-                    Price<button class="ser-cat-sort-button">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 512 512"><path fill="currentColor" d="M496.1 138.3L375.7 17.9c-7.9-7.9-20.6-7.9-28.5 0L226.9 138.3c-7.9 7.9-7.9 20.6 0 28.5 7.9 7.9 20.6 7.9 28.5 0l85.7-85.7v352.8c0 11.3 9.1 20.4 20.4 20.4 11.3 0 20.4-9.1 20.4-20.4V81.1l85.7 85.7c7.9 7.9 20.6 7.9 28.5 0 7.9-7.8 7.9-20.6 0-28.5zM287.1 347.2c-7.9-7.9-20.6-7.9-28.5 0l-85.7 85.7V80.1c0-11.3-9.1-20.4-20.4-20.4-11.3 0-20.4 9.1-20.4 20.4v352.8l-85.7-85.7c-7.9-7.9-20.6-7.9-28.5 0-7.9 7.9-7.9 20.6 0 28.5l120.4 120.4c7.9 7.9 20.6 7.9 28.5 0l120.4-120.4c7.8-7.9 7.8-20.7-.1-28.5z" /></svg>
+                    Status
+                </div>
+            </div>
+            @foreach(var i in Model.products)
+            {
+                <a href="@(i.active ? Url.Content("~/Request/Create_Form?id=" + i.id) : "#")" class="ser-cat-products-row line_item_none" data-category-id="@i.Category.id" data-status="@(i.active ? "active" : "inactive")">
+                    <button class="ser-cat-cell-more-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical"><circle cx="12" cy="12" r="1" /><circle cx="12" cy="5" r="1" /><circle cx="12" cy="19" r="1" /></svg>
                     </button>
-                </div>
-            </div>
-            <div class="ser-cat-products-row">
-                <button class="ser-cat-cell-more-button">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical"><circle cx="12" cy="12" r="1" /><circle cx="12" cy="5" r="1" /><circle cx="12" cy="19" r="1" /></svg>
-                </button>
-                <div class="ser-cat-product-cell ser-cat-image">
-                    <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80" alt="product">
-                    <span>Ocean</span>
-                </div>
-                <div class="ser-cat-product-cell ser-cat-category"><span class="ser-cat-cell-label">Category:</span>Furniture</div>
-                <div class="ser-cat-product-cell ser-cat-status-cell">
-                    <span class="ser-cat-cell-label">Status:</span>
-                    <span class="ser-cat-status ser-cat-active">Active</span>
-                </div>
-                <div class="ser-cat-product-cell ser-cat-sales"><span class="ser-cat-cell-label">Sales:</span>11</div>
-                <div class="ser-cat-product-cell ser-cat-stock"><span class="ser-cat-cell-label">Stock:</span>36</div>
-                <div class="ser-cat-product-cell ser-cat-price"><span class="ser-cat-cell-label">Price:</span>$560</div>
-            </div>
-            <div class="ser-cat-products-row">
-                <button class="ser-cat-cell-more-button">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical"><circle cx="12" cy="12" r="1" /><circle cx="12" cy="5" r="1" /><circle cx="12" cy="19" r="1" /></svg>
-                </button>
-                <div class="ser-cat-product-cell ser-cat-image">
-                    <img src="https://images.unsplash.com/photo-1484154218962-a197022b5858?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8a2l0Y2hlbnxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=60" alt="product">
-                    <span>Lou</span>
-                </div>
-                <div class="ser-cat-product-cell ser-cat-category"><span class="ser-cat-cell-label">Category:</span>Kitchen</div>
-                <div class="ser-cat-product-cell ser-cat-status-cell">
-                    <span class="ser-cat-cell-label">Status:</span>
-                    <span class="ser-cat-status ser-cat-disabled">Disabled</span>
-                </div>
-                <div class="ser-cat-product-cell ser-cat-sales"><span class="ser-cat-cell-label">Sales:</span>6</div>
-                <div class="ser-cat-product-cell ser-cat-stock"><span class="ser-cat-cell-label">Stock:</span>46</div>
-                <div class="ser-cat-product-cell ser-cat-price"><span class="ser-cat-cell-label">Price:</span>$710</div>
-            </div>
-            <div class="ser-cat-products-row">
-                <button class="ser-cat-cell-more-button">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical"><circle cx="12" cy="12" r="1" /><circle cx="12" cy="5" r="1" /><circle cx="12" cy="19" r="1" /></svg>
-                </button>
-                <div class="ser-cat-product-cell ser-cat-image">
-                    <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1yZWxhdGVkfDR8fHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=900&q=60" alt="product">
-                    <span>Yellow</span>
-                </div>
-                <div class="ser-cat-product-cell ser-cat-category"><span class="ser-cat-cell-label">Category:</span>Decoration</div>
-                <div class="ser-cat-product-cell ser-cat-status-cell">
-                    <span class="ser-cat-cell-label">Status:</span>
-                    <span class="ser-cat-status ser-cat-active">Active</span>
-                </div>
-                <div class="ser-cat-product-cell ser-cat-sales"><span class="ser-cat-cell-label">Sales:</span>61</div>
-                <div class="ser-cat-product-cell ser-cat-stock"><span class="ser-cat-cell-label">Stock:</span>56</div>
-                <div class="ser-cat-product-cell ser-cat-price"><span class="ser-cat-cell-label">Price:</span>$360</div>
-            </div>
-            <div class="ser-cat-products-row">
-                <button class="ser-cat-cell-more-button">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical"><circle cx="12" cy="12" r="1" /><circle cx="12" cy="5" r="1" /><circle cx="12" cy="19" r="1" /></svg>
-                </button>
-                <div class="ser-cat-product-cell ser-cat-image">
-                    <img src="https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8YmVkcm9vbXxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=60" alt="product">
-                    <span>Dreamy</span>
-                </div>
-                <div class="ser-cat-product-cell ser-cat-category"><span class="ser-cat-cell-label">Category:</span>Bedroom</div>
-                <div class="ser-cat-product-cell ser-cat-status-cell">
-                    <span class="ser-cat-cell-label">Status:</span>
-                    <span class="ser-cat-status ser-cat-disabled">Disabled</span>
-                </div>
-                <div class="ser-cat-product-cell ser-cat-sales"><span class="ser-cat-cell-label">Sales:</span>41</div>
-                <div class="ser-cat-product-cell ser-cat-stock"><span class="ser-cat-cell-label">Stock:</span>66</div>
-                <div class="ser-cat-product-cell ser-cat-price"><span class="ser-cat-cell-label">Price:</span>$260</div>
-            </div>
-            <div class="ser-cat-products-row">
-                <button class="ser-cat-cell-more-button">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical"><circle cx="12" cy="12" r="1" /><circle cx="12" cy="5" r="1" /><circle cx="12" cy="19" r="1" /></svg>
-                </button>
-                <div class="ser-cat-product-cell ser-cat-image">
-                    <img src="https://images.unsplash.com/photo-1554995207-c18c203602cb?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8aW50ZXJpb3J8ZW58MHwwfDB8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=60" alt="product">
-                    <span>Boheme</span>
-                </div>
-                <div class="ser-cat-product-cell ser-cat-category"><span class="ser-cat-cell-label">Category:</span>Furniture</div>
-                <div class="ser-cat-product-cell ser-cat-status-cell">
-                    <span class="ser-cat-cell-label">Status:</span>
-                    <span class="ser-cat-status ser-cat-active">Active</span>
-                </div>
-                <div class="ser-cat-product-cell ser-cat-sales"><span class="ser-cat-cell-label">Sales:</span>32</div>
-                <div class="ser-cat-product-cell ser-cat-stock"><span class="ser-cat-cell-label">Stock:</span>40</div>
-                <div class="ser-cat-product-cell ser-cat-price"><span class="ser-cat-cell-label">Price:</span>$350</div>
-            </div>
-            <div class="ser-cat-products-row">
-                <button class="ser-cat-cell-more-button">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical"><circle cx="12" cy="12" r="1" /><circle cx="12" cy="5" r="1" /><circle cx="12" cy="19" r="1" /></svg>
-                </button>
-                <div class="ser-cat-product-cell ser-cat-image">
-                    <img src="https://images.unsplash.com/photo-1507652313519-d4e9174996dd?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTZ8fGludGVyaW9yfGVufDB8MHwwfHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=60" alt="product">
-                    <span>Sky</span>
-                </div>
-                <div class="ser-cat-product-cell ser-cat-category"><span class="ser-cat-cell-label">Category:</span>Bathroom</div>
-                <div class="ser-cat-product-cell ser-cat-status-cell">
-                    <span class="ser-cat-cell-label">Status:</span>
-                    <span class="ser-cat-status ser-cat-disabled">Disabled</span>
-                </div>
-                <div class="ser-cat-product-cell ser-cat-sales"><span class="ser-cat-cell-label">Sales:</span>22</div>
-                <div class="ser-cat-product-cell ser-cat-stock"><span class="ser-cat-cell-label">Stock:</span>44</div>
-                <div class="ser-cat-product-cell ser-cat-price"><span class="ser-cat-cell-label">Price:</span>$160</div>
-            </div>
-            <div class="ser-cat-products-row">
-                <button class="ser-cat-cell-more-button">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical"><circle cx="12" cy="12" r="1" /><circle cx="12" cy="5" r="1" /><circle cx="12" cy="19" r="1" /></svg>
-                </button>
-                <div class="ser-cat-product-cell ser-cat-image">
-                    <img src="https://images.unsplash.com/photo-1516455590571-18256e5bb9ff?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MzB8fGludGVyaW9yfGVufDB8MHwwfHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=60" alt="product">
-                    <span>Midnight</span>
-                </div>
-                <div class="ser-cat-product-cell ser-cat-category"><span class="ser-cat-cell-label">Category:</span>Furniture</div>
-                <div class="ser-cat-product-cell ser-cat-status-cell">
-                    <span class="ser-cat-cell-label">Status:</span>
-                    <span class="ser-cat-status ser-cat-active">Active</span>
-                </div>
-                <div class="ser-cat-product-cell ser-cat-sales"><span class="ser-cat-cell-label">Sales:</span>23</div>
-                <div class="ser-cat-product-cell ser-cat-stock"><span class="ser-cat-cell-label">Stock:</span>45</div>
-                <div class="ser-cat-product-cell ser-cat-price"><span class="ser-cat-cell-label">Price:</span>$340</div>
-            </div>
-            <div class="ser-cat-products-row">
-                <button class="ser-cat-cell-more-button">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical"><circle cx="12" cy="12" r="1" /><circle cx="12" cy="5" r="1" /><circle cx="12" cy="19" r="1" /></svg>
-                </button>
-                <div class="ser-cat-product-cell ser-cat-image">
-                    <img src="https://images.unsplash.com/photo-1554995207-c18c203602cb?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8aW50ZXJpb3J8ZW58MHwwfDB8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=60" alt="product">
-                    <span>Boheme</span>
-                </div>
-                <div class="ser-cat-product-cell ser-cat-category"><span class="ser-cat-cell-label">Category:</span>Furniture</div>
-                <div class="ser-cat-product-cell ser-cat-status-cell">
-                    <span class="ser-cat-cell-label">Status:</span>
-                    <span class="ser-cat-status ser-cat-active">Active</span>
-                </div>
-                <div class="ser-cat-product-cell ser-cat-sales"><span class="ser-cat-cell-label">Sales:</span>32</div>
-                <div class="ser-cat-product-cell ser-cat-stock"><span class="ser-cat-cell-label">Stock:</span>40</div>
-                <div class="ser-cat-product-cell ser-cat-price"><span class="ser-cat-cell-label">Price:</span>$350</div>
-            </div>
-            <div class="ser-cat-products-row">
-                <button class="ser-cat-cell-more-button">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical"><circle cx="12" cy="12" r="1" /><circle cx="12" cy="5" r="1" /><circle cx="12" cy="19" r="1" /></svg>
-                </button>
-                <div class="ser-cat-product-cell ser-cat-image">
-                    <img src="https://images.unsplash.com/photo-1511389026070-a14ae610a1be?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MzR8fGludGVyaW9yfGVufDB8MHwwfHw%3D&auto=format&fit=crop&w=900&q=60" alt="product">
-                    <span>Palm</span>
-                </div>
-                <div class="ser-cat-product-cell ser-cat-category"><span class="ser-cat-cell-label">Category:</span>Decoration</div>
-                <div class="ser-cat-product-cell ser-cat-status-cell">
-                    <span class="ser-cat-cell-label">Status:</span>
-                    <span class="ser-cat-status ser-cat-active">Active</span>
-                </div>
-                <div class="ser-cat-product-cell ser-cat-sales"><span class="ser-cat-cell-label">Sales:</span>24</div>
-                <div class="ser-cat-product-cell ser-cat-stock"><span class="ser-cat-cell-label">Stock:</span>46</div>
-                <div class="ser-cat-product-cell ser-cat-price"><span class="ser-cat-cell-label">Price:</span>$60</div>
-            </div>
-            <div class="ser-cat-products-row">
-                <button class="ser-cat-cell-more-button">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical"><circle cx="12" cy="12" r="1" /><circle cx="12" cy="5" r="1" /><circle cx="12" cy="19" r="1" /></svg>
-                </button>
-                <div class="ser-cat-product-cell ser-cat-image">
-                    <img src="https://images.unsplash.com/photo-1600494603989-9650cf6ddd3d?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NTV8fGludGVyaW9yfGVufDB8MHwwfHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=60" alt="product">
-                    <span>Forest</span>
-                </div>
-                <div class="ser-cat-product-cell ser-cat-category"><span class="ser-cat-cell-label">Category:</span>Living Room</div>
-                <div class="ser-cat-product-cell ser-cat-status-cell">
-                    <span class="ser-cat-cell-label">Status:</span>
-                    <span class="ser-cat-status ser-cat-active">Active</span>
-                </div>
-                <div class="ser-cat-product-cell ser-cat-sales"><span class="ser-cat-cell-label">Sales:</span>41</div>
-                <div class="ser-cat-product-cell ser-cat-stock"><span class="ser-cat-cell-label">Stock:</span>16</div>
-                <div class="ser-cat-product-cell ser-cat-price"><span class="ser-cat-cell-label">Price:</span>$270</div>
-            </div>
-            <div class="ser-cat-products-row">
-                <button class="ser-cat-cell-more-button">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical"><circle cx="12" cy="12" r="1" /><circle cx="12" cy="5" r="1" /><circle cx="12" cy="19" r="1" /></svg>
-                </button>
-                <div class="ser-cat-product-cell ser-cat-image">
-                    <img src="https://images.unsplash.com/photo-1560448204-603b3fc33ddc?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Njd8fGludGVyaW9yfGVufDB8MHwwfHw%3D&auto=format&fit=crop&w=900&q=60" alt="product">
-                    <span>Sand</span>
-                </div>
-                <div class="ser-cat-product-cell ser-cat-category"><span class="ser-cat-cell-label">Category:</span>Living Room</div>
-                <div class="ser-cat-product-cell ser-cat-status-cell">
-                    <span class="ser-cat-cell-label">Status:</span>
-                    <span class="ser-cat-status ser-cat-disabled">Disabled</span>
-                </div>
-                <div class="ser-cat-product-cell ser-cat-sales"><span class="ser-cat-cell-label">Sales:</span>52</div>
-                <div class="ser-cat-product-cell ser-cat-stock"><span class="ser-cat-cell-label">Stock:</span>16</div>
-                <div class="ser-cat-product-cell ser-cat-price"><span class="ser-cat-cell-label">Price:</span>$230</div>
-            </div>
-            <div class="ser-cat-products-row">
-                <button class="ser-cat-cell-more-button">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical"><circle cx="12" cy="12" r="1" /><circle cx="12" cy="5" r="1" /><circle cx="12" cy="19" r="1" /></svg>
-                </button>
-                <div class="ser-cat-product-cell ser-cat-image">
-                    <img src="https://images.unsplash.com/photo-1533779283484-8ad4940aa3a8?ixid=MnwxMjA3fDB8MHxzZWFyY2h8ODd8fGludGVyaW9yfGVufDB8MHwwfHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=60" alt="product">
-                    <span>Autumn</span>
-                </div>
-                <div class="ser-cat-product-cell ser-cat-category"><span class="ser-cat-cell-label">Category:</span>Decoration</div>
-                <div class="ser-cat-product-cell ser-cat-status-cell">
-                    <span class="ser-cat-cell-label">Status:</span>
-                    <span class="ser-cat-status ser-cat-active">Active</span>
-                </div>
-                <div class="ser-cat-product-cell ser-cat-sales"><span class="ser-cat-cell-label">Sales:</span>21</div>
-                <div class="ser-cat-product-cell ser-cat-stock"><span class="ser-cat-cell-label">Stock:</span>46</div>
-                <div class="ser-cat-product-cell ser-cat-price"><span class="ser-cat-cell-label">Price:</span>$252</div>
-            </div>
-            <div class="ser-cat-products-row">
-                <button class="ser-cat-cell-more-button">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical"><circle cx="12" cy="12" r="1" /><circle cx="12" cy="5" r="1" /><circle cx="12" cy="19" r="1" /></svg>
-                </button>
-                <div class="ser-cat-product-cell ser-cat-image">
-                    <img src="https://images.unsplash.com/photo-1554995207-c18c203602cb?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8aW50ZXJpb3J8ZW58MHwwfDB8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=60" alt="product">
-                    <span>Boheme</span>
-                </div>
-                <div class="ser-cat-product-cell ser-cat-category"><span class="ser-cat-cell-label">Category:</span>Furniture</div>
-                <div class="ser-cat-product-cell ser-cat-status-cell">
-                    <span class="ser-cat-cell-label">Status:</span>
-                    <span class="ser-cat-status ser-cat-active">Active</span>
-                </div>
-                <div class="ser-cat-product-cell ser-cat-sales"><span class="ser-cat-cell-label">Sales:</span>32</div>
-                <div class="ser-cat-product-cell ser-cat-stock"><span class="ser-cat-cell-label">Stock:</span>40</div>
-                <div class="ser-cat-product-cell ser-cat-price"><span class="ser-cat-cell-label">Price:</span>$350</div>
-            </div>
+                    <div class="ser-cat-product-cell ser-cat-image">
+
+                        @if (i.photo != null)
+                        {
+                            <img src="@(i.photo != null ? $"data:{i.photo_type};base64,{Convert.ToBase64String(i.photo)}" :
+                             "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80")"
+                                 alt="product" />
+                        }
+                        else
+                        {
+                            if (i.product_type == "Product")
+                            {
+                                <img src="~/img/product/product_base.png"
+                                     alt="product" />
+                            }
+                            else
+                            {
+                                <img src="~/img/product/service_base.png"
+                                     alt="product" />
+                            }
+                        }
+
+                        <span>@i.item_title</span>
+                    </div>
+                    <div class="ser-cat-product-cell ser-cat-price"><span class="ser-cat-cell-label">Type:</span>@i.product_type</div>
+                    <div class="ser-cat-product-cell ser-cat-category"><span class="ser-cat-cell-label">Category:</span>@i.Category.title</div>
+                    <div class="ser-cat-product-cell ser-cat-sales"><span class="ser-cat-cell-label">Responsible:</span>@i.ResponsibleDepartment.name</div>
+                    <div class="ser-cat-product-cell ser-cat-stock"><span class="ser-cat-cell-label">Stock:</span>@i.quantity</div>
+                    <div class="ser-cat-product-cell ser-cat-status-cell">
+                        <span class="ser-cat-cell-label">Status:</span>
+                        @if (i.active)
+                        {
+                            <span class="ser-cat-status ser-cat-active">Active</span>
+                        }
+                        else
+                        {
+                            <span class="ser-cat-status ser-cat-disabled">Inactive</span>
+                        }
+                    </div>
+                </a>
+            }
+          
+            
         </div>
     </div>
 </div>

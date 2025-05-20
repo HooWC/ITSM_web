@@ -1,0 +1,456 @@
+﻿@using ITSM_DomainModelEntity.ViewModels
+@model User_ReqVM
+@{
+    ViewData["Title"] = "Req_Info";
+    Layout = "_Layout";
+}
+
+<style>
+    * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    }
+
+    body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.5;
+    padding: 10px;
+    margin: 0;
+    min-height: 100vh;
+    }
+
+    .inc-file-cre-form-padding {
+    padding: 5px 0px 0px 5px;
+    }
+
+    /* Product Image Styles */
+    .inc-cre-product-image-container {
+    margin-bottom: 1.25rem;
+    border-radius: 0.375rem;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+    max-width: 100%;
+    height: auto;
+    }
+
+    .inc-cre-product-image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 25%; /* Reduced height for rectangular images */
+    overflow: hidden;
+    background-color: #121212;
+    }
+
+    .inc-cre-product-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Changed from cover to contain */
+    transition: transform 0.5s ease;
+    background-color: #121212;
+    }
+
+    .inc-cre-product-image-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 50%, transparent 100%);
+    padding: 0.75rem 1.25rem;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    .inc-cre-product-title {
+    margin: 0 0 0.25rem 0;
+    font-weight: 600;
+    font-size: 1rem;
+    }
+
+    .inc-cre-product-description {
+    margin: 0;
+    opacity: 0.9;
+    font-size: 0.75rem;
+    }
+
+    .inc-cre-product-image-wrapper:hover .inc-cre-product-image {
+    transform: scale(1.03);
+    }
+
+    /* Add support for square images */
+    .inc-cre-product-image-wrapper.square {
+    padding-bottom: 25%; /* Keep same height for consistency */
+    }
+
+    /* Auto-detect and adjust for different image types */
+    .inc-cre-product-image.landscape {
+    object-position: center;
+    }
+
+    .inc-cre-product-image.portrait {
+    object-position: center;
+    }
+
+    .inc-cre-btn-closed {
+    background-color: #6b0e0e;
+    transition: all .2s ease-in-out;
+    }
+
+    .inc-cre-btn-closed:hover {
+    background-color: #590d0d;
+    }
+
+    @@media (max-width: 768px) {
+    .inc-cre-product-image-wrapper {
+    padding-bottom: 35%; /* Slightly taller on mobile but still compact */
+    }
+
+    .inc-cre-product-image-wrapper.square {
+    padding-bottom: 35%;
+    }
+    }
+</style>
+
+<div class="inc-cre-container">
+    <header class="inc-cre-header">
+        <div class="inc-cre-header-left">
+            <button class="inc-cre-menu-button">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+            <div class="inc-cre-title-group">
+                <div class="inc-cre-title">Requests</div>
+                <div class="inc-cre-subtitle">@Model.req.req_id</div>
+            </div>
+        </div>
+        <div class="inc-cre-header-right">
+            <button class="inc-cre-btn inc-cre-btn-icon" onclick="window.open('/Info/Info_Personal_Todo', '_blank')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+            </button>
+
+            @if (Model.req.state != "Completed" && Model.req.state != "Rejected")
+            {
+                <button class="inc-cre-btn inc-cre-btn-closed" id="Rejected_req">Rejected</button>
+                <button class="inc-cre-btn inc-cre-btn-resolve" id="Completed_req">Completed</button>
+                <button class="inc-cre-btn inc-cre-btn-submit" onclick="document.getElementById('incidentForm').submit();">Save</button>
+            }
+            else if (Model.req.state == "Rejected")
+            {
+                <button class="inc-cre-btn inc-cre-btn-closed" id="reopen-button">Reopened</button>
+            }
+
+            <div class="nav-item navbar-dropdown dropdown-user dropdown open-button">
+                <a class="nav-link dropdown-toggle hide-arrow p-0"
+                href="javascript:void(0);"
+                data-bs-toggle="dropdown">
+                    <div class="avatar avatar-online">
+                        <img src="@(Model.user.photo != null ? $"data:{Model.user.photo_type};base64," +  Convert.ToBase64String(Model.user.photo) :
+                            Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 rounded-circle" />
+                    </div>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="inc-cre-form-wrapper">
+
+        @if (!string.IsNullOrEmpty(ViewBag.Error as string))
+        {
+            <div id="error-notification" class="error-notification">
+                <div class="error-notification-content">
+                    <div class="error-notification-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                    </div>
+                    <div class="error-notification-text">
+                        <div class="error-notification-title">Submission failed</div>
+                        <div class="error-notification-message" id="error-notification-message">@ViewBag.Error</div>
+                    </div>
+                </div>
+                <button type="button" class="error-notification-close" id="error-notification-close">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+        }
+
+        <form id="incidentForm" class="inc-cre-incident-form" action="~/Request/Req_Info" method="post">
+            <input type="text" name="id" id="reqId" class="inc-cre-form-control" value="@Model.req.id" style="display:none;" readonly>
+            <input type="text" name="roleBack" id="roleBack" class="inc-cre-form-control" value="@ViewBag.roleBack" style="display:none;" readonly>
+            <input type="text" name="pro_id" id="pro_id" class="inc-cre-form-control" value="@Model.req.pro_id" style="display:none;" readonly>
+            <div class="inc-cre-product-image-container">
+                <div class="inc-cre-product-image-wrapper">
+
+                    @if (Model.req.Product.photo != null)
+                    {
+                        <img src="@(Model.req.Product.photo != null ? $"data:{Model.req.Product.photo_type};base64,{Convert.ToBase64String(Model.req.Product.photo)}" :
+                         "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80")"
+                        alt="Selected Product"
+                        class="inc-cre-product-image" />
+                    }
+                    else
+                    {
+                        if (Model.req.Product.product_type == "Product")
+                        {
+                            <img src="~/img/product/product_base.png"
+                            alt="Selected Product"
+                            class="inc-cre-product-image" />
+                        }
+                        else
+                        {
+                            <img src="~/img/product/service_base.png"
+                            alt="Selected Product"
+                            class="inc-cre-product-image" />
+                        }
+                    }
+
+                    <div class="inc-cre-product-image-overlay">
+                        <h4 class="inc-cre-product-title">@Model.req.Product.item_title</h4>
+                        <p class="inc-cre-product-description">@Model.req.Product.description</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="inc-cre-form-grid">
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="number" class="inc-cre-form-label">Request Number</label>
+                        <input type="text" class="inc-cre-form-control" value="@Model.req.req_id" readonly>
+                    </div>
+                </div>
+
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="number" class="inc-cre-form-label">Product Number</label>
+                        <input type="text" class="inc-cre-form-control" value="@Model.req.Product.pro_number" readonly>
+                    </div>
+                </div>
+            </div>
+
+            <div class="inc-cre-form-grid">
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="number" class="inc-cre-form-label">User</label>
+                        <input type="text" class="inc-cre-form-control" value="@Model.req.Sender.fullname" readonly>
+                    </div>
+                </div>
+
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="number" class="inc-cre-form-label">Quantity</label>
+                        @if (Model.req.Product.product_type == "Product")
+                        {
+                            <input type="number" name="quantity" id="quantity" class="inc-cre-form-control" value="@Model.req.quantity" min="1" max="@(Model.req.quantity + Model.req.Product.quantity)" @(Model.req.state == "Rejected" || Model.req.state == "Completed" ? "readonly" : "") required>
+                        }
+                        else
+                        {
+                            <input type="text" name="quantity" id="quantity" class="inc-cre-form-control" value="1" readonly>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="inc-cre-form-grid">
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="channel" class="inc-cre-form-label">Category</label>
+                        <input type="text" class="inc-cre-form-control" value="@Model.req.Product.Category.title" readonly>
+                    </div>
+                </div>
+
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="channel" class="inc-cre-form-label">Responsible</label>
+                        <input type="text" class="inc-cre-form-control" value="@Model.req.Product.ResponsibleDepartment.name" readonly>
+                    </div>
+                </div>
+            </div>
+
+            <div class="inc-cre-form-grid">
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="channel" class="inc-cre-form-label">Status</label>
+                        <select id="channel" name="state" class="inc-cre-form-control">
+                            @{
+                                var selectState = Model.req.state;
+                            }
+                            @if (selectState != "Completed" && selectState != "Rejected")
+                            {
+                                <option value="Pedding" selected="@(selectState == "Pedding")">Pedding</option>
+                                <option value="In Progress" selected="@(selectState == "In Progress")">In Progress</option>
+                                <option value="On Hold" selected="@(selectState == "On Hold")">On Hold</option>
+                            }
+                            else if (selectState == "Completed")
+                            {
+                                <option value="Completed" selected="@(selectState == "Completed")">Completed</option>
+                            }
+                            else if (selectState == "Rejected")
+                            {
+                                <option value="Rejected" selected="@(selectState == "Rejected")">Rejected</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-column">
+                        <div class="inc-cre-form-group">
+                            <label for="channel" class="inc-cre-form-label">Create Date</label>
+                            <input type="text" class="inc-cre-form-control" value="@Model.req.create_date.ToString("yyyy-MM-dd HH:mm:ss")" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="inc-cre-form-grid">
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="channel" class="inc-cre-form-label">Update Date</label>
+                        <input type="text" class="inc-cre-form-control" value="@Model.req.update_date.ToString("yyyy-MM-dd HH:mm:ss")" readonly>
+                    </div>
+                </div>
+
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="channel" class="inc-cre-form-label">Cloed Date</label>
+                        <input type="text" class="inc-cre-form-control" value="@(Model.req.closed_date != null ? Model.req.closed_date?.ToString("yyyy-MM-dd HH:mm:ss") : "-")" readonly>
+                    </div>
+                </div>
+            </div>
+
+            <div class="inc-cre-form-group inc-cre-short-description-group">
+                <label for="short-description" class="inc-cre-form-label inc-cre-required">Short description</label>
+                <div class="inc-cre-input-with-actions">
+                    <input autocomplete="off" type="text" id="short_description" value="@Model.req.short_description" name="short_description" class="inc-cre-form-control" @(Model.req.state == "Rejected" || Model.req.state == "Completed" ? "readonly" : "") required>
+                    <div class="inc-cre-action-buttons">
+                        <button type="button" class="inc-cre-btn-help">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="inc-cre-form-group inc-cre-full-width">
+                <label for="description" class="inc-cre-form-label">Description</label>
+                <textarea id="description" autocomplete="off" name="description" value="@Model.req.description" class="inc-cre-form-control inc-cre-description-textarea" rows="5" @(Model.req.state == "Rejected" || Model.req.state == "Completed" ? "readonly" : "")></textarea>
+            </div>
+        </form>
+    </main>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+    $(function () {
+      var $target = $('#Requests_menu');
+      if (!$target.hasClass('active') || !$target.hasClass('open')) {
+          $('.menu-item').removeClass('active open');
+          $target.addClass('active open');
+      }
+
+      let roleBack = $('#roleBack').val();
+      if(roleBack.includes("Admin")){
+          $('#Requests_child_all').addClass("active");
+      }
+      else if(roleBack.includes("Group")){
+          $('#Requests_child_assigned').addClass("active");
+      }
+      else{
+          $('#Requests_child_all_User').addClass("active");
+      }
+
+      $("#Completed_req").click(function() {
+
+          let reqId = $('#reqId').val();
+
+          $.ajax({
+              url: '/Ajax/CompletedRequest',
+              type: 'POST',
+              data: {
+                  req_id: reqId
+              },
+              success: function(response) {
+                  if (response.success) {
+                      window.location.href = '/Request/User_All';
+                  } else {
+                      // alert("Failed to resolve incident: " + response.message);
+                  }
+              },
+              error: function(xhr, status, error) {
+                  // alert("Error: " + error);
+              }
+          });
+      });
+
+      $("#Rejected_req").click(function() {
+
+          let reqId = $('#reqId').val();
+
+          console.log("req_id= " + reqId);
+
+          $.ajax({
+              url: '/Ajax/RejectedRequest',
+              type: 'POST',
+              data: {
+                  req_id: reqId
+              },
+              success: function(response) {
+                  if (response.success) {
+                      window.location.href = '/Request/User_All';
+                  } else {
+                      // alert(": " + response.message);
+                  }
+              },
+              error: function(xhr, status, error) {
+                  // alert(": " + error);
+              }
+          });
+      });
+
+      $("#reopen-button").click(function() {
+
+          let reqId = $('#reqId').val();
+
+          $.ajax({
+              url: '/Ajax/ReopenRequest',
+              type: 'POST',
+              data: {
+                  req_id: reqId
+              },
+              success: function(response) {
+                  if (response.success) {
+                      window.location.href = '/Request/User_All';
+                  } else {
+                      // alert(": " + response.message);
+                  }
+              },
+              error: function(xhr, status, error) {
+                  // alert(": " + error);
+              }
+          });
+      });
+
+    });
+</script>
+
