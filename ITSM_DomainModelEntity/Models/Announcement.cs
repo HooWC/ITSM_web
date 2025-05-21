@@ -27,6 +27,8 @@ namespace ITSM_DomainModelEntity.Models
         [Required]
         public string? message { get; set; }
 
+        public string? ann_title { get; set; }
+
         // Navigation properties
         public virtual User? User { get; set; }
     }

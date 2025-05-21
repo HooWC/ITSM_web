@@ -1,41 +1,29 @@
 ﻿@using ITSM_DomainModelEntity.ViewModels
 @model AllModelVM
 @{
-    ViewData["Title"] = "Product_List";
+    ViewData["Title"] = "View_Ann_List";
     Layout = "_Layout";
 }
 
 <style>
     .inc-tab-incidents-table th.number-column {
-        width: 8%;
-    }
-    
-    .inc-tab-incidents-table th.p_title {
-        width: 14%;
-    }
-
-    .inc-tab-incidents-table th.p_description {
-        width: 22%;
-    }
-
-    .inc-tab-incidents-table th.p_category {
-        width: 14%;
-    }
-
-    .inc-tab-incidents-table th.p_responsible {
-        width: 14%;
-    }
-
-    .inc-tab-incidents-table th.p_product_type {
-        width: 9%;
-    }
-
-    .inc-tab-incidents-table th.p_quantity {
-        width: 9%;
-    }
-
-    .inc-tab-incidents-table th.p_active {
         width: 10%;
+    }
+
+    .inc-tab-incidents-table th.title {
+        width: 30%;
+    }
+
+    .inc-tab-incidents-table th.create-by {
+        width: 20%;
+    }
+
+    .inc-tab-incidents-table th.create-date {
+        width: 20%;
+    }
+
+    .inc-tab-incidents-table th.update-date {
+        width: 20%;
     }
 </style>
 
@@ -45,17 +33,15 @@
             <button class="inc-tab-icon-button">
                 <i class="fas fa-list"></i>
             </button>
-            <h2 class="all-title-header-front">Products</h2>
+            <h2 class="all-title-header-front">Announcement</h2>
             <div class="inc-tab-dropdown">
                 <button class="inc-tab-dropdown-toggle" id="filterDropdown">Number <i class="fas fa-chevron-down"></i></button>
                 <div class="inc-tab-dropdown-menu" id="filterMenu" style="display:none;">
                     <a href="#" class="inc-tab-dropdown-item" data-filter="number">Number</a>
                     <a href="#" class="inc-tab-dropdown-item" data-filter="title">Title</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="description">Description</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="category">Category</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="product_type">Product Type</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="responsible">Responsible</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="quantity">Quantity</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-filter="create_by">Create By</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-filter="create_date">Create Date</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-filter="update_date">Update Date</a>
                 </div>
             </div>
             <div class="inc-tab-search-container">
@@ -73,16 +59,6 @@
                     <line x1="12" y1="17" x2="12.01" y2="17"></line>
                 </svg>
             </button>
-            <div class="inc-tab-dropdown">
-                <button class="inc-tab-dropdown-toggle" id="statusDropdown">All <i class="fas fa-chevron-down"></i></button>
-                <div class="inc-tab-dropdown-menu" id="statusMenu" style="display:none;">
-                    <a href="#" class="inc-tab-dropdown-item" data-status="all">All</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-status="active">Active</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-status="inactive">Inactive</a>
-                </div>
-            </div>
-            <button class="inc-tab-new-button item-delete-btn" id="deleteButton" disabled>Delete</button>
-            <button class="inc-tab-new-button" onclick="window.location.href='/Product/Product_Create';">New</button>
             <div class="nav-item navbar-dropdown dropdown-user dropdown open-button">
                 <a class="nav-link dropdown-toggle hide-arrow p-0"
                    href="javascript:void(0);"
@@ -109,31 +85,25 @@
                 <tr>
                     <th class="inc-tab-checkbox-column"></th>
                     <th class="inc-tab-sortable number-column" id="sortByNumber">Number <i class="fas fa-arrow-up" id="sortIcon"></i></th>
-                    <th class="p_title">Title</th>
-                    <th class="p_description">Description</th>
-                    <th class="p_category">Category</th>
-                    <th class="p_responsible">Responsible</th>
-                    <th class="p_product_type">Product Type</th>
-                    <th class="p_quantity">Quantity</th>
-                    <th class="p_active">Active</th>
+                    <th class="title">Title</th>
+                    <th class="create-by">Create By</th>
+                    <th class="create-date">Create date</th>
+                    <th class="update-date">Update date</th>
                 </tr>
             </thead>
             <tbody id="incTableBody">
 
-                @foreach (var i in Model.ProductList)
+                @foreach (var i in Model.AnnouncementList)
                 {
                     <tr class="incident-item" data-id="@i.id">
                         <td><input type="checkbox" class="item-checkbox"></td>
                         <td class="inc-tab-incident-number" data-label="Number">
-                            <a href="~/Product/Product_Info?id=@i.id">@i.pro_number</a>
+                            <a href="~/Announcement/View_Ann_Info?id=@i.id">@i.at_number</a>
                         </td>
-                        <td data-label="Item_title">@i.item_title</td>
-                        <td data-label="Description">@i.description</td>
-                        <td data-label="C_Title">@i.Category.title</td>
-                        <td data-label="R_Name">@i.ResponsibleDepartment.name</td>
-                        <td data-label="Product_Type">@i.product_type</td>
-                        <td data-label="Quantity">@i.quantity</td>
-                        <td data-label="Active">@(i.active ? "Active" : "Inactive")</td>
+                        <td data-label="title">@i.ann_title</td>
+                        <td data-label="u_fullname">@i.User.fullname</td>
+                        <td data-label="create date">@i.create_date.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                        <td data-label="update date">@i.update_date.ToString("yyyy-MM-dd HH:mm:ss")</td>
                     </tr>
                 }
 
@@ -151,16 +121,15 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="~/js/List/Product_List.js"></script>
+<script src="~/js/List/Ann_List.js"></script>
 <script>
       $(function () {
-        var $target = $('#Product_menu');
+        $('.menu-item').removeClass('active open');
+
+        var $target = $('#Ann_View_menu');
         if (!$target.hasClass('active') || !$target.hasClass('open')) {
-            $('.menu-item').removeClass('active open');
             $target.addClass('active open');
         }
-
-        $('#Product_menu_all').addClass("active");
     });
 </script>
 

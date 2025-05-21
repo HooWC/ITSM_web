@@ -47,10 +47,10 @@ namespace ITSM.Controllers
 
             var departmentList = allDepartment.OrderByDescending(y => y.id).ToList();
 
-            var model = new DepartmentVM
+            var model = new AllModelVM
             {
-                User = currentUser,
-                Department = departmentList
+                user = currentUser,
+                DepartmentList = departmentList
             };
 
             return View(model);

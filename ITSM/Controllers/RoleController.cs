@@ -44,10 +44,10 @@ namespace ITSM.Controllers
 
             var allRole = await roleTask;
 
-            var model = new RoleVM
+            var model = new AllModelVM
             {
-                User = currentUser,
-                Role = allRole
+                user = currentUser,
+                RoleList = allRole
             };
 
             return View(model);

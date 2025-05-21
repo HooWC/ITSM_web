@@ -44,7 +44,7 @@ namespace ITSM.Controllers
             return View(feedList);  
         }
 
-        private async Task<FeedbackVM> GetCommonFeedbackData()
+        private async Task<AllModelVM> GetCommonFeedbackData()
         {
             var tokenService = new TokenService(_httpContextAccessor);
             var currentUser_token = tokenService.GetUserInfo();
@@ -67,10 +67,10 @@ namespace ITSM.Controllers
             foreach (var feedback in feedList)
                 feedback.User = allUsers.FirstOrDefault(x => x.id == feedback.user_id);
 
-            return new FeedbackVM
+            return new AllModelVM
             {
-                User = currentUser,
-                Feedback = feedList
+                user = currentUser,
+                FeedbackList = feedList
             };
         }
 

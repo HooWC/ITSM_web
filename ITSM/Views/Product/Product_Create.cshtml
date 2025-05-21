@@ -1,5 +1,5 @@
 ﻿@using ITSM_DomainModelEntity.ViewModels
-@model Category_DepartmentVM
+@model AllModelVM
 @{
     ViewData["Title"] = "Product_Create";
 }
@@ -101,14 +101,14 @@
             <div class="inc-cre-form-grid">
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
-                        <label for="number" class="inc-cre-form-label">Number</label>
+                        <label for="pro_number" class="inc-cre-form-label">Number</label>
                         <input type="text" name="pro_number" id="pro_number" class="inc-cre-form-control" value="PRO_TBD" readonly>
                     </div>
                 </div>
 
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
-                        <label for="number" class="inc-cre-form-label inc-cre-required">Quantity</label>
+                        <label for="quantity" class="inc-cre-form-label inc-cre-required">Quantity</label>
                         <input type="number" name="quantity" id="quantity" class="inc-cre-form-control" value="1" min="1" required>
                     </div>
                 </div>
@@ -117,14 +117,14 @@
             <div class="inc-cre-form-grid">
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
-                        <label for="number" class="inc-cre-form-label inc-cre-required">Title</label>
+                        <label for="item_title" class="inc-cre-form-label inc-cre-required">Title</label>
                         <input type="text" name="item_title" id="item_title" class="inc-cre-form-control" autocomplete="off" required>
                     </div>
                 </div>
 
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
-                        <label for="number" class="inc-cre-form-label">Picture</label>
+                        <label for="file" class="inc-cre-form-label">Picture</label>
                         <input type="file" name="file" id="file" class="inc-cre-form-control inc-file-cre-form-padding">
                     </div>
                 </div>
@@ -133,11 +133,11 @@
             <div class="inc-cre-form-grid">
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
-                        <label for="channel" class="inc-cre-form-label">Category</label>
-                        <select id="channel" name="category_id" class="inc-cre-form-control">
-                            @foreach (var item in Model.category)
+                        <label for="category_id" class="inc-cre-form-label">Category</label>
+                        <select id="category_id" name="category_id" class="inc-cre-form-control">
+                            @foreach (var item in Model.CategoryList)
                             {
-                                var isSelected = item == Model.category.First() ? "selected" : "";
+                                var isSelected = item == Model.CategoryList.First() ? "selected" : "";
                                 <option value="@item.id" isSelected>@item.title</option>
                             }
                         </select>
@@ -146,11 +146,11 @@
 
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
-                        <label for="channel" class="inc-cre-form-label">Responsible</label>
-                        <select id="channel" name="responsible" class="inc-cre-form-control">
-                            @foreach (var item in Model.department)
+                        <label for="responsible" class="inc-cre-form-label">Responsible</label>
+                        <select id="responsible" name="responsible" class="inc-cre-form-control">
+                            @foreach (var item in Model.DepartmentList)
                             {
-                                var isSelected = item == Model.department.First() ? "selected" : "";
+                                var isSelected = item == Model.DepartmentList.First() ? "selected" : "";
                                 <option value="@item.id" isSelected>@item.name</option>
                             }
                         </select>
@@ -161,7 +161,7 @@
             <div class="inc-cre-form-grid">
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
-                        <label for="channel" class="inc-cre-form-label">Server Type</label>
+                        <label for="product_type" class="inc-cre-form-label">Server Type</label>
                         <select id="product_type" name="product_type" class="inc-cre-form-control">
                             <option value="Product">Product</option>
                             <option value="Service">Service</option>
@@ -171,7 +171,7 @@
             </div>
 
             <div class="inc-cre-form-group inc-cre-short-description-group">
-                <label for="short-description" class="inc-cre-form-label inc-cre-required">Description</label>
+                <label for="description" class="inc-cre-form-label inc-cre-required">Description</label>
                 <div class="inc-cre-input-with-actions">
                     <input type="text" name="description" id="description" class="inc-cre-form-control" autocomplete="off" required>
                 </div>

@@ -1,5 +1,5 @@
 ﻿@using ITSM_DomainModelEntity.ViewModels
-@model User_ReqVM
+@model AllModelVM
 @{
     ViewData["Title"] = "User_All";
     Layout = "_Layout";
@@ -135,7 +135,7 @@
             </thead>
             <tbody id="incTableBody">
 
-                @foreach (var i in Model.requests)
+                @foreach (var i in Model.RequestList)
                 {
                     <tr class="incident-item" data-id="@i.id">
                         <td><input type="checkbox" class="item-checkbox"></td>

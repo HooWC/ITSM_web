@@ -1,5 +1,5 @@
 ﻿@using ITSM_DomainModelEntity.ViewModels
-@model User_Dep_Cat_ProVM
+@model AllModelVM
 @{
     ViewData["Title"] = "Service_Catalog";
     Layout = "_Layout";
@@ -55,7 +55,7 @@
                         <label>Category</label>
                         <select class="ser-cat-category-filter">
                             <option value="all">All Categories</option>
-                            @foreach(var i in Model.categorys)
+                            @foreach(var i in Model.CategoryList)
                             {
                                 <option value="@i.id">@i.title</option>
                             }
@@ -111,7 +111,7 @@
                     Status
                 </div>
             </div>
-            @foreach(var i in Model.products)
+            @foreach(var i in Model.ProductList)
             {
                 <a href="@(i.active ? Url.Content("~/Request/Create_Form?id=" + i.id) : "#")" class="ser-cat-products-row line_item_none" data-category-id="@i.Category.id" data-status="@(i.active ? "active" : "inactive")">
                     <button class="ser-cat-cell-more-button">

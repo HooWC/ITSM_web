@@ -61,10 +61,10 @@ namespace ITSM.Controllers
                 product.ResponsibleDepartment = allDepartment.FirstOrDefault(x => x.id == product.responsible);
             }
 
-            var model = new ProductVM
+            var model = new AllModelVM
             {
-                User = currentUser,
-                Product = productList
+                user = currentUser,
+                ProductList = productList
             };
 
             return View(model);
@@ -88,10 +88,10 @@ namespace ITSM.Controllers
             var allCategory = await categoryTask;
             var allDepartment = await departmentTask;
 
-            var model = new Category_DepartmentVM()
+            var model = new AllModelVM()
             {
-                category = allCategory,
-                department = allDepartment
+                CategoryList = allCategory,
+                DepartmentList = allDepartment
             };
 
             return View(model);
@@ -118,10 +118,10 @@ namespace ITSM.Controllers
             var allDepartment = await departmentTask;
             var allProduct = await productTask;
 
-            var model = new Category_DepartmentVM()
+            var model = new AllModelVM()
             {
-                category = allCategory,
-                department = allDepartment
+                CategoryList = allCategory,
+                DepartmentList = allDepartment
             };
 
             if (product.item_title != null && product.description != null && product.quantity >= 0)
@@ -214,11 +214,11 @@ namespace ITSM.Controllers
             pro_info.Category = allCategory.Where(x => x.id == pro_info.category_id).FirstOrDefault();
             pro_info.ResponsibleDepartment = allDepartment.Where(x => x.id == pro_info.responsible).FirstOrDefault();
 
-            var model = new Pro_Cat_DepVM()
+            var model = new AllModelVM()
             {
                 product = pro_info,
-                category = allCategory,
-                department = allDepartment
+                CategoryList = allCategory,
+                DepartmentList = allDepartment
             };
 
             return View(model);
@@ -247,11 +247,11 @@ namespace ITSM.Controllers
             pro_info.Category = allCategory.Where(x => x.id == pro_info.category_id).FirstOrDefault();
             pro_info.ResponsibleDepartment = allDepartment.Where(x => x.id == pro_info.responsible).FirstOrDefault();
 
-            var model = new Pro_Cat_DepVM()
+            var model = new AllModelVM()
             {
                 product = pro_info,
-                category = allCategory,
-                department = allDepartment
+                CategoryList = allCategory,
+                DepartmentList = allDepartment
             };
 
             if (product.item_title != null && product.description != null && product.quantity >= 0)

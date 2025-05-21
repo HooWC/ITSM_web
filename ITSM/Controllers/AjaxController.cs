@@ -25,6 +25,7 @@ namespace ITSM.Controllers
         private readonly Product_api _productApi;
         private readonly Role_api _roleApi;
         private readonly Request_api _reqApi;
+        private readonly Announcement_api _announApi;
 
         public AjaxController(IHttpContextAccessor httpContextAccessor)
         {
@@ -39,6 +40,7 @@ namespace ITSM.Controllers
             _productApi = new Product_api(httpContextAccessor);
             _roleApi = new Role_api(httpContextAccessor);
             _reqApi = new Request_api(httpContextAccessor);
+            _announApi = new Announcement_api(httpContextAccessor);
         }
 
         private bool IsUserLoggedIn(out User currentUser)
@@ -2200,6 +2202,158 @@ namespace ITSM.Controllers
             catch (Exception ex)
             {
                 return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Announcement/Ann_List
+        public async Task<IActionResult> SearchAnnouncement(string searchTerm, string filterBy = "number")
+        {
+            if (string.IsNullOrEmpty(searchTerm))
+                return Json(new List<Feedback>());
+
+            if (!IsUserLoggedIn(out var currentUser))
+                return Json(new { success = false, message = "Not logged in" });
+
+            var allAnns = await _announApi.GetAllAnnouncement_API();
+            var allUsers = await _userApi.GetAllUser_API();
+            var userAnn = new List<Announcement>();
+            userAnn = allAnns.OrderByDescending(y => y.id).ToList();
+
+            List<Announcement> filteredAnns;
+
+            if (searchTerm == "re_entrynovalue")
+            {
+                filteredAnns = userAnn;
+            }
+            else
+            {
+                switch (filterBy.ToLower())
+                {
+                    case "title":
+                        filteredAnns = userAnn
+                            .Where(t => t.ann_title != null && t.ann_title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                    case "create_by":
+                        var filterUsers = allUsers.Where(x => x.fullname.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+                        filteredAnns = (from i in userAnn
+                                        join u in filterUsers on i.create_by equals u.id
+                                         select i).ToList();
+                        break;
+                    case "create_date":
+                        filteredAnns = userAnn
+                            .Where(t => t.create_date != null && t.create_date.ToString("yyyy-MM-dd HH:mm:ss").Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                    case "update_date":
+                        filteredAnns = userAnn
+                            .Where(t => t.update_date != null && t.update_date.ToString("yyyy-MM-dd HH:mm:ss").Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                    case "number":
+                    default:
+                        filteredAnns = userAnn
+                            .Where(t => t.at_number != null && t.at_number.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                }
+            }
+
+            var result = filteredAnns.Select(t => new {
+                t.id,
+                t.at_number,
+                t.ann_title,
+                fullname = allUsers.FirstOrDefault(u => u.id == t.create_by)?.fullname ?? "",
+                create_date = t.create_date.ToString("yyyy-MM-dd HH:mm:ss"),
+                update_date = t.update_date.ToString("yyyy-MM-dd HH:mm:ss")
+            });
+
+            return Json(result);
+        }
+
+        /// <summary>
+        /// Announcement/Ann_List
+        public async Task<IActionResult> SortAnnouncement(string sortOrder = "asc")
+        {
+            if (!IsUserLoggedIn(out var currentUser))
+                return Json(new { success = false, message = "Not logged in" });
+
+            var allAnns = await _announApi.GetAllAnnouncement_API();
+            var allUsers = await _userApi.GetAllUser_API();
+            var userAnn = new List<Announcement>();
+            userAnn = allAnns.OrderByDescending(y => y.id).ToList();
+
+            List<Announcement> sortedAnns;
+            if (sortOrder.ToLower() == "desc")
+                sortedAnns = userAnn.OrderBy(x => x.id).ToList();
+            else
+                sortedAnns = userAnn.OrderByDescending(x => x.id).ToList();
+
+            var result = sortedAnns.Select(t => new {
+                t.id,
+                t.at_number,
+                t.ann_title,
+                fullname = allUsers.FirstOrDefault(u => u.id == t.create_by)?.fullname ?? "",
+                create_date = t.create_date.ToString("yyyy-MM-dd HH:mm:ss"),
+                update_date = t.update_date.ToString("yyyy-MM-dd HH:mm:ss")
+            });
+
+            return Json(result);
+        }
+
+        /// <summary>
+        /// Announcement/Ann_List
+        [HttpPost]
+        public async Task<IActionResult> DeleteAnnouncements([FromBody] DeleteFeedbackRequestFM request)
+        {
+            var word = request.word;
+            var ids = request.ids;
+
+            if (ids == null || !ids.Any())
+                return Json(new { success = false, message = "No items selected for deletion" });
+
+            if (!IsUserLoggedIn(out var currentUser))
+                return Json(new { success = false, message = "Not logged in" });
+
+            try
+            {
+                int successCount = 0;
+
+                foreach (var id in ids)
+                {
+                    var allAnns = await _announApi.GetAllAnnouncement_API();
+                    var annToDelete = new Announcement();
+                    annToDelete = allAnns.FirstOrDefault(x => x.id == id);
+
+                    if (annToDelete != null)
+                    {
+                        bool result = await _announApi.DeleteAnnouncement_API(id);
+                        if (result)
+                            successCount++;
+                    }
+                }
+
+                if (successCount > 0)
+                {
+                    return Json(new
+                    {
+                        success = true,
+                        message = $"Successfully deleted {successCount} item(s)"
+                    });
+                }
+                else
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Failed to delete items. Items may not exist or you don't have permission"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = $"Error: {ex.Message}" });
             }
         }
     }

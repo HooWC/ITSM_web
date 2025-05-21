@@ -62,9 +62,9 @@ namespace ITSM.Controllers
                 i.Role = allRole.FirstOrDefault(x => x.id == i.role_id);
             }
 
-            var model = new UserVM
+            var model = new AllModelVM()
             {
-                User = currentUser,
+                user = currentUser,
                 UserList = allUser.Where(x => x.id != currentUser.id).OrderByDescending(y => y.id).ToList()
             };
 
@@ -86,11 +86,11 @@ namespace ITSM.Controllers
             var allDepartment = await departmentTask;
             var allRole = await roleTask;
 
-            var model = new User_Dep_RoleVM()
+            var model = new AllModelVM()
             {
                 user = currentUser,
-                role = allRole.OrderByDescending(x => x.id).ToList(),
-                department = allDepartment
+                RoleList = allRole.OrderByDescending(x => x.id).ToList(),
+                DepartmentList = allDepartment
             };
 
             return View(model);
@@ -114,11 +114,11 @@ namespace ITSM.Controllers
             var allRole = await roleTask;
             var allUser = await userTask;
 
-            var model = new User_Dep_RoleVM()
+            var model = new AllModelVM()
             {
                 user = currentUser,
-                role = allRole.OrderByDescending(x => x.id).ToList(),
-                department = allDepartment
+                RoleList = allRole.OrderByDescending(x => x.id).ToList(),
+                DepartmentList = allDepartment
             };
 
             if (!string.IsNullOrEmpty(user.emp_id) &&
@@ -281,12 +281,12 @@ namespace ITSM.Controllers
             info_user.Department = allDepartment.Where(x => x.id == currentUser.department_id).FirstOrDefault();
             info_user.Role = allRole.Where(x => x.id == currentUser.role_id).FirstOrDefault();
 
-            var model = new User_Dep_RoleVM()
+            var model = new AllModelVM()
             {
                 user = currentUser,
-                role = allRole,
-                department = allDepartment,
-                Info_User = info_user
+                RoleList = allRole,
+                DepartmentList = allDepartment,
+                info_user = info_user
             };
 
             return View(model);
@@ -314,12 +314,12 @@ namespace ITSM.Controllers
             info_user.Department = allDepartment.Where(x => x.id == currentUser.department_id).FirstOrDefault();
             info_user.Role = allRole.Where(x => x.id == currentUser.role_id).FirstOrDefault();
 
-            var model = new User_Dep_RoleVM()
+            var model = new AllModelVM()
             {
                 user = currentUser,
-                role = allRole,
-                department = allDepartment,
-                Info_User = info_user
+                RoleList = allRole,
+                DepartmentList = allDepartment,
+                info_user = info_user
             };
 
             if (!string.IsNullOrEmpty(user.emp_id) &&

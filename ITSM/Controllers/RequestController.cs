@@ -67,10 +67,10 @@ namespace ITSM.Controllers
                 i.UpdatedBy = allUser.FirstOrDefault(x => x.id == i.updated_by);
             }
 
-            var model = new User_ReqVM()
+            var model = new AllModelVM()
             {
                 user = currentUser,
-                requests = Reqs,
+                RequestList = Reqs,
             };
 
             return View(model);
@@ -103,10 +103,10 @@ namespace ITSM.Controllers
                 i.UpdatedBy = allUser.FirstOrDefault(x => x.id == i.updated_by);
             }
 
-            var model = new User_ReqVM()
+            var model = new AllModelVM()
             {
                 user = currentUser,
-                requests = Reqs,
+                RequestList = Reqs,
             };
 
             return View(model);
@@ -134,11 +134,11 @@ namespace ITSM.Controllers
                 i.ResponsibleDepartment = allDep.FirstOrDefault(x => x.id == i.responsible);
             }
 
-            var model = new User_Dep_Cat_ProVM()
+            var model = new AllModelVM()
             {
                 user = currentUser,
-                products = allProduct,
-                categorys = allCategory
+                ProductList = allProduct,
+                CategoryList = allCategory
             };
 
             return View(model);
@@ -162,10 +162,10 @@ namespace ITSM.Controllers
             info_pro.Category = allCategory.Where(x => x.id ==  info_pro.category_id).FirstOrDefault();
             info_pro.ResponsibleDepartment = allDep.Where(x => x.id == info_pro.responsible).FirstOrDefault();
 
-            var model = new ProductVM()
+            var model = new AllModelVM()
             {
-                User = currentUser,
-                Info_Product = info_pro
+                user = currentUser,
+                product = info_pro
             };
 
             return View(model);
@@ -197,10 +197,10 @@ namespace ITSM.Controllers
             info_pro.Category = allCategory.Where(x => x.id == info_pro.category_id).FirstOrDefault();
             info_pro.ResponsibleDepartment = allDep.Where(x => x.id == info_pro.responsible).FirstOrDefault();
 
-            var model = new ProductVM()
+            var model = new AllModelVM()
             {
-                User = currentUser,
-                Info_Product = info_pro
+                user = currentUser,
+                product = info_pro
             };
 
             if (info_pro.product_type == "Product")
@@ -291,10 +291,10 @@ namespace ITSM.Controllers
                 i.UpdatedBy = allUser.FirstOrDefault(x => x.id == i.updated_by);
             }
 
-            var model = new User_ReqVM()
+            var model = new AllModelVM()
             {
                 user = currentUser,
-                requests = Reqs,
+                RequestList = Reqs,
             };
 
             return View(model);
@@ -328,10 +328,10 @@ namespace ITSM.Controllers
             Req.Product.Category = allCategory.FirstOrDefault(x => x.id == Req.Product.category_id);
             Req.Product.ResponsibleDepartment = allDepartment.FirstOrDefault(x => x.id == Req.Product.responsible);
 
-            var model = new User_ReqVM()
+            var model = new AllModelVM()
             {
                 user = currentUser,
-                req = Req,
+                request = Req,
             };
 
             return View(model);
@@ -364,10 +364,10 @@ namespace ITSM.Controllers
             Req.Product.Category = allCategory.FirstOrDefault(x => x.id == Req.Product.category_id);
             Req.Product.ResponsibleDepartment = allDepartment.FirstOrDefault(x => x.id == Req.Product.responsible);
 
-            var model = new User_ReqVM()
+            var model = new AllModelVM()
             {
                 user = currentUser,
-                req = Req,
+                request = Req,
             };
 
             if (req.short_description == null)

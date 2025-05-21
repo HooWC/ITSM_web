@@ -1,5 +1,5 @@
 ﻿@using ITSM_DomainModelEntity.ViewModels
-@model IncidentInfoVM
+@model AllModelVM
 @{
     ViewData["Title"] = "Inc_Info_Form";
     Layout = "_Layout";
@@ -133,7 +133,7 @@
             </button>
             <div class="inc-cre-title-group">
                 <div class="inc-cre-title">Incident Information</div>
-                <div class="inc-cre-subtitle">@Model.Inc.inc_number</div>
+                <div class="inc-cre-subtitle">@Model.incident.inc_number</div>
             </div>
         </div>
         <div class="inc-cre-header-right">
@@ -152,13 +152,13 @@
                 </svg>
             </button>
 
-            @if (Model.Inc.state != "Resolved" && Model.Inc.state != "Closed")
+            @if (Model.incident.state != "Resolved" && Model.incident.state != "Closed")
             {
                 <button class="inc-cre-btn inc-cre-btn-closed" id="close-button">Closed</button>
                 <button class="inc-cre-btn inc-cre-btn-resolve" id="resolve-button">Resolve</button>
                 <button class="inc-cre-btn inc-cre-btn-submit" onclick="document.getElementById('incidentForm').submit();">Save</button>
             }
-            else if (Model.Inc.state == "Closed")
+            else if (Model.incident.state == "Closed")
             {
                 <button class="inc-cre-btn inc-cre-btn-closed" id="reopen-button">Reopened</button>
             }
@@ -167,7 +167,7 @@
                 href="javascript:void(0);"
                 data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
-                        <img src="@(Model.User.photo != null ? $"data:{Model.User.photo_type};base64," +  Convert.ToBase64String(Model.User.photo) :
+                        <img src="@(Model.user.photo != null ? $"data:{Model.user.photo_type};base64," +  Convert.ToBase64String(Model.user.photo) :
                             Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 rounded-circle" />
                     </div>
                 </a>
@@ -204,19 +204,19 @@
 
 
         <form id="incidentForm" class="inc-cre-incident-form" action="~/IncidentManagement/Inc_Info_Form" method="post">
-            <input type="text" name="id" id="id" class="inc-cre-form-control" value="@Model.Inc.id" style="display:none;" readonly>
+            <input type="text" name="id" id="id" class="inc-cre-form-control" value="@Model.incident.id" style="display:none;" readonly>
             <input type="text" name="roleBack" id="roleBack" class="inc-cre-form-control" value="@ViewBag.roleBack" style="display:none;" readonly>
             <div class="inc-cre-form-grid">
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="number" class="inc-cre-form-label">Number</label>
-                        <input type="text" name="inc_number" id="number" class="inc-cre-form-control" value="@Model.Inc.inc_number" readonly>
+                        <input type="text" name="inc_number" id="number" class="inc-cre-form-control" value="@Model.incident.inc_number" readonly>
                     </div>
 
                     <div class="inc-cre-form-group">
                         <label for="caller" class="inc-cre-form-label">Caller</label>
                         <div class="inc-cre-input-with-icon">
-                            <input type="text" name="sender" id="caller" class="inc-cre-form-control" autocomplete="off" value="@Model.User.fullname" readonly required>
+                            <input type="text" name="sender" id="caller" class="inc-cre-form-control" autocomplete="off" value="@Model.user.fullname" readonly required>
                         </div>
                     </div>
 
@@ -232,12 +232,12 @@
                             </button>
                         </label>
                         <select id="category" name="category" class="inc-cre-form-control">
-                            <option value="Hardware" selected="@(Model.Inc.category == "Hardware")">Hardware</option>
-                            <option value="Software" selected="@(Model.Inc.category == "Software")">Software</option>
-                            <option value="Network" selected="@(Model.Inc.category == "Network")">Network</option>
-                            <option value="Email" selected="@(Model.Inc.category == "Email")">Email</option>
-                            <option value="Database" selected="@(Model.Inc.category == "Database")">Database</option>
-                            <option value="Others" selected="@(Model.Inc.category == "Others")">Others</option>
+                            <option value="Hardware" selected="@(Model.incident.category == "Hardware")">Hardware</option>
+                            <option value="Software" selected="@(Model.incident.category == "Software")">Software</option>
+                            <option value="Network" selected="@(Model.incident.category == "Network")">Network</option>
+                            <option value="Email" selected="@(Model.incident.category == "Email")">Email</option>
+                            <option value="Database" selected="@(Model.incident.category == "Database")">Database</option>
+                            <option value="Others" selected="@(Model.incident.category == "Others")">Others</option>
                         </select>
                     </div>
 
@@ -269,8 +269,8 @@
                             </button>
                         </label>
                         <div class="inc-cre-input-with-icon">
-                            <input type="text" id="assignment-group" autocomplete="off" class="inc-cre-form-control" readonly value="@(Model.Inc.AssignmentGroup?.name ?? "")">
-                            <input type="hidden" id="assignment-group-id" name="assignment_group" value="@Model.Inc.assignment_group">
+                            <input type="text" id="assignment-group" autocomplete="off" class="inc-cre-form-control" readonly value="@(Model.incident.AssignmentGroup?.name ?? "")">
+                            <input type="hidden" id="assignment-group-id" name="assignment_group" value="@Model.incident.assignment_group">
                             <button type="button" class="inc-cre-icon-search" id="assignment-group-search">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <circle cx="11" cy="11" r="8"></circle>
@@ -296,19 +296,19 @@
                         <select id="state" name="state" class="inc-cre-form-control">
                             @* <option value="Closed" selected="@(Model.Inc.state == "Closed")">Closed</option> *@
                             @* <option value="Cancelled">Cancelled</option> *@
-                            @if (Model.Inc.state == "Resolved")
+                            @if (Model.incident.state == "Resolved")
                             {
-                                <option value="Resolved" selected="@(Model.Inc.state == "Resolved")">Resolved</option>
+                                <option value="Resolved" selected="@(Model.incident.state == "Resolved")">Resolved</option>
                             }
-                            else if (Model.Inc.state == "Closed")
+                            else if (Model.incident.state == "Closed")
                             {
-                                <option value="Closed" selected="@(Model.Inc.state == "Closed")">Closed</option>
+                                <option value="Closed" selected="@(Model.incident.state == "Closed")">Closed</option>
                             }
                             else
                             {
-                                <option value="Pedding" selected="@(Model.Inc.state == "Pedding")">Pedding</option>
-                                <option value="In Progress" selected="@(Model.Inc.state == "In Progress")">In Progress</option>
-                                <option value="On-Hold" selected="@(Model.Inc.state == "On-Hold")">On-Hold</option>
+                                <option value="Pedding" selected="@(Model.incident.state == "Pedding")">Pedding</option>
+                                <option value="In Progress" selected="@(Model.incident.state == "In Progress")">In Progress</option>
+                                <option value="On-Hold" selected="@(Model.incident.state == "On-Hold")">On-Hold</option>
                             }
                         </select>
                     </div>
@@ -325,9 +325,9 @@
                             </button>
                         </label>
                         <select id="impact" name="impact" class="inc-cre-form-control">
-                            <option value="1 - High" selected="@(Model.Inc.impact == "1 - High")">1 - High</option>
-                            <option value="2 - Medium" selected="@(Model.Inc.impact == "2 - Medium")">2 - Medium</option>
-                            <option value="3 - Low" selected="@(Model.Inc.impact == "3 - Low")">3 - Low</option>
+                            <option value="1 - High" selected="@(Model.incident.impact == "1 - High")">1 - High</option>
+                            <option value="2 - Medium" selected="@(Model.incident.impact == "2 - Medium")">2 - Medium</option>
+                            <option value="3 - Low" selected="@(Model.incident.impact == "3 - Low")">3 - Low</option>
                         </select>
                     </div>
 
@@ -343,9 +343,9 @@
                             </button>
                         </label>
                         <select id="urgency" name="urgency" class="inc-cre-form-control">
-                            <option value="1 - High" selected="@(Model.Inc.urgency == "1 - High")">1 - High</option>
-                            <option value="2 - Medium" selected="@(Model.Inc.urgency == "2 - Medium")">2 - Medium</option>
-                            <option value="3 - Low" selected="@(Model.Inc.urgency == "3 - Low")">3 - Low</option>
+                            <option value="1 - High" selected="@(Model.incident.urgency == "1 - High")">1 - High</option>
+                            <option value="2 - Medium" selected="@(Model.incident.urgency == "2 - Medium")">2 - Medium</option>
+                            <option value="3 - Low" selected="@(Model.incident.urgency == "3 - Low")">3 - Low</option>
                         </select>
                     </div>
 
@@ -361,8 +361,8 @@
                             </button>
                         </label>
                         <div class="inc-cre-priority-display">
-                            <span id="priority-value" class="inc-cre-priority-value">@Model.Inc.priority</span>
-                            <input type="hidden" id="priority-hidden" autocomplete="off" name="priority" value="@Model.Inc.priority">
+                            <span id="priority-value" class="inc-cre-priority-value">@Model.incident.priority</span>
+                            <input type="hidden" id="priority-hidden" autocomplete="off" name="priority" value="@Model.incident.priority">
                             <svg class="inc-cre-info-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <circle cx="12" cy="12" r="10"></circle>
                                 <line x1="12" y1="16" x2="12" y2="12"></line>
@@ -383,9 +383,9 @@
                             </button>
                         </label>
                         <div class="inc-cre-input-with-icon">
-                            <input type="text" id="assigned-to" class="inc-cre-form-control" readonly value="@(Model.Inc.AssignedTo?.fullname ?? "")">
-                            <input type="hidden" id="assigned-to-id" name="assigned_to" value="@Model.Inc.assigned_to">
-                            <button type="button" class="inc-cre-icon-search" id="assigned-to-search" @(Model.Inc.assignment_group > 0 ? "" : "disabled")>
+                            <input type="text" id="assigned-to" class="inc-cre-form-control" readonly value="@(Model.incident.AssignedTo?.fullname ?? "")">
+                            <input type="hidden" id="assigned-to-id" name="assigned_to" value="@Model.incident.assigned_to">
+                            <button type="button" class="inc-cre-icon-search" id="assigned-to-search" @(Model.incident.assignment_group > 0 ? "" : "disabled")>
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <circle cx="11" cy="11" r="8"></circle>
                                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -399,13 +399,13 @@
             <div class="inc-cre-form-group inc-cre-short-description-group">
                 <label for="short-description" class="inc-cre-form-label inc-cre-required">Short description</label>
                 <div class="inc-cre-input-with-actions">
-                    @if (Model.Inc.state != "Resolved" && Model.Inc.state != "Closed")
+                    @if (Model.incident.state != "Resolved" && Model.incident.state != "Closed")
                     {
-                        <input type="text" autocomplete="off" maxlength="100" id="short-description" name="short_description" class="inc-cre-form-control" value="@Model.Inc.short_description" required>
+                        <input type="text" autocomplete="off" maxlength="100" id="short-description" name="short_description" class="inc-cre-form-control" value="@Model.incident.short_description" required>
                     }
                     else
                     {
-                        <input type="text" autocomplete="off" maxlength="100" id="short-description" name="short_description" class="inc-cre-form-control" value="@Model.Inc.short_description" readonly required>
+                        <input type="text" autocomplete="off" maxlength="100" id="short-description" name="short_description" class="inc-cre-form-control" value="@Model.incident.short_description" readonly required>
                     }
                     <div class="inc-cre-action-buttons">
                         <button type="button" class="inc-cre-btn-help">
@@ -421,13 +421,13 @@
 
             <div class="inc-cre-form-group inc-cre-full-width">
                 <label for="description" class="inc-cre-form-label">Description</label>
-                @if (Model.Inc.state != "Resolved" && Model.Inc.state != "Closed")
+                @if (Model.incident.state != "Resolved" && Model.incident.state != "Closed")
                 {
-                    <textarea id="description" autocomplete="off" name="describe" class="inc-cre-form-control inc-cre-description-textarea" rows="5">@Model.Inc.describe</textarea>
+                    <textarea id="description" autocomplete="off" name="describe" class="inc-cre-form-control inc-cre-description-textarea" rows="5">@Model.incident.describe</textarea>
                 }
                 else
                 {
-                    <textarea id="description" autocomplete="off" name="describe" class="inc-cre-form-control inc-cre-description-textarea" rows="5" readonly>@Model.Inc.describe</textarea>
+                    <textarea id="description" autocomplete="off" name="describe" class="inc-cre-form-control inc-cre-description-textarea" rows="5" readonly>@Model.incident.describe</textarea>
                 }
             </div>
         </form>
@@ -514,7 +514,7 @@
                         <textarea id="resolve-notes" name="resolveNotes" class="inc-cre-notes-textarea" placeholder="Enter resolution details..."></textarea>
                     </div>
 
-                    @if (Model.Inc.state == "Resolved" || Model.Inc.state == "Closed")
+                    @if (Model.incident.state == "Resolved" || Model.incident.state == "Closed")
                     {
                         <div class="inc-cre-resolve-history-section resolution-history-section" id="resolution-history-section">
                             <h3 class="inc-cre-section-title">Resolution Information</h3>
@@ -530,7 +530,7 @@
         </div>
     </div>
 
-    @if (Model.Inc.state != "Resolved" && Model.Inc.state != "Closed")
+    @if (Model.incident.state != "Resolved" && Model.incident.state != "Closed")
     {
         <footer class="inc-cre-form-footer">
             <div class="inc-cre-footer-buttons">
@@ -611,8 +611,8 @@
         $('#Incidents_menu_all').addClass("active");
 
       // Check if it is resolved or closed
-      var isResolved = "@Model.Inc.state" === "Resolved";
-      var isClosed = "@Model.Inc.state" === "Closed";
+      var isResolved = "@Model.incident.state" === "Resolved";
+      var isClosed = "@Model.incident.state" === "Closed";
       
       // If resolved or closed, disable all form elements and show resolution history
       if (isResolved || isClosed) {
@@ -749,7 +749,7 @@
       function updateSubcategories() {
           var category = $("#category").val();
           var $subcategory = $("#subcategory");
-          var currentSubcategory = "@Model.Inc.subcategory"; // Save the current subcategory value
+          var currentSubcategory = "@Model.incident.subcategory"; // Save the current subcategory value
 
           // Clear existing options
           $subcategory.empty();
@@ -773,7 +773,7 @@
 
       // Modal box function
       var currentInputField = null;
-      var selectedDepartmentId = @(Model.Inc.assignment_group > 0 ? Model.Inc.assignment_group : "null");
+      var selectedDepartmentId = @(Model.incident.assignment_group > 0 ? Model.incident.assignment_group : "null");
       var departmentList = [];
       var usersByDepartment = {};
 
@@ -1038,8 +1038,7 @@
                       // Clear the activity container
                       $(".inc-cre-activity-container").empty();
                       
-                      // 如果是已解决或已关闭状态，并且没有聊天记录，显示无聊天记录的消息
-                      var isResolvedOrClosed = "@Model.Inc.state" === "Resolved" || "@Model.Inc.state" === "Closed";
+                      var isResolvedOrClosed = "@Model.incident.state" === "Resolved" || "@Model.incident.state" === "Closed";
                       if (isResolvedOrClosed && (!response.notes || response.notes.length === 0)) {
                           $(".inc-cre-activity-container").html('<div class="inc-cre-no-history" style="text-align: center; padding: 30px; color: #6c757d; font-style: italic;">No chat history available</div>');
                           return;

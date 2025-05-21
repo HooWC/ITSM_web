@@ -47,10 +47,10 @@ namespace ITSM.Controllers
 
             var categoryList = allCategory.OrderByDescending(y => y.id).ToList();
 
-            var model =  new CategoryVM
+            var model =  new AllModelVM
             {
-                User = currentUser,
-                Category = categoryList
+                user = currentUser,
+                CategoryList = categoryList
             };
 
             return View(model);

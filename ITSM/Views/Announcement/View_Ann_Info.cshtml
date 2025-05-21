@@ -1,0 +1,85 @@
+﻿@using ITSM_DomainModelEntity.ViewModels
+@model AllModelVM
+@{
+    ViewData["Title"] = "View_Ann_Info";
+    Layout = "_Layout";
+}
+
+<style>
+    body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #121212;
+        background-image: linear-gradient(to bottom, #151515, #0e0e0e);
+        line-height: 1.6;
+        font-size: 16px;
+    }
+
+    header {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        background-color: #121212;
+        padding: 10px 20px;
+        border: none;
+        margin-bottom: 0px;
+    }
+</style>
+
+<header class="KB3-header">
+    <div class="KB3-user-profile nav-item navbar-dropdown dropdown-user dropdown open-button">
+        <a class="nav-link dropdown-toggle hide-arrow p-0"
+           href="javascript:void(0);"
+           data-bs-toggle="dropdown">
+            <div class="avatar avatar-online">
+                <img src="@(Model.user.photo != null ? $"data:{Model.user.photo_type};base64," +  Convert.ToBase64String(Model.user.photo) :
+                          Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 rounded-circle" />
+            </div>
+        </a>
+    </div>
+</header>
+
+<nav class="KB3-breadcrumb">
+    <ul>
+        <li><a href="~/Announcement/View_Ann_List">Announcement (V)</a></li>
+        <li class="KB3-active">(@Model.announcement.at_number) - @Model.announcement.ann_title</li>
+    </ul>
+</nav>
+
+<main class="KB3-main">
+    <div class="KB3-article-container">
+        <div class="KB3-article-main">
+
+            <h1 class="KB3-article-title">@Model.announcement.ann_title</h1>
+
+            <div class="KB3-article-meta">
+                <div class="KB3-meta-item">
+                    <i class="fas fa-user"></i>
+                    <span>Authored by <a href="#" class="KB3-author-link">@Model.announcement.User.fullname</a></span>
+                </div>
+                <div class="KB3-meta-item">
+                    <i class="fas fa-calendar"></i>
+                    <span>@Model.announcement.create_date.ToString("yyyy-MM-dd HH:mm:ss")</span>
+                </div>
+            </div>
+
+            <div class="KB3-article-content">
+                @Html.Raw(Model.announcement.message)
+            </div>
+        </div>
+    </div>
+</main>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+    $(function () {
+         $('.menu-item').removeClass('active open');
+
+         var $target = $('#Ann_View_menu');
+         if (!$target.hasClass('active') || !$target.hasClass('open')) {
+             $target.addClass('active open');
+         }
+     });
+</script>
+

@@ -1,5 +1,5 @@
 ﻿@using ITSM_DomainModelEntity.ViewModels
-@model User_Dep_RoleVM
+@model AllModelVM
 @{
     ViewData["Title"] = "User_Info";
     Layout = "_Layout";
@@ -26,7 +26,6 @@
         padding: 4px 0px 0px 5px;
     }
 
-    /* Product Image Styles */
     .inc-cre-product-image-container {
         margin-bottom: 1.25rem;
         border-radius: 0.375rem;
@@ -40,7 +39,7 @@
         position: relative;
         width: 100%;
         height: 0;
-        padding-bottom: 25%; /* Reduced height for rectangular images */
+        padding-bottom: 25%; 
         overflow: hidden;
         background-color: #121212;
     }
@@ -51,7 +50,7 @@
         left: 0;
         width: 100%;
         height: 100%;
-        object-fit: contain; /* Changed from cover to contain */
+        object-fit: contain; 
         transition: transform 0.5s ease;
         background-color: #121212;
     }
@@ -83,12 +82,10 @@
         transform: scale(1.03);
     }
 
-    /* Add support for square images */
     .inc-cre-product-image-wrapper.square {
-        padding-bottom: 25%; /* Keep same height for consistency */
+        padding-bottom: 25%; 
     }
 
-    /* Auto-detect and adjust for different image types */
     .inc-cre-product-image.landscape {
         object-position: center;
     }
@@ -103,7 +100,7 @@
 
     @@media (max-width: 768px) {
         .inc-cre-product-image-wrapper {
-            padding-bottom: 35%; /* Slightly taller on mobile but still compact */
+            padding-bottom: 35%; 
         }
 
             .inc-cre-product-image-wrapper.square {
@@ -124,7 +121,7 @@
             </button>
             <div class="inc-cre-title-group">
                 <div class="inc-cre-title">User Info</div>
-                <div class="inc-cre-subtitle">@Model.Info_User.emp_id</div>
+                <div class="inc-cre-subtitle">@Model.info_user.emp_id</div>
             </div>
         </div>
         <div class="inc-cre-header-right">
@@ -183,21 +180,21 @@
         }
 
         <form id="incidentForm" class="inc-cre-incident-form" action="~/User/User_Info" method="post">
-            <input type="text" name="id" id="id" class="inc-cre-form-control" value="@Model.Info_User.id" style="display:none;" readonly>
+            <input type="text" name="id" id="id" class="inc-cre-form-control" value="@Model.info_user.id" style="display:none;" readonly>
             <div class="inc-cre-form-grid">
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
-                        <label for="number" class="inc-cre-form-label">Employee Number</label>
-                        <input type="text" name="emp_id" id="emp_id" class="inc-cre-form-control" value="@Model.Info_User.emp_id">
+                        <label for="emp_id" class="inc-cre-form-label">Employee Number</label>
+                        <input type="text" name="emp_id" id="emp_id" class="inc-cre-form-control" value="@Model.info_user.emp_id">
                     </div>
                 </div>
 
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
-                        <label for="channel" class="inc-cre-form-label">Gender</label>
+                        <label for="gender" class="inc-cre-form-label">Gender</label>
                         <select id="gender" name="gender" class="inc-cre-form-control">
                             @{
-                                var selectGender = Model.Info_User.gender;
+                                var selectGender = Model.info_user.gender;
                             }
                             <option value="Male" selected="@(selectGender == "Male" ? "selected" : null)">Male</option>
                             <option value="Female" selected="@(selectGender == "Female" ? "selected" : null)">Female</option>
@@ -210,15 +207,15 @@
             <div class="inc-cre-form-grid">
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
-                        <label for="number" class="inc-cre-form-label inc-cre-required">Full Name</label>
-                        <input type="text" name="fullname" id="fullname" class="inc-cre-form-control" value="@Model.Info_User.fullname" autocomplete="off" required>
+                        <label for="fullname" class="inc-cre-form-label inc-cre-required">Full Name</label>
+                        <input type="text" name="fullname" id="fullname" class="inc-cre-form-control" value="@Model.info_user.fullname" autocomplete="off" required>
                     </div>
                 </div>
 
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
-                        <label for="number" class="inc-cre-form-label inc-cre-required">Email</label>
-                        <input type="email" name="email" id="email" class="inc-cre-form-control" value="@Model.Info_User.email" autocomplete="off" required>
+                        <label for="email" class="inc-cre-form-label inc-cre-required">Email</label>
+                        <input type="email" name="email" id="email" class="inc-cre-form-control" value="@Model.info_user.email" autocomplete="off" required>
                     </div>
                 </div>
             </div>
@@ -226,12 +223,12 @@
             <div class="inc-cre-form-grid">
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
-                        <label for="channel" class="inc-cre-form-label">Department</label>
+                        <label for="department_id" class="inc-cre-form-label">Department</label>
                         <select id="department_id" name="department_id" class="inc-cre-form-control">
                             @{
-                                var selectDepartment = Model.Info_User.department_id;
+                                var selectDepartment = Model.info_user.department_id;
                             }
-                            @foreach (var item in Model.department)
+                            @foreach (var item in Model.DepartmentList)
                             {
                                 <option value="@item.id" selected="@(item.id == selectDepartment)">@item.name</option>
                             }
@@ -241,12 +238,12 @@
 
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
-                        <label for="channel" class="inc-cre-form-label">Role</label>
+                        <label for="role_id" class="inc-cre-form-label">Role</label>
                         <select id="role_id" name="role_id" class="inc-cre-form-control">
                             @{
-                                var selectRole = Model.Info_User.role_id;
+                                var selectRole = Model.info_user.role_id;
                             }
-                            @foreach (var item in Model.role)
+                            @foreach (var item in Model.RoleList)
                             {
                                 <option value="@item.id" selected="@(item.id == selectRole)">@item.role</option>
                             }
@@ -256,7 +253,7 @@
             </div>
 
             <div class="inc-cre-form-group inc-cre-short-description-group">
-                <label for="short-description" class="inc-cre-form-label">
+                <label for="role_code" class="inc-cre-form-label">
                     Role Code (If you change the new Role)
                     <button type="button" class="inc-cre-btn-help">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -274,17 +271,17 @@
             <div class="inc-cre-form-grid">
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
-                        <label for="number" class="inc-cre-form-label inc-cre-required">Title</label>
-                        <input type="text" name="title" id="title" class="inc-cre-form-control" autocomplete="off" value="@Model.Info_User.title" required>
+                        <label for="title" class="inc-cre-form-label inc-cre-required">Title</label>
+                        <input type="text" name="title" id="title" class="inc-cre-form-control" autocomplete="off" value="@Model.info_user.title" required>
                     </div>
                 </div>
 
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
-                        <label for="number" class="inc-cre-form-label">Race</label>
+                        <label for="race" class="inc-cre-form-label">Race</label>
                         <select id="race" name="race" class="inc-cre-form-control">
                             @{
-                                var selectRace = Model.Info_User.race;
+                                var selectRace = Model.info_user.race;
                             }
                             <option value="Malay" selected="@(selectRace == "Malay")">Malay</option>
                             <option value="Indian" selected="@(selectRace == "Indian")">Indian</option>
@@ -298,15 +295,15 @@
             <div class="inc-cre-form-grid">
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
-                        <label for="number" class="inc-cre-form-label">Business Phone</label>
-                        <input type="text" name="business_phone" id="business_phone" autocomplete="off" class="inc-cre-form-control" value="@Model.Info_User.business_phone">
+                        <label for="business_phone" class="inc-cre-form-label">Business Phone</label>
+                        <input type="text" name="business_phone" id="business_phone" autocomplete="off" class="inc-cre-form-control" value="@Model.info_user.business_phone">
                     </div>
                 </div>
 
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
-                        <label for="number" class="inc-cre-form-label inc-cre-required">Mobile Phone</label>
-                        <input type="email" name="mobile_phone" id="mobile_phone" autocomplete="off" class="inc-cre-form-control" value="@Model.Info_User.mobile_phone" required>
+                        <label for="mobile_phone" class="inc-cre-form-label inc-cre-required">Mobile Phone</label>
+                        <input type="text" name="mobile_phone" id="mobile_phone" autocomplete="off" class="inc-cre-form-control" value="@Model.info_user.mobile_phone" required>
                     </div>
                 </div>
             </div>
@@ -314,17 +311,17 @@
             <div class="inc-cre-form-grid">
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
-                        <label for="number" class="inc-cre-form-label inc-cre-required">Username</label>
-                        <input type="text" name="username" minlength="6" autocomplete="off" id="username" class="inc-cre-form-control" value="@Model.Info_User.username" required>
+                        <label for="username" class="inc-cre-form-label inc-cre-required">Username</label>
+                        <input type="text" name="username" minlength="6" autocomplete="off" id="username" class="inc-cre-form-control" value="@Model.info_user.username" required>
                     </div>
                 </div>
 
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
-                        <label for="number" class="inc-cre-form-label">Active</label>
+                        <label for="active" class="inc-cre-form-label">Active</label>
                         <select id="active" name="active" class="inc-cre-form-control">
                             @{
-                                var selectActive = Model.Info_User.active;
+                                var selectActive = Model.info_user.active;
                             }
                             <option value="true" selected="@(selectActive ? "selected" : null)">Active</option>
                             <option value="false" selected="@(selectActive == false ? "selected" : null)">Blocked</option>
@@ -336,7 +333,7 @@
             <div class="inc-cre-form-grid">
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
-                        <label for="number" class="inc-cre-form-label">
+                        <label for="password" class="inc-cre-form-label">
                             Old Password
                             <button type="button" class="inc-cre-btn-help">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -352,7 +349,7 @@
 
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
-                        <label for="number" class="inc-cre-form-label">
+                        <label for="new_password" class="inc-cre-form-label">
                             New Password (Required old password)
                             <button type="button" class="inc-cre-btn-help">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -368,15 +365,15 @@
 
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
-                        <label for="number" class="inc-cre-form-label">Create Date</label>
-                        <input type="text" name="cd" id="cd" autocomplete="off" class="inc-cre-form-control" value="@Model.Info_User.create_date.ToString("yyyy-MM-dd HH:mm:ss")" readonly>
+                        <label for="cd" class="inc-cre-form-label">Create Date</label>
+                        <input type="text" name="cd" id="cd" autocomplete="off" class="inc-cre-form-control" value="@Model.info_user.create_date.ToString("yyyy-MM-dd HH:mm:ss")" readonly>
                     </div>
                 </div>
 
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
-                        <label for="number" class="inc-cre-form-label">Update Date</label>
-                        <input type="email" name="ud" id="ud" autocomplete="off" class="inc-cre-form-control" value="@Model.Info_User.update_date?.ToString("yyyy-MM-dd HH:mm:ss")" readonly>
+                        <label for="ud" class="inc-cre-form-label">Update Date</label>
+                        <input type="text" name="ud" id="ud" autocomplete="off" class="inc-cre-form-control" value="@Model.info_user.update_date?.ToString("yyyy-MM-dd HH:mm:ss")" readonly>
                     </div>
                 </div>
             </div>

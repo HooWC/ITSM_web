@@ -1,12 +1,11 @@
 ﻿@using ITSM_DomainModelEntity.ViewModels
 @model AllModelVM
 @{
-    ViewData["Title"] = "Ann_Create";
+    ViewData["Title"] = "Ann_Info";
     Layout = "_Layout";
 }
 
 <style>
-    /* Product Image Styles */
     .inc-cre-product-image-container {
         margin-bottom: 1.25rem;
         border-radius: 0.375rem;
@@ -20,7 +19,7 @@
         position: relative;
         width: 100%;
         height: 0;
-        padding-bottom: 25%; /* Reduced height for rectangular images */
+        padding-bottom: 25%;
         overflow: hidden;
         background-color: #121212;
     }
@@ -31,7 +30,7 @@
         left: 0;
         width: 100%;
         height: 100%;
-        object-fit: contain; /* Changed from cover to contain */
+        object-fit: contain; 
         transition: transform 0.5s ease;
         background-color: #121212;
     }
@@ -120,7 +119,7 @@
             </button>
             <div class="inc-cre-title-group">
                 <div class="inc-cre-title">Announcement Form</div>
-                <div class="inc-cre-subtitle">New record</div>
+                <div class="inc-cre-subtitle">@Model.announcement.at_number</div>
             </div>
         </div>
         <div class="inc-cre-header-right">
@@ -138,7 +137,7 @@
                     <line x1="12" y1="17" x2="12.01" y2="17"></line>
                 </svg>
             </button>
-            <button class="inc-cre-btn inc-cre-btn-submit" onclick="document.getElementById('incidentForm').submit();">Submit</button>
+            <button class="inc-cre-btn inc-cre-btn-submit" onclick="document.getElementById('incidentForm').submit();">Save</button>
             <div class="nav-item navbar-dropdown dropdown-user dropdown open-button">
                 <a class="nav-link dropdown-toggle hide-arrow p-0"
                    href="javascript:void(0);"
@@ -149,6 +148,7 @@
                     </div>
                 </a>
             </div>
+            <!-- <button class="inc-cre-btn inc-cre-btn-resolve">Resolve</button> -->
         </div>
     </header>
 
@@ -179,19 +179,20 @@
             </div>
         }
 
-        <form id="incidentForm" class="inc-cre-incident-form" action="~/Announcement/Ann_Create" method="post">
+        <form id="incidentForm" class="inc-cre-incident-form" action="~/Announcement/Ann_Info" method="post">
+            <input type="text" name="id" id="id" class="inc-cre-form-control" value="@Model.announcement.id" style="display:none;" readonly>
             <div class="inc-cre-form-grid">
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="number" class="inc-cre-form-label">Number</label>
-                        <input type="text" id="number" class="inc-cre-form-control" value="ANN_TBD" readonly>
+                        <input type="text" id="number" class="inc-cre-form-control" value="@Model.announcement.at_number" readonly>
                     </div>
                 </div>
 
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="number" class="inc-cre-form-label">User Name</label>
-                        <input type="text" class="inc-cre-form-control" value="@Model.user.fullname" readonly>
+                        <input type="text" id="number" class="inc-cre-form-control" value="@Model.announcement.User.fullname" readonly>
                     </div>
                 </div>
             </div>
@@ -199,13 +200,13 @@
             <div class="inc-cre-form-group inc-cre-short-description-group">
                 <label for="ann_title" class="inc-cre-form-label inc-cre-required">Title</label>
                 <div class="inc-cre-input-with-actions">
-                    <input type="text" autocomplete="off" name="ann_title" id="ann_title" class="inc-cre-form-control" required>
+                    <input type="text" autocomplete="off" name="ann_title" id="ann_title" class="inc-cre-form-control" value="@Model.announcement.ann_title" required>
                 </div>
             </div>
 
             <div class="inc-cre-form-group kb-editor-container">
                 <label for="editor" class="inc-cre-form-label inc-cre-required">Article content</label>
-                <textarea id="editor" autocomplete="off" name="message" required></textarea>
+                <textarea id="editor" autocomplete="off" name="message" required>@Html.Raw(Model.announcement.message)</textarea>
             </div>
         </form>
     </main>
@@ -221,7 +222,7 @@
           $target.addClass('active open');
       }
 
-      $('#Announcement_menu_create').addClass("active");
+      $('#Announcement_menu_all').addClass("active");
     });
 
     tinymce.init({

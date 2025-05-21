@@ -20,22 +20,14 @@ namespace ITSM_DomainModelEntity.Models
         [ForeignKey("Department")]
         public int department_id { get; set; }
 
-        [Required]
-        [StringLength(50)]
         public string? device_type { get; set; }
 
-        [Required]
-        [StringLength(50)]
         public string? windows_version { get; set; }
 
-        [Required]
-        [StringLength(100)]
         public string? hostname { get; set; }
 
-        [StringLength(100)]
         public string? microsoft_office { get; set; }
 
-        [StringLength(100)]
         public string? antivirus { get; set; }
 
         [Required]
@@ -66,7 +58,7 @@ namespace ITSM_DomainModelEntity.Models
         [StringLength(100)]
         public string? hard_disk { get; set; }
 
-        public bool dvdrw { get; set; } = false;
+        public string? dvdrw { get; set; }
 
         [StringLength(100)]
         public string? ms_office { get; set; }

@@ -70,10 +70,10 @@ namespace ITSM.Controllers
                 incident.AssignedTo = allUsers.FirstOrDefault(u => u.id == incident.assigned_to);
             }
 
-            var model = new IncidentVM
+            var model = new AllModelVM
             {
-                User = currentUser,
-                Inc = incList
+                user = currentUser,
+                IncidentList = incList
             };
 
             return View(model);
@@ -109,10 +109,10 @@ namespace ITSM.Controllers
                 incident.AssignedTo = allUsers.FirstOrDefault(u => u.id == incident.assigned_to);
             }
 
-            var model = new IncidentVM
+            var model = new AllModelVM
             {
-                User = currentUser,
-                Inc = incList
+                user = currentUser,
+                IncidentList = incList
             };
 
             return View(model);
@@ -231,10 +231,10 @@ namespace ITSM.Controllers
             incData.AssignmentGroup = allDepartment.Where(x => x.id == incData.assignment_group).FirstOrDefault();
             incData.AssignedTo = incData.assigned_to == null ? null : allUser.FirstOrDefault(x => x.id == incData.assigned_to);
 
-            var model = new IncidentInfoVM()
+            var model = new AllModelVM()
             {
-                User = currentUser,
-                Inc = incData
+                user = currentUser,
+                incident = incData
             };
 
             return View(model);
@@ -266,10 +266,10 @@ namespace ITSM.Controllers
             incData.AssignmentGroup = allDepartment.FirstOrDefault(x => x.id == incData.assignment_group);
             incData.AssignedTo = incData.assigned_to == null ? null : allUser.FirstOrDefault(x => x.id == incData.assigned_to);
 
-            var model = new IncidentInfoVM()
+            var model = new AllModelVM()
             {
-                User = currentUser,
-                Inc = incData
+                user = currentUser,
+                incident = incData
             };
 
             if (inc.short_description == null && inc.AssignmentGroup == null)
@@ -352,10 +352,10 @@ namespace ITSM.Controllers
                 incident.AssignedTo = allUsers.FirstOrDefault(u => u.id == incident.assigned_to);
             }
 
-            var model = new IncidentVM
+            var model = new AllModelVM()
             {
-                User = currentUser,
-                Inc = incList
+                user = currentUser,
+                IncidentList = incList
             };
 
             return View(model);
@@ -391,10 +391,10 @@ namespace ITSM.Controllers
                 incident.AssignedTo = allUsers.FirstOrDefault(u => u.id == incident.assigned_to);
             }
 
-            var model = new IncidentVM
+            var model = new AllModelVM()
             {
-                User = currentUser,
-                Inc = incList
+                user = currentUser,
+                IncidentList = incList
             };
 
             return View(model);
@@ -430,10 +430,10 @@ namespace ITSM.Controllers
                 incident.AssignedTo = allUsers.FirstOrDefault(u => u.id == incident.assigned_to);
             }
 
-            var model = new IncidentVM
+            var model = new AllModelVM()
             {
-                User = currentUser,
-                Inc = incList
+                user = currentUser,
+                IncidentList = incList
             };
 
             return View(model);
@@ -469,10 +469,10 @@ namespace ITSM.Controllers
                 incident.AssignedTo = allUsers.FirstOrDefault(u => u.id == incident.assigned_to);
             }
 
-            var model = new IncidentVM
+            var model = new AllModelVM()
             {
-                User = currentUser,
-                Inc = incList
+                user = currentUser,
+                IncidentList = incList
             };
 
             return View(model);

@@ -1,5 +1,5 @@
 ﻿@using ITSM_DomainModelEntity.ViewModels
-@model ProductVM
+@model AllModelVM
 @{
     ViewData["Title"] = "Create_Form";
     Layout = "_Layout";
@@ -137,7 +137,7 @@
                    href="javascript:void(0);"
                    data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
-                        <img src="@(Model.User.photo != null ? $"data:{Model.User.photo_type};base64," +  Convert.ToBase64String(Model.User.photo) :
+                        <img src="@(Model.user.photo != null ? $"data:{Model.user.photo_type};base64," +  Convert.ToBase64String(Model.user.photo) :
                             Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 rounded-circle" />
                     </div>
                 </a>
@@ -173,20 +173,20 @@
         }
 
         <form id="incidentForm" class="inc-cre-incident-form" action="~/Request/Create_Form" method="post">
-            <input type="text" name="pro_id" id="pro_id" class="inc-cre-form-control" value="@Model.Info_Product.id" style="display:none;" readonly>
+            <input type="text" name="pro_id" id="pro_id" class="inc-cre-form-control" value="@Model.product.id" style="display:none;" readonly>
             <div class="inc-cre-product-image-container">
                 <div class="inc-cre-product-image-wrapper">
                     
-                    @if (Model.Info_Product.photo != null)
+                    @if (Model.product.photo != null)
                     {
-                        <img src="@(Model.Info_Product.photo != null ? $"data:{Model.Info_Product.photo_type};base64,{Convert.ToBase64String(Model.Info_Product.photo)}" :
+                        <img src="@(Model.product.photo != null ? $"data:{Model.product.photo_type};base64,{Convert.ToBase64String(Model.product.photo)}" :
                          "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80")"
                              alt="Selected Product"
                              class="inc-cre-product-image" />
                     }
                     else
                     {
-                        if (Model.Info_Product.product_type == "Product")
+                        if (Model.product.product_type == "Product")
                         {
                             <img src="~/img/product/product_base.png"
                                  alt="Selected Product"
@@ -201,8 +201,8 @@
                     }
 
                     <div class="inc-cre-product-image-overlay">
-                        <h4 class="inc-cre-product-title">@Model.Info_Product.item_title</h4>
-                        <p class="inc-cre-product-description">@Model.Info_Product.description</p>
+                        <h4 class="inc-cre-product-title">@Model.product.item_title</h4>
+                        <p class="inc-cre-product-description">@Model.product.description</p>
                     </div>
                 </div>
             </div>
@@ -218,7 +218,7 @@
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="number" class="inc-cre-form-label">Product Number</label>
-                        <input type="text" class="inc-cre-form-control" value="@Model.Info_Product.pro_number" readonly>
+                        <input type="text" class="inc-cre-form-control" value="@Model.product.pro_number" readonly>
                     </div>
                 </div>
             </div>
@@ -227,16 +227,16 @@
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="number" class="inc-cre-form-label">User</label>
-                        <input type="text" class="inc-cre-form-control" value="@Model.User.fullname" readonly>
+                        <input type="text" class="inc-cre-form-control" value="@Model.user.fullname" readonly>
                     </div>
                 </div>
 
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
-                        <label for="number" class="inc-cre-form-label">Quantity</label>
-                        @if (Model.Info_Product.product_type == "Product")
+                        <label for="quantity" class="inc-cre-form-label">Quantity</label>
+                        @if (Model.product.product_type == "Product")
                         {
-                            <input type="number" name="quantity" id="quantity" class="inc-cre-form-control" value="1" min="1" max="@Model.Info_Product.quantity" required>
+                            <input type="number" name="quantity" id="quantity" class="inc-cre-form-control" value="1" min="1" max="@Model.product.quantity" required>
                         }
                         else
                         {
@@ -250,20 +250,20 @@
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="channel" class="inc-cre-form-label">Category</label>
-                        <input type="text" class="inc-cre-form-control" value="@Model.Info_Product.Category.title" readonly>
+                        <input type="text" class="inc-cre-form-control" value="@Model.product.Category.title" readonly>
                     </div>
                 </div>
 
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="channel" class="inc-cre-form-label">Responsible</label>
-                        <input type="text" class="inc-cre-form-control" value="@Model.Info_Product.ResponsibleDepartment.name" readonly>
+                        <input type="text" class="inc-cre-form-control" value="@Model.product.ResponsibleDepartment.name" readonly>
                     </div>
                 </div>
             </div>
 
             <div class="inc-cre-form-group inc-cre-short-description-group">
-                <label for="short-description" class="inc-cre-form-label inc-cre-required">Short description</label>
+                <label for="short_description" class="inc-cre-form-label inc-cre-required">Short description</label>
                 <div class="inc-cre-input-with-actions">
                     <input autocomplete="off" type="text" id="short_description" name="short_description" class="inc-cre-form-control" required>
                     <div class="inc-cre-action-buttons">

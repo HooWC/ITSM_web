@@ -141,10 +141,10 @@ namespace ITSM.Controllers
             var todo = allTodo.Where(x => x.user_id == currentUser.id).OrderByDescending(y => y.id).ToList();
 
             // return to view data
-            var model = new TodoVM
+            var model = new AllModelVM
             {
-                User = currentUser,
-                Todo = todo,
+                user = currentUser,
+                TodoList = todo,
             };
 
             return View(model);
@@ -300,11 +300,11 @@ namespace ITSM.Controllers
             currentUser.Department = allDepartment.Where(x => x.id == currentUser.department_id).FirstOrDefault();
             currentUser.Role = allRole.Where(x => x.id == currentUser.role_id).FirstOrDefault();
 
-            var model = new User_Dep_RoleVM()
+            var model = new AllModelVM()
             {
                 user = currentUser,
-                role = allRole,
-                department = allDepartment
+                RoleList = allRole,
+                DepartmentList = allDepartment
             };
 
             return View(model);
@@ -333,11 +333,11 @@ namespace ITSM.Controllers
             currentUser.Department = allDepartment.Where(x => x.id == currentUser.department_id).FirstOrDefault();
             currentUser.Role = allRole.Where(x => x.id == currentUser.role_id).FirstOrDefault();
 
-            var model = new User_Dep_RoleVM()
+            var model = new AllModelVM()
             {
-                user = info_user,
-                role = allRole,
-                department = allDepartment
+                user = currentUser,
+                RoleList = allRole,
+                DepartmentList = allDepartment
             };
 
             if (!string.IsNullOrEmpty(user.emp_id) &&
