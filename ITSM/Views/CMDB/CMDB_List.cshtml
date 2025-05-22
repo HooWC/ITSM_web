@@ -45,7 +45,7 @@
             <div class="inc-tab-dropdown">
                 <button class="inc-tab-dropdown-toggle" id="filterDropdown">Full Name <i class="fas fa-chevron-down"></i></button>
                 <div class="inc-tab-dropdown-menu" id="filterMenu" style="display:none;">
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="fullname_name">Full Name</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-filter="full_name">Full Name</a>
                     <a href="#" class="inc-tab-dropdown-item" data-filter="department">Department</a>
                     <a href="#" class="inc-tab-dropdown-item" data-filter="device_type">Device Type</a>
                     <a href="#" class="inc-tab-dropdown-item" data-filter="windows_version">Windows Version</a>
@@ -112,7 +112,7 @@
                     <tr class="incident-item" data-id="@i.id">
                         <td><input type="checkbox" class="item-checkbox"></td>
                         <td class="inc-tab-incident-number" data-label="Number">
-                            <a href="~/Announcement/Ann_Info?id=@i.id">@i.full_name</a>
+                            <a href="~/CMDB/CMDB_Info?id=@i.id">@i.full_name</a>
                         </td>
                         <td data-label="department_name">@i.Department.name</td>
                         <td data-label="device_type">@i.device_type</td>
@@ -137,7 +137,7 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="~/js/List/Ann_List.js"></script>
+<script src="~/js/List/CMDB_List.js"></script>
 <script>
       $(function () {
         var $target = $('#CMDB_menu');

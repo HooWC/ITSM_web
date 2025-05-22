@@ -26,6 +26,7 @@ namespace ITSM.Controllers
         private readonly Role_api _roleApi;
         private readonly Request_api _reqApi;
         private readonly Announcement_api _announApi;
+        private readonly CMDB_api _cmdbApi;
 
         public AjaxController(IHttpContextAccessor httpContextAccessor)
         {
@@ -41,6 +42,7 @@ namespace ITSM.Controllers
             _roleApi = new Role_api(httpContextAccessor);
             _reqApi = new Request_api(httpContextAccessor);
             _announApi = new Announcement_api(httpContextAccessor);
+            _cmdbApi = new CMDB_api(httpContextAccessor);
         }
 
         private bool IsUserLoggedIn(out User currentUser)
@@ -1399,7 +1401,7 @@ namespace ITSM.Controllers
                 
             var result = filteredDepartments.Select(t => new {
                 t.name,
-                t.description
+                description = t.description != null ? t.description : ""
             });
 
             return Json(result);
@@ -2329,6 +2331,186 @@ namespace ITSM.Controllers
                     if (annToDelete != null)
                     {
                         bool result = await _announApi.DeleteAnnouncement_API(id);
+                        if (result)
+                            successCount++;
+                    }
+                }
+
+                if (successCount > 0)
+                {
+                    return Json(new
+                    {
+                        success = true,
+                        message = $"Successfully deleted {successCount} item(s)"
+                    });
+                }
+                else
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Failed to delete items. Items may not exist or you don't have permission"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = $"Error: {ex.Message}" });
+            }
+        }
+
+        /// <summary>
+        /// CMDB/CMDB_List
+        public async Task<IActionResult> SearchCMDB(string searchTerm, string filterBy = "full_name")
+        {
+            if (string.IsNullOrEmpty(searchTerm))
+                return Json(new List<Feedback>());
+
+            if (!IsUserLoggedIn(out var currentUser))
+                return Json(new { success = false, message = "Not logged in" });
+
+            var CMDBTask = _cmdbApi.GetAllCMDB_API();
+            var departmentTask = _departmentApi.GetAllDepartment_API();
+            await Task.WhenAll(CMDBTask, departmentTask);
+
+            var allCMDB = await CMDBTask;
+            var allDep = await departmentTask;
+
+            var userCMDB = new List<CMDB>();
+
+            userCMDB = allCMDB.OrderByDescending(y => y.id).ToList();
+
+            List<CMDB> filteredCMDBs;
+
+            if (searchTerm == "re_entrynovalue")
+            {
+                filteredCMDBs = userCMDB;
+            }
+            else
+            {
+                switch (filterBy.ToLower())
+                {
+                    case "full_name":
+                        filteredCMDBs = userCMDB
+                            .Where(t => t.full_name != null && t.full_name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                    case "department":
+                        var filterDeps = allDep.Where(x => x.name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+                        filteredCMDBs = (from i in userCMDB
+                                         join d in filterDeps on i.department_id equals d.id
+                                         select i).ToList();
+                        break;
+                    case "device_type":
+                        filteredCMDBs = userCMDB
+                            .Where(t => t.device_type != null && t.device_type.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                    case "windows_version":
+                        filteredCMDBs = userCMDB
+                            .Where(t => t.windows_version != null && t.windows_version.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                    case "host_name":
+                        filteredCMDBs = userCMDB
+                            .Where(t => t.hostname != null && t.hostname.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                    case "ram":
+                        filteredCMDBs = userCMDB
+                            .Where(t => t.ram != null && t.ram.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                    case "dvdrw":
+                        filteredCMDBs = userCMDB
+                            .Where(t => t.dvdrw != null && t.dvdrw.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                    default:
+                        filteredCMDBs = userCMDB;
+                        break;
+                }
+            }
+
+            var result = filteredCMDBs.Select(t => new {
+                t.id,
+                t.full_name,
+                t.device_type,
+                t.windows_version,
+                t.hostname,
+                t.ram,
+                t.dvdrw,
+                department = allDep.FirstOrDefault(u => u.id == t.department_id)?.name ?? ""
+            });
+
+            return Json(result);
+        }
+
+        /// <summary>
+        /// CMDB/CMDB_List
+        public async Task<IActionResult> SortCMDB(string sortOrder = "asc")
+        {
+            if (!IsUserLoggedIn(out var currentUser))
+                return Json(new { success = false, message = "Not logged in" });
+
+            var CMDBTask = _cmdbApi.GetAllCMDB_API();
+            var departmentTask = _departmentApi.GetAllDepartment_API();
+            await Task.WhenAll(CMDBTask, departmentTask);
+
+            var allCMDB = await CMDBTask;
+            var allDep = await departmentTask;
+
+            var userCMDBs = new List<CMDB>();
+            userCMDBs = allCMDB.OrderByDescending(y => y.id).ToList();
+
+            List<CMDB> sortedCMDBs;
+            if (sortOrder.ToLower() == "desc")
+                sortedCMDBs = userCMDBs.OrderBy(x => x.id).ToList();
+            else
+                sortedCMDBs = userCMDBs.OrderByDescending(x => x.id).ToList();
+
+            var result = sortedCMDBs.Select(t => new {
+                t.id,
+                t.full_name,
+                t.device_type,
+                t.windows_version,
+                t.hostname,
+                t.ram,
+                t.dvdrw,
+                department = allDep.FirstOrDefault(u => u.id == t.department_id)?.name ?? ""
+            });
+
+            return Json(result);
+        }
+
+        /// <summary>
+        /// CMDB/CMDB_List
+        [HttpPost]
+        public async Task<IActionResult> DeleteCMDBs([FromBody] DeleteFeedbackRequestFM request)
+        {
+            var word = request.word;
+            var ids = request.ids;
+
+            if (ids == null || !ids.Any())
+                return Json(new { success = false, message = "No items selected for deletion" });
+
+            if (!IsUserLoggedIn(out var currentUser))
+                return Json(new { success = false, message = "Not logged in" });
+
+            try
+            {
+                int successCount = 0;
+
+                foreach (var id in ids)
+                {
+                    var allCMDBs = await _cmdbApi.GetAllCMDB_API();
+                    var CMDBToDelete = new CMDB();
+                    CMDBToDelete = allCMDBs.FirstOrDefault(x => x.id == id);
+
+
+                    if (CMDBToDelete != null)
+                    {
+                        bool result = await _cmdbApi.DeleteCMDB_API(id);
                         if (result)
                             successCount++;
                     }

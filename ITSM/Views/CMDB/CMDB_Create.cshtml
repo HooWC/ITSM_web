@@ -34,7 +34,7 @@
                 </svg>
             </button>
             <div class="inc-cre-title-group">
-                <div class="inc-cre-title">CMDB</div>
+                <div class="inc-cre-title">CMDB Form</div>
                 <div class="inc-cre-subtitle">New record</div>
             </div>
         </div>
@@ -59,7 +59,7 @@
                    href="javascript:void(0);"
                    data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
-                        <img src="@(ViewBag.Photo != null ? $"data:{ViewBag.PhotoType};base64,{Convert.ToBase64String(ViewBag.Photo)}" :
+                        <img src="@(Model.user.photo != null ? $"data:{Model.user.photo_type};base64," +  Convert.ToBase64String(Model.user.photo) :
                             Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 rounded-circle" />
                     </div>
                 </a>
@@ -94,7 +94,7 @@
             </div>
         }
 
-        <form id="incidentForm" class="inc-cre-incident-form" action="~/Feedback/Feedback_Create" method="post">
+        <form id="incidentForm" class="inc-cre-incident-form" action="~/CMDB/CMDB_Create" method="post">
             <div class="inc-cre-form-grid">
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
@@ -194,6 +194,7 @@
                         <label for="ram" class="inc-cre-form-label">RAM</label>
                         <select id="ram" name="ram" class="inc-cre-form-control">
                             <option value="2GB">2GB</option>
+                            <option value="4GB">4GB</option>
                             <option value="6GB">6GB</option>
                             <option value="8GB">8GB</option>
                             <option value="12GB">12GB</option>
@@ -260,7 +261,7 @@
             </div>
 
             <div class="inc-cre-form-group inc-cre-short-description-group">
-                <label for="ms_office" class="inc-cre-form-label inc-cre-required">MS Office</label>
+                <label for="ms_office" class="inc-cre-form-label">MS Office</label>
                 <div class="inc-cre-input-with-actions">
                     <input type="text" autocomplete="off" name="ms_office" id="ms_office" class="inc-cre-form-control" required>
                 </div>
@@ -286,13 +287,13 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
     $(function () {
-      var $target = $('#Feedback_menu');
+      var $target = $('#CMDB_menu');
       if (!$target.hasClass('active') || !$target.hasClass('open')) {
           $('.menu-item').removeClass('active open');
           $target.addClass('active open');
       }
 
-      $('#Feedback_menu_create').addClass("active");
+      $('#CMDB_menu_create').addClass("active");
     });
 </script>
 

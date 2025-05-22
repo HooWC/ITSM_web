@@ -1,7 +1,318 @@
-﻿
+﻿@using ITSM_DomainModelEntity.ViewModels
+@model AllModelVM
 @{
     ViewData["Title"] = "CMDB_Info";
+    Layout = "_Layout";
 }
 
-<h1>CMDB_Info</h1>
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: 'Segoe UI', Arial, sans-serif;
+        background-color: var(--background-color);
+        color: var(--text-color);
+        line-height: 1.5;
+        padding: 10px;
+        margin: 0;
+        min-height: 100vh;
+    }
+</style>
+
+<div class="inc-cre-container">
+    <header class="inc-cre-header">
+        <div class="inc-cre-header-left">
+            <button class="inc-cre-menu-button">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+            <div class="inc-cre-title-group">
+                <div class="inc-cre-title">CMDB Information</div>
+                <div class="inc-cre-subtitle">Info record</div>
+            </div>
+        </div>
+        <div class="inc-cre-header-right">
+            <button class="inc-cre-btn inc-cre-btn-icon" onclick="location.href='/CMDB/CMDB_List'">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="4" y1="6" x2="20" y2="6"></line>
+                    <line x1="4" y1="12" x2="20" y2="12"></line>
+                    <line x1="4" y1="18" x2="20" y2="18"></line>
+                </svg>
+            </button>
+            <button class="inc-cre-btn inc-cre-btn-icon" onclick="window.open('/Info/Info_Personal_Todo', '_blank')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+            </button>
+            <button class="inc-cre-btn inc-cre-btn-submit" onclick="document.getElementById('incidentForm').submit();">Save</button>
+            <div class="nav-item navbar-dropdown dropdown-user dropdown open-button">
+                <a class="nav-link dropdown-toggle hide-arrow p-0"
+                   href="javascript:void(0);"
+                   data-bs-toggle="dropdown">
+                    <div class="avatar avatar-online">
+                        <img src="@(Model.user.photo != null ? $"data:{Model.user.photo_type};base64," +  Convert.ToBase64String(Model.user.photo) :
+                            Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 rounded-circle" />
+                    </div>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="inc-cre-form-wrapper">
+
+        @if (!string.IsNullOrEmpty(ViewBag.Error as string))
+        {
+            <div id="error-notification" class="error-notification">
+                <div class="error-notification-content">
+                    <div class="error-notification-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                    </div>
+                    <div class="error-notification-text">
+                        <div class="error-notification-title">Submission failed</div>
+                        <div class="error-notification-message" id="error-notification-message">@ViewBag.Error</div>
+                    </div>
+                </div>
+                <button type="button" class="error-notification-close" id="error-notification-close">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+        }
+
+        <form id="incidentForm" class="inc-cre-incident-form" action="~/CMDB/CMDB_Info" method="post">
+            <input type="text" name="id" id="id" class="inc-cre-form-control" value="@Model.CMDB.id" style="display:none;" readonly>
+            <div class="inc-cre-form-grid">
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="full_name" class="inc-cre-form-label inc-cre-required">Full Name</label>
+                        <input autocomplete="off" type="text" name="full_name" id="full_name" class="inc-cre-form-control" value="@Model.CMDB.full_name">
+                    </div>
+                </div>
+
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="department_id" class="inc-cre-form-label">Department</label>
+                        <select id="department_id" name="department_id" class="inc-cre-form-control">
+                            @{
+                                var selectDep_id = Model.CMDB.department_id;
+                            }
+                            @foreach (var i in Model.DepartmentList)
+                            {
+                                <option value="@i.id" selected="@(selectDep_id == i.id)">@i.name</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="inc-cre-form-grid">
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="device_type" class="inc-cre-form-label">Device Type</label>
+                        <select id="device_type" name="device_type" class="inc-cre-form-control">
+                            @{
+                                var selectDevice_Type = Model.CMDB.device_type;
+                            }
+                            <option value="Desktop" selected="@(selectDevice_Type == "Desktop")">Desktop</option>
+                            <option value="Desktop Dell" selected="@(selectDevice_Type == "Desktop Dell")">Desktop Dell</option>
+                            <option value="Laptop" selected="@(selectDevice_Type == "Laptop")">Laptop</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="windows_version" class="inc-cre-form-label inc-cre-required">Windows Version</label>
+                        <input autocomplete="off" type="text" name="windows_version" value="@Model.CMDB.windows_version" id="windows_version" class="inc-cre-form-control">
+                    </div>
+                </div>
+            </div>
+
+            <div class="inc-cre-form-grid">
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="hostname" class="inc-cre-form-label inc-cre-required">Host Name</label>
+                        <input autocomplete="off" type="text" name="hostname" value="@Model.CMDB.hostname" id="hostname" class="inc-cre-form-control">
+                    </div>
+                </div>
+
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="microsoft_office" class="inc-cre-form-label inc-cre-required">Microsoft Office</label>
+                        <input autocomplete="off" type="text" name="microsoft_office" value="@Model.CMDB.microsoft_office" id="microsoft_office" class="inc-cre-form-control">
+                    </div>
+                </div>
+            </div>
+
+            <div class="inc-cre-form-grid">
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="antivirus" class="inc-cre-form-label inc-cre-required">Antivirus</label>
+                        <input autocomplete="off" type="text" name="antivirus" id="antivirus" value="@Model.CMDB.antivirus" class="inc-cre-form-control">
+                    </div>
+                </div>
+
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="ip_address" class="inc-cre-form-label inc-cre-required">IP Address</label>
+                        <input autocomplete="off" type="text" name="ip_address" id="ip_address" value="@Model.CMDB.ip_address" class="inc-cre-form-control">
+                    </div>
+                </div>
+            </div>
+
+            <div class="inc-cre-form-grid">
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="sql_account" class="inc-cre-form-label">SQL Account</label>
+                        <select id="sql_account" name="sql_account" class="inc-cre-form-control">
+                            @{
+                                var selectSql_Account = Model.CMDB.sql_account;
+                            }
+                            <option value="true" selected="@(selectSql_Account == true)">Yes</option>
+                            <option value="false" selected="@(selectSql_Account == false)">No</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="motherboard" class="inc-cre-form-label inc-cre-required">Mother Board</label>
+                        <input autocomplete="off" type="text" name="motherboard" value="@Model.CMDB.motherboard" id="motherboard" class="inc-cre-form-control">
+                    </div>
+                </div>
+            </div>
+
+            <div class="inc-cre-form-grid">
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="ram" class="inc-cre-form-label">RAM</label>
+                        <select id="ram" name="ram" class="inc-cre-form-control">
+                            @{
+                                var selectRam = Model.CMDB.ram;
+                            }
+                            <option value="2GB" selected="@(selectRam == "2GB")">2GB</option>
+                            <option value="4GB" selected="@(selectRam == "4GB")">4GB</option>
+                            <option value="6GB" selected="@(selectRam == "6GB")">6GB</option>
+                            <option value="8GB" selected="@(selectRam == "8GB")">8GB</option>
+                            <option value="12GB" selected="@(selectRam == "12GB")">12GB</option>
+                            <option value="16GB" selected="@(selectRam == "16GB")">16GB</option>
+                            <option value="24GB" selected="@(selectRam == "24GB")">24GB</option>
+                            <option value="32GB" selected="@(selectRam == "32GB")">32GB</option>
+                            <option value="48GB" selected="@(selectRam == "48GB")">48GB</option>
+                            <option value="64GB" selected="@(selectRam == "64GB")">64GB</option>
+                            <option value="96GB" selected="@(selectRam == "96GB")">96GB</option>
+                            <option value="128GB" selected="@(selectRam == "128GB")">128GB</option>
+                            <option value="256GB" selected="@(selectRam == "256GB")">256GB</option>
+                            <option value="512GB" selected="@(selectRam == "512GB")">512GB</option>
+                            <option value="1TB" selected="@(selectRam == "1TB")">1TB</option>
+                            <option value="2TB" selected="@(selectRam == "2TB")">2TB</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="monitor_led" class="inc-cre-form-label inc-cre-required">Monitor LED</label>
+                        <input autocomplete="off" type="text" name="monitor_led" id="monitor_led" value="@Model.CMDB.monitor_led" class="inc-cre-form-control">
+                    </div>
+                </div>
+            </div>
+
+            <div class="inc-cre-form-grid">
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="keyboard" class="inc-cre-form-label">Keyboard</label>
+                        <select id="keyboard" name="keyboard" class="inc-cre-form-control">
+                            @{
+                                var selectKeyboard = Model.CMDB.keyboard;
+                            }
+                            <option value="USB Keyboard" selected="@(selectRam == "USB Keyboard")">USB Keyboard</option>
+                            <option value="Laptop Keyboard" selected="@(selectRam == "Laptop Keyboard")">Laptop Keyboard</option>
+                            <option value="Wireless Keyboard" selected="@(selectRam == "Wireless Keyboard")">Wireless Keyboard</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="mouse" class="inc-cre-form-label">Mouse</label>
+                        <select id="mouse" name="mouse" class="inc-cre-form-control">
+                            @{
+                                var selectMouse = Model.CMDB.mouse;
+                            }
+                            <option value="USB Mouse" selected="@(selectMouse == "USB Mouse")">USB Mouse</option>
+                            <option value="Wireless Mouse" selected="@(selectMouse == "Wireless Mouse")">Wireless Mouse</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="inc-cre-form-grid">
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="hard_disk" class="inc-cre-form-label inc-cre-required">Hard Disk</label>
+                        <input autocomplete="off" type="text" name="hard_disk" value="@Model.CMDB.hard_disk" id="hard_disk" class="inc-cre-form-control">
+                    </div>
+                </div>
+
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="dvdrw" class="inc-cre-form-label inc-cre-required">DVDRW</label>
+                        <input autocomplete="off" type="text" name="dvdrw" value="@Model.CMDB.dvdrw" id="dvdrw" class="inc-cre-form-control">
+                    </div>
+                </div>
+            </div>
+
+            <div class="inc-cre-form-group inc-cre-short-description-group">
+                <label for="ms_office" class="inc-cre-form-label">MS Office</label>
+                <div class="inc-cre-input-with-actions">
+                    <input type="text" autocomplete="off" name="ms_office" id="ms_office" value="@Model.CMDB.ms_office" class="inc-cre-form-control" required>
+                </div>
+            </div>
+
+            <div class="inc-cre-form-group inc-cre-short-description-group">
+                <label for="processor" class="inc-cre-form-label inc-cre-required">Processor</label>
+                <div class="inc-cre-input-with-actions">
+                    <input type="text" autocomplete="off" name="processor" id="processor" value="@Model.CMDB.processor" class="inc-cre-form-control" required>
+                </div>
+            </div>
+
+            <div class="inc-cre-form-group inc-cre-short-description-group">
+                <label for="erp_system" class="inc-cre-form-label inc-cre-required">ERP System</label>
+                <div class="inc-cre-input-with-actions">
+                    <input type="text" autocomplete="off" name="erp_system" id="erp_system" value="@Model.CMDB.erp_system" class="inc-cre-form-control" required>
+                </div>
+            </div>
+        </form>
+    </main>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+    $(function () {
+      var $target = $('#CMDB_menu');
+      if (!$target.hasClass('active') || !$target.hasClass('open')) {
+          $('.menu-item').removeClass('active open');
+          $target.addClass('active open');
+      }
+
+      $('#CMDB_menu_all').addClass("active");
+    });
+</script>
+
 

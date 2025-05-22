@@ -1,7 +1,9 @@
-﻿using ITSM_DomainModelEntity.ViewModels;
+﻿using ITSM_DomainModelEntity.Models;
+using ITSM_DomainModelEntity.ViewModels;
 using ITSM_Insfrastruture.Repository.Api;
 using ITSM_Insfrastruture.Repository.Token;
 using Microsoft.AspNetCore.Mvc;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ITSM.Controllers
 {
@@ -81,9 +83,182 @@ namespace ITSM.Controllers
             return View(model);
         }
 
-        public IActionResult CMDB_Info()
+        [HttpPost]
+        public async Task<IActionResult> CMDB_Create(CMDB cmdb_info)
         {
-            return View();
+            var tokenService = new TokenService(_httpContextAccessor);
+            var currentUser_token = tokenService.GetUserInfo();
+
+            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+
+            var DepartmentTask = _depApi.GetAllDepartment_API();
+            await Task.WhenAll(DepartmentTask);
+
+            var allDep = await DepartmentTask;
+
+            var model = new AllModelVM()
+            {
+                user = currentUser,
+                DepartmentList = allDep
+            };
+
+            if (
+                cmdb_info.full_name != null &&
+                cmdb_info.windows_version != null &&
+                cmdb_info.microsoft_office != null &&
+                cmdb_info.hostname != null &&
+                cmdb_info.antivirus != null &&
+                cmdb_info.ip_address != null &&
+                cmdb_info.motherboard != null &&
+                cmdb_info.monitor_led != null &&
+                cmdb_info.hard_disk != null &&
+                cmdb_info.dvdrw != null &&
+                cmdb_info.processor != null &&
+                cmdb_info.erp_system != null
+                )
+            {
+
+                CMDB new_cmdb = new CMDB()
+                {
+                    full_name = cmdb_info.full_name,
+                    department_id = cmdb_info.department_id,
+                    device_type = cmdb_info.device_type,
+                    windows_version = cmdb_info.windows_version,
+                    hostname = cmdb_info.hostname,
+                    microsoft_office = cmdb_info.microsoft_office,
+                    antivirus = cmdb_info.antivirus,
+                    ip_address = cmdb_info.ip_address,
+                    erp_system = cmdb_info.erp_system,
+                    sql_account = cmdb_info.sql_account,
+                    processor = cmdb_info.processor,
+                    motherboard = cmdb_info.motherboard,
+                    ram = cmdb_info.ram,
+                    monitor_led = cmdb_info.monitor_led,
+                    keyboard = cmdb_info.keyboard,
+                    mouse = cmdb_info.mouse,
+                    hard_disk = cmdb_info.hard_disk,
+                    dvdrw = cmdb_info.dvdrw,
+                    ms_office = cmdb_info.ms_office
+                };
+
+                // create new CMDB data
+                bool result = await _cmdbApi.CreateCMDB_API(new_cmdb);
+
+                if (result)
+                    return RedirectToAction("CMDB_List", "CMDB");
+                else
+                {
+                    ViewBag.Error = "Create CMDB Error";
+                    return View(model);
+                }
+            }
+            else
+            {
+                ViewBag.Error = "Please fill in all required fields";
+                return View(model);
+            }
+        }
+
+        public async Task<IActionResult> CMDB_Info(int id)
+        {
+            // current user info
+            var tokenService = new TokenService(_httpContextAccessor);
+            var currentUser_token = tokenService.GetUserInfo();
+
+            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+
+            var departmentTask = _depApi.GetAllDepartment_API();
+            await Task.WhenAll(departmentTask);
+
+            var allDeps = await departmentTask;
+
+            var cmdb_info = await _cmdbApi.FindByIDCMDB_API(id);
+
+            cmdb_info.Department = allDeps.FirstOrDefault(x => x.id == cmdb_info.department_id);
+
+            var model = new AllModelVM()
+            {
+                user = currentUser,
+                CMDB = cmdb_info,
+                DepartmentList = allDeps
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CMDB_Info(CMDB cmdb_if)
+        {
+            // current user info
+            var tokenService = new TokenService(_httpContextAccessor);
+            var currentUser_token = tokenService.GetUserInfo();
+
+            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+
+            var departmentTask = _depApi.GetAllDepartment_API();
+            await Task.WhenAll(departmentTask);
+
+            var allDeps = await departmentTask;
+
+            var cmdb_info = await _cmdbApi.FindByIDCMDB_API(cmdb_if.id);
+
+            cmdb_info.Department = allDeps.FirstOrDefault(x => x.id == cmdb_info.department_id);
+
+            var model = new AllModelVM()
+            {
+                user = currentUser,
+                CMDB = cmdb_info,
+                DepartmentList = allDeps
+            };
+
+            if (cmdb_if.full_name != null &&
+                cmdb_if.windows_version != null &&
+                cmdb_if.microsoft_office != null &&
+                cmdb_if.hostname != null &&
+                cmdb_if.antivirus != null &&
+                cmdb_if.ip_address != null &&
+                cmdb_if.motherboard != null &&
+                cmdb_if.monitor_led != null &&
+                cmdb_if.hard_disk != null &&
+                cmdb_if.dvdrw != null &&
+                cmdb_if.processor != null &&
+                cmdb_if.erp_system != null)
+            {
+                cmdb_info.full_name = cmdb_if.full_name;
+                cmdb_info.department_id = cmdb_if.department_id;
+                cmdb_info.device_type = cmdb_if.device_type;
+                cmdb_info.windows_version = cmdb_if.windows_version;
+                cmdb_info.hostname = cmdb_if.hostname;
+                cmdb_info.microsoft_office = cmdb_if.microsoft_office;
+                cmdb_info.antivirus = cmdb_if.antivirus;
+                cmdb_info.ip_address = cmdb_if.ip_address;
+                cmdb_info.erp_system = cmdb_if.erp_system;
+                cmdb_info.sql_account = cmdb_if.sql_account;
+                cmdb_info.processor = cmdb_if.processor;
+                cmdb_info.motherboard = cmdb_if.motherboard;
+                cmdb_info.ram = cmdb_if.ram;
+                cmdb_info.monitor_led = cmdb_if.monitor_led;
+                cmdb_info.keyboard = cmdb_if.keyboard;
+                cmdb_info.mouse = cmdb_if.mouse;
+                cmdb_info.hard_disk = cmdb_if.hard_disk;
+                cmdb_info.dvdrw = cmdb_if.dvdrw;
+                cmdb_info.ms_office = cmdb_if.ms_office;
+
+                bool result = await _cmdbApi.UpdateCMDB_API(cmdb_info);
+
+                if (result)
+                    return RedirectToAction("CMDB_List", "CMDB");
+                else
+                {
+                    ViewBag.Error = "Update CMDB Error";
+                    return View(model);
+                }
+            }
+            else
+            {
+                ViewBag.Error = "Please fill in all required fields";
+                return View(model);
+            }
         }
     }
 }
