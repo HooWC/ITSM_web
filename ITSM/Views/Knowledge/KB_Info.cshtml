@@ -242,20 +242,20 @@
             <div class="inc-cre-form-group inc-cre-short-description-group">
                 <label for="name" class="inc-cre-form-label inc-cre-required">Title</label>
                 <div class="inc-cre-input-with-actions">
-                    <input type="text" id="name" class="inc-cre-form-control" value="@Model.knowledge.title" name="title" required>
+                    <input type="text" id="name" autocomplete="off" class="inc-cre-form-control" value="@Model.knowledge.title" name="title" required>
                 </div>
             </div>
 
             <div class="inc-cre-form-group inc-cre-short-description-group">
                 <label for="short_description" class="inc-cre-form-label inc-cre-required">Short description</label>
                 <div class="inc-cre-input-with-actions">
-                    <input type="text" id="short-description" name="short_description" value="@Model.knowledge.short_description" class="inc-cre-form-control" required>
+                    <input type="text" autocomplete="off" id="short-description" name="short_description" value="@Model.knowledge.short_description" class="inc-cre-form-control" required>
                 </div>
             </div>
 
             <div class="inc-cre-form-group kb-editor-container">
                 <label for="editor" class="inc-cre-form-label inc-cre-required">Article content</label>
-                <textarea id="editor" name="article">@Html.Raw(Model.knowledge.article)</textarea>
+                <textarea id="editor" autocomplete="off" name="article">@Html.Raw(Model.knowledge.article)</textarea>
             </div>
         </form>
     </main>
