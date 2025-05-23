@@ -57,9 +57,9 @@ namespace ITSM.Controllers
 
             await Task.WhenAll(CategoryTask, UserTask, KBTask);
 
-            var allCategory = await CategoryTask;
-            var allUser = await UserTask;
-            var allKB = await KBTask;
+            var allCategory = CategoryTask.Result;
+            var allUser = UserTask.Result;
+            var allKB = KBTask.Result;
 
             foreach (var i in allKB)
             {
@@ -76,7 +76,36 @@ namespace ITSM.Controllers
             return View(model);
         }
 
-        public IActionResult KB_Info()
+        public async Task<IActionResult> KB_Info(int id)
+        {
+            // current user info
+            var tokenService = new TokenService(_httpContextAccessor);
+            var currentUser_token = tokenService.GetUserInfo();
+
+            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+
+            var userTask = _userApi.GetAllUser_API();
+            var categoryTask = _categoryApi.GetAllCategory_API();
+            await Task.WhenAll(userTask, categoryTask);
+
+            var allUsers = userTask.Result;
+            var allCategorys = categoryTask.Result;
+
+            var kb_info = await _kbApi.FindByIDKnowledge_API(id);
+
+            kb_info.Author = allUsers.FirstOrDefault(x => x.id == kb_info.author);
+
+            var model = new AllModelVM()
+            {
+                user = currentUser,
+                CategoryList = allCategorys,
+                knowledge = kb_info
+            };
+
+            return View(model);
+        }
+
+        public IActionResult KB_Import_Info()
         {
             return View();
         }
@@ -101,7 +130,7 @@ namespace ITSM.Controllers
             var CategoryTask = _categoryApi.GetAllCategory_API();
             await Task.WhenAll(CategoryTask);
 
-            var allCategory = await CategoryTask;
+            var allCategory = CategoryTask.Result;
 
             var model = new AllModelVM()
             {
@@ -124,8 +153,8 @@ namespace ITSM.Controllers
             var KBTask = _kbApi.GetAllKnowledge_API();
             await Task.WhenAll(CategoryTask, KBTask);
 
-            var allCategory = await CategoryTask;
-            var allKB = await KBTask;
+            var allCategory = CategoryTask.Result;
+            var allKB = KBTask.Result;
 
             var model = new AllModelVM()
             {
@@ -191,7 +220,7 @@ namespace ITSM.Controllers
             var CategoryTask = _categoryApi.GetAllCategory_API();
             await Task.WhenAll(CategoryTask);
 
-            var allCategory = await CategoryTask;
+            var allCategory = CategoryTask.Result;
 
             var model = new AllModelVM()
             {
@@ -215,8 +244,8 @@ namespace ITSM.Controllers
             var KBTask = _kbApi.GetAllKnowledge_API();
             await Task.WhenAll(CategoryTask, KBTask);
 
-            var allCategory = await CategoryTask;
-            var allKB = await KBTask;
+            var allCategory = CategoryTask.Result;
+            var allKB = KBTask.Result;
 
             var model = new AllModelVM()
             {

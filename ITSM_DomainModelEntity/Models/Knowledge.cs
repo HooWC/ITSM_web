@@ -33,11 +33,13 @@ namespace ITSM_DomainModelEntity.Models
 
         public DateTime updated { get; set; }
 
-        public bool active { get; set; } = true;
+        public bool active { get; set; }
 
         public byte[]? kb_file { get; set; }
         public string? title { get; set; }
         public int kb_view {  get; set; }
+
+        public string? kb_type { get; set; }
 
         // Navigation properties
         public virtual User? Author { get; set; }

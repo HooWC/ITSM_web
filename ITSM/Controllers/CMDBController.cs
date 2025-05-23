@@ -47,8 +47,8 @@ namespace ITSM.Controllers
             var DepartmentTask = _depApi.GetAllDepartment_API();
             await Task.WhenAll(CMDBTask, DepartmentTask);
 
-            var allCMDB = await CMDBTask;
-            var allDep = await DepartmentTask;
+            var allCMDB = CMDBTask.Result;
+            var allDep = DepartmentTask.Result;
 
             foreach (var i in allCMDB)
                 i.Department = allDep.FirstOrDefault(x => x.id == i.department_id);
@@ -72,7 +72,7 @@ namespace ITSM.Controllers
             var DepartmentTask = _depApi.GetAllDepartment_API();
             await Task.WhenAll(DepartmentTask);
 
-            var allDep = await DepartmentTask;
+            var allDep = DepartmentTask.Result;
 
             var model = new AllModelVM()
             {
@@ -94,7 +94,7 @@ namespace ITSM.Controllers
             var DepartmentTask = _depApi.GetAllDepartment_API();
             await Task.WhenAll(DepartmentTask);
 
-            var allDep = await DepartmentTask;
+            var allDep = DepartmentTask.Result;
 
             var model = new AllModelVM()
             {
@@ -170,7 +170,7 @@ namespace ITSM.Controllers
             var departmentTask = _depApi.GetAllDepartment_API();
             await Task.WhenAll(departmentTask);
 
-            var allDeps = await departmentTask;
+            var allDeps = departmentTask.Result;
 
             var cmdb_info = await _cmdbApi.FindByIDCMDB_API(id);
 
@@ -198,7 +198,7 @@ namespace ITSM.Controllers
             var departmentTask = _depApi.GetAllDepartment_API();
             await Task.WhenAll(departmentTask);
 
-            var allDeps = await departmentTask;
+            var allDeps = departmentTask.Result;
 
             var cmdb_info = await _cmdbApi.FindByIDCMDB_API(cmdb_if.id);
 

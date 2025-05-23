@@ -33,13 +33,6 @@ namespace ITSM.Controllers
             _roleApi = new Role_api(httpContextAccessor);
         }
 
-        // ????
-        //public async Task<IActionResult> Admin_All()
-        //{
-        // 要开发的界面，admin的界面，看所有的incident
-        // allInc.OrderByDescending(y => y.id).ToList();
-        //}
-
         public async Task<IActionResult> All()
         {
             // current user info
@@ -57,12 +50,12 @@ namespace ITSM.Controllers
             await Task.WhenAll(inc, dep, user);
 
             // get incident list data
-            var allInc = await inc;
+            var allInc = inc.Result;
             var incList = allInc.OrderByDescending(y => y.id).ToList();
 
             // get user and department data
-            var allDepartments = await dep;
-            var allUsers = await user;
+            var allDepartments = dep.Result;
+            var allUsers = user.Result;
 
             foreach (var incident in incList)
             {
@@ -96,12 +89,12 @@ namespace ITSM.Controllers
             await Task.WhenAll(inc, dep, user);
 
             // get incident list data
-            var allInc = await inc;
+            var allInc = inc.Result;
             var incList = allInc.Where(x => x.sender == currentUser.id).OrderByDescending(y => y.id).ToList();
 
             // get user and department data
-            var allDepartments = await dep;
-            var allUsers = await user;
+            var allDepartments = dep.Result;
+            var allUsers = user.Result;
 
             foreach (var incident in incList)
             {
@@ -159,7 +152,7 @@ namespace ITSM.Controllers
             await Task.WhenAll(incidentTask);
 
             // Up Number
-            var allIncident = await incidentTask;
+            var allIncident = incidentTask.Result;
             string newId = "";
             if (allIncident.Count > 0)
             {
@@ -221,8 +214,8 @@ namespace ITSM.Controllers
             await Task.WhenAll(departmentTask, userTask);
 
             // Ready Api Data
-            var allDepartment = await departmentTask;
-            var allUser = await userTask;
+            var allDepartment = departmentTask.Result;
+            var allUser = userTask.Result;
 
             // Get Inc Data
             var incData = await _incApi.FindByIDIncident_API(id);
@@ -257,8 +250,8 @@ namespace ITSM.Controllers
             await Task.WhenAll(departmentTask, userTask);
 
             // Ready Api Data
-            var allDepartment = await departmentTask;
-            var allUser = await userTask;
+            var allDepartment = departmentTask.Result;
+            var allUser = userTask.Result;
 
             // Get Inc Data
             var incData = await _incApi.FindByIDIncident_API(inc.id);
@@ -339,12 +332,12 @@ namespace ITSM.Controllers
             await Task.WhenAll(inc, dep, user);
 
             // get incident list data
-            var allInc = await inc;
+            var allInc = inc.Result;
             var incList = allInc.Where(x => x.assigned_to == currentUser.id).OrderByDescending(y => y.id).ToList();
 
             // get user and department data
-            var allDepartments = await dep;
-            var allUsers = await user;
+            var allDepartments = dep.Result;
+            var allUsers = user.Result;
 
             foreach (var incident in incList)
             {
@@ -378,12 +371,12 @@ namespace ITSM.Controllers
             await Task.WhenAll(inc, dep, user);
 
             // get incident list data
-            var allInc = await inc;
+            var allInc = inc.Result;
             var incList = allInc.Where(x => x.assignment_group == currentUser.department_id).OrderByDescending(y => y.id).ToList();
 
             // get user and department data
-            var allDepartments = await dep;
-            var allUsers = await user;
+            var allDepartments = dep.Result;
+            var allUsers = user.Result;
 
             foreach (var incident in incList)
             {
@@ -417,12 +410,12 @@ namespace ITSM.Controllers
             await Task.WhenAll(inc, dep, user);
 
             // get incident list data
-            var allInc = await inc;
+            var allInc = inc.Result;
             var incList = allInc.Where(x => x.assigned_to == currentUser.id || x.updated_by == currentUser.id && x.state == "Resolved").OrderByDescending(y => y.id).ToList();
 
             // get user and department data
-            var allDepartments = await dep;
-            var allUsers = await user;
+            var allDepartments = dep.Result;
+            var allUsers = user.Result;
 
             foreach (var incident in incList)
             {
@@ -456,12 +449,12 @@ namespace ITSM.Controllers
             await Task.WhenAll(inc, dep, user);
 
             // get incident list data
-            var allInc = await inc;
+            var allInc = inc.Result;
             var incList = allInc.Where(x => (x.assigned_to == currentUser.id || x.updated_by == currentUser.id) && x.state == "Closed").OrderByDescending(y => y.id).ToList();
 
             // get user and department data
-            var allDepartments = await dep;
-            var allUsers = await user;
+            var allDepartments = dep.Result;
+            var allUsers = user.Result;
 
             foreach (var incident in incList)
             {

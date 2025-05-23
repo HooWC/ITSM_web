@@ -27,6 +27,7 @@ namespace ITSM.Controllers
         private readonly Request_api _reqApi;
         private readonly Announcement_api _announApi;
         private readonly CMDB_api _cmdbApi;
+        private readonly Knowledge_api _kbApi;
 
         public AjaxController(IHttpContextAccessor httpContextAccessor)
         {
@@ -43,6 +44,7 @@ namespace ITSM.Controllers
             _reqApi = new Request_api(httpContextAccessor);
             _announApi = new Announcement_api(httpContextAccessor);
             _cmdbApi = new CMDB_api(httpContextAccessor);
+            _kbApi = new Knowledge_api(httpContextAccessor);
         }
 
         private bool IsUserLoggedIn(out User currentUser)
@@ -1144,9 +1146,9 @@ namespace ITSM.Controllers
             var productTask = _productApi.GetAllProduct_API();
             await Task.WhenAll(categoryTask, departmentTask, productTask);
 
-            var allCategory = await categoryTask;
-            var allDepartment = await departmentTask;
-            var allProduct = await productTask;
+            var allCategory = categoryTask.Result;
+            var allDepartment = departmentTask.Result;
+            var allProduct = productTask.Result;
 
             var selectProduct = new List<Product>();
             selectProduct = allProduct.OrderByDescending(y => y.id).ToList();
@@ -1229,9 +1231,9 @@ namespace ITSM.Controllers
             var departmentTask = _departmentApi.GetAllDepartment_API();
             await Task.WhenAll(productTask, categoryTask, departmentTask);
 
-            var allProduct = await productTask;
-            var allCategory = await categoryTask;
-            var allDepartment = await departmentTask;
+            var allProduct = productTask.Result;
+            var allCategory = categoryTask.Result;
+            var allDepartment = departmentTask.Result;
 
             var SelectProduct = new List<Product>();
             SelectProduct = allProduct.OrderByDescending(y => y.id).ToList();
@@ -1268,9 +1270,9 @@ namespace ITSM.Controllers
             var departmentTask = _departmentApi.GetAllDepartment_API();
             await Task.WhenAll(productTask, categoryTask, departmentTask);
 
-            var allProduct = await productTask;
-            var allCategory = await categoryTask;
-            var allDepartment = await departmentTask;
+            var allProduct = productTask.Result;
+            var allCategory = categoryTask.Result;
+            var allDepartment = departmentTask.Result;
 
             var SelectProduct = new List<Product>();
             SelectProduct = allProduct.OrderByDescending(y => y.id).ToList();
@@ -1845,10 +1847,10 @@ namespace ITSM.Controllers
             var requestTask = _reqApi.GetAllRequest_API();
             await Task.WhenAll(productTask, userTask, departmentTask, requestTask);
 
-            var allProduct = await productTask;
-            var allUser = await userTask;
-            var allDepartment = await departmentTask;
-            var allRequest = await requestTask;
+            var allProduct = productTask.Result;
+            var allUser = userTask.Result;
+            var allDepartment = departmentTask.Result;
+            var allRequest = requestTask.Result;
 
             List<Request> filteredReqs;
 
@@ -1960,10 +1962,10 @@ namespace ITSM.Controllers
             var requestTask = _reqApi.GetAllRequest_API();
             await Task.WhenAll(productTask, userTask, departmentTask, requestTask);
 
-            var allProduct = await productTask;
-            var allUser = await userTask;
-            var allDepartment = await departmentTask;
-            var allRequest = await requestTask;
+            var allProduct = productTask.Result;
+            var allUser = userTask.Result;
+            var allDepartment = departmentTask.Result;
+            var allRequest = requestTask.Result;
 
             List<Request> filteredReqs;
 
@@ -2031,10 +2033,10 @@ namespace ITSM.Controllers
             var requestTask = _reqApi.GetAllRequest_API();
             await Task.WhenAll(productTask, userTask, departmentTask, requestTask);
 
-            var allProduct = await productTask;
-            var allUser = await userTask;
-            var allDepartment = await departmentTask;
-            var allRequest = await requestTask;
+            var allProduct = productTask.Result;
+            var allUser = userTask.Result;
+            var allDepartment = departmentTask.Result;
+            var allRequest = requestTask.Result;
 
             List<Request> sortedRequests;
             if (sortOrder.ToLower() == "desc")
@@ -2109,7 +2111,6 @@ namespace ITSM.Controllers
                 return Json(new { success = false, message = $"Error: {ex.Message}" });
             }
         }
-
 
         /// <summary>
         /// Request/Req_Info
@@ -2373,8 +2374,8 @@ namespace ITSM.Controllers
             var departmentTask = _departmentApi.GetAllDepartment_API();
             await Task.WhenAll(CMDBTask, departmentTask);
 
-            var allCMDB = await CMDBTask;
-            var allDep = await departmentTask;
+            var allCMDB = CMDBTask.Result;
+            var allDep = departmentTask.Result;
 
             var userCMDB = new List<CMDB>();
 
@@ -2457,8 +2458,8 @@ namespace ITSM.Controllers
             var departmentTask = _departmentApi.GetAllDepartment_API();
             await Task.WhenAll(CMDBTask, departmentTask);
 
-            var allCMDB = await CMDBTask;
-            var allDep = await departmentTask;
+            var allCMDB = CMDBTask.Result;
+            var allDep = departmentTask.Result;
 
             var userCMDBs = new List<CMDB>();
             userCMDBs = allCMDB.OrderByDescending(y => y.id).ToList();
@@ -2511,6 +2512,232 @@ namespace ITSM.Controllers
                     if (CMDBToDelete != null)
                     {
                         bool result = await _cmdbApi.DeleteCMDB_API(id);
+                        if (result)
+                            successCount++;
+                    }
+                }
+
+                if (successCount > 0)
+                {
+                    return Json(new
+                    {
+                        success = true,
+                        message = $"Successfully deleted {successCount} item(s)"
+                    });
+                }
+                else
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Failed to delete items. Items may not exist or you don't have permission"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = $"Error: {ex.Message}" });
+            }
+        }
+
+        /// <summary>
+        /// Knowledge/KB_List
+        public async Task<IActionResult> SearchKB(string searchTerm, string filterBy = "number")
+        {
+            if (string.IsNullOrEmpty(searchTerm))
+                return Json(new List<Feedback>());
+
+            if (!IsUserLoggedIn(out var currentUser))
+                return Json(new { success = false, message = "Not logged in" });
+
+            var UserTask = _userApi.GetAllUser_API();
+            var KBTask = _kbApi.GetAllKnowledge_API();
+
+            await Task.WhenAll(UserTask, KBTask);
+
+            var allUser = UserTask.Result;
+            var allKB = KBTask.Result;
+
+            var userKB = new List<Knowledge>();
+
+            userKB = allKB.OrderByDescending(y => y.id).ToList();
+
+            List<Knowledge> filteredKBs;
+
+            if (searchTerm == "re_entrynovalue")
+            {
+                filteredKBs = userKB;
+            }
+            else
+            {
+                switch (filterBy.ToLower())
+                {
+                    case "number":
+                        filteredKBs = userKB
+                            .Where(t => t.kb_number != null && t.kb_number.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                    case "author":
+                        var filterDeps = allUser.Where(x => x.fullname.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+                        filteredKBs = (from i in userKB
+                                       join d in filterDeps on i.author equals d.id
+                                         select i).ToList();
+                        break;
+                    case "title":
+                        filteredKBs = userKB
+                            .Where(t => t.title != null && t.title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                    case "short_description":
+                        filteredKBs = userKB
+                            .Where(t => t.short_description != null && t.short_description.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                    case "create_date":
+                        filteredKBs = userKB
+                            .Where(t => t.create_date != null && t.create_date.ToString("yyyy-MM-dd HH:mm:ss").Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                    case "update_date":
+                        filteredKBs = userKB
+                            .Where(t => t.updated != null && t.updated.ToString("yyyy-MM-dd HH:mm:ss").Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                    default:
+                        filteredKBs = userKB;
+                        break;
+                }
+            }
+
+            var result = filteredKBs.Select(t => new {
+                t.id,
+                t.short_description,
+                t.title,
+                t.kb_number,
+                active = t.active ? "Active" : "Inactive",
+                author = allUser.FirstOrDefault(u => u.id == t.author)?.fullname ?? "",
+                create_date = t.create_date.ToString("yyyy-MM-dd HH:mm:ss"),
+                update_date = t.updated.ToString("yyyy-MM-dd HH:mm:ss")
+            });
+
+            return Json(result);
+        }
+
+        /// <summary>
+        /// Knowledge/KB_List
+        public async Task<IActionResult> SortKB(string sortOrder = "asc")
+        {
+            if (!IsUserLoggedIn(out var currentUser))
+                return Json(new { success = false, message = "Not logged in" });
+
+            var UserTask = _userApi.GetAllUser_API();
+            var KBTask = _kbApi.GetAllKnowledge_API();
+
+            await Task.WhenAll(UserTask, KBTask);
+
+            var allUser = UserTask.Result;
+            var allKB = KBTask.Result;
+
+            var userKB = new List<Knowledge>();
+
+            userKB = allKB.OrderByDescending(y => y.id).ToList();
+
+            List<Knowledge> sortedKBs;
+            if (sortOrder.ToLower() == "desc")
+                sortedKBs = userKB.OrderBy(x => x.id).ToList();
+            else
+                sortedKBs = userKB.OrderByDescending(x => x.id).ToList();
+
+            var result = sortedKBs.Select(t => new {
+                t.id,
+                t.short_description,
+                t.title,
+                t.kb_number,
+                active = t.active ? "Active" : "Inactive",
+                author = allUser.FirstOrDefault(u => u.id == t.author)?.fullname ?? "",
+                create_date = t.create_date.ToString("yyyy-MM-dd HH:mm:ss"),
+                update_date = t.updated.ToString("yyyy-MM-dd HH:mm:ss")
+            });
+
+            return Json(result);
+        }
+
+        /// <summary>
+        /// Knowledge/KB_List
+        public async Task<IActionResult> FilterKBByStatus(string filterword, string status = "all")
+        {
+            if (!IsUserLoggedIn(out var currentUser))
+                return Json(new { success = false, message = "Not logged in" });
+
+            var UserTask = _userApi.GetAllUser_API();
+            var KBTask = _kbApi.GetAllKnowledge_API();
+
+            await Task.WhenAll(UserTask, KBTask);
+
+            var allUser = UserTask.Result;
+            var allKB = KBTask.Result;
+
+            var userKB = new List<Knowledge>();
+
+            userKB = allKB.OrderByDescending(y => y.id).ToList();
+
+            List<Knowledge> filteredKBs;
+
+            switch (status.ToLower())
+            {
+                case "active":
+                    filteredKBs = userKB.Where(t => t.active).ToList();
+                    break;
+                case "inactive":
+                    filteredKBs = userKB.Where(t => !t.active).ToList();
+                    break;
+                default:
+                    filteredKBs = userKB;
+                    break;
+            }
+
+            var result = filteredKBs.Select(t => new {
+                t.id,
+                t.short_description,
+                t.title,
+                t.kb_number,
+                active = t.active ? "Active" : "Inactive",
+                author = allUser.FirstOrDefault(u => u.id == t.author)?.fullname ?? "",
+                create_date = t.create_date.ToString("yyyy-MM-dd HH:mm:ss"),
+                update_date = t.updated.ToString("yyyy-MM-dd HH:mm:ss")
+            });
+
+            return Json(result);
+        }
+
+        /// <summary>
+        /// Knowledge/KB_List
+        [HttpPost]
+        public async Task<IActionResult> DeleteKBs([FromBody] DeleteFeedbackRequestFM request)
+        {
+            var word = request.word;
+            var ids = request.ids;
+
+            if (ids == null || !ids.Any())
+                return Json(new { success = false, message = "No items selected for deletion" });
+
+            if (!IsUserLoggedIn(out var currentUser))
+                return Json(new { success = false, message = "Not logged in" });
+
+            try
+            {
+                int successCount = 0;
+
+                foreach (var id in ids)
+                {
+                    var allKBs = await _kbApi.GetAllKnowledge_API();
+                    var KBToDelete = new Knowledge();
+                    KBToDelete = allKBs.FirstOrDefault(x => x.id == id);
+
+
+                    if (KBToDelete != null)
+                    {
+                        bool result = await _kbApi.DeleteKnowledge_API(id);
                         if (result)
                             successCount++;
                     }

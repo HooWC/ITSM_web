@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Headers;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using ITSM_DomainModelEntity.Models;
@@ -93,6 +94,9 @@ namespace ITSM_Insfrastruture.Repository.Api
                 _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenModel.Token);
                 var jsonStr = new StringContent(JsonConvert.SerializeObject(knowledge), Encoding.UTF8, "application/json");
                 var response = await _client.PostAsync(_allKnowledgeUrl, jsonStr);
+
+                var responseStr = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"RESPONSE: {responseStr}");
 
                 return response.IsSuccessStatusCode;
             }

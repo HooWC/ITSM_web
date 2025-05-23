@@ -53,10 +53,10 @@ namespace ITSM.Controllers
             var requestTask = _reqApi.GetAllRequest_API();
             await Task.WhenAll(productTask, userTask, departmentTask, requestTask);
 
-            var allProduct = await productTask;
-            var allUser = await userTask;
-            var allDepartment = await departmentTask;
-            var allRequest = await requestTask;
+            var allProduct = productTask.Result;
+            var allUser = userTask.Result;
+            var allDepartment = departmentTask.Result;
+            var allRequest = requestTask.Result;
 
             var Reqs = allRequest.OrderByDescending(x => x.id).ToList();
             foreach(var i in Reqs)
@@ -89,10 +89,10 @@ namespace ITSM.Controllers
             var requestTask = _reqApi.GetAllRequest_API();
             await Task.WhenAll(productTask, userTask, departmentTask, requestTask);
 
-            var allProduct = await productTask;
-            var allUser = await userTask;
-            var allDepartment = await departmentTask;
-            var allRequest = await requestTask;
+            var allProduct = productTask.Result;
+            var allUser = userTask.Result;
+            var allDepartment = departmentTask.Result;
+            var allRequest = requestTask.Result;
 
             var Reqs = allRequest.Where(x => x.sender == currentUser.id).OrderByDescending(x => x.id).ToList();
             foreach (var i in Reqs)
@@ -124,9 +124,9 @@ namespace ITSM.Controllers
             var productTask = _productApi.GetAllProduct_API();
             await Task.WhenAll(depTask, categoryTask, productTask);
 
-            var allDep = await depTask;
-            var allCategory = await categoryTask;
-            var allProduct = await productTask;
+            var allDep = depTask.Result;
+            var allCategory = categoryTask.Result;
+            var allProduct = productTask.Result;
 
             foreach(var i in allProduct)
             {
@@ -155,8 +155,8 @@ namespace ITSM.Controllers
             var categoryTask = _categoryApi.GetAllCategory_API();
             await Task.WhenAll(depTask, categoryTask);
 
-            var allDep = await depTask;
-            var allCategory = await categoryTask;
+            var allDep = depTask.Result;
+            var allCategory = categoryTask.Result;
 
             var info_pro = await _productApi.FindByIDProduct_API(id);
             info_pro.Category = allCategory.Where(x => x.id ==  info_pro.category_id).FirstOrDefault();
@@ -185,10 +185,10 @@ namespace ITSM.Controllers
             var roleTask = _roleApi.GetAllRole_API();
             await Task.WhenAll(depTask, categoryTask, reqTask, roleTask);
 
-            var allDep = await depTask;
-            var allCategory = await categoryTask;
-            var allReq = await reqTask;
-            var allRole = await roleTask;
+            var allDep = depTask.Result;
+            var allCategory = categoryTask.Result;
+            var allReq = reqTask.Result;
+            var allRole = roleTask.Result;
 
             currentUser.Role = allRole.Where(x => x.id == currentUser.role_id).FirstOrDefault();
 
@@ -277,10 +277,10 @@ namespace ITSM.Controllers
             var requestTask = _reqApi.GetAllRequest_API();
             await Task.WhenAll(productTask, userTask, departmentTask, requestTask);
 
-            var allProduct = await productTask;
-            var allUser = await userTask;
-            var allDepartment = await departmentTask;
-            var allRequest = await requestTask;
+            var allProduct = productTask.Result;
+            var allUser = userTask.Result;
+            var allDepartment = departmentTask.Result;
+            var allRequest = requestTask.Result;
 
             var Reqs = allRequest.Where(x => x.assignment_group == currentUser.department_id).OrderByDescending(x => x.id).ToList();
             foreach (var i in Reqs)
@@ -315,10 +315,10 @@ namespace ITSM.Controllers
             var categoryTask = _categoryApi.GetAllCategory_API();
             await Task.WhenAll(productTask, userTask, departmentTask, categoryTask);
 
-            var allProduct = await productTask;
-            var allUser = await userTask;
-            var allDepartment = await departmentTask;
-            var allCategory = await categoryTask;
+            var allProduct = productTask.Result;
+            var allUser = userTask.Result;
+            var allDepartment = departmentTask.Result;
+            var allCategory = categoryTask.Result;
 
             var Req = await _reqApi.FindByIDRequest_API(id);
             Req.Product = allProduct.FirstOrDefault(x => x.id == Req.pro_id);
@@ -351,10 +351,10 @@ namespace ITSM.Controllers
             var categoryTask = _categoryApi.GetAllCategory_API();
             await Task.WhenAll(productTask, userTask, departmentTask, categoryTask);
 
-            var allProduct = await productTask;
-            var allUser = await userTask;
-            var allDepartment = await departmentTask;
-            var allCategory = await categoryTask;
+            var allProduct = productTask.Result;
+            var allUser = userTask.Result;
+            var allDepartment = departmentTask.Result;
+            var allCategory = categoryTask.Result;
 
             var Req = await _reqApi.FindByIDRequest_API(req.id);
             Req.Product = allProduct.FirstOrDefault(x => x.id == Req.pro_id);

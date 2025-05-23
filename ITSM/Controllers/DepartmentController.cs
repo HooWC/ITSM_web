@@ -43,7 +43,7 @@ namespace ITSM.Controllers
             var depTask = _depApi.GetAllDepartment_API();
             await Task.WhenAll(depTask);
 
-            var allDepartment = await depTask;
+            var allDepartment = depTask.Result;
 
             var departmentList = allDepartment.OrderByDescending(y => y.id).ToList();
 

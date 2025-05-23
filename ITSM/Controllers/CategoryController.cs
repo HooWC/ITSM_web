@@ -43,7 +43,7 @@ namespace ITSM.Controllers
             var categoryTask = _categoryApi.GetAllCategory_API();
             await Task.WhenAll(categoryTask);
 
-            var allCategory = await categoryTask;
+            var allCategory = categoryTask.Result;
 
             var categoryList = allCategory.OrderByDescending(y => y.id).ToList();
 

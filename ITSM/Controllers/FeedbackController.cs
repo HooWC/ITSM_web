@@ -56,9 +56,9 @@ namespace ITSM.Controllers
             var roleTask = _roleApi.GetAllRole_API();
             await Task.WhenAll(feedTask, userTask, roleTask);
 
-            var allFeed = await feedTask;
-            var allUsers = await userTask;
-            var allRoles = await roleTask;
+            var allFeed = feedTask.Result;
+            var allUsers = userTask.Result;
+            var allRoles = roleTask.Result;
 
             var feedList = currentUser.role_id == allRoles.Where(x => x.role == "User").FirstOrDefault()?.id
                 ? allFeed.Where(x => x.user_id == currentUser.id).OrderByDescending(y => y.id).ToList()

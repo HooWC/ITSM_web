@@ -42,7 +42,7 @@ namespace ITSM.Controllers
             var roleTask = _roleApi.GetAllRole_API();
             await Task.WhenAll(roleTask);
 
-            var allRole = await roleTask;
+            var allRole = roleTask.Result;
 
             var model = new AllModelVM
             {

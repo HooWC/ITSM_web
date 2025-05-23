@@ -44,8 +44,8 @@ namespace ITSM.Controllers
             var UserTask = _userApi.GetAllUser_API();
             await Task.WhenAll(AnnounTask, UserTask);
 
-            var allAnnoun = await AnnounTask;
-            var allUser = await UserTask;
+            var allAnnoun = AnnounTask.Result;
+            var allUser = UserTask.Result;
 
             foreach(var i in allAnnoun)
                 i.User = allUser.FirstOrDefault(x => x.id == i.create_by);
@@ -70,8 +70,8 @@ namespace ITSM.Controllers
             var UserTask = _userApi.GetAllUser_API();
             await Task.WhenAll(AnnounTask, UserTask);
 
-            var allAnnoun = await AnnounTask;
-            var allUser = await UserTask;
+            var allAnnoun = AnnounTask.Result;
+            var allUser = UserTask.Result;
 
             foreach (var i in allAnnoun)
                 i.User = allUser.FirstOrDefault(x => x.id == i.create_by);
@@ -96,7 +96,7 @@ namespace ITSM.Controllers
             var userTask = _userApi.GetAllUser_API();
             await Task.WhenAll(userTask);
 
-            var allUser = await userTask;
+            var allUser = userTask.Result;
 
             var ann_info = await _announApi.FindByIDAnnouncement_API(id);
 
@@ -145,7 +145,7 @@ namespace ITSM.Controllers
                 var annTask = _announApi.GetAllAnnouncement_API();
                 await Task.WhenAll(annTask);
 
-                var allAnn = await annTask;
+                var allAnn = annTask.Result;
 
                 string newId = "";
                 if (allAnn.Count > 0)
@@ -197,7 +197,7 @@ namespace ITSM.Controllers
             var userTask = _userApi.GetAllUser_API();
             await Task.WhenAll(userTask);
 
-            var allUser = await userTask;
+            var allUser = userTask.Result;
 
             var ann_info = await _announApi.FindByIDAnnouncement_API(id);
 
@@ -224,7 +224,7 @@ namespace ITSM.Controllers
             var userTask = _userApi.GetAllUser_API();
             await Task.WhenAll(userTask);
 
-            var allUser = await userTask;
+            var allUser = userTask.Result;
 
             var ann_info = await _announApi.FindByIDAnnouncement_API(ann.id);
 

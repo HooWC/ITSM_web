@@ -1,7 +1,307 @@
-﻿
+﻿@using ITSM_DomainModelEntity.ViewModels
+@model AllModelVM
 @{
     ViewData["Title"] = "KB_Info";
+    Layout = "_Layout";
 }
 
-<h1>KB_Info</h1>
+<style>
+    .inc-cre-product-image-container {
+        margin-bottom: 1.25rem;
+        border-radius: 0.375rem;
+        overflow: hidden;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+        max-width: 100%;
+        height: auto;
+    }
+
+    .inc-cre-product-image-wrapper {
+        position: relative;
+        width: 100%;
+        height: 0;
+        padding-bottom: 25%;
+        overflow: hidden;
+        background-color: #121212;
+    }
+
+    .inc-cre-product-image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        transition: transform 0.5s ease;
+        background-color: #121212;
+    }
+
+    .inc-cre-product-image-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 50%, transparent 100%);
+        padding: 0.75rem 1.25rem;
+        color: white;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    .inc-cre-product-title {
+        margin: 0 0 0.25rem 0;
+        font-weight: 600;
+        font-size: 1rem;
+    }
+
+    .inc-cre-product-description {
+        margin: 0;
+        opacity: 0.9;
+        font-size: 0.75rem;
+    }
+
+    .inc-cre-product-image-wrapper:hover .inc-cre-product-image {
+        transform: scale(1.03);
+    }
+
+    .inc-cre-product-image-wrapper.square {
+        padding-bottom: 25%;
+    }
+
+    .inc-cre-product-image.landscape {
+        object-position: center;
+    }
+
+    .inc-cre-product-image.portrait {
+        object-position: center;
+    }
+
+    @@media (max-width: 768px) {
+        .inc-cre-product-image-wrapper {
+            padding-bottom: 35%;
+        }
+
+            .inc-cre-product-image-wrapper.square {
+                padding-bottom: 35%;
+            }
+    }
+
+    .kb-title-input {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #ced4da;
+        border-radius: 0.375rem;
+        font-size: 1.1rem;
+        font-weight: 500;
+        margin-bottom: 1rem;
+    }
+
+    .kb-description-input {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #ced4da;
+        border-radius: 0.375rem;
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .kb-editor-container {
+        margin-bottom: 1.5rem;
+    }
+</style>
+
+<div class="inc-cre-container">
+    <header class="inc-cre-header">
+        <div class="inc-cre-header-left">
+            <button class="inc-cre-menu-button">
+                <i class="fa-solid fa-plus"></i>
+            </button>
+            <div class="inc-cre-title-group">
+                <div class="inc-cre-title">Knowledge Information</div>
+                <div class="inc-cre-subtitle">@Model.knowledge.kb_number</div>
+            </div>
+        </div>
+        <div class="inc-cre-header-right">
+            <button class="inc-cre-btn inc-cre-btn-icon" onclick="location.href='/Knowledge/KB_List'">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="4" y1="6" x2="20" y2="6"></line>
+                    <line x1="4" y1="12" x2="20" y2="12"></line>
+                    <line x1="4" y1="18" x2="20" y2="18"></line>
+                </svg>
+            </button>
+            <button class="inc-cre-btn inc-cre-btn-icon" onclick="window.open('/Info/Info_Personal_Todo', '_blank')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+            </button>
+            <button class="inc-cre-btn inc-cre-btn-submit" onclick="document.getElementById('incidentForm').submit();">Save</button>
+            <div class="nav-item navbar-dropdown dropdown-user dropdown open-button">
+                <a class="nav-link dropdown-toggle hide-arrow p-0"
+                   href="javascript:void(0);"
+                   data-bs-toggle="dropdown">
+                    <div class="avatar avatar-online">
+                        <img src="@(Model.user.photo != null ? $"data:{Model.user.photo_type};base64," +  Convert.ToBase64String(Model.user.photo) :
+                            Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 rounded-circle" />
+                    </div>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="inc-cre-form-wrapper">
+
+        @if (!string.IsNullOrEmpty(ViewBag.Error as string))
+        {
+            <div id="error-notification" class="error-notification">
+                <div class="error-notification-content">
+                    <div class="error-notification-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                    </div>
+                    <div class="error-notification-text">
+                        <div class="error-notification-title">Submission failed</div>
+                        <div class="error-notification-message" id="error-notification-message">@ViewBag.Error</div>
+                    </div>
+                </div>
+                <button type="button" class="error-notification-close" id="error-notification-close">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+        }
+
+        <form id="incidentForm" class="inc-cre-incident-form" action="~/Knowledge/KB_Create" method="post">
+            <div class="inc-cre-form-grid">
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="number" class="inc-cre-form-label">Number</label>
+                        <input type="text" id="number" class="inc-cre-form-control" value="@Model.knowledge.kb_number" readonly>
+                    </div>
+                </div>
+
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="channel" class="inc-cre-form-label">Channel</label>
+                        <select id="channel" name="category_id" class="inc-cre-form-control">
+                            @{
+                                var selectCategory = Model.knowledge.category_id;
+                            }
+                            @foreach (var i in Model.CategoryList)
+                            {
+                                <option value="@i.id" selected="@(selectCategory == i.id)">@i.title</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="inc-cre-form-grid">
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="author" class="inc-cre-form-label">Author</label>
+                        <input type="text" id="author" class="inc-cre-form-control" value="@Model.knowledge.Author.fullname" readonly>
+                    </div>
+                </div>
+
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="channel" class="inc-cre-form-label">Channel</label>
+                        <select id="channel" name="category_id" class="inc-cre-form-control">
+                            @{
+                                var selectActive = Model.knowledge.active;
+                            }
+                            <option value="true" selected="@(selectActive == true)">Active</option>
+                            <option value="false" selected="@(selectActive == false)">Inactive</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="inc-cre-form-grid">
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="cd" class="inc-cre-form-label">Create Date</label>
+                        <input type="text" id="cd" class="inc-cre-form-control" value="@Model.knowledge.create_date.ToString("yyyy-MM-dd HH:mm:ss")" readonly>
+                    </div>
+                </div>
+
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="ud" class="inc-cre-form-label">Update Date</label>
+                        <input type="text" id="ud" class="inc-cre-form-control" value="@Model.knowledge.updated.ToString("yyyy-MM-dd HH:mm:ss")" readonly>
+                    </div>
+                </div>
+            </div>
+
+            <div class="inc-cre-form-group inc-cre-short-description-group">
+                <label for="name" class="inc-cre-form-label inc-cre-required">Title</label>
+                <div class="inc-cre-input-with-actions">
+                    <input type="text" id="name" class="inc-cre-form-control" value="@Model.knowledge.title" name="title" required>
+                </div>
+            </div>
+
+            <div class="inc-cre-form-group inc-cre-short-description-group">
+                <label for="short_description" class="inc-cre-form-label inc-cre-required">Short description</label>
+                <div class="inc-cre-input-with-actions">
+                    <input type="text" id="short-description" name="short_description" value="@Model.knowledge.short_description" class="inc-cre-form-control" required>
+                </div>
+            </div>
+
+            <div class="inc-cre-form-group kb-editor-container">
+                <label for="editor" class="inc-cre-form-label inc-cre-required">Article content</label>
+                <textarea id="editor" name="article">@Html.Raw(Model.knowledge.article)</textarea>
+            </div>
+        </form>
+    </main>
+</div>
+
+<script src="https://cdn.tiny.cloud/1/msh9n12ypmjq6b1f8axq4qb930bqm3h2kardtzuczvhc8yl5/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+            $(function () {
+                  var $target = $('#Knowledge_menu');
+              if (!$target.hasClass('active') || !$target.hasClass('open')) {
+                  $('.menu-item').removeClass('active open');
+                  $target.addClass('active open');
+              }
+
+                  $('#Knowledge_menu_all').addClass("active");
+            });
+
+    tinymce.init({
+      selector: '#editor',
+      height: 500,
+      menubar: true,
+      plugins: [
+        'advlist autolink lists link image charmap print preview anchor',
+        'searchreplace visualblocks code fullscreen',
+        'insertdatetime media table paste code help wordcount'
+      ],
+      toolbar: 'undo redo | formatselect | bold italic backcolor | \
+                alignleft aligncenter alignright alignjustify | \
+                bullist numlist outdent indent | removeformat | help',
+      skin: 'oxide-dark',
+      content_css: 'dark',
+      content_style: `
+        body {
+          background-color: #1e1e1e;
+          color: #f8f8f8;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        p, li, h1, h2, h3, h4, h5, h6 { color: #f8f8f8; }
+        a { color: #3391ff; }
+        table { border-color: #494949; }
+        table td { border-color: #494949; }
+        .mce-content-body:not([dir=rtl])[data-mce-placeholder]:not(.mce-visualblocks)::before {
+          color: #999;
+        }
+      `
+    });
+</script>
+
 

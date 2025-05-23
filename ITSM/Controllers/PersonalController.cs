@@ -63,13 +63,13 @@ namespace ITSM.Controllers
             await Task.WhenAll(todoTask, incidentTask, userTask, reqTask, knowledgeTask, feedbackTask, departmentTask, roleTask);
 
             // Linq get api data
-            var allTodo = await todoTask;
+            var allTodo = todoTask.Result;
             var todo = allTodo.Where(x => x.user_id == currentUser.id).ToList();
             var todo_c_count = todo.Count(x => x.active);
             var todo_td_count = todo.Count(x => !x.active);
             var todo_all_count = todo.Count;
 
-            var allIncident = await incidentTask;
+            var allIncident = incidentTask.Result;
             var incident = allIncident.Where(x => x.sender == currentUser.id).OrderByDescending(y => y.id).ToList();
             var incident_list = incident.Take(9).ToList();
             var incident_r_count = incident.Count(x => x.state == "Resolved");
@@ -78,25 +78,25 @@ namespace ITSM.Controllers
             var incident_o_count = incident.Count(x => x.state == "On-Hold");
             var incident_all_count = incident.Count;
 
-            var allUser = await userTask;
+            var allUser = userTask.Result;
             var sameDepartment = allUser.Where(x => x.department_id == currentUser.department_id).Take(9).ToList();
 
-            var allReq = await reqTask;
+            var allReq = reqTask.Result;
             var req = allReq.Where(x => x.sender == currentUser.id).ToList();
             var req_r_count = req.Count(x => x.state == "Resolved");
             var req_p_count = req.Count(x => x.state == "Pending");
             var req_all_count = req.Count;
 
-            var allKnowledge = await knowledgeTask;
+            var allKnowledge = knowledgeTask.Result;
             var knowledge_count = allKnowledge.Count(x => x.author == currentUser.id);
 
-            var allFeedback = await feedbackTask;
+            var allFeedback = feedbackTask.Result;
             var feedback_count = allFeedback.Count(x => x.user_id == currentUser.id);
 
-            var allDepartment = await departmentTask;
+            var allDepartment = departmentTask.Result;
             var getDepartmentName = allDepartment.Where(x => x.id == currentUser.department_id).FirstOrDefault()?.name;
 
-            var allRole = await roleTask;
+            var allRole = roleTask.Result;
             var getRoleName = allRole.Where(x => x.id == currentUser.role_id).FirstOrDefault()?.role;
 
             // return to view data
@@ -137,7 +137,7 @@ namespace ITSM.Controllers
             var todoTask = _todoApi.GetAllTodo_API();
 
             // get todo list data
-            var allTodo = await todoTask;
+            var allTodo = todoTask.Result;
             var todo = allTodo.Where(x => x.user_id == currentUser.id).OrderByDescending(y => y.id).ToList();
 
             // return to view data
@@ -186,7 +186,7 @@ namespace ITSM.Controllers
             var todoTask = _todoApi.GetAllTodo_API();
 
             // get todo new id
-            var allTodo = await todoTask;
+            var allTodo = todoTask.Result;
             
             string newId = "";
             if (allTodo.Count > 0)
@@ -294,8 +294,8 @@ namespace ITSM.Controllers
             var roleTask = _roleApi.GetAllRole_API();
             await Task.WhenAll(departmentTask, roleTask);
 
-            var allDepartment = await departmentTask;
-            var allRole = await roleTask;
+            var allDepartment = departmentTask.Result;
+            var allRole = roleTask.Result;
 
             currentUser.Department = allDepartment.Where(x => x.id == currentUser.department_id).FirstOrDefault();
             currentUser.Role = allRole.Where(x => x.id == currentUser.role_id).FirstOrDefault();
@@ -324,9 +324,9 @@ namespace ITSM.Controllers
             var userTask = _userApi.GetAllUser_API();
             await Task.WhenAll(departmentTask, roleTask, userTask);
 
-            var allDepartment = await departmentTask;
-            var allRole = await roleTask;
-            var allUser = await userTask;
+            var allDepartment = departmentTask.Result;
+            var allRole = roleTask.Result;
+            var allUser = userTask.Result;
 
             var info_user = await _userApi.FindByIDUser_API(user.id);
 

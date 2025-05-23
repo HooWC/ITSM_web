@@ -52,9 +52,9 @@ namespace ITSM.Controllers
             var roleTask = _roleApi.GetAllRole_API();
             await Task.WhenAll(userTask, depTask, roleTask);
 
-            var allUser = await userTask;
-            var allDep = await depTask;
-            var allRole = await roleTask;
+            var allUser = userTask.Result;
+            var allDep = depTask.Result;
+            var allRole = roleTask.Result;
 
             foreach(var i in allUser)
             {
@@ -83,8 +83,8 @@ namespace ITSM.Controllers
             var roleTask = _roleApi.GetAllRole_API();
             await Task.WhenAll(departmentTask, roleTask);
 
-            var allDepartment = await departmentTask;
-            var allRole = await roleTask;
+            var allDepartment = departmentTask.Result;
+            var allRole = roleTask.Result;
 
             var model = new AllModelVM()
             {
@@ -110,9 +110,9 @@ namespace ITSM.Controllers
             var userTask = _userApi.GetAllUser_API();
             await Task.WhenAll(departmentTask, roleTask, userTask);
 
-            var allDepartment = await departmentTask;
-            var allRole = await roleTask;
-            var allUser = await userTask;
+            var allDepartment = departmentTask.Result;
+            var allRole = roleTask.Result;
+            var allUser = userTask.Result;
 
             var model = new AllModelVM()
             {
@@ -274,8 +274,8 @@ namespace ITSM.Controllers
             var roleTask = _roleApi.GetAllRole_API();
             await Task.WhenAll(departmentTask, roleTask);
 
-            var allDepartment = await departmentTask;
-            var allRole = await roleTask;
+            var allDepartment = departmentTask.Result;
+            var allRole = roleTask.Result;
 
             var info_user = await _userApi.FindByIDUser_API(id);
             info_user.Department = allDepartment.Where(x => x.id == currentUser.department_id).FirstOrDefault();
@@ -306,9 +306,9 @@ namespace ITSM.Controllers
             var userTask = _userApi.GetAllUser_API();
             await Task.WhenAll(departmentTask, roleTask, userTask);
 
-            var allDepartment = await departmentTask;
-            var allRole = await roleTask;
-            var allUser = await userTask;
+            var allDepartment = departmentTask.Result;
+            var allRole = roleTask.Result;
+            var allUser = userTask.Result;
 
             var info_user = await _userApi.FindByIDUser_API(user.id);
             info_user.Department = allDepartment.Where(x => x.id == currentUser.department_id).FirstOrDefault();
