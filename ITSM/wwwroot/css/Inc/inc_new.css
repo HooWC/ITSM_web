@@ -130,6 +130,7 @@ body {
     background-color: var(--submit-btn);
     color: white;
     border: none;
+    font-weight:bold;
 }
 
 .inc-cre-btn-resolve {

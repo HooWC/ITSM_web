@@ -175,7 +175,8 @@
             </div>
         }
 
-        <form id="incidentForm" class="inc-cre-incident-form" action="~/Knowledge/KB_Create" method="post">
+        <form id="incidentForm" class="inc-cre-incident-form" action="~/Knowledge/KB_Info?type=word" method="post">
+            <input type="text" name="id" id="id" class="inc-cre-form-control" value="@Model.knowledge.id" style="display:none;" readonly>
             <div class="inc-cre-form-grid">
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
@@ -211,7 +212,7 @@
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="channel" class="inc-cre-form-label">Channel</label>
-                        <select id="channel" name="category_id" class="inc-cre-form-control">
+                        <select id="channel" name="active" class="inc-cre-form-control">
                             @{
                                 var selectActive = Model.knowledge.active;
                             }

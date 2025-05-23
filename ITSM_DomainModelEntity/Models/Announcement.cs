@@ -5,6 +5,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Json.Serialization;
+using ITSM_DomainModelEntity.Function;
 
 namespace ITSM_DomainModelEntity.Models
 {
@@ -24,10 +26,14 @@ namespace ITSM_DomainModelEntity.Models
 
         public DateTime update_date { get; set; }
 
-        [Required]
         public string? message { get; set; }
 
         public string? ann_title { get; set; }
+
+        [JsonConverter(typeof(Base64ToByteArrayConverter))]
+        public byte[]? ann_file { get; set; }
+
+        public string? ann_type { get; set; }
 
         // Navigation properties
         public virtual User? User { get; set; }

@@ -60,6 +60,7 @@
                 </svg>
             </button>
             <button class="inc-tab-new-button item-delete-btn" id="deleteButton" disabled>Delete</button>
+            <button class="inc-tab-new-button item-import-btn" onclick="window.location.href='/Announcement/Ann_Import';">Import</button>
             <button class="inc-tab-new-button" onclick="window.location.href='/Announcement/Ann_Create';">New</button>
             <div class="nav-item navbar-dropdown dropdown-user dropdown open-button">
                 <a class="nav-link dropdown-toggle hide-arrow p-0"
@@ -100,7 +101,14 @@
                     <tr class="incident-item" data-id="@i.id">
                         <td><input type="checkbox" class="item-checkbox"></td>
                         <td class="inc-tab-incident-number" data-label="Number">
-                            <a href="~/Announcement/Ann_Info?id=@i.id">@i.at_number</a>
+                            @if (i.ann_type != null)
+                            {
+                                <a href="~/Announcement/Ann_Info?id=@i.id&type=import">@i.at_number</a>
+                            }
+                            else
+                            {
+                                <a href="~/Announcement/Ann_Info?id=@i.id&type=info">@i.at_number</a>
+                            }
                         </td>
                         <td data-label="title">@i.ann_title</td>
                         <td data-label="u_fullname">@i.User.fullname</td>

@@ -346,46 +346,30 @@
                             <div class="text-truncate" data-i18n="Dashboards">Announcements</div>
                         </a>
                     </li>
-                
-                <!-- Knowledge -->
-                    <li class="menu-item" id="Knowledge_menu">
-                    <a href="javascript:void(0)" class="menu-link menu-toggle">
-                        <i class="menu-icon tf-icons bx bx-box"></i>
-                        <div class="text-truncate" data-i18n="User interface">Knowledge</div>
-                    </a>
-                    <ul class="menu-sub">
-                        <li class="menu-item" id="Knowledge_menu_home">
-                            <a href="~/Knowledge/KB_Home" class="menu-link">
-                                <div class="text-truncate" data-i18n="Accordion">Home</div>
-                            </a>
-                        </li>
-                            <li class="menu-item" id="Knowledge_menu_all">
-                                <a href="~/Knowledge/KB_List" class="menu-link">
-                                    <div class="text-truncate" data-i18n="Accordion">All</div>
+
+                    <li class="menu-item" id="Knowledge_menu_u">
+                        <a href="javascript:void(0)" class="menu-link menu-toggle">
+                            <i class="menu-icon tf-icons bx bx-box"></i>
+                            <div class="text-truncate" data-i18n="User interface">Knowledge</div>
+                        </a>
+                        <ul class="menu-sub">
+                            <li class="menu-item" id="Knowledge_menu_u_home">
+                                <a href="~/Knowledge/KB_Home" class="menu-link">
+                                    <div class="text-truncate" data-i18n="Accordion">Home</div>
                                 </a>
                             </li>
-                            <li class="menu-item" id="Knowledge_menu_search">
+                            <li class="menu-item" id="Knowledge_menu_u_search">
                                 <a href="~/Knowledge/KB_Search" class="menu-link">
-                                <div class="text-truncate" data-i18n="Alerts">test search</div>
-                            </a>
-                        </li>
-                            <li class="menu-item" id="Knowledge_menu_read">
+                                    <div class="text-truncate" data-i18n="Alerts">test search</div>
+                                </a>
+                            </li>
+                            <li class="menu-item" id="Knowledge_menu_u_read">
                                 <a href="~/Knowledge/KB_Read" class="menu-link">
                                     <div class="text-truncate" data-i18n="Alerts">test read</div>
                                 </a>
                             </li>
-                            <li class="menu-item" id="Knowledge_menu_create">
-                                <a href="~/Knowledge/KB_Create" class="menu-link">
-                                <div class="text-truncate" data-i18n="Alerts">Create New</div>
-                            </a>
-                        </li>
-                            <li class="menu-item" id="Knowledge_menu_import">
-                                <a href="~/Knowledge/KB_Import" class="menu-link">
-                                <div class="text-truncate" data-i18n="Badges">Import Articles</div>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
+                        </ul>
+                    </li>
 
                     <!-- Feedback -->
                     <li class="menu-item" id="Feedback_menu">
@@ -449,8 +433,43 @@
                                 <div class="text-truncate" data-i18n="Text Divider">Create New</div>
                             </a>
                         </li>
+                            <li class="menu-item" id="Announcement_menu_import">
+                                <a href="~/Announcement/Ann_Import" class="menu-link">
+                                    <div class="text-truncate" data-i18n="Text Divider">Import File</div>
+                                </a>
+                            </li>
                     </ul>
                 </li>
+
+                    <!-- Knowledge -->
+                    <li class="menu-item" id="Knowledge_menu">
+                        <a href="javascript:void(0)" class="menu-link menu-toggle">
+                            <i class="menu-icon tf-icons bx bx-box"></i>
+                            <div class="text-truncate" data-i18n="User interface">A-Knowledge</div>
+                        </a>
+                        <ul class="menu-sub">
+                            <li class="menu-item" id="Knowledge_menu_all">
+                                <a href="~/Knowledge/KB_List" class="menu-link">
+                                    <div class="text-truncate" data-i18n="Accordion">All (Admin)</div>
+                                </a>
+                            </li>
+                            <li class="menu-item" id="Knowledge_menu_all">
+                                <a href="~/Knowledge/KB_List" class="menu-link">
+                                    <div class="text-truncate" data-i18n="Accordion">All (User)</div>
+                                </a>
+                            </li>
+                            <li class="menu-item" id="Knowledge_menu_create">
+                                <a href="~/Knowledge/KB_Create" class="menu-link">
+                                    <div class="text-truncate" data-i18n="Alerts">Create New</div>
+                                </a>
+                            </li>
+                            <li class="menu-item" id="Knowledge_menu_import">
+                                <a href="~/Knowledge/KB_Import" class="menu-link">
+                                    <div class="text-truncate" data-i18n="Badges">Import File</div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
 
                 <!-- Admin -->
                 <li class="menu-header small text-uppercase"><span class="menu-header-text">Admin</span></li>

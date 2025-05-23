@@ -75,6 +75,9 @@ namespace ITSM_Insfrastruture.Repository.Api
                 var jsonStr = new StringContent(JsonConvert.SerializeObject(knowledge), Encoding.UTF8, "application/json");
                 var response = await _client.PutAsync($"{_sudKnowledgeUrl}{knowledge.id}", jsonStr);
 
+                //var responseStr = await response.Content.ReadAsStringAsync();
+                //Console.WriteLine($"RESPONSE: {responseStr}");
+
                 return response.IsSuccessStatusCode;
             }
             catch (Exception ex)
@@ -94,9 +97,6 @@ namespace ITSM_Insfrastruture.Repository.Api
                 _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenModel.Token);
                 var jsonStr = new StringContent(JsonConvert.SerializeObject(knowledge), Encoding.UTF8, "application/json");
                 var response = await _client.PostAsync(_allKnowledgeUrl, jsonStr);
-
-                var responseStr = await response.Content.ReadAsStringAsync();
-                Console.WriteLine($"RESPONSE: {responseStr}");
 
                 return response.IsSuccessStatusCode;
             }

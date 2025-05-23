@@ -76,7 +76,7 @@ namespace ITSM.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> KB_Info(int id)
+        public async Task<IActionResult> KB_Info(int id, string type)
         {
             // current user info
             var tokenService = new TokenService(_httpContextAccessor);
@@ -102,7 +102,105 @@ namespace ITSM.Controllers
                 knowledge = kb_info
             };
 
-            return View(model);
+            if(type == "word") return View(model);
+            else return View("KB_Import_Info", model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> KB_Info(IFormFile file, string type, Knowledge kb)
+        {
+            // current user info
+            var tokenService = new TokenService(_httpContextAccessor);
+            var currentUser_token = tokenService.GetUserInfo();
+
+            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+
+            var userTask = _userApi.GetAllUser_API();
+            var categoryTask = _categoryApi.GetAllCategory_API();
+            await Task.WhenAll(userTask, categoryTask);
+
+            var allUsers = userTask.Result;
+            var allCategorys = categoryTask.Result;
+
+            var kb_info = await _kbApi.FindByIDKnowledge_API(kb.id);
+
+            kb_info.Author = allUsers.FirstOrDefault(x => x.id == kb_info.author);
+
+            var model = new AllModelVM()
+            {
+                user = currentUser,
+                CategoryList = allCategorys,
+                knowledge = kb_info
+            };
+
+            if (kb.title != null &&
+                kb.short_description != null)
+            {
+                var u_kb_info = await _kbApi.FindByIDKnowledge_API(kb.id);
+
+                if (type == "word")
+                {
+                    if(kb.article == null)
+                    {
+                        ViewBag.Error = "Please fill in all required fields";
+                        return View(model);
+                    }
+                    else
+                    {
+                        u_kb_info.article = kb.article;
+                    }
+                }
+
+                byte[] fileBytes = null;
+                if (type == "file")
+                {
+                    if (file != null && file.Length > 100_000_000) // 100MB
+                    {
+                        ViewBag.Error = "File size exceeds 100MB limit";
+                        return View(model);
+                    }
+
+                    if (file != null && file.Length > 0)
+                    {
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            await file.CopyToAsync(memoryStream);
+                            fileBytes = memoryStream.ToArray();
+                        }
+                    }
+                }
+
+                if(type == "file")
+                {
+                    if (fileBytes != null)
+                    {
+                        u_kb_info.kb_file = fileBytes;
+                        u_kb_info.kb_type = GetMimeTypeFromFileSignature(fileBytes);
+                    }
+                }
+
+                u_kb_info.title = kb.title;
+                u_kb_info.short_description = kb.short_description;
+                u_kb_info.active = kb.active;
+                u_kb_info.category_id = kb.category_id;
+
+                bool result = await _kbApi.UpdateKnowledge_API(u_kb_info);
+
+                if (result)
+                    return RedirectToAction("KB_List", "Knowledge");
+                else
+                {
+                    ViewBag.Error = "Update Knowledge Error";
+                    if (type == "word") return View(model);
+                    else return View("KB_Import_Info", model);
+                }
+            }
+            else
+            {
+                ViewBag.Error = "Please fill in all required fields";
+                if (type == "word") return View(model);
+                else return View("KB_Import_Info", model);
+            }
         }
 
         public IActionResult KB_Import_Info()
@@ -259,9 +357,9 @@ namespace ITSM.Controllers
             {
                 byte[] fileBytes = null;
 
-                if (file != null && file.Length > 50_000_000) // 50MB
+                if (file != null && file.Length > 100_000_000) // 100MB
                 {
-                    ViewBag.Error = "File size exceeds 50MB limit";
+                    ViewBag.Error = "File size exceeds 100MB limit";
                     return View(model);
                 }
 
@@ -450,6 +548,52 @@ namespace ITSM.Controllers
             }
 
             return "application/octet-stream";
+        }
+
+        public async Task<IActionResult> DownloadKBFile(int id)
+        {
+            try
+            {
+                var kb = await _kbApi.FindByIDKnowledge_API(id);
+                
+                if (kb == null || kb.kb_file == null || kb.kb_file.Length == 0)
+                {
+                    return NotFound("File does not exist");
+                }
+
+                string fileExtension = GetFileExtensionFromMimeType(kb.kb_type);
+                string fileName = $"KB_{kb.kb_number}{fileExtension}";
+
+                return File(kb.kb_file, kb.kb_type, fileName);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"An error occurred while downloading the file: {ex.Message}");
+            }
+        }
+
+        private string GetFileExtensionFromMimeType(string mimeType)
+        {
+            if (string.IsNullOrEmpty(mimeType))
+                return ".bin";
+
+            return mimeType.ToLower() switch
+            {
+                "application/pdf" => ".pdf",
+                "application/msword" => ".doc",
+                "application/vnd.openxmlformats-officedocument.wordprocessingml.document" => ".docx",
+                "application/vnd.ms-excel" => ".xls",
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" => ".xlsx",
+                "application/vnd.ms-powerpoint" => ".ppt",
+                "application/vnd.openxmlformats-officedocument.presentationml.presentation" => ".pptx",
+                "application/vnd.openxmlformats-officedocument.presentationml.slideshow" => ".ppsx",
+                "text/plain" => ".txt",
+                "text/csv" => ".csv",
+                "application/zip" => ".zip",
+                "application/x-rar-compressed" => ".rar",
+                "application/rtf" => ".rtf",
+                _ => ".bin"
+            };
         }
     }
 }

@@ -545,6 +545,14 @@ input[type="checkbox"] {
         background: #4f0217;
     }
 
+.item-import-btn {
+    background: #993d15;
+}
+
+    .item-import-btn:hover {
+        background: #702d11;
+    }
+
 .inc-tab-pagination-button:disabled {
     opacity: 0.5;
     cursor: not-allowed;

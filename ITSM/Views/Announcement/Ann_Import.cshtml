@@ -1,7 +1,7 @@
 ﻿@using ITSM_DomainModelEntity.ViewModels
 @model AllModelVM
 @{
-    ViewData["Title"] = "KB_Import";
+    ViewData["Title"] = "Ann_Import";
     Layout = "_Layout";
 }
 
@@ -30,7 +30,7 @@
         left: 0;
         width: 100%;
         height: 100%;
-        object-fit: contain; 
+        object-fit: contain;
         transition: transform 0.5s ease;
         background-color: #121212;
     }
@@ -63,7 +63,7 @@
     }
 
     .inc-cre-product-image-wrapper.square {
-        padding-bottom: 25%; 
+        padding-bottom: 25%;
     }
 
     .inc-cre-product-image.landscape {
@@ -76,7 +76,7 @@
 
     @@media (max-width: 768px) {
         .inc-cre-product-image-wrapper {
-            padding-bottom: 35%; 
+            padding-bottom: 35%;
         }
 
             .inc-cre-product-image-wrapper.square {
@@ -91,32 +91,29 @@
         text-align: center;
         margin-bottom: 24px;
         background: linear-gradient(135deg, #1a1a1a 0%, #242424 100%);
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 
-                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         position: relative;
         overflow: hidden;
     }
-    
-    .file-upload-container::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 1px;
-        background: linear-gradient(90deg, transparent, #3a86ff, transparent);
-        opacity: 0.4;
-    }
 
-    .file-upload-container:hover {
-        border-color: #3a86ff;
-        background: linear-gradient(135deg, #1f1f1f 0%, #2a2a2a 100%);
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 
-                    0 0 0 1px rgba(58, 134, 255, 0.3),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-        transform: translateY(-2px);
-    }
+        .file-upload-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #3a86ff, transparent);
+            opacity: 0.4;
+        }
+
+        .file-upload-container:hover {
+            border-color: #3a86ff;
+            background: linear-gradient(135deg, #1f1f1f 0%, #2a2a2a 100%);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(58, 134, 255, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
 
     .file-upload-input {
         display: none;
@@ -132,7 +129,7 @@
         text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
         transition: color 0.3s ease;
     }
-    
+
     .file-upload-container:hover .file-upload-label {
         color: #3a86ff;
     }
@@ -145,7 +142,7 @@
         filter: drop-shadow(0 4px 8px rgba(58, 134, 255, 0.3));
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    
+
     .file-upload-container:hover .upload-icon {
         color: #5a9aff;
         transform: scale(1.1) translateY(-2px);
@@ -168,16 +165,16 @@
         font-size: 0.9rem;
     }
 
-    .file-upload-btn:hover {
-        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-        box-shadow: 0 6px 16px rgba(58, 134, 255, 0.4);
-        transform: translateY(-2px);
-    }
-    
-    .file-upload-btn:active {
-        transform: translateY(0);
-        box-shadow: 0 2px 8px rgba(58, 134, 255, 0.3);
-    }
+        .file-upload-btn:hover {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            box-shadow: 0 6px 16px rgba(58, 134, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .file-upload-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(58, 134, 255, 0.3);
+        }
 
     .file-info {
         margin-top: 18px;
@@ -206,12 +203,12 @@
                 <i class="fa-solid fa-plus"></i>
             </button>
             <div class="inc-cre-title-group">
-                <div class="inc-cre-title">Knowledge Import</div>
+                <div class="inc-cre-title">Announcement Import</div>
                 <div class="inc-cre-subtitle">New record</div>
             </div>
         </div>
         <div class="inc-cre-header-right">
-            <button class="inc-cre-btn inc-cre-btn-icon" onclick="location.href='/Knowledge/KB_List'">
+            <button class="inc-cre-btn inc-cre-btn-icon" onclick="location.href='/Announcement/Ann_List'">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="4" y1="6" x2="20" y2="6"></line>
                     <line x1="4" y1="12" x2="20" y2="12"></line>
@@ -266,39 +263,27 @@
             </div>
         }
 
-        <form id="incidentForm" class="inc-cre-incident-form" action="~/Knowledge/KB_Import" method="post" enctype="multipart/form-data">
+        <form id="incidentForm" class="inc-cre-incident-form" action="~/Announcement/Ann_Import" method="post" enctype="multipart/form-data">
             <div class="inc-cre-form-grid">
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="number" class="inc-cre-form-label">Number</label>
-                        <input type="text" id="number" class="inc-cre-form-control" value="KB_TBD" readonly>
+                        <input type="text" id="number" class="inc-cre-form-control" value="ANN_TBD" readonly>
                     </div>
                 </div>
 
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
-                        <label for="channel" class="inc-cre-form-label">Channel</label>
-                        <select id="channel" name="category_id" class="inc-cre-form-control">
-                            @foreach (var i in Model.CategoryList)
-                            {
-                                <option value="@i.id">@i.title</option>
-                            }
-                        </select>
+                        <label for="number" class="inc-cre-form-label">User Name</label>
+                        <input type="text" class="inc-cre-form-control" value="@Model.user.fullname" readonly>
                     </div>
                 </div>
             </div>
 
             <div class="inc-cre-form-group inc-cre-short-description-group">
-                <label for="name" class="inc-cre-form-label inc-cre-required">Title</label>
+                <label for="ann_title" class="inc-cre-form-label inc-cre-required">Title</label>
                 <div class="inc-cre-input-with-actions">
-                    <input type="text" id="name" class="inc-cre-form-control" name="title" required>
-                </div>
-            </div>
-
-            <div class="inc-cre-form-group inc-cre-short-description-group">
-                <label for="short_description" class="inc-cre-form-label inc-cre-required">Short description</label>
-                <div class="inc-cre-input-with-actions">
-                    <input type="text" id="short-description" name="short_description" class="inc-cre-form-control" required>
+                    <input type="text" autocomplete="off" name="ann_title" id="ann_title" class="inc-cre-form-control" required>
                 </div>
             </div>
 
@@ -317,13 +302,13 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
     $(function () {
-        var $target = $('#Knowledge_menu');
+        var $target = $('#Announcement_menu');
         if (!$target.hasClass('active') || !$target.hasClass('open')) {
             $('.menu-item').removeClass('active open');
             $target.addClass('active open');
         }
 
-        $('#Knowledge_menu_import').addClass("active");
+        $('#Announcement_menu_import').addClass("active");
 
         $('#browseBtn').click(function() {            $('#file').click();        });        $('#file').change(function() {            var fileName = $(this).val().split('\\').pop();            if (fileName) {                $('#selectedFile').text('Selected file: ' + fileName).show();                $('.file-upload-container').css('border-color', '#3a86ff');            } else {                $('#selectedFile').hide();                $('.file-upload-container').css('border-color', '#444444');            }
         });
@@ -346,7 +331,7 @@
             e.preventDefault();
             e.stopPropagation();
             $(this).css('border-color', '#3a86ff');
-            
+
             var files = e.originalEvent.dataTransfer.files;
             if (files.length) {
                 $('#file')[0].files = files;
@@ -355,7 +340,9 @@
             }
         });
 
-        $('#submitBtn, .inc-cre-btn-submit').click(function() {            if ($('#file')[0].files.length === 0) {                             return;            }            $('#incidentForm').submit();        });
+        $('#submitBtn, .inc-cre-btn-submit').click(function() {            if ($('#file')[0].files.length === 0) {                                return;            }            $('#incidentForm').submit();        });
     });
 </script>
+
+
 

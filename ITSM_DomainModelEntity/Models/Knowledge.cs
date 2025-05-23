@@ -5,6 +5,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Json.Serialization;
+using ITSM_DomainModelEntity.Function;
 
 namespace ITSM_DomainModelEntity.Models
 {
@@ -35,6 +37,7 @@ namespace ITSM_DomainModelEntity.Models
 
         public bool active { get; set; }
 
+        [JsonConverter(typeof(Base64ToByteArrayConverter))]
         public byte[]? kb_file { get; set; }
         public string? title { get; set; }
         public int kb_view {  get; set; }

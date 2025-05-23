@@ -2308,10 +2308,8 @@ namespace ITSM.Controllers
         /// <summary>
         /// Announcement/Ann_List
         [HttpPost]
-        public async Task<IActionResult> DeleteAnnouncements([FromBody] DeleteFeedbackRequestFM request)
+        public async Task<IActionResult> DeleteAnnouncements([FromBody] List<int> ids)
         {
-            var word = request.word;
-            var ids = request.ids;
 
             if (ids == null || !ids.Any())
                 return Json(new { success = false, message = "No items selected for deletion" });
@@ -2487,10 +2485,8 @@ namespace ITSM.Controllers
         /// <summary>
         /// CMDB/CMDB_List
         [HttpPost]
-        public async Task<IActionResult> DeleteCMDBs([FromBody] DeleteFeedbackRequestFM request)
+        public async Task<IActionResult> DeleteCMDBs([FromBody] List<int> ids)
         {
-            var word = request.word;
-            var ids = request.ids;
 
             if (ids == null || !ids.Any())
                 return Json(new { success = false, message = "No items selected for deletion" });
@@ -2713,10 +2709,8 @@ namespace ITSM.Controllers
         /// <summary>
         /// Knowledge/KB_List
         [HttpPost]
-        public async Task<IActionResult> DeleteKBs([FromBody] DeleteFeedbackRequestFM request)
+        public async Task<IActionResult> DeleteKBs([FromBody] List<int> ids)
         {
-            var word = request.word;
-            var ids = request.ids;
 
             if (ids == null || !ids.Any())
                 return Json(new { success = false, message = "No items selected for deletion" });

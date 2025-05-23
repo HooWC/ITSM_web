@@ -7,31 +7,169 @@
 
 <style>
     body {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: #121212;
-        background-image: linear-gradient(to bottom, #151515, #0e0e0e);
-        line-height: 1.6;
-        font-size: 16px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #121212;
+    background-image: linear-gradient(to bottom, #151515, #0e0e0e);
+    line-height: 1.6;
+    font-size: 16px;
     }
 
     header {
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        background-color: #121212;
-        padding: 10px 20px;
-        border: none;
-        margin-bottom: 0px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    background-color: #121212;
+    padding: 10px 20px;
+    border: none;
+    margin-bottom: 0px;
     }
+
+    /* 文件下载容器样式 */
+    .file-download-container {
+        border: 2px solid #333333;
+        border-radius: 12px;
+        padding: 28px;
+        margin: 24px 0;
+        background: linear-gradient(135deg, #1a1a1a 0%, #242424 100%);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+        .file-download-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #3a86ff, transparent);
+            opacity: 0.6;
+        }
+
+        .file-download-container:hover {
+            border-color: #3a86ff;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(58, 134, 255, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+    .file-download-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0;
+    }
+
+    .file-icon {
+        font-size: 44px;
+        margin-right: 18px;
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+        transition: transform 0.3s ease;
+    }
+
+    .file-download-container:hover .file-icon {
+        transform: scale(1.05);
+    }
+
+    .file-icon.pdf {
+        color: #ff4757;
+    }
+
+    .file-icon.word {
+        color: #5dade2;
+    }
+
+    .file-icon.excel {
+        color: #58d68d;
+    }
+
+    .file-icon.ppt {
+        color: #f39c12;
+    }
+
+    .file-icon.default {
+        color: #95a5a6;
+    }
+
+    .file-info-wrapper {
+        flex-grow: 1;
+    }
+
+    .file-name {
+        font-size: 1.15rem;
+        font-weight: 600;
+        margin-bottom: 6px;
+        color: #ffffff;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 320px;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    }
+
+    .file-details {
+        color: #b0b0b0;
+        font-size: 0.9rem;
+        font-weight: 400;
+    }
+
+    .download-button {
+        background: linear-gradient(135deg, #3a86ff 0%, #2563eb 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 12px 20px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        box-shadow: 0 4px 12px rgba(58, 134, 255, 0.3);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-size: 0.85rem;
+    }
+
+        .download-button:hover {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            box-shadow: 0 6px 16px rgba(58, 134, 255, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .download-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(58, 134, 255, 0.3);
+        }
+
+    .no-file-message {
+        text-align: center;
+        color: #888888;
+        padding: 20px;
+        background: linear-gradient(135deg, #1a1a1a 0%, #242424 100%);
+        border-radius: 8px;
+    }
+
+        .no-file-message i {
+            display: block;
+            margin-bottom: 12px;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+        }
+
+        .no-file-message p {
+            margin: 0;
+            font-weight: 500;
+            color: #aaaaaa;
+        }
 </style>
 
 <header class="KB3-header">
     <div class="KB3-user-profile nav-item navbar-dropdown dropdown-user dropdown open-button">
         <a class="nav-link dropdown-toggle hide-arrow p-0"
-           href="javascript:void(0);"
-           data-bs-toggle="dropdown">
+        href="javascript:void(0);"
+        data-bs-toggle="dropdown">
             <div class="avatar avatar-online">
                 <img src="@(Model.user.photo != null ? $"data:{Model.user.photo_type};base64," +  Convert.ToBase64String(Model.user.photo) :
                           Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 rounded-circle" />
@@ -42,7 +180,7 @@
 
 <nav class="KB3-breadcrumb">
     <ul>
-        <li><a href="~/Announcement/View_Ann_List">Announcement (V)</a></li>
+        <li><a href="~/Announcement/View_Ann_List">Announcements</a></li>
         <li class="KB3-active">(@Model.announcement.at_number) - @Model.announcement.ann_title</li>
     </ul>
 </nav>
@@ -65,7 +203,91 @@
             </div>
 
             <div class="KB3-article-content">
-                @Html.Raw(Model.announcement.message)
+                @if(Model.announcement.message != null)
+                {
+                    @Html.Raw(Model.announcement.message)
+                }
+                else
+                {
+                    @if (Model.announcement.ann_file != null && Model.announcement.ann_file.Length > 0)
+                    {
+                        <div class="file-download-container">
+                            <div class="file-download-header">
+                                @{
+                                    string iconClass = "default";
+                                    string fileType = "file";
+
+                                    if (!string.IsNullOrEmpty(Model.announcement.ann_type))
+                                    {
+                                        if (Model.announcement.ann_type.Contains("pdf"))
+                                        {
+                                            iconClass = "pdf";
+                                            fileType = "PDF document";
+                                        }
+                                        else if (Model.announcement.ann_type.Contains("word") || Model.announcement.ann_type.Contains("doc"))
+                                        {
+                                            iconClass = "word";
+                                            fileType = "Word document";
+                                        }
+                                        else if (Model.announcement.ann_type.Contains("sheet") || Model.announcement.ann_type.Contains("excel") || Model.announcement.ann_type.Contains("xls"))
+                                        {
+                                            iconClass = "excel";
+                                            fileType = "Excel spreadsheet";
+                                        }
+                                        else if (Model.announcement.ann_type.Contains("presentation") || Model.announcement.ann_type.Contains("ppt"))
+                                        {
+                                            iconClass = "ppt";
+                                            fileType = "PowerPoint presentation";
+                                        }
+                                    }
+                                }
+
+                                <div class="file-icon @iconClass">
+                                    @if (iconClass == "pdf")
+                                    {
+                                        <i class="fa-solid fa-file-pdf"></i>
+                                    }
+                                    else if (iconClass == "word")
+                                    {
+                                        <i class="fa-solid fa-file-word"></i>
+                                    }
+                                    else if (iconClass == "excel")
+                                    {
+                                        <i class="fa-solid fa-file-excel"></i>
+                                    }
+                                    else if (iconClass == "ppt")
+                                    {
+                                        <i class="fa-solid fa-file-powerpoint"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="fa-solid fa-file"></i>
+                                    }
+                                </div>
+
+                                <div class="file-info-wrapper">
+                                    <div class="file-name">Announcement File - @Model.announcement.at_number</div>
+                                    <div class="file-details">@fileType | @(Model.announcement.ann_file.Length / 1024) KB</div>
+                                </div>
+
+                                <button type="button" class="download-button" onclick="downloadFile(@Model.announcement.id)">
+                                    <i class="fa-solid fa-download"></i>
+                                    Download
+                                </button>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="file-download-container">
+                            <div class="no-file-message">
+                                <i class="fa-solid fa-file-circle-xmark" style="font-size: 32px; color: #666666; margin-bottom: 12px;"></i>
+                                <p>No announcement content or file available</p>
+                            </div>
+                        </div>
+                    }
+                }
+
             </div>
         </div>
     </div>
@@ -81,5 +303,9 @@
              $target.addClass('active open');
          }
      });
+
+    function downloadFile(id) {
+        window.location.href = '/Announcement/DownloadKBFile?id=' + id;
+    }
 </script>
 

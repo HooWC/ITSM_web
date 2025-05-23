@@ -1,7 +1,7 @@
 ﻿@using ITSM_DomainModelEntity.ViewModels
 @model AllModelVM
 @{
-    ViewData["Title"] = "KB_Import_Info";
+    ViewData["Title"] = "Ann_Import_Info";
     Layout = "_Layout";
 }
 
@@ -91,73 +91,70 @@
         padding: 28px;
         margin-bottom: 24px;
         background: linear-gradient(135deg, #1a1a1a 0%, #242424 100%);
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 
-                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         position: relative;
         overflow: hidden;
     }
-    
-    .file-download-container::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 1px;
-        background: linear-gradient(90deg, transparent, #3a86ff, transparent);
-        opacity: 0.6;
-    }
-    
-    .file-download-container:hover {
-        border-color: #3a86ff;
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 
-                    0 0 0 1px rgba(58, 134, 255, 0.3),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-        transform: translateY(-2px);
-    }
-    
+
+        .file-download-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #3a86ff, transparent);
+            opacity: 0.6;
+        }
+
+        .file-download-container:hover {
+            border-color: #3a86ff;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(58, 134, 255, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
     .file-download-header {
         display: flex;
         align-items: center;
         margin-bottom: 0;
     }
-    
+
     .file-icon {
         font-size: 44px;
         margin-right: 18px;
         filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
         transition: transform 0.3s ease;
     }
-    
+
     .file-download-container:hover .file-icon {
         transform: scale(1.05);
     }
-    
+
     .file-icon.pdf {
         color: #ff4757;
     }
-    
+
     .file-icon.word {
         color: #5dade2;
     }
-    
+
     .file-icon.excel {
         color: #58d68d;
     }
-    
+
     .file-icon.ppt {
         color: #f39c12;
     }
-    
+
     .file-icon.default {
         color: #95a5a6;
     }
-    
+
     .file-info-wrapper {
         flex-grow: 1;
     }
-    
+
     .file-name {
         font-size: 1.15rem;
         font-weight: 600;
@@ -169,13 +166,13 @@
         max-width: 320px;
         text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
     }
-    
+
     .file-details {
         color: #b0b0b0;
         font-size: 0.9rem;
         font-weight: 400;
     }
-    
+
     .download-button {
         background: linear-gradient(135deg, #3a86ff 0%, #2563eb 100%);
         color: white;
@@ -193,18 +190,18 @@
         letter-spacing: 0.5px;
         font-size: 0.85rem;
     }
-    
-    .download-button:hover {
-        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-        box-shadow: 0 6px 16px rgba(58, 134, 255, 0.4);
-        transform: translateY(-1px);
-    }
-    
-    .download-button:active {
-        transform: translateY(0);
-        box-shadow: 0 2px 8px rgba(58, 134, 255, 0.3);
-    }
-    
+
+        .download-button:hover {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            box-shadow: 0 6px 16px rgba(58, 134, 255, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .download-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(58, 134, 255, 0.3);
+        }
+
     .no-file-message {
         text-align: center;
         color: #888888;
@@ -212,18 +209,18 @@
         background: linear-gradient(135deg, #1a1a1a 0%, #242424 100%);
         border-radius: 8px;
     }
-    
-    .no-file-message i {
-        display: block;
-        margin-bottom: 12px;
-        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-    }
-    
-    .no-file-message p {
-        margin: 0;
-        font-weight: 500;
-        color: #aaaaaa;
-    }
+
+        .no-file-message i {
+            display: block;
+            margin-bottom: 12px;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+        }
+
+        .no-file-message p {
+            margin: 0;
+            font-weight: 500;
+            color: #aaaaaa;
+        }
 
     .file-upload-container {
         border: 2px dashed #444444;
@@ -232,32 +229,29 @@
         text-align: center;
         margin-bottom: 24px;
         background: linear-gradient(135deg, #1a1a1a 0%, #242424 100%);
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 
-                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         position: relative;
         overflow: hidden;
     }
-    
-    .file-upload-container::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 1px;
-        background: linear-gradient(90deg, transparent, #3a86ff, transparent);
-        opacity: 0.4;
-    }
 
-    .file-upload-container:hover {
-        border-color: #3a86ff;
-        background: linear-gradient(135deg, #1f1f1f 0%, #2a2a2a 100%);
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 
-                    0 0 0 1px rgba(58, 134, 255, 0.3),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-        transform: translateY(-2px);
-    }
+        .file-upload-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #3a86ff, transparent);
+            opacity: 0.4;
+        }
+
+        .file-upload-container:hover {
+            border-color: #3a86ff;
+            background: linear-gradient(135deg, #1f1f1f 0%, #2a2a2a 100%);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(58, 134, 255, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
 
     .file-upload-input {
         display: none;
@@ -273,7 +267,7 @@
         text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
         transition: color 0.3s ease;
     }
-    
+
     .file-upload-container:hover .file-upload-label {
         color: #3a86ff;
     }
@@ -286,7 +280,7 @@
         filter: drop-shadow(0 4px 8px rgba(58, 134, 255, 0.3));
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    
+
     .file-upload-container:hover .upload-icon {
         color: #5a9aff;
         transform: scale(1.1) translateY(-2px);
@@ -309,16 +303,16 @@
         font-size: 0.9rem;
     }
 
-    .file-upload-btn:hover {
-        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-        box-shadow: 0 6px 16px rgba(58, 134, 255, 0.4);
-        transform: translateY(-2px);
-    }
-    
-    .file-upload-btn:active {
-        transform: translateY(0);
-        box-shadow: 0 2px 8px rgba(58, 134, 255, 0.3);
-    }
+        .file-upload-btn:hover {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            box-shadow: 0 6px 16px rgba(58, 134, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .file-upload-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(58, 134, 255, 0.3);
+        }
 
     .file-info {
         margin-top: 18px;
@@ -347,12 +341,12 @@
                 <i class="fa-solid fa-plus"></i>
             </button>
             <div class="inc-cre-title-group">
-                <div class="inc-cre-title">Knowledge Information</div>
-                <div class="inc-cre-subtitle">@Model.knowledge.kb_number</div>
+                <div class="inc-cre-title">Announcement Information</div>
+                <div class="inc-cre-subtitle">@Model.announcement.at_number</div>
             </div>
         </div>
         <div class="inc-cre-header-right">
-            <button class="inc-cre-btn inc-cre-btn-icon" onclick="location.href='/Knowledge/KB_List'">
+            <button class="inc-cre-btn inc-cre-btn-icon" onclick="location.href='/Announcement/Ann_List'">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="4" y1="6" x2="20" y2="6"></line>
                     <line x1="4" y1="12" x2="20" y2="12"></line>
@@ -407,50 +401,20 @@
             </div>
         }
 
-        <form id="incidentForm" class="inc-cre-incident-form" action="~/Knowledge/KB_Info?type=file" method="post" enctype="multipart/form-data">
-            <input type="text" name="id" id="id" class="inc-cre-form-control" value="@Model.knowledge.id" style="display:none;" readonly>
+        <form id="incidentForm" class="inc-cre-incident-form" action="~/Announcement/Ann_Info?type=import" method="post" enctype="multipart/form-data">
+            <input type="text" name="id" id="id" class="inc-cre-form-control" value="@Model.announcement.id" style="display:none;" readonly>
             <div class="inc-cre-form-grid">
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="number" class="inc-cre-form-label">Number</label>
-                        <input type="text" id="number" class="inc-cre-form-control" value="@Model.knowledge.kb_number" readonly>
+                        <input type="text" id="number" class="inc-cre-form-control" value="@Model.announcement.at_number" readonly>
                     </div>
                 </div>
 
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
-                        <label for="channel" class="inc-cre-form-label">Channel</label>
-                        <select id="channel" name="category_id" class="inc-cre-form-control">
-                            @{
-                                var selectCategory = Model.knowledge.category_id;
-                            }
-                            @foreach (var i in Model.CategoryList)
-                            {
-                                <option value="@i.id" selected="@(selectCategory == i.id)">@i.title</option>
-                            }
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <div class="inc-cre-form-grid">
-                <div class="inc-cre-form-column">
-                    <div class="inc-cre-form-group">
-                        <label for="author" class="inc-cre-form-label">Author</label>
-                        <input type="text" id="author" class="inc-cre-form-control" value="@Model.knowledge.Author.fullname" readonly>
-                    </div>
-                </div>
-
-                <div class="inc-cre-form-column">
-                    <div class="inc-cre-form-group">
-                        <label for="channel" class="inc-cre-form-label">Channel</label>
-                        <select id="channel" name="active" class="inc-cre-form-control">
-                            @{
-                                var selectActive = Model.knowledge.active;
-                            }
-                            <option value="true" selected="@(selectActive == true)">Active</option>
-                            <option value="false" selected="@(selectActive == false)">Inactive</option>
-                        </select>
+                        <label for="number" class="inc-cre-form-label">User Name</label>
+                        <input type="text" class="inc-cre-form-control" value="@Model.user.fullname" readonly>
                     </div>
                 </div>
             </div>
@@ -459,51 +423,58 @@
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="cd" class="inc-cre-form-label">Create Date</label>
-                        <input type="text" id="cd" class="inc-cre-form-control" value="@Model.knowledge.create_date.ToString("yyyy-MM-dd HH:mm:ss")" readonly>
+                        <input type="text" id="cd" class="inc-cre-form-control" value="@Model.announcement.create_date.ToString("yyyy-MM-dd HH:mm:ss")" readonly>
                     </div>
                 </div>
 
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="ud" class="inc-cre-form-label">Update Date</label>
-                        <input type="text" id="ud" class="inc-cre-form-control" value="@Model.knowledge.updated.ToString("yyyy-MM-dd HH:mm:ss")" readonly>
+                        <input type="text" id="ud" class="inc-cre-form-control" value="@Model.announcement.update_date.ToString("yyyy-MM-dd HH:mm:ss")" readonly>
                     </div>
                 </div>
             </div>
 
-            @if (Model.knowledge.kb_file != null && Model.knowledge.kb_file.Length > 0)
+            <div class="inc-cre-form-group inc-cre-short-description-group">
+                <label for="ann_title" class="inc-cre-form-label inc-cre-required">Title</label>
+                <div class="inc-cre-input-with-actions">
+                    <input type="text" autocomplete="off" name="ann_title" id="ann_title" class="inc-cre-form-control" value="@Model.announcement.ann_title" required>
+                </div>
+            </div>
+
+            @if (Model.announcement.ann_file != null && Model.announcement.ann_file.Length > 0)
             {
                 <div class="file-download-container">
                     <div class="file-download-header">
                         @{
                             string iconClass = "default";
                             string fileType = "file";
-                            
-                            if (!string.IsNullOrEmpty(Model.knowledge.kb_type))
+
+                            if (!string.IsNullOrEmpty(Model.announcement.ann_type))
                             {
-                                if (Model.knowledge.kb_type.Contains("pdf"))
+                                if (Model.announcement.ann_type.Contains("pdf"))
                                 {
                                     iconClass = "pdf";
                                     fileType = "PDF document";
                                 }
-                                else if (Model.knowledge.kb_type.Contains("word") || Model.knowledge.kb_type.Contains("doc"))
+                                else if (Model.announcement.ann_type.Contains("word") || Model.announcement.ann_type.Contains("doc"))
                                 {
                                     iconClass = "word";
                                     fileType = "Word document";
                                 }
-                                else if (Model.knowledge.kb_type.Contains("sheet") || Model.knowledge.kb_type.Contains("excel") || Model.knowledge.kb_type.Contains("xls"))
+                                else if (Model.announcement.ann_type.Contains("sheet") || Model.announcement.ann_type.Contains("excel") || Model.announcement.ann_type.Contains("xls"))
                                 {
                                     iconClass = "excel";
                                     fileType = "Excel spreadsheet";
                                 }
-                                else if (Model.knowledge.kb_type.Contains("presentation") || Model.knowledge.kb_type.Contains("ppt"))
+                                else if (Model.announcement.ann_type.Contains("presentation") || Model.announcement.ann_type.Contains("ppt"))
                                 {
                                     iconClass = "ppt";
                                     fileType = "PowerPoint presentation";
                                 }
                             }
                         }
-                        
+
                         <div class="file-icon @iconClass">
                             @if (iconClass == "pdf")
                             {
@@ -526,13 +497,13 @@
                                 <i class="fa-solid fa-file"></i>
                             }
                         </div>
-                        
+
                         <div class="file-info-wrapper">
-                            <div class="file-name">Knowledge Base File - @Model.knowledge.kb_number</div>
-                            <div class="file-details">@fileType | @(Model.knowledge.kb_file.Length / 1024) KB</div>
+                            <div class="file-name">Announcement Base File - @Model.announcement.at_number</div>
+                            <div class="file-details">@fileType | @(Model.announcement.ann_file.Length / 1024) KB</div>
                         </div>
-                        
-                        <button type="button" class="download-button" onclick="downloadFile(@Model.knowledge.id)">
+
+                        <button type="button" class="download-button" onclick="downloadFile(@Model.announcement.id)">
                             <i class="fa-solid fa-download"></i>
                             Download
                         </button>
@@ -564,13 +535,13 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
     $(function () {
-        var $target = $('#Knowledge_menu');
+        var $target = $('#Announcement_menu');
         if (!$target.hasClass('active') || !$target.hasClass('open')) {
             $('.menu-item').removeClass('active open');
             $target.addClass('active open');
         }
 
-        $('#Knowledge_menu_all').addClass("active");
+        $('#Announcement_menu_all').addClass("active");
 
         $('#browseBtn').click(function() {            $('#file').click();        });        $('#file').change(function() {            var fileName = $(this).val().split('\\').pop();            if (fileName) {                $('#selectedFile').text('Selected file: ' + fileName).show();                $('.file-upload-container').css('border-color', '#3a86ff');            } else {                $('#selectedFile').hide();                $('.file-upload-container').css('border-color', '#444444');            }
         });
@@ -606,8 +577,10 @@
     });
 
     function downloadFile(id) {
-        window.location.href = '/Knowledge/DownloadKBFile?id=' + id;
+        window.location.href = '/Announcement/DownloadKBFile?id=' + id;
     }
 </script>
+
+
 
 

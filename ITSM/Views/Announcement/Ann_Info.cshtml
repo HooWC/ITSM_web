@@ -62,12 +62,10 @@
         transform: scale(1.03);
     }
 
-    /* Add support for square images */
     .inc-cre-product-image-wrapper.square {
-        padding-bottom: 25%; /* Keep same height for consistency */
+        padding-bottom: 25%; 
     }
 
-    /* Auto-detect and adjust for different image types */
     .inc-cre-product-image.landscape {
         object-position: center;
     }
@@ -78,7 +76,7 @@
 
     @@media (max-width: 768px) {
         .inc-cre-product-image-wrapper {
-            padding-bottom: 35%; /* Slightly taller on mobile but still compact */
+            padding-bottom: 35%; 
         }
 
             .inc-cre-product-image-wrapper.square {
@@ -86,7 +84,6 @@
             }
     }
 
-    /* 知识库文章样式 */
     .kb-title-input {
         width: 100%;
         padding: 0.75rem;
@@ -148,7 +145,6 @@
                     </div>
                 </a>
             </div>
-            <!-- <button class="inc-cre-btn inc-cre-btn-resolve">Resolve</button> -->
         </div>
     </header>
 
@@ -179,7 +175,7 @@
             </div>
         }
 
-        <form id="incidentForm" class="inc-cre-incident-form" action="~/Announcement/Ann_Info" method="post">
+        <form id="incidentForm" class="inc-cre-incident-form" action="~/Announcement/Ann_Info?type=info" method="post">
             <input type="text" name="id" id="id" class="inc-cre-form-control" value="@Model.announcement.id" style="display:none;" readonly>
             <div class="inc-cre-form-grid">
                 <div class="inc-cre-form-column">
