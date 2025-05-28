@@ -11,6 +11,7 @@ namespace ITSM.Controllers
     public class IncidentManagementController : Controller
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly UserService _userService;
         private readonly User_api _userApi;
         private readonly Todo_api _todoApi;
         private readonly Feedback_api _feedbackApi;
@@ -20,7 +21,7 @@ namespace ITSM.Controllers
         private readonly Department_api _depApi;
         private readonly Role_api _roleApi;
 
-        public IncidentManagementController(IHttpContextAccessor httpContextAccessor)
+        public IncidentManagementController(IHttpContextAccessor httpContextAccessor, UserService userService)
         {
             _httpContextAccessor = httpContextAccessor;
             _userApi = new User_api(httpContextAccessor);
@@ -31,15 +32,12 @@ namespace ITSM.Controllers
             _reqApi = new Request_api(httpContextAccessor);
             _depApi = new Department_api(httpContextAccessor);
             _roleApi = new Role_api(httpContextAccessor);
+            _userService = userService;
         }
 
         public async Task<IActionResult> All()
         {
-            // current user info
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             // Making concurrent API requests
             var inc = _incApi.GetAllIncident_API();
@@ -74,11 +72,7 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> User_All()
         {
-            // current user info
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             // Making concurrent API requests
             var inc = _incApi.GetAllIncident_API();
@@ -113,36 +107,30 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Create_Form()
         {
-            // current user info
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
+            var currentUser = await _userService.GetCurrentUserAsync();
 
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var model = new AllModelVM
+            {
+                user = currentUser
+            };
 
-            ViewBag.CurrentUser = currentUser.fullname;
-            ViewBag.Photo = currentUser.photo;
-            ViewBag.PhotoType = currentUser.photo_type;
-
-            return View();
+            return View(model);
         }
 
         [HttpPost]
         public async Task<IActionResult> Create_Form(Incident inc)
         {
-            // current user info
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
+            var currentUser = await _userService.GetCurrentUserAsync();
 
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
-
-            ViewBag.CurrentUser = currentUser.fullname;
-            ViewBag.Photo = currentUser.photo;
-            ViewBag.PhotoType = currentUser.photo_type;
+            var model = new AllModelVM
+            {
+                user = currentUser
+            };
 
             if (inc.short_description == null && inc.AssignmentGroup == null)
             {
                 ViewBag.Error = "Please fill in all required fields";
-                return View();
+                return View(model);
             }
 
             // Making concurrent API requests
@@ -188,23 +176,17 @@ namespace ITSM.Controllers
             bool result = await _incApi.CreateIncident_API(new_inc);
 
             if (result)
-                return RedirectToAction("All", "IncidentManagement");
+                return RedirectToAction("User_All", "IncidentManagement");
             else
             {
                 ViewBag.Error = "Create Incident Error";
-                return View();
+                return View(model);
             }       
         }
 
         public async Task<IActionResult> Inc_Info_Form(int id, string role)
         {
-            // current user info
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
-
-            ViewBag.roleBack = role;
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             // Making concurrent API requests
             var departmentTask = _depApi.GetAllDepartment_API();
@@ -227,7 +209,8 @@ namespace ITSM.Controllers
             var model = new AllModelVM()
             {
                 user = currentUser,
-                incident = incData
+                incident = incData,
+                roleBack = role
             };
 
             return View(model);
@@ -236,11 +219,7 @@ namespace ITSM.Controllers
         [HttpPost]
         public async Task<IActionResult> Inc_Info_Form(Incident inc, string roleBack)
         {
-            // current user info
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             // Making concurrent API requests
             var departmentTask = _depApi.GetAllDepartment_API();
@@ -262,7 +241,8 @@ namespace ITSM.Controllers
             var model = new AllModelVM()
             {
                 user = currentUser,
-                incident = incData
+                incident = incData,
+                roleBack = roleBack
             };
 
             if (inc.short_description == null && inc.AssignmentGroup == null)
@@ -317,11 +297,7 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Assigned_To_Me()
         {
-            // current user info
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             // Making concurrent API requests
             var inc = _incApi.GetAllIncident_API();
@@ -356,11 +332,7 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Assigned_To_Group()
         {
-            // current user info
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             // Making concurrent API requests
             var inc = _incApi.GetAllIncident_API();
@@ -395,11 +367,7 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Resolved_Assigned_To_Me()
         {
-            // current user info
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             // Making concurrent API requests
             var inc = _incApi.GetAllIncident_API();
@@ -434,11 +402,7 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Closed_Assigned_To_Me()
         {
-            // current user info
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             // Making concurrent API requests
             var inc = _incApi.GetAllIncident_API();

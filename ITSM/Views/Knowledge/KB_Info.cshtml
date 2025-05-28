@@ -177,6 +177,7 @@
 
         <form id="incidentForm" class="inc-cre-incident-form" action="~/Knowledge/KB_Info?type=word" method="post">
             <input type="text" name="id" id="id" class="inc-cre-form-control" value="@Model.knowledge.id" style="display:none;" readonly>
+            <input type="text" name="roleBack" id="roleBack" class="inc-cre-form-control" value="@Model.roleBack" style="display:none;" readonly>
             <div class="inc-cre-form-grid">
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
@@ -265,13 +266,20 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
             $(function () {
-                  var $target = $('#Knowledge_menu');
-              if (!$target.hasClass('active') || !$target.hasClass('open')) {
-                  $('.menu-item').removeClass('active open');
-                  $target.addClass('active open');
-              }
+                var $target = $('#Knowledge_menu');
 
-                  $('#Knowledge_menu_all').addClass("active");
+                if (!$target.hasClass('active') || !$target.hasClass('open')) {
+                    $('.menu-item').removeClass('active open');
+                    $target.addClass('active open');
+                }
+
+                var role = $('#roleBack').val();
+
+                if (role === 'admin') {
+                    $('#Knowledge_menu_all').addClass('active');
+                } else if (role === 'user') {
+                    $('#Knowledge_menu_all_user').addClass('active');
+                }
             });
 
     tinymce.init({

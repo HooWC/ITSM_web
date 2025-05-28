@@ -1,4 +1,5 @@
-﻿using ITSM_DomainModelEntity.Models;
+﻿using System.Security.Cryptography.Xml;
+using ITSM_DomainModelEntity.Models;
 using ITSM_DomainModelEntity.ViewModels;
 using ITSM_Insfrastruture.Repository.Api;
 using ITSM_Insfrastruture.Repository.Token;
@@ -9,6 +10,7 @@ namespace ITSM.Controllers
     public class KnowledgeController : Controller
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly UserService _userService;
         private readonly User_api _userApi;
         private readonly Todo_api _todoApi;
         private readonly Feedback_api _feedbackApi;
@@ -22,7 +24,7 @@ namespace ITSM.Controllers
         private readonly Knowledge_api _kbApi;
         private readonly Category_api _categoryApi;
 
-        public KnowledgeController(IHttpContextAccessor httpContextAccessor)
+        public KnowledgeController(IHttpContextAccessor httpContextAccessor, UserService userService)
         {
             _httpContextAccessor = httpContextAccessor;
             _userApi = new User_api(httpContextAccessor);
@@ -37,19 +39,43 @@ namespace ITSM.Controllers
             _cmdbApi = new CMDB_api(httpContextAccessor);
             _kbApi = new Knowledge_api(httpContextAccessor);
             _categoryApi = new Category_api(httpContextAccessor);
+            _userService = userService;
         }
 
-        public IActionResult KB_Home()
+        public async Task<IActionResult> KB_Home()
         {
-            return View();
+            var currentUser = await _userService.GetCurrentUserAsync();
+
+            var CategoryTask = _categoryApi.GetAllCategory_API();
+            var UserTask = _userApi.GetAllUser_API();
+            var KBTask = _kbApi.GetAllKnowledge_API();
+
+            await Task.WhenAll(CategoryTask, UserTask, KBTask);
+
+            var allCategory = CategoryTask.Result;
+            var allUser = UserTask.Result;
+            var allKB = KBTask.Result;
+
+            foreach (var i in allKB)
+            {
+                i.Category = allCategory.FirstOrDefault(x => x.id == i.category_id);
+                i.Author = allUser.FirstOrDefault(x => x.id == i.author);
+            }
+
+            var model = new AllModelVM
+            {
+                user = currentUser,
+                KnowledgeList = allKB.OrderByDescending(X => X.id).ToList(),
+                CategoryList = allCategory
+                
+            };
+
+            return View(model);
         }
 
         public async Task<IActionResult> KB_List()
         {
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             var CategoryTask = _categoryApi.GetAllCategory_API();
             var UserTask = _userApi.GetAllUser_API();
@@ -76,13 +102,40 @@ namespace ITSM.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> KB_Info(int id, string type)
+        public async Task<IActionResult> KB_List_User()
         {
-            // current user info
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
+            var currentUser = await _userService.GetCurrentUserAsync();
 
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var CategoryTask = _categoryApi.GetAllCategory_API();
+            var UserTask = _userApi.GetAllUser_API();
+            var KBTask = _kbApi.GetAllKnowledge_API();
+
+            await Task.WhenAll(CategoryTask, UserTask, KBTask);
+
+            var allCategory = CategoryTask.Result;
+            var allUser = UserTask.Result;
+            var allKB = KBTask.Result;
+
+            var KB_info_list = allKB.Where(x => x.author == currentUser.id).ToList();
+
+            foreach (var i in KB_info_list)
+            {
+                i.Category = allCategory.FirstOrDefault(x => x.id == i.category_id);
+                i.Author = allUser.FirstOrDefault(x => x.id == i.author);
+            }
+
+            var model = new AllModelVM
+            {
+                user = currentUser,
+                KnowledgeList = KB_info_list.OrderByDescending(X => X.id).ToList()
+            };
+
+            return View(model);
+        }
+
+        public async Task<IActionResult> KB_Info(int id, string type, string role)
+        {
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             var userTask = _userApi.GetAllUser_API();
             var categoryTask = _categoryApi.GetAllCategory_API();
@@ -99,7 +152,8 @@ namespace ITSM.Controllers
             {
                 user = currentUser,
                 CategoryList = allCategorys,
-                knowledge = kb_info
+                knowledge = kb_info,
+                roleBack = role
             };
 
             if(type == "word") return View(model);
@@ -107,13 +161,9 @@ namespace ITSM.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> KB_Info(IFormFile file, string type, Knowledge kb)
+        public async Task<IActionResult> KB_Info(IFormFile file, string type, Knowledge kb, string roleBack)
         {
-            // current user info
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             var userTask = _userApi.GetAllUser_API();
             var categoryTask = _categoryApi.GetAllCategory_API();
@@ -130,7 +180,8 @@ namespace ITSM.Controllers
             {
                 user = currentUser,
                 CategoryList = allCategorys,
-                knowledge = kb_info
+                knowledge = kb_info,
+                roleBack = roleBack
             };
 
             if (kb.title != null &&
@@ -187,7 +238,12 @@ namespace ITSM.Controllers
                 bool result = await _kbApi.UpdateKnowledge_API(u_kb_info);
 
                 if (result)
-                    return RedirectToAction("KB_List", "Knowledge");
+                {
+                    if (roleBack == "admin")
+                        return RedirectToAction("KB_List", "Knowledge");
+                    else
+                        return RedirectToAction("KB_List_User", "Knowledge");
+                }
                 else
                 {
                     ViewBag.Error = "Update Knowledge Error";
@@ -203,27 +259,103 @@ namespace ITSM.Controllers
             }
         }
 
-        public IActionResult KB_Import_Info()
+        public async Task<IActionResult> KB_Import_Info()
         {
-            return View();
+            var currentUser = await _userService.GetCurrentUserAsync();
+            var model = new AllModelVM()
+            {
+                user = currentUser
+            };
+            return View(model);
         }
 
-        public IActionResult KB_Search()
+        public async Task<IActionResult> KB_Search(int categorytitle, string kb_search_word, string showall)
         {
-            return View();
+            var currentUser = await _userService.GetCurrentUserAsync();
+
+            var CategoryTask = _categoryApi.GetAllCategory_API();
+            var UserTask = _userApi.GetAllUser_API();
+            var KBTask = _kbApi.GetAllKnowledge_API();
+
+            await Task.WhenAll(CategoryTask, UserTask, KBTask);
+
+            var allCategory = CategoryTask.Result;
+            var allUser = UserTask.Result;
+            var allKB = KBTask.Result;
+
+            var category_info = new Category();
+            if (categorytitle != null)
+                category_info  = allCategory.FirstOrDefault(x => x.id == categorytitle);
+
+            List<Knowledge> kbs;
+            if (kb_search_word != null)
+                kbs = allKB.Where(x => x.title.Contains(kb_search_word)).ToList();
+            else if (showall != null)
+                kbs = allKB;
+            else if (category_info != null)
+                kbs = allKB.Where(x => x.category_id == category_info.id).ToList();
+            else
+                kbs = allKB;
+
+            if (kbs.Count > 0)
+            {
+                foreach (var i in kbs)
+                {
+                    i.Category = allCategory.FirstOrDefault(x => x.id == i.category_id);
+                    i.Author = allUser.FirstOrDefault(x => x.id == i.author);
+                }
+            }
+
+            var model = new AllModelVM
+            {
+                user = currentUser,
+                KnowledgeList = kbs,
+                category = category_info != null ? category_info : null,
+                kb_search_word = kb_search_word
+            };
+
+            return View(model);
         }
 
-        public IActionResult KB_Read()
+        public async Task<IActionResult> KB_Read(int kbid, string kbsearchword, string showall)
         {
-            return View();
+            var currentUser = await _userService.GetCurrentUserAsync();
+
+            var CategoryTask = _categoryApi.GetAllCategory_API();
+            var UserTask = _userApi.GetAllUser_API();
+            var KBTask = _kbApi.GetAllKnowledge_API();
+
+            await Task.WhenAll(CategoryTask, UserTask, KBTask);
+
+            var allCategory = CategoryTask.Result;
+            var allUser = UserTask.Result;
+            var allKB = KBTask.Result;
+
+            var kb_info = new Knowledge();
+            if (kbid != null)
+                kb_info = allKB.Where(x => x.id == kbid).FirstOrDefault();
+
+            var category_info = allCategory.FirstOrDefault(x => x.id == kb_info.category_id);
+
+            kb_info.Category = allCategory.FirstOrDefault(x => x.id == kb_info.category_id);
+            kb_info.Author = allUser.FirstOrDefault(x => x.id == kb_info.author);
+
+            var model = new AllModelVM
+            {
+                user = currentUser,
+                knowledge = kb_info,
+                category = category_info,
+                kb_search_word = kbsearchword != null ? kbsearchword : null,
+                kb_search_all = showall != null ? showall : null,
+                KnowledgeList = allKB.Where(x => x.category_id == kb_info.category_id && x.id != kb_info.id).Take(5).OrderByDescending(x => x.id).ToList()
+            };
+
+            return View(model);
         }
 
         public async Task<IActionResult> KB_Create()
         {
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             var CategoryTask = _categoryApi.GetAllCategory_API();
             await Task.WhenAll(CategoryTask);
@@ -242,10 +374,7 @@ namespace ITSM.Controllers
         [HttpPost]
         public async Task<IActionResult> KB_Create(Knowledge kb)
         {
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             var CategoryTask = _categoryApi.GetAllCategory_API();
             var KBTask = _kbApi.GetAllKnowledge_API();
@@ -294,7 +423,7 @@ namespace ITSM.Controllers
                 bool result = await _kbApi.CreateKnowledge_API(new_kb);
 
                 if (result)
-                    return RedirectToAction("KB_List", "Knowledge");
+                    return RedirectToAction("KB_List_User", "Knowledge");
                 else
                 {
                     ViewBag.Error = "Create Knowledge Error";
@@ -310,10 +439,7 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> KB_Import()
         {
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             var CategoryTask = _categoryApi.GetAllCategory_API();
             await Task.WhenAll(CategoryTask);
@@ -332,11 +458,7 @@ namespace ITSM.Controllers
         [HttpPost]
         public async Task<IActionResult> KB_Import(IFormFile file, Knowledge kb)
         {
-            // current user info
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             var CategoryTask = _categoryApi.GetAllCategory_API();
             var KBTask = _kbApi.GetAllKnowledge_API();
@@ -405,7 +527,7 @@ namespace ITSM.Controllers
                 bool result = await _kbApi.CreateKnowledge_API(new_kb);
 
                 if (result)
-                    return RedirectToAction("KB_List", "Knowledge");
+                    return RedirectToAction("KB_List_User", "Knowledge");
                 else
                 {
                     ViewBag.Error = "Create Knowledge Error";

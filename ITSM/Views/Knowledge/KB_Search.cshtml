@@ -1,4 +1,5 @@
-﻿
+﻿@using ITSM_DomainModelEntity.ViewModels
+@model AllModelVM
 @{
     ViewData["Title"] = "KB_Search";
     Layout = "_Layout";
@@ -6,26 +7,31 @@
 
 <style>
     * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     }
 
     body {
-        background-color: #121212;
-        font-size: 16px;
-        line-height: 1.5;
+    background-color: #121212;
+    font-size: 16px;
+    line-height: 1.5;
+    }
+
+    .KB2-result-content .title_read_info:hover{
+    text-decoration:none;
     }
 </style>
 
 <header class="KB2-header">
     <div class="KB2-user-profile nav-item navbar-dropdown dropdown-user dropdown open-button">
         <a class="nav-link dropdown-toggle hide-arrow p-0"
-           href="javascript:void(0);"
-           data-bs-toggle="dropdown">
+        href="javascript:void(0);"
+        data-bs-toggle="dropdown">
             <div class="avatar avatar-online">
-                <img src="https://www.diydoutu.com/touxiang/20201222-1.jpg" alt class="w-px-40 h-auto rounded-circle" />
+                <img src="@(Model.user.photo != null ? $"data:{Model.user.photo_type};base64," +  Convert.ToBase64String(Model.user.photo) :
+                            Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 rounded-circle" />
             </div>
         </a>
     </div>
@@ -33,323 +39,89 @@
 
 <nav class="KB2-breadcrumb">
     <ul>
-        <li><a href="#">Home</a></li>
-        <li class="KB2-active">Knowledge Search</li>
+        <li><a href="~/Knowledge/KB_Home">Home</a></li>
+        @if (Model.category != null)
+        {
+            <li class="KB2-active">@Model.category.title (Knowledge Search)</li>
+        }
+        else
+        {
+            <li class="KB2-active">All (Knowledge Search)</li>
+        }
+
     </ul>
 </nav>
 
 <main>
-    <div class="KB2-search-section">
-        <div class="KB2-search-container">
-            <input type="text" placeholder="Search Title..." value="">
-            <button type="submit"><i class="fas fa-search"></i></button>
+    <form action="~/Knowledge/KB_Search" method="get">
+        <div class="KB2-search-section">
+            <div class="KB2-search-container">
+                <input type="text" name="kb_search_word" placeholder="Search Title...">
+                <button type="submit"><i class="fas fa-search"></i></button>
+            </div>
         </div>
-        <div class="KB2-filter-section">
-            <button class="KB2-filter-btn">
-                <i class="fas fa-filter"></i> Filters
-            </button>
-        </div>
-    </div>
+    </form>
 
     <div class="KB2-results-section">
         <div class="KB2-results-header">
-            <div class="KB2-results-count">12 results for "About"</div>
-            <div class="KB2-results-sorting">
-                <span>Sort by</span>
-                <div class="KB2-sort-options">
-                    <a href="#" class="KB2-active">Relevance</a>
-                    <a href="#">Views</a>
-                    <a href="#">Newest</a>
-                    <a href="#">Alphabetical</a>
-                </div>
-            </div>
+            @if (Model.category != null)
+            {
+                <div class="KB2-results-count">@Model.KnowledgeList.Count results for "@Model.category.title"</div>
+            }
+            else if (@Model.kb_search_word != null)
+            {
+                <div class="KB2-results-count">@Model.KnowledgeList.Count results for "@Model.kb_search_word"</div>
+            }
+            else
+            {
+                <div class="KB2-results-count">@Model.KnowledgeList.Count results for All</div>
+            }
         </div>
 
         <div class="KB2-showing-results">Showing All Results</div>
 
         <div class="KB2-search-results">
-            <div class="KB2-result-item">
-                <div class="KB2-result-icon">
-                    <i class="fas fa-phone-alt"></i>
-                </div>
-                <div class="KB2-result-content">
-                    <h3><a href="#">About Windows Vista</a></h3>
-                    <div class="KB2-result-path">
-                        <span>IT</span>
-                        <i class="fas fa-chevron-right"></i>
-                        <span>Operating Systems</span>
-                        <i class="fas fa-chevron-right"></i>
-                        <span>Windows</span>
-                        <i class="fas fa-chevron-right"></i>
-                        <span>Windows Vista</span>
+            @foreach(var i in Model.KnowledgeList)
+            {
+                <div class="KB2-result-item">
+                    <div class="KB2-result-icon">
+                        @if (i.kb_type != null)
+                        {
+                            <i class="fa-solid fa-file"></i>
+                        }
+                        else
+                        {
+                            <i class="fas fa-book"></i>
+                        }
                     </div>
-                    <div class="KB2-result-description">
-                        About Windows Vista Note: If you are migrating from an older operating system, UITS strongly recommends installing Windows 7 rather than Vista. Windows 7 was released three years after Vista) if you want to keep Windows Media Center. For information about upgrading from an earlier version
-                    </div>
-                    <div class="KB2-result-meta">
-                        <span class="KB2-author">Boris Catino</span>
-                        <span class="KB2-views">5 Views</span>
-                        <span class="KB2-date">2y ago</span>
-                        <div class="KB2-rating">
-                            <span class="KB2-star">&#9734;</span>
-                            <span class="KB2-star">&#9734;</span>
-                            <span class="KB2-star">&#9734;</span>
-                            <span class="KB2-star">&#9734;</span>
-                            <span class="KB2-star">&#9734;</span>
+                    <div class="KB2-result-content">
+                        @if (Model.kb_search_word != null)
+                        {
+                            <h3><a href="~/Knowledge/KB_Read?kbid=@i.id&kbsearchword=@Model.kb_search_word" class="title_read_info">@i.title</a></h3>
+                        }
+                        else if (Model.category != null)
+                        {
+                            <h3><a href="~/Knowledge/KB_Read?kbid=@i.id" class="title_read_info">@i.title</a></h3>
+                        }
+                        else
+                        {
+                            <h3><a href="~/Knowledge/KB_Read?kbid=@i.id&showall=all" class="title_read_info">@i.title</a></h3>
+                        }
+                        <div class="KB2-result-path">
+                            <span>@i.Category.title</span>
+                            <i class="fas fa-chevron-right"></i>
+                            <span>@i.title</span>
+                        </div>
+                        <div class="KB2-result-description">
+                            @i.short_description
+                        </div>
+                        <div class="KB2-result-meta">
+                            <span class="KB2-author"><i class="fas fa-user" style="padding-right:3px;"></i> @i.Author.fullname</span>
+                            <span class="KB2-date"><i class="fas fa-calendar" style="padding-right:3px;"></i> @i.create_date.ToString("yyyy-MM-dd HH:mm:ss")</span>
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="KB2-result-item">
-                <div class="KB2-result-icon">
-                    <i class="fas fa-phone-alt"></i>
-                </div>
-                <div class="KB2-result-content">
-                    <h3><a href="#">About Windows 7</a></h3>
-                    <div class="KB2-result-path">
-                        <span>IT</span>
-                        <i class="fas fa-chevron-right"></i>
-                        <span>Operating Systems</span>
-                        <i class="fas fa-chevron-right"></i>
-                        <span>Windows</span>
-                        <i class="fas fa-chevron-right"></i>
-                        <span>Windows 7</span>
-                    </div>
-                    <div class="KB2-result-description">
-                        About Windows 7 Windows 7 is not an upgrade to Windows Vista, but an entirely different operating system. With it, you can expect greater functionality in communication, multimedia, and security, including improved, streamlined User Account Control (UAC) performance with fewer prompts
-                    </div>
-                    <div class="KB2-result-meta">
-                        <span class="KB2-author">Boris Catino</span>
-                        <span class="KB2-views">9 Views</span>
-                        <span class="KB2-date">2y ago</span>
-                        <div class="KB2-rating">
-                            <span class="KB2-star">&#9734;</span>
-                            <span class="KB2-star">&#9734;</span>
-                            <span class="KB2-star">&#9734;</span>
-                            <span class="KB2-star">&#9734;</span>
-                            <span class="KB2-star">&#9734;</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="KB2-result-item">
-                <div class="KB2-result-icon">
-                    <i class="fas fa-phone-alt"></i>
-                </div>
-                <div class="KB2-result-content">
-                    <h3><a href="#">About Windows 10</a></h3>
-                    <div class="KB2-result-path">
-                        <span>IT</span>
-                        <i class="fas fa-chevron-right"></i>
-                        <span>Operating Systems</span>
-                        <i class="fas fa-chevron-right"></i>
-                        <span>Windows</span>
-                    </div>
-                    <div class="KB2-result-description">
-                        Introducing Windows 10 Windows 10 is full of new features and improvements. Take a look at the highlights! Ready, set. Start menu The Start menu is back—and it's more personal, more organized, and more fun than before. Select the Start icon button on the taskbar. You'll find your most used apps on the left, the...
-                    </div>
-                    <div class="KB2-result-meta">
-                        <span class="KB2-author">Boris Catino</span>
-                        <span class="KB2-views">8 Views</span>
-                        <span class="KB2-date">2y ago</span>
-                        <div class="KB2-rating">
-                            <span class="KB2-star">&#9734;</span>
-                            <span class="KB2-star">&#9734;</span>
-                            <span class="KB2-star">&#9734;</span>
-                            <span class="KB2-star">&#9734;</span>
-                            <span class="KB2-star">&#9734;</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="KB2-result-item">
-                <div class="KB2-result-icon">
-                    <i class="fas fa-phone-alt"></i>
-                </div>
-                <div class="KB2-result-content">
-                    <h3><a href="#">About Windows 10</a></h3>
-                    <div class="KB2-result-path">
-                        <span>IT</span>
-                        <i class="fas fa-chevron-right"></i>
-                        <span>Operating Systems</span>
-                        <i class="fas fa-chevron-right"></i>
-                        <span>Windows</span>
-                    </div>
-                    <div class="KB2-result-description">
-                        Introducing Windows 10 Windows 10 is full of new features and improvements. Take a look at the highlights! Ready, set. Start menu The Start menu is back—and it's more personal, more organized, and more fun than before. Select the Start icon button on the taskbar. You'll find your most used apps on the left, the...
-                    </div>
-                    <div class="KB2-result-meta">
-                        <span class="KB2-author">Boris Catino</span>
-                        <span class="KB2-views">8 Views</span>
-                        <span class="KB2-date">2y ago</span>
-                        <div class="KB2-rating">
-                            <span class="KB2-star">&#9734;</span>
-                            <span class="KB2-star">&#9734;</span>
-                            <span class="KB2-star">&#9734;</span>
-                            <span class="KB2-star">&#9734;</span>
-                            <span class="KB2-star">&#9734;</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="KB2-result-item">
-                <div class="KB2-result-icon">
-                    <i class="fas fa-phone-alt"></i>
-                </div>
-                <div class="KB2-result-content">
-                    <h3><a href="#">About Windows 10</a></h3>
-                    <div class="KB2-result-path">
-                        <span>IT</span>
-                        <i class="fas fa-chevron-right"></i>
-                        <span>Operating Systems</span>
-                        <i class="fas fa-chevron-right"></i>
-                        <span>Windows</span>
-                    </div>
-                    <div class="KB2-result-description">
-                        Introducing Windows 10 Windows 10 is full of new features and improvements. Take a look at the highlights! Ready, set. Start menu The Start menu is back—and it's more personal, more organized, and more fun than before. Select the Start icon button on the taskbar. You'll find your most used apps on the left, the...
-                    </div>
-                    <div class="KB2-result-meta">
-                        <span class="KB2-author">Boris Catino</span>
-                        <span class="KB2-views">8 Views</span>
-                        <span class="KB2-date">2y ago</span>
-                        <div class="KB2-rating">
-                            <span class="KB2-star">&#9734;</span>
-                            <span class="KB2-star">&#9734;</span>
-                            <span class="KB2-star">&#9734;</span>
-                            <span class="KB2-star">&#9734;</span>
-                            <span class="KB2-star">&#9734;</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="KB2-result-item">
-                <div class="KB2-result-icon">
-                    <i class="fas fa-phone-alt"></i>
-                </div>
-                <div class="KB2-result-content">
-                    <h3><a href="#">About Windows 10</a></h3>
-                    <div class="KB2-result-path">
-                        <span>IT</span>
-                        <i class="fas fa-chevron-right"></i>
-                        <span>Operating Systems</span>
-                        <i class="fas fa-chevron-right"></i>
-                        <span>Windows</span>
-                    </div>
-                    <div class="KB2-result-description">
-                        Introducing Windows 10 Windows 10 is full of new features and improvements. Take a look at the highlights! Ready, set. Start menu The Start menu is back—and it's more personal, more organized, and more fun than before. Select the Start icon button on the taskbar. You'll find your most used apps on the left, the...
-                    </div>
-                    <div class="KB2-result-meta">
-                        <span class="KB2-author">Boris Catino</span>
-                        <span class="KB2-views">8 Views</span>
-                        <span class="KB2-date">2y ago</span>
-                        <div class="KB2-rating">
-                            <span class="KB2-star">&#9734;</span>
-                            <span class="KB2-star">&#9734;</span>
-                            <span class="KB2-star">&#9734;</span>
-                            <span class="KB2-star">&#9734;</span>
-                            <span class="KB2-star">&#9734;</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="KB2-result-item">
-                <div class="KB2-result-icon">
-                    <i class="fas fa-phone-alt"></i>
-                </div>
-                <div class="KB2-result-content">
-                    <h3><a href="#">About Windows 10</a></h3>
-                    <div class="KB2-result-path">
-                        <span>IT</span>
-                        <i class="fas fa-chevron-right"></i>
-                        <span>Operating Systems</span>
-                        <i class="fas fa-chevron-right"></i>
-                        <span>Windows</span>
-                    </div>
-                    <div class="KB2-result-description">
-                        Introducing Windows 10 Windows 10 is full of new features and improvements. Take a look at the highlights! Ready, set. Start menu The Start menu is back—and it's more personal, more organized, and more fun than before. Select the Start icon button on the taskbar. You'll find your most used apps on the left, the...
-                    </div>
-                    <div class="KB2-result-meta">
-                        <span class="KB2-author">Boris Catino</span>
-                        <span class="KB2-views">8 Views</span>
-                        <span class="KB2-date">2y ago</span>
-                        <div class="KB2-rating">
-                            <span class="KB2-star">&#9734;</span>
-                            <span class="KB2-star">&#9734;</span>
-                            <span class="KB2-star">&#9734;</span>
-                            <span class="KB2-star">&#9734;</span>
-                            <span class="KB2-star">&#9734;</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="KB2-result-item">
-                <div class="KB2-result-icon">
-                    <i class="fas fa-phone-alt"></i>
-                </div>
-                <div class="KB2-result-content">
-                    <h3><a href="#">About Windows 10</a></h3>
-                    <div class="KB2-result-path">
-                        <span>IT</span>
-                        <i class="fas fa-chevron-right"></i>
-                        <span>Operating Systems</span>
-                        <i class="fas fa-chevron-right"></i>
-                        <span>Windows</span>
-                    </div>
-                    <div class="KB2-result-description">
-                        Introducing Windows 10 Windows 10 is full of new features and improvements. Take a look at the highlights! Ready, set. Start menu The Start menu is back—and it's more personal, more organized, and more fun than before. Select the Start icon button on the taskbar. You'll find your most used apps on the left, the...
-                    </div>
-                    <div class="KB2-result-meta">
-                        <span class="KB2-author">Boris Catino</span>
-                        <span class="KB2-views">8 Views</span>
-                        <span class="KB2-date">2y ago</span>
-                        <div class="KB2-rating">
-                            <span class="KB2-star">&#9734;</span>
-                            <span class="KB2-star">&#9734;</span>
-                            <span class="KB2-star">&#9734;</span>
-                            <span class="KB2-star">&#9734;</span>
-                            <span class="KB2-star">&#9734;</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="KB2-result-item">
-                <div class="KB2-result-icon">
-                    <i class="fas fa-phone-alt"></i>
-                </div>
-                <div class="KB2-result-content">
-                    <h3><a href="#">About Windows 10</a></h3>
-                    <div class="KB2-result-path">
-                        <span>IT</span>
-                        <i class="fas fa-chevron-right"></i>
-                        <span>Operating Systems</span>
-                        <i class="fas fa-chevron-right"></i>
-                        <span>Windows</span>
-                    </div>
-                    <div class="KB2-result-description">
-                        Introducing Windows 10 Windows 10 is full of new features and improvements. Take a look at the highlights! Ready, set. Start menu The Start menu is back—and it's more personal, more organized, and more fun than before. Select the Start icon button on the taskbar. You'll find your most used apps on the left, the...
-                    </div>
-                    <div class="KB2-result-meta">
-                        <span class="KB2-author">Boris Catino</span>
-                        <span class="KB2-views">8 Views</span>
-                        <span class="KB2-date">2y ago</span>
-                        <div class="KB2-rating">
-                            <span class="KB2-star">&#9734;</span>
-                            <span class="KB2-star">&#9734;</span>
-                            <span class="KB2-star">&#9734;</span>
-                            <span class="KB2-star">&#9734;</span>
-                            <span class="KB2-star">&#9734;</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            }
         </div>
     </div>
 </main>

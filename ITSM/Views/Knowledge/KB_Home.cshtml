@@ -1,4 +1,5 @@
-﻿
+﻿@using ITSM_DomainModelEntity.ViewModels
+@model AllModelVM
 @{
     ViewData["Title"] = "KB_Home";
     Layout = "_Layout";
@@ -6,166 +7,148 @@
 
 <style>
     * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     }
 
     body {
-        background-color: #121212;
-        font-size: 16px;
-        line-height: 1.5;
+    background-color: #121212;
+    font-size: 16px;
+    line-height: 1.5;
+    }
+
+    .KB1-card:hover{
+    text-decoration:none;
     }
 </style>
 
 <header class="KB1-header">
     <div class="KB1-user-profile nav-item navbar-dropdown dropdown-user dropdown open-button">
         <a class="nav-link dropdown-toggle hide-arrow p-0"
-           href="javascript:void(0);"
-           data-bs-toggle="dropdown">
+        href="javascript:void(0);"
+        data-bs-toggle="dropdown">
             <div class="avatar avatar-online">
-                <img src="https://www.diydoutu.com/touxiang/20201222-1.jpg" alt class="w-px-40 h-auto rounded-circle" />
+                <img src="@(Model.user.photo != null ? $"data:{Model.user.photo_type};base64," +  Convert.ToBase64String(Model.user.photo) :
+                            Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 rounded-circle" />
             </div>
         </a>
     </div>
 </header>
 
 <main>
-    <div class="KB1-hero-section">
-        <div class="KB1-search-container">
-            <input type="text" placeholder="Search Title...">
-            <button type="submit"><i class="fas fa-search"></i></button>
+    <form action="~/Knowledge/KB_Search" method="get">
+        <div class="KB1-hero-section">
+            <div class="KB1-search-container">
+                <input autocomplete="off" type="text" name="kb_search_word" placeholder="Search Title...">
+                <button type="submit"><i class="fas fa-search"></i></button>
+            </div>
         </div>
-    </div>
+    </form>
 
     <div class="KB1-knowledge-section">
         <div class="KB1-section-header">
-            <h2>Explore our Knowledge Bases (76)</h2>
-            <div class="KB1-dropdown">
-                <button class="KB1-dropdown-btn">Actions <i class="fas fa-chevron-down"></i></button>
-            </div>
+            <h2>Knowledge Bases (@Model.KnowledgeList.Count)</h2>
         </div>
 
         <div class="KB1-knowledge-cards">
-            <a href="it-knowledge.html" class="KB1-card">
+
+            <a href="~/Knowledge/KB_Search?showall=all" class="KB1-card">
                 <div class="KB1-card-icon KB1-it-icon">
-                    <i class="fas fa-phone-alt"></i>
-                </div>
-                <div class="KB1-card-title">IT</div>
-                <div class="KB1-card-count"><i class="far fa-file-alt"></i> 35</div>
-            </a>
-
-            <a href="kcs-knowledge.html" class="KB1-card">
-                <div class="KB1-card-icon KB1-kcs-icon">
                     <i class="fas fa-book"></i>
                 </div>
-                <div class="KB1-card-title">KCS Knowledge Base</div>
-                <div class="KB1-card-count"><i class="far fa-file-alt"></i> 4</div>
+                <div class="KB1-card-title">All</div>
+                <div class="KB1-card-count"><i class="far fa-file-alt"></i> @(Model.KnowledgeList.Count())</div>
             </a>
 
-            <a href="knowledge.html" class="KB1-card">
-                <div class="KB1-card-icon KB1-knowledge-icon">
-                    <i class="fas fa-desktop"></i>
-                </div>
-                <div class="KB1-card-title">Knowledge</div>
-                <div class="KB1-card-count"><i class="far fa-file-alt"></i> 0</div>
-            </a>
+            @foreach(var i in Model.CategoryList)
+            {
+                <a href="~/Knowledge/KB_Search?categorytitle=@i.id" class="KB1-card">
+                    <div class="KB1-card-icon KB1-it-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="KB1-card-title">@i.title</div>
+                    <div class="KB1-card-count"><i class="far fa-file-alt"></i> @(Model.KnowledgeList.Where(kb => kb.category_id == i.id).Count())</div>
+                </a>
+            }
 
-            <a href="known-error.html" class="KB1-card">
-                <div class="KB1-card-icon KB1-error-icon">
-                    <i class="fas fa-book"></i>
-                </div>
-                <div class="KB1-card-title">Known Error</div>
-                <div class="KB1-card-count"><i class="far fa-file-alt"></i> 3</div>
-            </a>
         </div>
     </div>
 
     <div class="KB1-articles-section">
         <div class="KB1-article-column">
             <div class="KB1-article-header">
-                <h3>Featured</h3>
+                <h3>Latest</h3>
             </div>
             <div class="KB1-article-content">
-                <div class="KB1-article-item">
-                    <a href="#" class="KB1-article-title">Email Interruption Tonight at 11:00 PM Eastern</a>
-                    <div class="KB1-article-meta">
-                        <span class="KB1-author">Wayne Webb</span>
-                        <span class="KB1-views">0 Views</span>
-                        <span class="KB1-date">2y ago</span>
-                    </div>
-                </div>
-                <div class="KB1-article-item">
-                    <a href="#" class="KB1-article-title">Sales Force Automation is DOWN</a>
-                    <div class="KB1-article-meta">
-                        <span class="KB1-author">Wayne Webb</span>
-                        <span class="KB1-views">0 Views</span>
-                        <span class="KB1-date">2y ago</span>
-                    </div>
-                </div>
+                @if (Model.KnowledgeList.Count > 0)
+                {
+                    @foreach (var i in Model.KnowledgeList.Take(4))
+                    {
+                        <div class="KB1-article-item">
+                            <a href="~/Knowledge/KB_Read?kbid=@i.id" class="KB1-article-title">@i.title</a>
+                            <div class="KB1-article-meta">
+                                <span class="KB1-author">@i.Author.fullname</span>
+                                <span class="KB1-views">@i.create_date.ToString("yyyy-MM-dd HH:mm:ss")</span>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="KB1-no-content">No content to display</div>
+                }
             </div>
         </div>
 
         <div class="KB1-article-column">
             <div class="KB1-article-header">
-                <h3>Most Useful</h3>
+                <h3>My Knowledge</h3>
             </div>
             <div class="KB1-article-content">
-                <div class="KB1-no-content">No content to display</div>
+                @if (Model.KnowledgeList.Count > 0)
+                {
+                    @foreach (var i in Model.KnowledgeList.Where(kb => kb.author == Model.user.id).Take(4))
+                    {
+                        <div class="KB1-article-item">
+                            <a href="~/Knowledge/KB_Read?kbid=@i.id" class="KB1-article-title">@i.title</a>
+                            <div class="KB1-article-meta">
+                                <span class="KB1-author">@i.Author.fullname</span>
+                                <span class="KB1-views">@i.create_date.ToString("yyyy-MM-dd HH:mm:ss")</span>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="KB1-no-content">No content to display</div>
+                }
             </div>
         </div>
 
         <div class="KB1-article-column">
             <div class="KB1-article-header">
-                <h3>Most Viewed</h3>
+                <h3>File Download</h3>
             </div>
             <div class="KB1-article-content">
-                <div class="KB1-article-item">
-                    <a href="#" class="KB1-article-title">What are phishing scams and how can I avoid them?</a>
-                    <div class="KB1-article-meta">
-                        <span class="KB1-author">Ron Kettering</span>
-                        <span class="KB1-views">90 Views</span>
-                        <span class="KB1-date">2y ago</span>
-                    </div>
-                    <div class="KB1-rating">
-                        <span class="KB1-star">&#9734;</span>
-                        <span class="KB1-star">&#9734;</span>
-                        <span class="KB1-star">&#9734;</span>
-                        <span class="KB1-star">&#9734;</span>
-                        <span class="KB1-star">&#9734;</span>
-                    </div>
-                </div>
-                <div class="KB1-article-item">
-                    <a href="#" class="KB1-article-title">Automatic Replies (Out Of Office)</a>
-                    <div class="KB1-article-meta">
-                        <span class="KB1-author">Ron Kettering</span>
-                        <span class="KB1-views">85 Views</span>
-                        <span class="KB1-date">2y ago</span>
-                    </div>
-                    <div class="KB1-rating">
-                        <span class="KB1-star">&#9734;</span>
-                        <span class="KB1-star">&#9734;</span>
-                        <span class="KB1-star">&#9734;</span>
-                        <span class="KB1-star">&#9734;</span>
-                        <span class="KB1-star">&#9734;</span>
-                    </div>
-                </div>
-                <div class="KB1-article-item">
-                    <a href="#" class="KB1-article-title">Automatic Replies (Out Of Office)</a>
-                    <div class="KB1-article-meta">
-                        <span class="KB1-author">Ron Kettering</span>
-                        <span class="KB1-views">85 Views</span>
-                        <span class="KB1-date">2y ago</span>
-                    </div>
-                    <div class="KB1-rating">
-                        <span class="KB1-star">&#9734;</span>
-                        <span class="KB1-star">&#9734;</span>
-                        <span class="KB1-star">&#9734;</span>
-                        <span class="KB1-star">&#9734;</span>
-                        <span class="KB1-star">&#9734;</span>
-                    </div>
-                </div>
+                @if (Model.KnowledgeList.Count > 0)
+                {
+                    @foreach (var i in Model.KnowledgeList.Where(kb => kb.kb_type != null).Take(4))
+                    {
+                        <div class="KB1-article-item">
+                            <a href="~/Knowledge/KB_Read?kbid=@i.id" class="KB1-article-title">@i.title</a>
+                            <div class="KB1-article-meta">
+                                <span class="KB1-author">@i.Author.fullname</span>
+                                <span class="KB1-views">@i.create_date.ToString("yyyy-MM-dd HH:mm:ss")</span>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="KB1-no-content">No content to display</div>
+                }
             </div>
         </div>
     </div>

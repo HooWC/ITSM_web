@@ -10,6 +10,7 @@ namespace ITSM.Controllers
     public class CMDBController : Controller
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly UserService _userService;
         private readonly User_api _userApi;
         private readonly Todo_api _todoApi;
         private readonly Feedback_api _feedbackApi;
@@ -21,7 +22,7 @@ namespace ITSM.Controllers
         private readonly Announcement_api _announApi;
         private readonly CMDB_api _cmdbApi;
 
-        public CMDBController(IHttpContextAccessor httpContextAccessor)
+        public CMDBController(IHttpContextAccessor httpContextAccessor, UserService userService)
         {
             _httpContextAccessor = httpContextAccessor;
             _userApi = new User_api(httpContextAccessor);
@@ -34,14 +35,12 @@ namespace ITSM.Controllers
             _roleApi = new Role_api(httpContextAccessor);
             _announApi = new Announcement_api(httpContextAccessor);
             _cmdbApi = new CMDB_api(httpContextAccessor);
+            _userService = userService;
         }
 
         public async Task<IActionResult> CMDB_List()
         {
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             var CMDBTask = _cmdbApi.GetAllCMDB_API();
             var DepartmentTask = _depApi.GetAllDepartment_API();
@@ -64,10 +63,7 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> CMDB_Create()
         {
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             var DepartmentTask = _depApi.GetAllDepartment_API();
             await Task.WhenAll(DepartmentTask);
@@ -86,10 +82,7 @@ namespace ITSM.Controllers
         [HttpPost]
         public async Task<IActionResult> CMDB_Create(CMDB cmdb_info)
         {
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             var DepartmentTask = _depApi.GetAllDepartment_API();
             await Task.WhenAll(DepartmentTask);
@@ -161,11 +154,7 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> CMDB_Info(int id)
         {
-            // current user info
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             var departmentTask = _depApi.GetAllDepartment_API();
             await Task.WhenAll(departmentTask);
@@ -189,11 +178,7 @@ namespace ITSM.Controllers
         [HttpPost]
         public async Task<IActionResult> CMDB_Info(CMDB cmdb_if)
         {
-            // current user info
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             var departmentTask = _depApi.GetAllDepartment_API();
             await Task.WhenAll(departmentTask);

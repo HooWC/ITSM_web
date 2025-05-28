@@ -1,4 +1,5 @@
-﻿@model ITSM_DomainModelEntity.Models.Department
+﻿@using ITSM_DomainModelEntity.ViewModels
+@model AllModelVM
 @{
     ViewData["Title"] = "Department_Info";
     Layout = "_Layout";
@@ -58,8 +59,8 @@
                    href="javascript:void(0);"
                    data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
-                        <img src="@(ViewBag.Photo != null ? $"data:{ViewBag.PhotoType};base64,{Convert.ToBase64String(ViewBag.Photo)}" :
-                             Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 rounded-circle" />
+                        <img src="@(Model.user.photo != null ? $"data:{Model.user.photo_type};base64," +  Convert.ToBase64String(Model.user.photo) :
+                            Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 rounded-circle" />
                     </div>
                 </a>
             </div>
@@ -94,18 +95,18 @@
         }
 
         <form id="incidentForm" class="inc-cre-incident-form" action="~/Department/Department_Info" method="post">
-            <input type="text" name="id" id="id" class="inc-cre-form-control" value="@Model.id" style="display:none;" readonly>
+            <input type="text" name="id" id="id" class="inc-cre-form-control" value="@Model.department.id" style="display:none;" readonly>
             <div class="inc-cre-form-group inc-cre-short-description-group">
                 <label for="name" class="inc-cre-form-label inc-cre-required">Name</label>
                 <div class="inc-cre-input-with-actions">
-                    <input type="text" autocomplete="off" name="name" id="name" class="inc-cre-form-control" value="@Model.name" required>
+                    <input type="text" autocomplete="off" name="name" id="name" class="inc-cre-form-control" value="@Model.department.name" required>
                 </div>
             </div>
 
             <div class="inc-cre-form-group inc-cre-short-description-group">
                 <label for="description" class="inc-cre-form-label">Description</label>
                 <div class="inc-cre-input-with-actions">
-                    <input type="text" autocomplete="off" name="description" id="description" class="inc-cre-form-control" value="@Model.description" required>
+                    <input type="text" autocomplete="off" name="description" id="description" class="inc-cre-form-control" value="@Model.department.description" required>
                 </div>
             </div>
         </form>

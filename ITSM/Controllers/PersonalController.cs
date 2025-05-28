@@ -11,6 +11,7 @@ namespace ITSM.Controllers
     public class PersonalController : Controller
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly UserService _userService;
         private readonly Auth_api _authApi;
         private readonly User_api _userApi;
         private readonly Todo_api _todoApi;
@@ -24,7 +25,7 @@ namespace ITSM.Controllers
         private readonly Product_api _productApi;
         private readonly Department_api _departmentApi;
 
-        public PersonalController(IHttpContextAccessor httpContextAccessor)
+        public PersonalController(IHttpContextAccessor httpContextAccessor, UserService userService)
         {
             _httpContextAccessor = httpContextAccessor;
             _authApi = new Auth_api(httpContextAccessor);
@@ -39,15 +40,12 @@ namespace ITSM.Controllers
             _categoryApi = new Category_api(httpContextAccessor);
             _productApi = new Product_api(httpContextAccessor);
             _departmentApi = new Department_api(httpContextAccessor);
+            _userService = userService;
         }
 
         public async Task<IActionResult> Home()
         {
-            // current user info
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             // Making concurrent API requests
             var todoTask = _todoApi.GetAllTodo_API();
@@ -100,8 +98,9 @@ namespace ITSM.Controllers
             var getRoleName = allRole.Where(x => x.id == currentUser.role_id).FirstOrDefault()?.role;
 
             // return to view data
-            var model = new PersonalHomeVM
+            var model = new AllModelVM()
             {
+                user = currentUser,
                 User = currentUser,
                 CompletedTodo = todo_c_count,
                 TodoCount = todo_td_count,
@@ -127,11 +126,7 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Todo_List()
         {
-            // current user info
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             // Making concurrent API requests
             var todoTask = _todoApi.GetAllTodo_API();
@@ -152,34 +147,30 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Todo_Create()
         {
-            // current user info
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
+            var currentUser = await _userService.GetCurrentUserAsync();
 
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var model = new AllModelVM
+            {
+                user = currentUser
+            };
 
-            ViewBag.Photo = currentUser.photo;
-            ViewBag.PhotoType = currentUser.photo_type;
-
-            return View();
+            return View(model);
         }
 
         [HttpPost]
         public async Task<IActionResult> Todo_Create(Todo todo, string active_word)
         {
-            // current user info
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
+            var currentUser = await _userService.GetCurrentUserAsync();
 
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
-
-            ViewBag.Photo = currentUser.photo;
-            ViewBag.PhotoType = currentUser.photo_type;
+            var model = new AllModelVM
+            {
+                user = currentUser
+            };
 
             if (todo.title == null)
             {
                 ViewBag.Error = "Please fill in all required fields";
-                return View();
+                return View(model);
             }
 
             // Making concurrent API requests
@@ -220,46 +211,44 @@ namespace ITSM.Controllers
             else
             {
                 ViewBag.Error = "Create Todo Error";
-                return View();
+                return View(model);
             }
         }
 
         public async Task<IActionResult> Todo_Edit(int id)
         {
-            // current user info
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
-
-            ViewBag.Photo = currentUser.photo;
-            ViewBag.PhotoType = currentUser.photo_type;
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             // Get Todo
             var todo = await _todoApi.FindByIDTodo_API(id);
 
-            return View(todo);
+            var model = new AllModelVM
+            {
+                user = currentUser,
+                todo = todo
+            };
+
+            return View(model);
         }
 
         [HttpPost]
         public async Task<IActionResult> Todo_Edit(Todo todo, string active_word)
         {
-            // current user info
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
-
-            ViewBag.Photo = currentUser.photo;
-            ViewBag.PhotoType = currentUser.photo_type;
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             // Get Todo
             var edit_todo = await _todoApi.FindByIDTodo_API(todo.id);
 
+            var model = new AllModelVM
+            {
+                user = currentUser,
+                todo = edit_todo
+            };
+
             if (todo.title == null)
             {
                 ViewBag.Error = "Please fill in all required fields";
-                return View(edit_todo);
+                return View(model);
             }
 
             if(edit_todo != null)
@@ -275,20 +264,16 @@ namespace ITSM.Controllers
                 else
                 {
                     ViewBag.Error = "Update Todo Error";
-                    return View(edit_todo);
+                    return View(model);
                 }
             }
 
-            return View(todo);
+            return View(model);
         }
 
         public async Task<IActionResult> User_Info()
         {
-            // current user info
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             var departmentTask = _departmentApi.GetAllDepartment_API();
             var roleTask = _roleApi.GetAllRole_API();
@@ -313,11 +298,7 @@ namespace ITSM.Controllers
         [HttpPost]
         public async Task<IActionResult> User_Info(IFormFile file, User user, string role_code, string new_password)
         {
-            // current user info
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             var departmentTask = _departmentApi.GetAllDepartment_API();
             var roleTask = _roleApi.GetAllRole_API();
@@ -349,9 +330,9 @@ namespace ITSM.Controllers
             {
                 byte[] fileBytes = null;
 
-                if (file != null && file.Length > 50_000_000)
+                if (file != null && file.Length > 20_000_000)
                 {
-                    ViewBag.Error = "File size exceeds 50MB limit";
+                    ViewBag.Error = "File size exceeds 20MB limit";
                     return View(model);
                 }
 
@@ -400,7 +381,7 @@ namespace ITSM.Controllers
                     }
                 }
 
-                bool emailEmpid = allUser.Any(u => u.emp_id.ToLower() == user.emp_id.ToLower());
+                bool emailEmpid = allUser.Any(u => u.emp_id.ToLower() == user.emp_id.ToLower() && u.id != user.id);
                 bool emailExists = allUser.Any(u => u.email == user.email && u.id != user.id);
                 bool usernameExists = allUser.Any(u => u.username == user.username && u.id != user.id);
                 bool mobilephoneExists = allUser.Any(u => u.mobile_phone == user.mobile_phone && u.id != user.id);
@@ -496,6 +477,7 @@ namespace ITSM.Controllers
 
                 if (result)
                 {
+                    var tokenService = new TokenService(_httpContextAccessor);
                     tokenService.SaveUserInfo(info_user);
                     return RedirectToAction("Home", "Personal");
                 }
@@ -510,26 +492,6 @@ namespace ITSM.Controllers
                 ViewBag.Error = "Please fill in all required fields";
                 return View(model);
             }
-        }
-
-        public IActionResult Incident_List()
-        {
-            return View();
-        }
-
-        public IActionResult Request_List()
-        {
-            return View();
-        }
-
-        public IActionResult Knowledge_List()
-        {
-            return View();
-        }
-
-        public IActionResult Feedback_List()
-        {
-            return View();
         }
 
         private string GetMimeTypeFromFileSignature(byte[] fileBytes)

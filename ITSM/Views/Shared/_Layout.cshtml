@@ -1,16 +1,19 @@
-﻿<!doctype html>
+﻿@using ITSM_DomainModelEntity.ViewModels
+@model AllModelVM
+
+<!doctype html>
 
 <html lang="en"
-      class="layout-menu-fixed layout-compact"
-      data-assets-path="~/assets/"
-      data-template="vertical-menu-template-free"
-      data-bs-theme="dark">
+class="layout-menu-fixed layout-compact"
+data-assets-path="~/assets/"
+data-template="vertical-menu-template-free"
+data-bs-theme="dark">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport"
-          content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
-    <title>ITSM Demo MVC</title>
+    <title>HSG ITSM</title>
 
     <meta name="description" content="" />
 
@@ -22,7 +25,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
-          rel="stylesheet" />
+    rel="stylesheet" />
     <link rel="stylesheet" href="~/assets/vendor/fonts/iconify-icons.css" />
 
     <!-- My CSS -->
@@ -233,26 +236,6 @@
                                     <div class="text-truncate" data-i18n="Without navbar">All Todo</div>
                                 </a>
                             </li>
-                            <li class="menu-item" id="Prosonal_menu_inc">
-                                <a href="~/Personal/Incident_List" class="menu-link">
-                                    <div class="text-truncate" data-i18n="Fluid">Incidents</div>
-                                </a>
-                            </li>
-                            <li class="menu-item" id="Prosonal_menu_req">
-                                <a href="~/Personal/Request_List" class="menu-link">
-                                    <div class="text-truncate" data-i18n="Container">Requests</div>
-                                </a>
-                            </li>
-                            <li class="menu-item" id="Prosonal_menu_kb">
-                                <a href="~/Personal/Knowledge_List" class="menu-link">
-                                    <div class="text-truncate" data-i18n="Container">Knowledges</div>
-                                </a>
-                            </li>
-                            <li class="menu-item" id="Prosonal_menu_feedback">
-                                <a href="~/Personal/Feedback_List" class="menu-link">
-                                    <div class="text-truncate" data-i18n="Blank">My Feedback</div>
-                                </a>
-                            </li>
                         </ul>
                     </li>
 
@@ -268,11 +251,15 @@
                             <div class="text-truncate" data-i18n="Account Settings">Incidents</div>
                         </a>
                         <ul class="menu-sub">
-                            <li class="menu-item" id="Incidents_menu_all">
-                                <a href="~/IncidentManagement/All" class="menu-link">
-                                    <div class="text-truncate" data-i18n="Connections">All (Admin)</div>
-                                </a>
-                            </li>
+                            @if (Model.user.Role.role.ToLower() == "admin")
+                            {
+                                <li class="menu-item" id="Incidents_menu_all">
+                                    <a href="~/IncidentManagement/All" class="menu-link">
+                                        <div class="text-truncate" data-i18n="Connections">All (Admin)</div>
+                                    </a>
+                                </li>
+                            }
+
                             <li class="menu-item" id="Incidents_menu_all_user">
                                 <a href="~/IncidentManagement/User_All" class="menu-link">
                                     <div class="text-truncate" data-i18n="Connections">All (User)</div>
@@ -283,41 +270,52 @@
                                     <div class="text-truncate" data-i18n="Account">Create New</div>
                                 </a>
                             </li>
-                            <li class="menu-item" id="Incidents_menu_assigned">
-                                <a href="~/IncidentManagement/Assigned_To_Me" class="menu-link">
-                                    <div class="text-truncate" data-i18n="Notifications">Assigned to me</div>
-                                </a>
-                            </li>
-                            <li class="menu-item" id="Incidents_menu_assigned_to_team">
-                                <a href="~/IncidentManagement/Assigned_To_Group" class="menu-link">
-                                    <div class="text-truncate" data-i18n="Notifications">Assigned to us</div>
-                                </a>
-                            </li>
-                            <li class="menu-item" id="Incidents_menu_assigned_resolve">
-                                <a href="~/IncidentManagement/Resolved_Assigned_To_Me" class="menu-link">
-                                    <div class="text-truncate" data-i18n="Notifications">Resolved by me</div>
-                                </a>
-                            </li>
-                            <li class="menu-item" id="Incidents_menu_assigned_closed">
-                                <a href="~/IncidentManagement/Closed_Assigned_To_Me" class="menu-link">
-                                    <div class="text-truncate" data-i18n="Notifications">Closed by me</div>
-                                </a>
-                            </li>
+
+                            @if (@Model.user.Role.role.ToLower() == "admin" || @Model.user.Role.role.ToLower() == "itil")
+                            {
+                                <li class="menu-item" id="Incidents_menu_assigned">
+                                    <a href="~/IncidentManagement/Assigned_To_Me" class="menu-link">
+                                        <div class="text-truncate" data-i18n="Notifications">Assigned to me</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item" id="Incidents_menu_assigned_to_team">
+                                    <a href="~/IncidentManagement/Assigned_To_Group" class="menu-link">
+                                        <div class="text-truncate" data-i18n="Notifications">Assigned to us</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item" id="Incidents_menu_assigned_resolve">
+                                    <a href="~/IncidentManagement/Resolved_Assigned_To_Me" class="menu-link">
+                                        <div class="text-truncate" data-i18n="Notifications">Resolved by me</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item" id="Incidents_menu_assigned_closed">
+                                    <a href="~/IncidentManagement/Closed_Assigned_To_Me" class="menu-link">
+                                        <div class="text-truncate" data-i18n="Notifications">Closed by me</div>
+                                    </a>
+                                </li>
+                            }
+
+
+
                         </ul>
                     </li>
-                    
+
                     <!-- Requests -->
                     <li class="menu-item" id="Requests_menu">
-                    <a href="javascript:void(0);" class="menu-link menu-toggle">
-                        <i class="menu-icon tf-icons bx bx-dock-top"></i>
-                        <div class="text-truncate" data-i18n="Account Settings">Requests</div>
-                    </a>
-                    <ul class="menu-sub">
-                            <li class="menu-item" id="Requests_child_all">
-                                <a href="~/Request/All" class="menu-link">
-                                    <div class="text-truncate" data-i18n="Connections">All (Admin)</div>
-                                </a>
-                           </li>
+                        <a href="javascript:void(0);" class="menu-link menu-toggle">
+                            <i class="menu-icon tf-icons bx bx-dock-top"></i>
+                            <div class="text-truncate" data-i18n="Account Settings">Requests</div>
+                        </a>
+                        <ul class="menu-sub">
+                            @if (Model.user.Role.role.ToLower() == "admin")
+                            {
+                                <li class="menu-item" id="Requests_child_all">
+                                    <a href="~/Request/All" class="menu-link">
+                                        <div class="text-truncate" data-i18n="Connections">All (Admin)</div>
+                                    </a>
+                                </li>
+                            }
+
                             <li class="menu-item" id="Requests_child_all_User">
                                 <a href="~/Request/User_All" class="menu-link">
                                     <div class="text-truncate" data-i18n="Connections">All (User)</div>
@@ -328,17 +326,22 @@
                                     <div class="text-truncate" data-i18n="Connections">Service Catalog</div>
                                 </a>
                             </li>
-                            <li class="menu-item" id="Requests_child_assigned">
-                                <a href="~/Request/Assigned_To_Us" class="menu-link">
-                                    <div class="text-truncate" data-i18n="Notifications">Assigned to us</div>
-                                </a>
-                           </li>
-                    </ul>
-                </li>
 
-                <!-- Components -->
-                <li class="menu-header small text-uppercase"><span class="menu-header-text">Components</span></li>
-                 
+                            @if (Model.user.Role.role.ToLower() == "admin" || Model.user.Role.role.ToLower() == "itil")
+                            {
+                                <li class="menu-item" id="Requests_child_assigned">
+                                    <a href="~/Request/Assigned_To_Us" class="menu-link">
+                                        <div class="text-truncate" data-i18n="Notifications">Assigned to us</div>
+                                    </a>
+                                </li>
+                            }
+
+                        </ul>
+                    </li>
+
+                    <!-- Components -->
+                    <li class="menu-header small text-uppercase"><span class="menu-header-text">Components</span></li>
+
                     <!-- Announcement View -->
                     <li class="menu-item" id="Ann_View_menu">
                         <a href="~/Announcement/View_Ann_List" class="menu-link">
@@ -349,41 +352,28 @@
 
                     <!-- Knowledge View -->
                     <li class="menu-item" id="Knowledge_menu_u">
-                        <a href="javascript:void(0)" class="menu-link menu-toggle">
-                            <i class="menu-icon tf-icons bx bx-box"></i>
-                            <div class="text-truncate" data-i18n="User interface">Knowledge</div>
+                        <a href="~/Knowledge/KB_Home" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-home-smile"></i>
+                            <div class="text-truncate" data-i18n="Dashboards">Knowledges</div>
                         </a>
-                        <ul class="menu-sub">
-                            <li class="menu-item" id="Knowledge_menu_u_home">
-                                <a href="~/Knowledge/KB_Home" class="menu-link">
-                                    <div class="text-truncate" data-i18n="Accordion">Home</div>
-                                </a>
-                            </li>
-                            <li class="menu-item" id="Knowledge_menu_u_search">
-                                <a href="~/Knowledge/KB_Search" class="menu-link">
-                                    <div class="text-truncate" data-i18n="Alerts">test search</div>
-                                </a>
-                            </li>
-                            <li class="menu-item" id="Knowledge_menu_u_read">
-                                <a href="~/Knowledge/KB_Read" class="menu-link">
-                                    <div class="text-truncate" data-i18n="Alerts">test read</div>
-                                </a>
-                            </li>
-                        </ul>
                     </li>
 
                     <!-- Feedback -->
                     <li class="menu-item" id="Feedback_menu">
-                    <a href="javascript:void(0)" class="menu-link menu-toggle">
-                        <i class="menu-icon tf-icons bx bx-copy"></i>
-                        <div class="text-truncate" data-i18n="Extended UI">Feedback</div>
-                    </a>
-                    <ul class="menu-sub">
-                            <li class="menu-item" id="Feedback_menu_all">
-                                <a href="~/Feedback/All_Feedback_List" class="menu-link">
-                                    <div class="text-truncate" data-i18n="Perfect Scrollbar">All (Admin)</div>
-                                </a>
-                            </li>
+                        <a href="javascript:void(0)" class="menu-link menu-toggle">
+                            <i class="menu-icon tf-icons bx bx-copy"></i>
+                            <div class="text-truncate" data-i18n="Extended UI">Feedback</div>
+                        </a>
+                        <ul class="menu-sub">
+                            @if (Model.user.Role.role.ToLower() == "admin")
+                            {
+                                <li class="menu-item" id="Feedback_menu_all">
+                                    <a href="~/Feedback/All_Feedback_List" class="menu-link">
+                                        <div class="text-truncate" data-i18n="Perfect Scrollbar">All (Admin)</div>
+                                    </a>
+                                </li>
+                            }
+
                             <li class="menu-item" id="Feedback_menu_all_User">
                                 <a href="~/Feedback/Feedback_List" class="menu-link">
                                     <div class="text-truncate" data-i18n="Perfect Scrollbar">All (User)</div>
@@ -393,69 +383,81 @@
                                 <a href="~/Feedback/Feedback_Create" class="menu-link">
                                     <div class="text-truncate" data-i18n="Text Divider">Create New</div>
                                 </a>
-                        </li>
-                    </ul>
-                </li>
-
-                    <!-- CMDB -->
-                    <li class="menu-item" id="CMDB_menu">
-                        <a href="javascript:void(0)" class="menu-link menu-toggle">
-                            <i class="menu-icon tf-icons bx bx-copy"></i>
-                            <div class="text-truncate" data-i18n="Extended UI">CMDB</div>
-                        </a>
-                        <ul class="menu-sub">
-                            <li class="menu-item" id="CMDB_menu_all">
-                                <a href="~/CMDB/CMDB_List" class="menu-link">
-                                    <div class="text-truncate" data-i18n="Perfect Scrollbar">All</div>
-                                </a>
-                            </li>
-                            <li class="menu-item" id="CMDB_menu_create">
-                                <a href="~/CMDB/CMDB_Create" class="menu-link">
-                                    <div class="text-truncate" data-i18n="Text Divider">Create New</div>
-                                </a>
                             </li>
                         </ul>
                     </li>
 
-                    <!-- Announcement -->
-                    <li class="menu-item" id="Announcement_menu">
-                    <a href="javascript:void(0)" class="menu-link menu-toggle">
-                        <i class="menu-icon tf-icons bx bx-copy"></i>
-                            <div class="text-truncate" data-i18n="Extended UI">A-Announcements</div>
-                    </a>
-                    <ul class="menu-sub">
-                            <li class="menu-item" id="Announcement_menu_all">
-                            <a href="~/Announcement/Ann_List" class="menu-link">
-                                <div class="text-truncate" data-i18n="Perfect Scrollbar">All</div>
+                    @if (Model.user.Role.role.ToLower() == "admin")
+                    {
+                        <!-- CMDB -->
+                        <li class="menu-item" id="CMDB_menu">
+                            <a href="javascript:void(0)" class="menu-link menu-toggle">
+                                <i class="menu-icon tf-icons bx bx-copy"></i>
+                                <div class="text-truncate" data-i18n="Extended UI">CMDB</div>
                             </a>
+                            <ul class="menu-sub">
+                                <li class="menu-item" id="CMDB_menu_all">
+                                    <a href="~/CMDB/CMDB_List" class="menu-link">
+                                        <div class="text-truncate" data-i18n="Perfect Scrollbar">All</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item" id="CMDB_menu_create">
+                                    <a href="~/CMDB/CMDB_Create" class="menu-link">
+                                        <div class="text-truncate" data-i18n="Text Divider">Create New</div>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
-                            <li class="menu-item" id="Announcement_menu_create">
-                                <a href="~/Announcement/Ann_Create" class="menu-link">
-                                <div class="text-truncate" data-i18n="Text Divider">Create New</div>
+                    }
+
+
+                    @if (Model.user.Role.role.ToLower() == "admin" || Model.user.Role.role.ToLower() == "itil")
+                    {
+                        <!-- Announcement -->
+                        <li class="menu-item" id="Announcement_menu">
+                            <a href="javascript:void(0)" class="menu-link menu-toggle">
+                                <i class="menu-icon tf-icons bx bx-copy"></i>
+                                <div class="text-truncate" data-i18n="Extended UI">Announcement</div>
                             </a>
+                            <ul class="menu-sub">
+                                <li class="menu-item" id="Announcement_menu_all">
+                                    <a href="~/Announcement/Ann_List" class="menu-link">
+                                        <div class="text-truncate" data-i18n="Perfect Scrollbar">All</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item" id="Announcement_menu_create">
+                                    <a href="~/Announcement/Ann_Create" class="menu-link">
+                                        <div class="text-truncate" data-i18n="Text Divider">Create New</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item" id="Announcement_menu_import">
+                                    <a href="~/Announcement/Ann_Import" class="menu-link">
+                                        <div class="text-truncate" data-i18n="Text Divider">Import File</div>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
-                            <li class="menu-item" id="Announcement_menu_import">
-                                <a href="~/Announcement/Ann_Import" class="menu-link">
-                                    <div class="text-truncate" data-i18n="Text Divider">Import File</div>
-                                </a>
-                            </li>
-                    </ul>
-                </li>
+                    }
+
 
                     <!-- Knowledge -->
                     <li class="menu-item" id="Knowledge_menu">
                         <a href="javascript:void(0)" class="menu-link menu-toggle">
                             <i class="menu-icon tf-icons bx bx-box"></i>
-                            <div class="text-truncate" data-i18n="User interface">A-Knowledge</div>
+                            <div class="text-truncate" data-i18n="User interface">Knowledge</div>
                         </a>
                         <ul class="menu-sub">
-                            <li class="menu-item" id="Knowledge_menu_all">
-                                <a href="~/Knowledge/KB_List" class="menu-link">
-                                    <div class="text-truncate" data-i18n="Accordion">All (Admin)</div>
-                                </a>
-                            </li>
-                            <li class="menu-item" id="Knowledge_menu_all">
-                                <a href="~/Knowledge/KB_List" class="menu-link">
+                            @if (Model.user.Role.role.ToLower() == "admin")
+                            {
+                                <li class="menu-item" id="Knowledge_menu_all">
+                                    <a href="~/Knowledge/KB_List" class="menu-link">
+                                        <div class="text-truncate" data-i18n="Accordion">All (Admin)</div>
+                                    </a>
+                                </li>
+                            }
+                            
+                            <li class="menu-item" id="Knowledge_menu_all_user">
+                                <a href="~/Knowledge/KB_List_User" class="menu-link">
                                     <div class="text-truncate" data-i18n="Accordion">All (User)</div>
                                 </a>
                             </li>
@@ -472,108 +474,111 @@
                         </ul>
                     </li>
 
-                <!-- Admin -->
-                <li class="menu-header small text-uppercase"><span class="menu-header-text">Admin</span></li>
+                    @if (@Model.user.Role.role.ToLower() == "admin")
+                    {
+                        <!-- Admin -->
+                        <li class="menu-header small text-uppercase"><span class="menu-header-text">Admin</span></li>
 
-                    <!-- Role -->
-                    <li class="menu-item" id="Role_menu">
-                        <a href="javascript:void(0)" class="menu-link menu-toggle">
-                            <i class="menu-icon tf-icons bx bx-copy"></i>
-                            <div class="text-truncate" data-i18n="Extended UI">Role</div>
-                        </a>
-                        <ul class="menu-sub">
-                            <li class="menu-item" id="Role_menu_all">
-                                <a href="~/Role/Role_List" class="menu-link">
-                                    <div class="text-truncate" data-i18n="Perfect Scrollbar">All</div>
-                                </a>
-                            </li>
-                            <li class="menu-item" id="Role_menu_create">
-                                <a href="~/Role/Role_Create" class="menu-link">
-                                    <div class="text-truncate" data-i18n="Text Divider">Create New</div>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
+                        <!-- Role -->
+                        <li class="menu-item" id="Role_menu">
+                            <a href="javascript:void(0)" class="menu-link menu-toggle">
+                                <i class="menu-icon tf-icons bx bx-copy"></i>
+                                <div class="text-truncate" data-i18n="Extended UI">Role</div>
+                            </a>
+                            <ul class="menu-sub">
+                                <li class="menu-item" id="Role_menu_all">
+                                    <a href="~/Role/Role_List" class="menu-link">
+                                        <div class="text-truncate" data-i18n="Perfect Scrollbar">All</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item" id="Role_menu_create">
+                                    <a href="~/Role/Role_Create" class="menu-link">
+                                        <div class="text-truncate" data-i18n="Text Divider">Create New</div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
 
-                    <!-- User -->
-                    <li class="menu-item" id="User_menu">
-                        <a href="javascript:void(0)" class="menu-link menu-toggle">
-                            <i class="menu-icon tf-icons bx bx-copy"></i>
-                            <div class="text-truncate" data-i18n="Extended UI">User</div>
-                        </a>
-                        <ul class="menu-sub">
-                            <li class="menu-item" id="User_menu_all">
-                                <a href="~/User/User_List" class="menu-link">
-                                    <div class="text-truncate" data-i18n="Perfect Scrollbar">All</div>
-                                </a>
-                            </li>
-                            <li class="menu-item" id="User_menu_create">
-                                <a href="~/User/UserCreate" class="menu-link">
-                                    <div class="text-truncate" data-i18n="Text Divider">Create New</div>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
+                        <!-- User -->
+                        <li class="menu-item" id="User_menu">
+                            <a href="javascript:void(0)" class="menu-link menu-toggle">
+                                <i class="menu-icon tf-icons bx bx-copy"></i>
+                                <div class="text-truncate" data-i18n="Extended UI">User</div>
+                            </a>
+                            <ul class="menu-sub">
+                                <li class="menu-item" id="User_menu_all">
+                                    <a href="~/User/User_List" class="menu-link">
+                                        <div class="text-truncate" data-i18n="Perfect Scrollbar">All</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item" id="User_menu_create">
+                                    <a href="~/User/UserCreate" class="menu-link">
+                                        <div class="text-truncate" data-i18n="Text Divider">Create New</div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
 
-                    <!-- Department -->
-                    <li class="menu-item" id="Department_menu">
-                        <a href="javascript:void(0)" class="menu-link menu-toggle">
-                            <i class="menu-icon tf-icons bx bx-copy"></i>
-                            <div class="text-truncate" data-i18n="Extended UI">Department</div>
-                        </a>
-                        <ul class="menu-sub">
-                            <li class="menu-item" id="Department_menu_all">
-                                <a href="~/Department/Department_List" class="menu-link">
-                                    <div class="text-truncate" data-i18n="Perfect Scrollbar">All</div>
-                                </a>
-                            </li>
-                            <li class="menu-item" id="Department_menu_create">
-                                <a href="~/Department/Department_Create" class="menu-link">
-                                    <div class="text-truncate" data-i18n="Text Divider">Create New</div>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
+                        <!-- Department -->
+                        <li class="menu-item" id="Department_menu">
+                            <a href="javascript:void(0)" class="menu-link menu-toggle">
+                                <i class="menu-icon tf-icons bx bx-copy"></i>
+                                <div class="text-truncate" data-i18n="Extended UI">Department</div>
+                            </a>
+                            <ul class="menu-sub">
+                                <li class="menu-item" id="Department_menu_all">
+                                    <a href="~/Department/Department_List" class="menu-link">
+                                        <div class="text-truncate" data-i18n="Perfect Scrollbar">All</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item" id="Department_menu_create">
+                                    <a href="~/Department/Department_Create" class="menu-link">
+                                        <div class="text-truncate" data-i18n="Text Divider">Create New</div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
 
-                    <!-- Category -->
-                    <li class="menu-item" id="Category_menu">
-                        <a href="javascript:void(0)" class="menu-link menu-toggle">
-                            <i class="menu-icon tf-icons bx bx-copy"></i>
-                            <div class="text-truncate" data-i18n="Extended UI">Category</div>
-                        </a>
-                        <ul class="menu-sub">
-                            <li class="menu-item" id="Category_menu_all">
-                                <a href="~/Category/Category_List" class="menu-link">
-                                    <div class="text-truncate" data-i18n="Perfect Scrollbar">All</div>
-                                </a>
-                            </li>
-                            <li class="menu-item" id="Category_menu_create">
-                                <a href="~/Category/Category_Create" class="menu-link">
-                                    <div class="text-truncate" data-i18n="Text Divider">Create New</div>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
+                        <!-- Category -->
+                        <li class="menu-item" id="Category_menu">
+                            <a href="javascript:void(0)" class="menu-link menu-toggle">
+                                <i class="menu-icon tf-icons bx bx-copy"></i>
+                                <div class="text-truncate" data-i18n="Extended UI">Category</div>
+                            </a>
+                            <ul class="menu-sub">
+                                <li class="menu-item" id="Category_menu_all">
+                                    <a href="~/Category/Category_List" class="menu-link">
+                                        <div class="text-truncate" data-i18n="Perfect Scrollbar">All</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item" id="Category_menu_create">
+                                    <a href="~/Category/Category_Create" class="menu-link">
+                                        <div class="text-truncate" data-i18n="Text Divider">Create New</div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
 
-                    <!-- Product -->
-                    <li class="menu-item" id="Product_menu">
-                        <a href="javascript:void(0)" class="menu-link menu-toggle">
-                            <i class="menu-icon tf-icons bx bx-copy"></i>
-                            <div class="text-truncate" data-i18n="Extended UI">Product</div>
-                        </a>
-                        <ul class="menu-sub">
-                            <li class="menu-item" id="Product_menu_all">
-                                <a href="~/Product/Product_List" class="menu-link">
-                                    <div class="text-truncate" data-i18n="Perfect Scrollbar">All</div>
-                                </a>
-                            </li>
-                            <li class="menu-item" id="Product_menu_create">
-                                <a href="~/Product/Product_Create" class="menu-link">
-                                    <div class="text-truncate" data-i18n="Text Divider">Create New</div>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
+                        <!-- Product -->
+                        <li class="menu-item" id="Product_menu">
+                            <a href="javascript:void(0)" class="menu-link menu-toggle">
+                                <i class="menu-icon tf-icons bx bx-copy"></i>
+                                <div class="text-truncate" data-i18n="Extended UI">Product</div>
+                            </a>
+                            <ul class="menu-sub">
+                                <li class="menu-item" id="Product_menu_all">
+                                    <a href="~/Product/Product_List" class="menu-link">
+                                        <div class="text-truncate" data-i18n="Perfect Scrollbar">All</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item" id="Product_menu_create">
+                                    <a href="~/Product/Product_Create" class="menu-link">
+                                        <div class="text-truncate" data-i18n="Text Divider">Create New</div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    }
 
                 <!-- Forms -->
                 </ul>
@@ -617,7 +622,7 @@
     <script src="~/assets/js/main.js"></script>
 
     <!-- Page JS -->
-    <script src="~/assets/js/dashboards-analytics.js"></script>
+    
 
     <!-- Place this tag before closing body tag for github widget button. -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
@@ -630,25 +635,20 @@
     <script src="~/js/Layout/RightPhoneFunction.js"></script>
     <script src="~/js/Form/error_handler.js"></script>
 
-    <!-- 移动菜单脚本 -->
     <script>
-        // 确保DOM加载完成后执行
         document.addEventListener('DOMContentLoaded', function() {
-            // 获取菜单按钮和模态窗口
+          
             const openBtn = document.querySelector('.open-button');
             const menuModal = document.getElementById('menuModal');
             const closeBtn = document.getElementById('closeButton');
             
-            // 确保元素存在
             if(openBtn && menuModal) {
-                // 添加打开菜单事件
                 openBtn.addEventListener('click', function() {
-                    console.log('打开菜单按钮被点击');
+                    //console.log('openBtn Menu');
                     menuModal.classList.add('active_open_menu');
                     document.body.classList.add('menu-open');
                 });
                 
-                // 确保关闭按钮工作
                 if(closeBtn) {
                     closeBtn.addEventListener('click', function() {
                         menuModal.classList.remove('active_open_menu');
@@ -657,10 +657,8 @@
                 }
             }
             
-            // 检查移动端视图切换按钮
             const mobileToggleBtn = document.getElementById('mobile-toggle-menu');
             if(mobileToggleBtn) {
-                // 确保按钮在移动设备上显示
                 mobileToggleBtn.style.display = 'flex';
             }
         });

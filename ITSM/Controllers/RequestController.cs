@@ -10,6 +10,7 @@ namespace ITSM.Controllers
     public class RequestController : Controller
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly UserService _userService;
         private readonly Auth_api _authApi;
         private readonly User_api _userApi;
         private readonly Todo_api _todoApi;
@@ -23,8 +24,9 @@ namespace ITSM.Controllers
         private readonly Product_api _productApi;
         private readonly Department_api _departmentApi;
 
-        public RequestController(IHttpContextAccessor httpContextAccessor)
+        public RequestController(IHttpContextAccessor httpContextAccessor, UserService userService)
         {
+            _userService = userService;
             _httpContextAccessor = httpContextAccessor;
             _authApi = new Auth_api(httpContextAccessor);
             _userApi = new User_api(httpContextAccessor);
@@ -42,10 +44,7 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> All()
         {
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             var productTask = _productApi.GetAllProduct_API();
             var userTask = _userApi.GetAllUser_API();
@@ -78,10 +77,7 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> User_All()
         {
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             var productTask = _productApi.GetAllProduct_API();
             var userTask = _userApi.GetAllUser_API();
@@ -114,10 +110,7 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Service_Catalog()
         {
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             var depTask = _depApi.GetAllDepartment_API();
             var categoryTask = _categoryApi.GetAllCategory_API();
@@ -146,10 +139,7 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Create_Form(int id)
         {
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             var depTask = _depApi.GetAllDepartment_API();
             var categoryTask = _categoryApi.GetAllCategory_API();
@@ -174,10 +164,7 @@ namespace ITSM.Controllers
         [HttpPost]
         public async Task<IActionResult> Create_Form(int pro_id, Request req)
         {
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             var depTask = _depApi.GetAllDepartment_API();
             var categoryTask = _categoryApi.GetAllCategory_API();
@@ -266,10 +253,7 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Assigned_To_Us()
         {
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             var productTask = _productApi.GetAllProduct_API();
             var userTask = _userApi.GetAllUser_API();
@@ -302,12 +286,7 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Req_Info(int id, string role)
         {
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
-
-            ViewBag.roleBack = role;
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             var productTask = _productApi.GetAllProduct_API();
             var userTask = _userApi.GetAllUser_API();
@@ -332,6 +311,7 @@ namespace ITSM.Controllers
             {
                 user = currentUser,
                 request = Req,
+                roleBack = role
             };
 
             return View(model);
@@ -340,10 +320,7 @@ namespace ITSM.Controllers
         [HttpPost]
         public async Task<IActionResult> Req_Info(Request req, string roleBack)
         {
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             var productTask = _productApi.GetAllProduct_API();
             var userTask = _userApi.GetAllUser_API();
@@ -368,6 +345,7 @@ namespace ITSM.Controllers
             {
                 user = currentUser,
                 request = Req,
+                roleBack = roleBack
             };
 
             if (req.short_description == null)

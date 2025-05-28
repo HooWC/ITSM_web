@@ -1,4 +1,5 @@
-﻿using System.Runtime.Intrinsics.Arm;
+﻿using System.Data;
+using System.Runtime.Intrinsics.Arm;
 using ITSM_DomainModelEntity.Models;
 using ITSM_DomainModelEntity.ViewModels;
 using ITSM_Insfrastruture.Repository.Api;
@@ -10,6 +11,7 @@ namespace ITSM.Controllers
     public class FeedbackController : Controller
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly UserService _userService;
         private readonly User_api _userApi;
         private readonly Todo_api _todoApi;
         private readonly Feedback_api _feedbackApi;
@@ -19,7 +21,7 @@ namespace ITSM.Controllers
         private readonly Department_api _depApi;
         private readonly Role_api _roleApi;
 
-        public FeedbackController(IHttpContextAccessor httpContextAccessor)
+        public FeedbackController(IHttpContextAccessor httpContextAccessor, UserService userService)
         {
             _httpContextAccessor = httpContextAccessor;
             _userApi = new User_api(httpContextAccessor);
@@ -30,6 +32,7 @@ namespace ITSM.Controllers
             _reqApi = new Request_api(httpContextAccessor);
             _depApi = new Department_api(httpContextAccessor);
             _roleApi = new Role_api(httpContextAccessor);
+            _userService = userService;
         }
 
         public async Task<IActionResult> All_Feedback_List()
@@ -46,10 +49,7 @@ namespace ITSM.Controllers
 
         private async Task<AllModelVM> GetCommonFeedbackData()
         {
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             var feedTask = _feedbackApi.GetAllFeedback_API();
             var userTask = _userApi.GetAllUser_API();
@@ -76,36 +76,30 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Feedback_Create()
         {
-            // current user info
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
+            var currentUser = await _userService.GetCurrentUserAsync();
 
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var model =  new AllModelVM()
+            {
+                user = currentUser
+            };
 
-            ViewBag.CurrentUser = currentUser.fullname;
-            ViewBag.Photo = currentUser.photo;
-            ViewBag.PhotoType = currentUser.photo_type;
-
-            return View();
+            return View(model);
         }
 
         [HttpPost]
         public async Task<IActionResult> Feedback_Create(Feedback feed)
         {
-            // current user info
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
+            var currentUser = await _userService.GetCurrentUserAsync();
 
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
-
-            ViewBag.CurrentUser = currentUser.fullname;
-            ViewBag.Photo = currentUser.photo;
-            ViewBag.PhotoType = currentUser.photo_type;
+            var model = new AllModelVM()
+            {
+                user = currentUser
+            };
 
             if (feed.message == null)
             {
                 ViewBag.Error = "Please fill in all required fields";
-                return View();
+                return View(model);
             }
 
             // Making concurrent API requests
@@ -143,51 +137,50 @@ namespace ITSM.Controllers
             else
             {
                 ViewBag.Error = "Create Feedback Error";
-                return View();
+                return View(model);
             }
         }
 
         public async Task<IActionResult> Feedback_Info(int id, string role)
         {
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
-
-            ViewBag.roleBack = role;
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             // Get Feedback
             var feedback = await _feedbackApi.FindByIDFeedback_API(id);
             var feedbackUser = await _userApi.FindByIDUser_API(feedback.user_id);
             feedback.User = feedbackUser;
 
-            ViewBag.Photo = currentUser.photo;
-            ViewBag.PhotoType = currentUser.photo_type;
+            var model = new AllModelVM()
+            {
+                user = currentUser,
+                feedback = feedback,
+                roleBack = role
+            };
 
-            return View(feedback);
+            return View(model);
         }
 
         [HttpPost]
         public async Task<IActionResult> Feedback_Info(Feedback feed, string roleBack)
         {
-            // current user info
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             // Get Feedback
             var feedback = await _feedbackApi.FindByIDFeedback_API(feed.id);
             var feedbackUser = await _userApi.FindByIDUser_API(feedback.user_id);
             feedback.User = feedbackUser;
 
-            ViewBag.Photo = currentUser.photo;
-            ViewBag.PhotoType = currentUser.photo_type;
+            var model = new AllModelVM()
+            {
+                user = currentUser,
+                feedback = feedback,
+                roleBack = roleBack
+            };
 
             if (feed.message == null)
             {
                 ViewBag.Error = "Please fill in all required fields";
-                return View(feedback);
+                return View(model);
             }
 
             // Update New Feedback
@@ -199,16 +192,14 @@ namespace ITSM.Controllers
             if (result)
             {
                 if (roleBack == "Admin")
-                    return RedirectToAction("All", "Request");
-                else if (roleBack == "Group")
-                    return RedirectToAction("Assigned_To_Us", "Request");
+                    return RedirectToAction("All_Feedback_List", "Feedback");
                 else
                     return RedirectToAction("Feedback_List", "Feedback");
             }
             else
             {
                 ViewBag.Error = "Update Feedback Error";
-                return View(feedback);
+                return View(model);
             }
         }
     }

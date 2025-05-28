@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
   let cardColor, headingColor, legendColor, labelColor, shadeColor, borderColor, fontFamily;
   cardColor = config.colors.cardColor;
   headingColor = config.colors.headingColor;
-  legendColor = config.colors.bodyColor;
+  legendColor = config.colors.white;
   labelColor = config.colors.textMuted;
   borderColor = config.colors.borderColor;
   fontFamily = config.fontFamily;
@@ -112,18 +112,18 @@ document.addEventListener('DOMContentLoaded', function (e) {
     totalRevenueChartOptions = {
       series: [
         {
-          name: new Date().getFullYear() - 1,
-          data: [18, 7, 15, 29, 18, 12, 9]
+          name: "Other State",
+          data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  // 默认12个月都是0
         },
         {
-          name: new Date().getFullYear() - 2,
-          data: [-13, -18, -9, -14, -8, -17, -15]
+          name: "Resolved",
+          data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  // 默认12个月都是0
         }
       ],
       chart: {
         height: 300,
-        stacked: true,
         type: 'bar',
+        stacked: true,
         toolbar: { show: false }
       },
       plotOptions: {
@@ -132,11 +132,10 @@ document.addEventListener('DOMContentLoaded', function (e) {
           columnWidth: '30%',
           borderRadius: 8,
           startingShape: 'rounded',
-          endingShape: 'rounded',
-          borderRadiusApplication: 'around'
+          endingShape: 'rounded'
         }
       },
-      colors: [config.colors.primary, config.colors.info],
+      colors: [config.colors.info, config.colors.primary],
       dataLabels: {
         enabled: false
       },
@@ -177,11 +176,8 @@ document.addEventListener('DOMContentLoaded', function (e) {
           right: 20
         }
       },
-      fill: {
-        opacity: [1, 1]
-      },
       xaxis: {
-        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
         labels: {
           style: {
             fontSize: '13px',
@@ -205,129 +201,6 @@ document.addEventListener('DOMContentLoaded', function (e) {
           }
         }
       },
-      responsive: [
-        {
-          breakpoint: 1700,
-          options: {
-            plotOptions: {
-              bar: {
-                borderRadius: 10,
-                columnWidth: '35%'
-              }
-            }
-          }
-        },
-        {
-          breakpoint: 1440,
-          options: {
-            plotOptions: {
-              bar: {
-                borderRadius: 12,
-                columnWidth: '43%'
-              }
-            }
-          }
-        },
-        {
-          breakpoint: 1300,
-          options: {
-            plotOptions: {
-              bar: {
-                borderRadius: 11,
-                columnWidth: '45%'
-              }
-            }
-          }
-        },
-        {
-          breakpoint: 1200,
-          options: {
-            plotOptions: {
-              bar: {
-                borderRadius: 11,
-                columnWidth: '37%'
-              }
-            }
-          }
-        },
-        {
-          breakpoint: 1040,
-          options: {
-            plotOptions: {
-              bar: {
-                borderRadius: 12,
-                columnWidth: '45%'
-              }
-            }
-          }
-        },
-        {
-          breakpoint: 991,
-          options: {
-            plotOptions: {
-              bar: {
-                borderRadius: 12,
-                columnWidth: '33%'
-              }
-            }
-          }
-        },
-        {
-          breakpoint: 768,
-          options: {
-            plotOptions: {
-              bar: {
-                borderRadius: 11,
-                columnWidth: '28%'
-              }
-            }
-          }
-        },
-        {
-          breakpoint: 640,
-          options: {
-            plotOptions: {
-              bar: {
-                borderRadius: 11,
-                columnWidth: '30%'
-              }
-            }
-          }
-        },
-        {
-          breakpoint: 576,
-          options: {
-            plotOptions: {
-              bar: {
-                borderRadius: 10,
-                columnWidth: '38%'
-              }
-            }
-          }
-        },
-        {
-          breakpoint: 440,
-          options: {
-            plotOptions: {
-              bar: {
-                borderRadius: 10,
-                columnWidth: '50%'
-              }
-            }
-          }
-        },
-        {
-          breakpoint: 380,
-          options: {
-            plotOptions: {
-              bar: {
-                borderRadius: 9,
-                columnWidth: '60%'
-              }
-            }
-          }
-        }
-      ],
       states: {
         hover: {
           filter: {
@@ -344,13 +217,150 @@ document.addEventListener('DOMContentLoaded', function (e) {
   if (typeof totalRevenueChartEl !== undefined && totalRevenueChartEl !== null) {
     const totalRevenueChart = new ApexCharts(totalRevenueChartEl, totalRevenueChartOptions);
     totalRevenueChart.render();
+
+    // 获取当前年份
+    const currentYear = new Date().getFullYear();
+
+    // 更新图表数据的函数
+    function updateChartData(year) {
+      const statsElement = document.querySelector('#incidentStatsData');
+      if (statsElement && statsElement.dataset.stats) {
+        try {
+          const statsData = JSON.parse(statsElement.dataset.stats);
+          const yearData = statsData.find(stat => stat.year === year);
+
+          if (yearData) {
+            const resolvedData = [];
+            const otherData = [];
+
+            // 获取1-12月的数据
+            for (let month = 1; month <= 12; month++) {
+              if (yearData.monthlyData && yearData.monthlyData[month]) {
+                resolvedData.push(yearData.monthlyData[month].resolvedCount);
+                otherData.push(-yearData.monthlyData[month].otherCount); // 使Other State为负值
+              } else {
+                resolvedData.push(0);
+                otherData.push(0);
+              }
+            }
+
+            // 更新图表数据
+            totalRevenueChart.updateOptions({
+              yaxis: {
+                labels: {
+                  formatter: function(val) {
+                    return Math.abs(val); // 显示绝对值
+                  }
+                }
+              }
+            });
+
+            totalRevenueChart.updateSeries([
+              {
+                name: "Other State",
+                data: otherData
+              },
+              {
+                name: "Resolved",
+                data: resolvedData
+              }
+            ]);
+
+            // 更新Growth显示
+            const growthText = document.querySelector('.text-center.fw-medium.my-6');
+            if (growthText) {
+              growthText.textContent = `${yearData.growth}% Resolved Rate`;
+            }
+
+            // 更新Growth图表
+            if (growthChart) {
+              growthChart.updateSeries([yearData.growth]);
+            }
+
+            // 更新底部年份显示
+            const allYears = statsData.map(stat => stat.year).sort((a, b) => b - a); // 降序排序
+            const selectedIndex = allYears.indexOf(year);
+            
+            // 获取要显示的两个年份（排除当前选中的年份）
+            let displayYears = allYears.filter(y => y !== year);
+            
+            // 确保年份按降序排序
+            displayYears.sort((a, b) => b - a);
+            
+            // 限制只取两个年份
+            displayYears = displayYears.slice(0, 2);
+            
+            // 更新年份显示和Growth值
+            const [firstYear, secondYear] = displayYears;
+            
+            // 更新第一个显示框（较大的年份）
+            const firstYearElement = document.querySelector('.prev-year');
+            const firstGrowthValue = document.querySelectorAll('.growth-value')[0];
+            if (firstYearElement && firstYear) {
+                firstYearElement.textContent = firstYear;
+                const firstYearData = statsData.find(stat => stat.year === firstYear);
+                if (firstYearData && firstGrowthValue) {
+                    firstGrowthValue.textContent = firstYearData.growth.toFixed(1) + '%';
+                }
+            }
+
+            // 更新第二个显示框（较小的年份）
+            const secondYearElement = document.querySelector('.next-year');
+            const secondGrowthValue = document.querySelectorAll('.growth-value')[1];
+            if (secondYearElement && secondYear) {
+                secondYearElement.textContent = secondYear;
+                const secondYearData = statsData.find(stat => stat.year === secondYear);
+                if (secondYearData && secondGrowthValue) {
+                    secondGrowthValue.textContent = secondYearData.growth.toFixed(1) + '%';
+                }
+            }
+          }
+        } catch (error) {
+          console.error('Error parsing or processing stats data:', error);
+        }
+      }
+    }
+
+    // 添加年份选择事件监听
+    document.querySelectorAll('.year-item').forEach(item => {
+      item.addEventListener('click', function() {
+        const selectedYear = parseInt(this.dataset.year);
+        // 更新图表数据
+        updateChartData(selectedYear);
+        
+        // 更新所有显示年份的元素
+        const yearDisplayElements = document.querySelectorAll('#selectedYear');
+        yearDisplayElements.forEach(element => {
+          element.textContent = selectedYear;
+        });
+
+        // 更新右侧按钮的年份显示
+        const yearButtons = document.querySelectorAll('.btn-group .btn.btn-outline-primary:not(.dropdown-toggle)');
+        yearButtons.forEach(button => {
+          button.textContent = selectedYear;
+        });
+
+        // 更新下拉按钮的选中状态
+        document.querySelectorAll('.year-item').forEach(yearItem => {
+          if (parseInt(yearItem.dataset.year) === selectedYear) {
+            yearItem.classList.add('active');
+          } else {
+            yearItem.classList.remove('active');
+          }
+        });
+      });
+    });
+
+    // 初始化时设置当前年份为选中状态
+    const currentYearItems = document.querySelectorAll(`.year-item[data-year="${currentYear}"]`);
+    currentYearItems.forEach(item => item.classList.add('active'));
   }
 
   // Growth Chart - Radial Bar Chart
   // --------------------------------------------------------------------
   const growthChartEl = document.querySelector('#growthChart'),
     growthChartOptions = {
-      series: [78],
+      series: [parseFloat(document.querySelector('.text-center.fw-medium.my-6').textContent)], // 获取当前年份的Growth值
       labels: ['Growth'],
       chart: {
         height: 200,
@@ -379,7 +389,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
             },
             value: {
               offsetY: -25,
-              color: headingColor,
+              color: legendColor,
               fontSize: '22px',
               fontWeight: '500',
               fontFamily: fontFamily
@@ -422,8 +432,10 @@ document.addEventListener('DOMContentLoaded', function (e) {
         }
       }
     };
+
+  let growthChart;
   if (typeof growthChartEl !== undefined && growthChartEl !== null) {
-    const growthChart = new ApexCharts(growthChartEl, growthChartOptions);
+    growthChart = new ApexCharts(growthChartEl, growthChartOptions);
     growthChart.render();
   }
 
@@ -610,83 +622,91 @@ document.addEventListener('DOMContentLoaded', function (e) {
 
   // Order Statistics Chart
   // --------------------------------------------------------------------
-  const chartOrderStatistics = document.querySelector('#orderStatisticsChart'),
-    orderChartConfig = {
-      chart: {
-        height: 165,
-        width: 136,
-        type: 'donut',
-        offsetX: 15
-      },
-      labels: ['Electronic', 'Sports', 'Decor', 'Fashion'],
-      series: [50, 85, 25, 40],
-      colors: [config.colors.success, config.colors.primary, config.colors.secondary, config.colors.info],
-      stroke: {
-        width: 5,
-        colors: [cardColor]
-      },
-      dataLabels: {
-        enabled: false,
-        formatter: function (val, opt) {
-          return parseInt(val) + '%';
-        }
-      },
-      legend: {
-        show: false
-      },
-      grid: {
-        padding: {
-          top: 0,
-          bottom: 0,
-          right: 15
-        }
-      },
-      states: {
-        hover: {
-          filter: { type: 'none' }
-        },
-        active: {
-          filter: { type: 'none' }
-        }
-      },
-      plotOptions: {
-        pie: {
-          donut: {
-            size: '75%',
-            labels: {
-              show: true,
-              value: {
-                fontSize: '1.125rem',
-                fontFamily: fontFamily,
-                fontWeight: 500,
-                color: headingColor,
-                offsetY: -17,
-                formatter: function (val) {
-                  return parseInt(val) + '%';
+    const chartData = document.getElementById("chart-data");
+
+    const incident = parseInt(chartData.dataset.incident);
+    const request = parseInt(chartData.dataset.request);
+    const feedback = parseInt(chartData.dataset.feedback);
+    const knowledge = parseInt(chartData.dataset.knowledge);
+    const total = parseInt(chartData.dataset.total);
+
+    const chartOrderStatistics = document.querySelector('#orderStatisticsChart'),
+        orderChartConfig = {
+            chart: {
+                height: 165,
+                width: 136,
+                type: 'donut',
+                offsetX: 15
+            },
+            labels: ['Incidents', 'Requests', 'Feedbacks', 'Knowledges'],
+            series: [incident, request, feedback, knowledge],
+            colors: [config.colors.success, config.colors.primary, config.colors.secondary, config.colors.info],
+            stroke: {
+                width: 5,
+                colors: [cardColor]
+            },
+            dataLabels: {
+                enabled: false,
+                formatter: function (val, opt) {
+                    return parseInt(val) + '%';
                 }
-              },
-              name: {
-                offsetY: 17,
-                fontFamily: fontFamily
-              },
-              total: {
-                show: true,
-                fontSize: '13px',
-                color: legendColor,
-                label: 'Weekly',
-                formatter: function (w) {
-                  return '38%';
+            },
+            legend: {
+                show: false
+            },
+            grid: {
+                padding: {
+                    top: 0,
+                    bottom: 0,
+                    right: 15
                 }
-              }
+            },
+            states: {
+                hover: {
+                    filter: { type: 'none' }
+                },
+                active: {
+                    filter: { type: 'none' }
+                }
+            },
+            plotOptions: {
+                pie: {
+                    donut: {
+                        size: '75%',
+                        labels: {
+                            show: true,
+                            value: {
+                                fontSize: '1.125rem',
+                                fontFamily: fontFamily,
+                                fontWeight: 500,
+                                color: legendColor,
+                                offsetY: -17,
+                                formatter: function (val) {
+                                    return parseInt(val) + '%';
+                                }
+                            },
+                            name: {
+                                offsetY: 17,
+                                fontFamily: fontFamily
+                            },
+                            total: {
+                                show: true,
+                                fontSize: '13px',
+                                color: legendColor,
+                                label: 'Weekly',
+                                formatter: function (w) {
+                                    return `${total}%`;
+                                }
+                            }
+                        }
+                    }
+                }
             }
-          }
-        }
-      }
-    };
-  if (typeof chartOrderStatistics !== undefined && chartOrderStatistics !== null) {
-    const statisticsChart = new ApexCharts(chartOrderStatistics, orderChartConfig);
-    statisticsChart.render();
-  }
+        };
+    if (typeof chartOrderStatistics !== undefined && chartOrderStatistics !== null) {
+        const statisticsChart = new ApexCharts(chartOrderStatistics, orderChartConfig);
+        statisticsChart.render();
+    }
 
   // Income Chart - Area chart
   // --------------------------------------------------------------------
@@ -694,7 +714,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
     incomeChartConfig = {
       series: [
         {
-          data: [21, 30, 22, 42, 26, 35, 29]
+          data: [21, 30, 22, 42, 26, 35, 29,30,21,15,28,45]
         }
       ],
       chart: {
@@ -759,7 +779,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
         }
       },
       xaxis: {
-        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+          categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
         axisBorder: {
           show: false
         },

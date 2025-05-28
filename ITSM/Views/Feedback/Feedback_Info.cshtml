@@ -1,4 +1,5 @@
-﻿@model ITSM_DomainModelEntity.Models.Feedback
+﻿@using ITSM_DomainModelEntity.ViewModels
+@model AllModelVM
 @{
     ViewData["Title"] = "Feedback_Info";
 }
@@ -33,7 +34,7 @@
             </button>
             <div class="inc-cre-title-group">
                 <div class="inc-cre-title">Feedback Information</div>
-                <div class="inc-cre-subtitle">@Model.fb_number</div>
+                <div class="inc-cre-subtitle">@Model.feedback.fb_number</div>
             </div>
         </div>
         <div class="inc-cre-header-right">
@@ -57,7 +58,7 @@
                    href="javascript:void(0);"
                    data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
-                        <img src="@(ViewBag.Photo != null ? $"data:{ViewBag.PhotoType};base64,{Convert.ToBase64String(ViewBag.Photo)}" :
+                        <img src="@(Model.user.photo != null ? $"data:{Model.user.photo_type};base64," +  Convert.ToBase64String(Model.user.photo) :
                             Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 rounded-circle" />
                     </div>
                 </a>
@@ -93,20 +94,20 @@
         }
 
         <form id="incidentForm" class="inc-cre-incident-form" action="~/Feedback/Feedback_Info" method="post">
-            <input type="text" name="id" id="id" class="inc-cre-form-control" value="@Model.id" style="display:none;" readonly>
-            <input type="text" name="roleBack" id="roleBack" class="inc-cre-form-control" value="@ViewBag.roleBack" style="display:none;" readonly>
+            <input type="text" name="id" id="id" class="inc-cre-form-control" value="@Model.feedback.id" style="display:none;" readonly>
+            <input type="text" name="roleBack" id="roleBack" class="inc-cre-form-control" value="@Model.roleBack" style="display:none;" readonly>
             <div class="inc-cre-form-grid">
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="number" class="inc-cre-form-label">Number</label>
-                        <input type="text" name="fb_number" id="fb_number" class="inc-cre-form-control" value="@Model.fb_number" readonly>
+                        <input type="text" name="fb_number" id="fb_number" class="inc-cre-form-control" value="@Model.feedback.fb_number" readonly>
                     </div>
                 </div>
 
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="name" class="inc-cre-form-label">User</label>
-                        <input type="text" name="name" id="name" class="inc-cre-form-control" value="@Model.User.fullname" readonly>
+                        <input type="text" name="name" id="name" class="inc-cre-form-control" value="@Model.user.fullname" readonly>
                     </div>
                 </div>
             </div>
@@ -114,7 +115,7 @@
             <div class="inc-cre-form-group inc-cre-short-description-group">
                 <label for="message" class="inc-cre-form-label inc-cre-required">Message</label>
                 <div class="inc-cre-input-with-actions">
-                    <input type="text" autocomplete="off" name="message" id="message" class="inc-cre-form-control" value="@Model.message" required>
+                    <input type="text" autocomplete="off" name="message" id="message" class="inc-cre-form-control" value="@Model.feedback.message" required>
                 </div>
             </div>
         </form>

@@ -72,7 +72,7 @@ a {
 
     .KB3-breadcrumb a {
         color: #3b9cff;
-        font-weight: 500;
+        font-weight: bold;
     }
 
     .KB3-breadcrumb .active {
@@ -217,7 +217,7 @@ main {
 
 .KB3-author-link {
     color: #5eadff;
-    font-weight: 500;
+    font-weight: bold;
 }
 
 .KB3-rating {
@@ -328,6 +328,173 @@ main {
     font-style: italic;
 }
 
+/* Knowledge Base List Items in Sidebar */
+.KB3-sidebar-section .KB3-knowledge-item {
+    display: block;
+    margin-bottom: 12px;
+    padding: 16px;
+    background: linear-gradient(135deg, #262626 0%, #2a2a2a 100%);
+    border-radius: 12px;
+    border: 1px solid #404040;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.KB3-sidebar-section .KB3-knowledge-item:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    background: linear-gradient(180deg, #3a86ff 0%, #2563eb 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.KB3-sidebar-section .KB3-knowledge-item:hover {
+    background: linear-gradient(135deg, #2a2a2a 0%, #2e2e2e 100%);
+    border-color: #3a86ff;
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(58, 134, 255, 0.4);
+    text-decoration: none;
+}
+
+.KB3-sidebar-section .KB3-knowledge-item:hover:before {
+    opacity: 1;
+}
+
+.KB3-sidebar-section .KB3-knowledge-item .KB3-kb-number {
+    font-size: 0.8rem;
+    color: #3a86ff;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    opacity: 0.9;
+}
+
+.KB3-sidebar-section .KB3-knowledge-item .KB3-kb-title {
+    font-size: 0.9rem;
+    color: #e0e0e0;
+    margin: 0;
+    line-height: 1.4;
+    font-weight: 500;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+    position: relative;
+    padding-left: 20px;
+}
+
+.KB3-sidebar-section .KB3-knowledge-item .KB3-kb-title:before {
+    content: '📄';
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 0.8rem;
+    opacity: 0.7;
+}
+
+.KB3-sidebar-section .KB3-knowledge-item:hover .KB3-kb-number {
+    color: #5eadff;
+}
+
+.KB3-sidebar-section .KB3-knowledge-item:hover .KB3-kb-title {
+    color: #ffffff;
+}
+
+/* For the generic <a> tags in sidebar (fallback) */
+.KB3-sidebar-section a:not(.KB3-knowledge-item) {
+    display: block;
+    margin-bottom: 12px;
+    padding: 16px;
+    background: linear-gradient(135deg, #262626 0%, #2a2a2a 100%);
+    border-radius: 8px;
+    border: 1px solid #404040;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.KB3-sidebar-section a:not(.KB3-knowledge-item):before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    background: linear-gradient(180deg, #3a86ff 0%, #2563eb 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.KB3-sidebar-section a:not(.KB3-knowledge-item):hover {
+    background: linear-gradient(135deg, #2a2a2a 0%, #2e2e2e 100%);
+    border-color: #3a86ff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(58, 134, 255, 0.3);
+    text-decoration: none;
+}
+
+.KB3-sidebar-section a:not(.KB3-knowledge-item):hover:before {
+    opacity: 1;
+}
+
+.KB3-sidebar-section a:not(.KB3-knowledge-item) p:first-child {
+    font-size: 0.8rem;
+    color: #3a86ff;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    opacity: 0.9;
+}
+
+.KB3-sidebar-section a:not(.KB3-knowledge-item) p:last-child {
+    font-size: 0.9rem;
+    color: #e0e0e0;
+    margin: 0;
+    line-height: 1.4;
+    font-weight: 500;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+    position: relative;
+    padding-left: 20px;
+}
+
+.KB3-sidebar-section a:not(.KB3-knowledge-item) p:last-child:before {
+    content: '📄';
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 0.8rem;
+    opacity: 0.7;
+}
+
+.KB3-sidebar-section a:not(.KB3-knowledge-item):hover p:first-child {
+    color: #5eadff;
+}
+
+.KB3-sidebar-section a:not(.KB3-knowledge-item):hover p:last-child {
+    color: #ffffff;
+}
+
+/* Empty state styling */
+.KB3-sidebar-section:has(.KB3-no-content) {
+    text-align: center;
+    padding: 24px 15px;
+}
+
 /* Tags */
 .KB3-tags {
     display: flex;
@@ -378,10 +545,196 @@ main {
     .KB3-breadcrumb ul {
         flex-wrap: wrap;
     }
+
+    .KB3-sidebar-section .KB3-knowledge-item,
+    .KB3-sidebar-section a:not(.KB3-knowledge-item) {
+        padding: 12px;
+        margin-bottom: 8px;
+    }
+
+    .KB3-sidebar-section .KB3-knowledge-item .KB3-kb-number,
+    .KB3-sidebar-section a:not(.KB3-knowledge-item) p:first-child {
+        font-size: 0.75rem;
+    }
+
+    .KB3-sidebar-section .KB3-knowledge-item .KB3-kb-title,
+    .KB3-sidebar-section a:not(.KB3-knowledge-item) p:last-child {
+        font-size: 0.85rem;
+    }
 }
 
 @font-face {
     font-family: 'Inter';
     src: url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
     font-display: swap;
+}
+
+/*=== file download ===*/
+.file-download-container {
+    border: 2px solid #333333;
+    border-radius: 12px;
+    padding: 28px;
+    margin: 24px 0;
+    background: linear-gradient(135deg, #1a1a1a 0%, #242424 100%);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+    .file-download-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, #3a86ff, transparent);
+        opacity: 0.6;
+    }
+
+    .file-download-container:hover {
+        border-color: #3a86ff;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(58, 134, 255, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        transform: translateY(-2px);
+    }
+
+.file-download-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0;
+}
+
+.file-icon {
+    font-size: 44px;
+    margin-right: 18px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    transition: transform 0.3s ease;
+}
+
+.file-download-container:hover .file-icon {
+    transform: scale(1.05);
+}
+
+.file-icon.pdf {
+    color: #ff4757;
+}
+
+.file-icon.word {
+    color: #5dade2;
+}
+
+.file-icon.excel {
+    color: #58d68d;
+}
+
+.file-icon.ppt {
+    color: #f39c12;
+}
+
+.file-icon.default {
+    color: #95a5a6;
+}
+
+.file-info-wrapper {
+    flex-grow: 1;
+}
+
+.file-name {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #ffffff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 320px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.file-details {
+    color: #b0b0b0;
+    font-size: 0.9rem;
+    font-weight: 400;
+}
+
+.download-button {
+    background: linear-gradient(135deg, #3a86ff 0%, #2563eb 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 4px 12px rgba(58, 134, 255, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.85rem;
+}
+
+    .download-button:hover {
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        box-shadow: 0 6px 16px rgba(58, 134, 255, 0.4);
+        transform: translateY(-1px);
+    }
+
+    .download-button:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 8px rgba(58, 134, 255, 0.3);
+    }
+
+.no-file-message {
+    text-align: center;
+    color: #888888;
+    padding: 20px;
+    background: linear-gradient(135deg, #1a1a1a 0%, #242424 100%);
+    border-radius: 8px;
+}
+
+    .no-file-message i {
+        display: block;
+        margin-bottom: 12px;
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    }
+
+    .no-file-message p {
+        margin: 0;
+        font-weight: 500;
+        color: #aaaaaa;
+    }
+
+/* KB Read Search - Same as KB_Search */
+.KB-read-search-section {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    margin: 20px;
+}
+
+.KB-read-search-container {
+    flex: 1;
+    display: flex;
+    max-width: 600px;
+}
+
+.KB-read-search-container input {
+    flex: 1;
+    padding: 12px 20px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: clamp(13px, 1.2vw, 14px);
+    margin-right: 10px;
+}
+
+.KB-read-search-container button {
+    background-color: #575758;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 0 20px;
+    cursor: pointer;
 }

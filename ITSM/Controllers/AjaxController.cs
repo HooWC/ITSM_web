@@ -2538,7 +2538,7 @@ namespace ITSM.Controllers
 
         /// <summary>
         /// Knowledge/KB_List
-        public async Task<IActionResult> SearchKB(string searchTerm, string filterBy = "number")
+        public async Task<IActionResult> SearchKB(string searchWord, string searchTerm, string filterBy = "number")
         {
             if (string.IsNullOrEmpty(searchTerm))
                 return Json(new List<Feedback>());
@@ -2556,7 +2556,10 @@ namespace ITSM.Controllers
 
             var userKB = new List<Knowledge>();
 
-            userKB = allKB.OrderByDescending(y => y.id).ToList();
+            if (searchWord == "admin")
+                userKB = allKB.OrderByDescending(x => x.id).ToList();
+            else
+                userKB = allKB.Where(x => x.author == currentUser.id).OrderByDescending(x => x.id).ToList();
 
             List<Knowledge> filteredKBs;
 
@@ -2621,7 +2624,7 @@ namespace ITSM.Controllers
 
         /// <summary>
         /// Knowledge/KB_List
-        public async Task<IActionResult> SortKB(string sortOrder = "asc")
+        public async Task<IActionResult> SortKB(string sortWord, string sortOrder = "asc")
         {
             if (!IsUserLoggedIn(out var currentUser))
                 return Json(new { success = false, message = "Not logged in" });
@@ -2635,6 +2638,11 @@ namespace ITSM.Controllers
             var allKB = KBTask.Result;
 
             var userKB = new List<Knowledge>();
+
+            if (sortWord == "admin")
+                userKB = allKB.OrderByDescending(x => x.id).ToList();
+            else
+                userKB = allKB.Where(x => x.author == currentUser.id).OrderByDescending(x => x.id).ToList();
 
             userKB = allKB.OrderByDescending(y => y.id).ToList();
 
@@ -2674,8 +2682,10 @@ namespace ITSM.Controllers
             var allKB = KBTask.Result;
 
             var userKB = new List<Knowledge>();
-
-            userKB = allKB.OrderByDescending(y => y.id).ToList();
+            if (filterword == "admin")
+                userKB = allKB.OrderByDescending(x => x.id).ToList();
+            else
+                userKB = allKB.Where(x => x.author == currentUser.id).OrderByDescending(x => x.id).ToList();
 
             List<Knowledge> filteredKBs;
 

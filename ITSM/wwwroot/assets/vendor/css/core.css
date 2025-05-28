@@ -5521,7 +5521,7 @@ textarea.form-control-lg {
 .card-subtitle {
     margin-top: calc(-0.5 * var(--bs-card-title-spacer-y));
     margin-bottom: 0;
-    color: var(--bs-card-subtitle-color);
+    color: #919191;
 }
 
 .card-text:last-child {
@@ -12429,9 +12429,13 @@ li:not(:first-child) .dropdown-item, .dropdown-menu .dropdown-item:not(:first-ch
     display: block !important;
 }
 
-.d-grid {
-    display: grid !important;
-}
+    .d-block:hover{
+        text-decoration:none;
+    }
+
+    .d-grid {
+        display: grid !important;
+    }
 
 .d-table {
     display: table !important;
@@ -27028,3 +27032,71 @@ body:not(.modal-open) .layout-content-navbar .layout-navbar {
         --bs-footer-link-color: var(--bs-body-color);
         --bs-footer-brand-color: var(--bs-heading-color);
     }
+
+/* Lori 的图片 */
+.congratulation-card {
+    position: relative;
+    overflow: hidden;
+    border: none;
+}
+
+    .congratulation-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, rgb(21, 25, 40) 20%, rgba(38, 46, 73, 0.938) 50%, rgba(88, 91, 124, 0.2) 90%, rgba(255, 255, 255, 0) 100%), url('/img/back/lori.png') no-repeat bottom left 110px;
+        background-size: cover;
+        z-index: 1;
+    }
+
+.text-content {
+    position: relative;
+    z-index: 2;
+    padding: 2rem;
+}
+
+.image-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.badge-image {
+    max-height: 175px;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+}
+
+.btn-light {
+    background-color: white;
+    color: #4a6dff;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+    .btn-light:hover {
+        background-color: #f8f9fa;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-decoration:none;
+    }
+
+@media (max-width: 768px) {
+    .congratulation-card::before {
+        background: linear-gradient(180deg, rgba(74, 109, 255, 0.8) 0%, transparent 100%), url('../assets/img/my/lori.png') no-repeat center bottom;
+    }
+
+    .image-content {
+        padding-top: 0;
+    }
+
+    .badge-image {
+        max-height: 150px;
+    }
+}
+/* Lori 的图片 */

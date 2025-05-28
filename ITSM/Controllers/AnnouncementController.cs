@@ -10,6 +10,7 @@ namespace ITSM.Controllers
     public class AnnouncementController : Controller
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly UserService _userService;
         private readonly User_api _userApi;
         private readonly Todo_api _todoApi;
         private readonly Feedback_api _feedbackApi;
@@ -20,7 +21,7 @@ namespace ITSM.Controllers
         private readonly Role_api _roleApi;
         private readonly Announcement_api _announApi;
 
-        public AnnouncementController(IHttpContextAccessor httpContextAccessor)
+        public AnnouncementController(IHttpContextAccessor httpContextAccessor, UserService userService)
         {
             _httpContextAccessor = httpContextAccessor;
             _userApi = new User_api(httpContextAccessor);
@@ -32,14 +33,12 @@ namespace ITSM.Controllers
             _depApi = new Department_api(httpContextAccessor);
             _roleApi = new Role_api(httpContextAccessor);
             _announApi = new Announcement_api(httpContextAccessor);
+            _userService = userService;
         }
 
         public async Task<IActionResult> Ann_List()
         {
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             var AnnounTask = _announApi.GetAllAnnouncement_API();
             var UserTask = _userApi.GetAllUser_API();
@@ -62,10 +61,7 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> View_Ann_List()
         {
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             var AnnounTask = _announApi.GetAllAnnouncement_API();
             var UserTask = _userApi.GetAllUser_API();
@@ -88,11 +84,7 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> View_Ann_Info(int id)
         {
-            // current user info
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             var userTask = _userApi.GetAllUser_API();
             await Task.WhenAll(userTask);
@@ -114,10 +106,7 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Ann_Create()
         {
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             var model = new AllModelVM()
             {
@@ -130,10 +119,7 @@ namespace ITSM.Controllers
         [HttpPost]
         public async Task<IActionResult> Ann_Create(Announcement ann)
         {
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             var model = new AllModelVM()
             {
@@ -189,11 +175,7 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Ann_Info(int id, string type)
         {
-            // current user info
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             var userTask = _userApi.GetAllUser_API();
             await Task.WhenAll(userTask);
@@ -217,11 +199,7 @@ namespace ITSM.Controllers
         [HttpPost]
         public async Task<IActionResult> Ann_Info(IFormFile file, string type, Announcement ann)
         {
-            // current user info
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             var userTask = _userApi.GetAllUser_API();
             await Task.WhenAll(userTask);
@@ -302,10 +280,7 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Ann_Import()
         {
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             var model = new AllModelVM()
             {
@@ -318,11 +293,7 @@ namespace ITSM.Controllers
         [HttpPost]
         public async Task<IActionResult> Ann_Import(IFormFile file, Announcement ann)
         {
-            // current user info
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             var model = new AllModelVM()
             {
@@ -400,7 +371,12 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Ann_Import_Info()
         {
-            return View();
+            var currentUser = await _userService.GetCurrentUserAsync();
+            var model = new AllModelVM()
+            {
+                user = currentUser
+            };
+            return View(model);
         }
 
         private string GetMimeTypeFromFileSignature(byte[] fileBytes, string fileExtension = "")

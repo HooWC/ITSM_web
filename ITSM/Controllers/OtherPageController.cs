@@ -1,4 +1,5 @@
-﻿using ITSM_Insfrastruture.Repository.Api;
+﻿using ITSM_DomainModelEntity.ViewModels;
+using ITSM_Insfrastruture.Repository.Api;
 using ITSM_Insfrastruture.Repository.Token;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,8 +20,9 @@ namespace ITSM.Controllers
         private readonly Category_api _categoryApi;
         private readonly Product_api _productApi;
         private readonly Department_api _departmentApi;
+        private readonly UserService _userService;
 
-        public OtherPageController(IHttpContextAccessor httpContextAccessor)
+        public OtherPageController(IHttpContextAccessor httpContextAccessor, UserService userService)
         {
             _httpContextAccessor = httpContextAccessor;
             _authApi = new Auth_api(httpContextAccessor);
@@ -35,17 +37,17 @@ namespace ITSM.Controllers
             _categoryApi = new Category_api(httpContextAccessor);
             _productApi = new Product_api(httpContextAccessor);
             _departmentApi = new Department_api(httpContextAccessor);
+            _userService = userService;
         }
 
         public async Task<IActionResult> Show_Session()
         {
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
+            var currentUser = await _userService.GetCurrentUserAsync();
 
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
-
-            ViewBag.Photo = currentUser.photo;
-            ViewBag.PhotoType = currentUser.photo_type;
+            var model = new AllModelVM()
+            {
+                user = currentUser
+            };
 
             return View();
         }

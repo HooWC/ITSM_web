@@ -4,12 +4,14 @@ using ITSM_DomainModelEntity.ViewModels;
 using ITSM_Insfrastruture.Repository.Api;
 using ITSM_Insfrastruture.Repository.Token;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace ITSM.Controllers
 {
     public class RoleController : Controller
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly UserService _userService;
         private readonly User_api _userApi;
         private readonly Todo_api _todoApi;
         private readonly Feedback_api _feedbackApi;
@@ -19,8 +21,9 @@ namespace ITSM.Controllers
         private readonly Department_api _depApi;
         private readonly Role_api _roleApi;
 
-        public RoleController(IHttpContextAccessor httpContextAccessor)
+        public RoleController(IHttpContextAccessor httpContextAccessor, UserService userService)
         {
+            _userService = userService;
             _httpContextAccessor = httpContextAccessor;
             _userApi = new User_api(httpContextAccessor);
             _todoApi = new Todo_api(httpContextAccessor);
@@ -34,10 +37,7 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Role_List()
         {
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             var roleTask = _roleApi.GetAllRole_API();
             await Task.WhenAll(roleTask);
@@ -55,34 +55,30 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Role_Create()
         {
-            // current user info
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
+            var currentUser = await _userService.GetCurrentUserAsync();
 
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var model = new AllModelVM
+            {
+                user = currentUser
+            };
 
-            ViewBag.Photo = currentUser.photo;
-            ViewBag.PhotoType = currentUser.photo_type;
-
-            return View();
+            return View(model);
         }
 
         [HttpPost]
         public async Task<IActionResult> Role_Create(Role roleName)
         {
-            // current user info
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
+            var currentUser = await _userService.GetCurrentUserAsync();
 
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
-
-            ViewBag.Photo = currentUser.photo;
-            ViewBag.PhotoType = currentUser.photo_type;
+            var model = new AllModelVM
+            {
+                user = currentUser
+            };
 
             if (roleName.role == null)
             {
                 ViewBag.Error = "Please fill in all required fields";
-                return View();
+                return View(model);
             }
 
             var allRole = await _roleApi.GetAllRole_API();
@@ -91,7 +87,7 @@ namespace ITSM.Controllers
             if (b)
             {
                 ViewBag.Error = "This role already exist.";
-                return View();
+                return View(model);
             }
 
             // Create New Role
@@ -108,40 +104,39 @@ namespace ITSM.Controllers
             else
             {
                 ViewBag.Error = "Create Role Error";
-                return View();
+                return View(model);
             }
         }
 
         public async Task<IActionResult> Role_Info(int id)
         {
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
-
-            ViewBag.Photo = currentUser.photo;
-            ViewBag.PhotoType = currentUser.photo_type;
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             // Get Role
             var role = await _roleApi.FindByIDRole_API(id);
 
-            return View(role);
+            var model = new AllModelVM
+            {
+                user = currentUser,
+                role = role
+            };
+
+            return View(model);
         }
 
         [HttpPost]
         public async Task<IActionResult> Role_Info(Role roleInfo)
         {
-            // current user info
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
-
-            ViewBag.Photo = currentUser.photo;
-            ViewBag.PhotoType = currentUser.photo_type;
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             // Making concurrent API requests
             var roleTask = await _roleApi.FindByIDRole_API(roleInfo.id);
+
+            var model = new AllModelVM
+            {
+                user = currentUser,
+                role = roleTask
+            };
 
             if (roleTask.role == null)
             {
@@ -155,7 +150,7 @@ namespace ITSM.Controllers
             if (b)
             {
                 ViewBag.Error = "This role already exist.";
-                return View(roleTask);
+                return View(model);
             }
 
             // Update New ROle
@@ -169,7 +164,7 @@ namespace ITSM.Controllers
             else
             {
                 ViewBag.Error = "Update Role Error";
-                return View(roleTask);
+                return View(model);
             }
         }
     }

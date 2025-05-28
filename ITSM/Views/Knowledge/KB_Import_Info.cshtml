@@ -409,6 +409,7 @@
 
         <form id="incidentForm" class="inc-cre-incident-form" action="~/Knowledge/KB_Info?type=file" method="post" enctype="multipart/form-data">
             <input type="text" name="id" id="id" class="inc-cre-form-control" value="@Model.knowledge.id" style="display:none;" readonly>
+            <input type="text" name="roleBack" id="roleBack" class="inc-cre-form-control" value="@ViewBag.roleBack" style="display:none;" readonly>
             <div class="inc-cre-form-grid">
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
@@ -584,7 +585,13 @@
             $target.addClass('active open');
         }
 
-        $('#Knowledge_menu_all').addClass("active");
+        var role = $('#roleBack').val();
+
+        if (role === 'admin') {
+            $('#Knowledge_menu_all').addClass('active');
+        } else if (role === 'user') {
+            $('#Knowledge_menu_all_user').addClass('active');
+        }
 
         $('#browseBtn').click(function() {            $('#file').click();        });        $('#file').change(function() {            var fileName = $(this).val().split('\\').pop();            if (fileName) {                $('#selectedFile').text('Selected file: ' + fileName).show();                $('.file-upload-container').css('border-color', '#3a86ff');            } else {                $('#selectedFile').hide();                $('.file-upload-container').css('border-color', '#444444');            }
         });

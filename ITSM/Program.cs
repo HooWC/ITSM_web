@@ -1,3 +1,4 @@
+using ITSM.Controllers;
 using Microsoft.AspNetCore.Http.Features;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +21,8 @@ builder.Services.AddSession(options =>
     // Set Cookie to persistent cookie (using MaxAge)
     options.Cookie.MaxAge = TimeSpan.FromDays(365 * 100);
 });
+
+builder.Services.AddScoped<UserService>();
 
 var app = builder.Build();
 

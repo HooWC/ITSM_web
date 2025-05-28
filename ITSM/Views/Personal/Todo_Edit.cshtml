@@ -1,4 +1,5 @@
-﻿@model ITSM_DomainModelEntity.Models.Todo
+﻿@using ITSM_DomainModelEntity.ViewModels
+@model AllModelVM
 @{
     ViewData["Title"] = "Todo_Edit";
     Layout = "_Layout";
@@ -38,7 +39,7 @@
             </button>
             <div class="inc-cre-title-group">
                 <div class="inc-cre-title">Todo Information</div>
-                <div class="inc-cre-subtitle">@Model.todo_id</div>
+                <div class="inc-cre-subtitle">@Model.todo.todo_id</div>
             </div>
         </div>
         <div class="inc-cre-header-right">
@@ -62,11 +63,8 @@
                    href="javascript:void(0);"
                    data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
-                        <img src="@(ViewBag.Photo != null ?
-                             $"data:{ViewBag.PhotoType};base64,{Convert.ToBase64String(ViewBag.Photo)}" :
-                             Url.Content("~/img/avatar/user_avatar.jpg"))"
-                             alt="avatar"
-                             class="w-px-40 rounded-circle" />
+                        <img src="@(Model.user.photo != null ? $"data:{Model.user.photo_type};base64," + Convert.ToBase64String(Model.user.photo) :
+                                  Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 rounded-circle" />
                     </div>
                 </a>
             </div>
@@ -101,12 +99,12 @@
         }
 
         <form id="incidentForm" class="inc-cre-incident-form" action="~/Personal/Todo_Edit" method="post">
-            <input type="text" name="id" id="id" class="inc-cre-form-control" value="@Model.id" style="display:none;" readonly>
+            <input type="text" name="id" id="id" class="inc-cre-form-control" value="@Model.todo.id" style="display:none;" readonly>
             <div class="inc-cre-form-grid">
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="number" class="inc-cre-form-label">Number</label>
-                        <input type="text" name="todo_id" id="number" class="inc-cre-form-control" value="@Model.todo_id" readonly>
+                        <input type="text" name="todo_id" id="number" class="inc-cre-form-control" value="@Model.todo.todo_id" readonly>
                     </div>
                 </div>
 
@@ -114,8 +112,8 @@
                     <div class="inc-cre-form-group">
                         <label for="channel" class="inc-cre-form-label">Active</label>
                         <select id="channel" name="active_word" class="inc-cre-form-control">
-                            <option value="Doing" selected="@(Model != null && Model.active == false)">Doing</option>
-                            <option value="Completed" selected="@(Model != null && Model.active == true)">Completed</option>
+                            <option value="Doing" selected="@(Model.todo != null && Model.todo.active == false)">Doing</option>
+                            <option value="Completed" selected="@(Model.todo != null && Model.todo.active == true)">Completed</option>
                         </select>
                     </div>
                 </div>
@@ -124,7 +122,7 @@
             <div class="inc-cre-form-group inc-cre-short-description-group">
                 <label for="short-description" class="inc-cre-form-label inc-cre-required">Title</label>
                 <div class="inc-cre-input-with-actions">
-                    <input type="text" name="title" value="@Model.title" id="short-description" class="inc-cre-form-control" autocomplete="off" required>
+                    <input type="text" name="title" value="@Model.todo.title" id="short-description" class="inc-cre-form-control" autocomplete="off" required>
                     <div class="inc-cre-action-buttons">
                         <button type="button" class="inc-cre-btn-help">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

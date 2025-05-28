@@ -9,6 +9,7 @@ namespace ITSM.Controllers
     public class DepartmentController : Controller
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly UserService _userService;
         private readonly User_api _userApi;
         private readonly Todo_api _todoApi;
         private readonly Feedback_api _feedbackApi;
@@ -19,8 +20,9 @@ namespace ITSM.Controllers
         private readonly Role_api _roleApi;
         private readonly Category_api _categoryApi;
 
-        public DepartmentController(IHttpContextAccessor httpContextAccessor)
+        public DepartmentController(IHttpContextAccessor httpContextAccessor, UserService userService)
         {
+            _userService = userService;
             _httpContextAccessor = httpContextAccessor;
             _userApi = new User_api(httpContextAccessor);
             _todoApi = new Todo_api(httpContextAccessor);
@@ -35,10 +37,7 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Department_List()
         {
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             var depTask = _depApi.GetAllDepartment_API();
             await Task.WhenAll(depTask);
@@ -58,34 +57,30 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Department_Create()
         {
-            // current user info
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
+            var currentUser = await _userService.GetCurrentUserAsync();
 
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var model = new AllModelVM
+            {
+                user = currentUser
+            };
 
-            ViewBag.Photo = currentUser.photo;
-            ViewBag.PhotoType = currentUser.photo_type;
-
-            return View();
+            return View(model);
         }
 
         [HttpPost]
         public async Task<IActionResult> Department_Create(Department dep)
         {
-            // current user info
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
+            var currentUser = await _userService.GetCurrentUserAsync();
 
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
-
-            ViewBag.Photo = currentUser.photo;
-            ViewBag.PhotoType = currentUser.photo_type;
+            var model = new AllModelVM
+            {
+                user = currentUser
+            };
 
             if (dep.name == null)
             {
                 ViewBag.Error = "Please fill in all required fields";
-                return View();
+                return View(model);
             }
 
             // Create New Department
@@ -103,40 +98,39 @@ namespace ITSM.Controllers
             else
             {
                 ViewBag.Error = "Create Department Error";
-                return View();
+                return View(model);
             }
         }
 
         public async Task<IActionResult> Department_Info(int id)
         {
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
-
-            ViewBag.Photo = currentUser.photo;
-            ViewBag.PhotoType = currentUser.photo_type;
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             // Get Department
             var department = await _depApi.FindByIDDepartment_API(id);
 
-            return View(department);
+            var model = new AllModelVM
+            {
+                user = currentUser,
+                department = department
+            };
+
+            return View(model);
         }
 
         [HttpPost]
         public async Task<IActionResult> Department_Info(Department dep)
         {
-            // current user info
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
-
-            ViewBag.Photo = currentUser.photo;
-            ViewBag.PhotoType = currentUser.photo_type;
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             // Making concurrent API requests
             var departmentTask = await _depApi.FindByIDDepartment_API(dep.id);
+
+            var model = new AllModelVM
+            {
+                user = currentUser,
+                department = departmentTask
+            };
 
             if (departmentTask.name == null)
             {

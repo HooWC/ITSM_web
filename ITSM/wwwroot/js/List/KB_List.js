@@ -3,6 +3,10 @@ var itemsPerPage = 18;
 var IncidentItems = $('.incident-item').length;
 var IncidentPages = Math.ceil(IncidentItems / itemsPerPage);
 
+let searchFunctionName = $('#forAjaxGetFunctionName_search').text();
+let sortFunctionName = $('#forAjaxGetFunctionName_sort').text();
+let filterFunctionName = $('#forAjaxGetFunctionName_filter').text();
+
 // Set default filter field and status
 var currentFilter = 'number';
 var currentStatus = 'all';
@@ -155,11 +159,20 @@ $('#sortByNumber').click(function () {
 // Sort todos function
 function sortIncidents() {
 
+    var word = "";
+    if (sortFunctionName.includes("SortKB_Admin"))
+        word = "admin";
+    else if (sortFunctionName.includes("SortKB_User"))
+        word = "user";
+    else
+        word = "sort_basic";
+
     $.ajax({
         url: '/Ajax/SortKB',
         method: 'GET',
         data: {
-            sortOrder: currentSortOrder
+            sortOrder: currentSortOrder,
+            sortWord: word
         },
         success: function (data) {
             updateKnowledgeTable(data);
@@ -310,12 +323,21 @@ function searchKnowledges() {
         searchTerm = "re_entrynovalue";
     }
 
+    var word = "";
+    if (searchFunctionName.includes("SearchKB_Admin"))
+        word = "admin";
+    else if (searchFunctionName.includes("SearchKB_User"))
+        word = "user";
+    else
+        word = "search_basic";
+
     $.ajax({
         url: '/Ajax/SearchKB',
         method: 'GET',
         data: {
             searchTerm: searchTerm,
-            filterBy: currentFilter
+            filterBy: currentFilter,
+            searchWord: word
         },
         success: function (data) {
             updateKnowledgeTable(data);
@@ -345,11 +367,20 @@ function filterByStatus() {
         return;
     }
 
+    var word = "";
+    if (filterFunctionName.includes("Filter_Item_Admin"))
+        word = "admin";
+    else if (filterFunctionName.includes("Filter_Item_User"))
+        word = "user";
+    else
+        word = "filter_basic";
+
     $.ajax({
         url: '/Ajax/FilterKBByStatus',
         method: 'GET',
         data: {
-            status: currentStatus
+            status: currentStatus,
+            filterword: word
         },
         success: function (data) {
             updateKnowledgeTable(data);

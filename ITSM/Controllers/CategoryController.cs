@@ -9,6 +9,7 @@ namespace ITSM.Controllers
     public class CategoryController : Controller
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly UserService _userService;
         private readonly User_api _userApi;
         private readonly Todo_api _todoApi;
         private readonly Feedback_api _feedbackApi;
@@ -19,7 +20,7 @@ namespace ITSM.Controllers
         private readonly Role_api _roleApi;
         private readonly Category_api _categoryApi;
 
-        public CategoryController(IHttpContextAccessor httpContextAccessor)
+        public CategoryController(IHttpContextAccessor httpContextAccessor, UserService userService)
         {
             _httpContextAccessor = httpContextAccessor;
             _userApi = new User_api(httpContextAccessor);
@@ -31,14 +32,12 @@ namespace ITSM.Controllers
             _depApi = new Department_api(httpContextAccessor);
             _roleApi = new Role_api(httpContextAccessor);
             _categoryApi = new Category_api(httpContextAccessor);
+            _userService = userService;
         }
 
         public async Task<IActionResult> Category_List()
         {
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             var categoryTask = _categoryApi.GetAllCategory_API();
             await Task.WhenAll(categoryTask);
@@ -58,34 +57,30 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Category_Create()
         {
-            // current user info
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
+            var currentUser = await _userService.GetCurrentUserAsync();
 
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var model = new AllModelVM
+            {
+                user = currentUser
+            };
 
-            ViewBag.Photo = currentUser.photo;
-            ViewBag.PhotoType = currentUser.photo_type;
-
-            return View();
+            return View(model);
         }
 
         [HttpPost]
         public async Task<IActionResult> Category_Create(Category category)
         {
-            // current user info
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
+            var currentUser = await _userService.GetCurrentUserAsync();
 
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
-
-            ViewBag.Photo = currentUser.photo;
-            ViewBag.PhotoType = currentUser.photo_type;
+            var model = new AllModelVM
+            {
+                user = currentUser
+            };
 
             if (category.title == null)
             {
                 ViewBag.Error = "Please fill in all required fields";
-                return View();
+                return View(model);
             }
 
             // Create New Category
@@ -103,45 +98,44 @@ namespace ITSM.Controllers
             else
             {
                 ViewBag.Error = "Create Category Error";
-                return View();
+                return View(model);
             }
         }
 
         public async Task<IActionResult> Category_Info(int id)
         {
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
-
-            ViewBag.Photo = currentUser.photo;
-            ViewBag.PhotoType = currentUser.photo_type;
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             // Get Category
             var category = await _categoryApi.FindByIDCategory_API(id);
 
-            return View(category);
+            var model = new AllModelVM
+            {
+                user = currentUser,
+                category = category
+            };
+
+            return View(model);
         }
 
         [HttpPost]
         public async Task<IActionResult> Category_Info(Category c)
         {
-            // current user info
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
-
-            ViewBag.Photo = currentUser.photo;
-            ViewBag.PhotoType = currentUser.photo_type;
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             // Making concurrent API requests
             var categoryTask = await _categoryApi.FindByIDCategory_API(c.id);
 
+            var model = new AllModelVM
+            {
+                user = currentUser,
+                category = categoryTask
+            };
+
             if (categoryTask.title == null)
             {
                 ViewBag.Error = "Please fill in all required fields";
-                return View(categoryTask);
+                return View(model);
             }
 
             // Update New Category
@@ -156,10 +150,8 @@ namespace ITSM.Controllers
             else
             {
                 ViewBag.Error = "Update Category Error";
-                return View(categoryTask);
+                return View(model);
             }
         }
-
-
     }
 }

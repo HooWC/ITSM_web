@@ -1,4 +1,5 @@
-﻿
+﻿@using ITSM_DomainModelEntity.ViewModels
+@model AllModelVM
 @{
     ViewData["Title"] = "KB_Read";
     Layout = "_Layout";
@@ -6,33 +7,34 @@
 
 <style>
     body {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: #121212;
-        background-image: linear-gradient(to bottom, #151515, #0e0e0e);
-        line-height: 1.6;
-        font-size: 16px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #121212;
+    background-image: linear-gradient(to bottom, #151515, #0e0e0e);
+    line-height: 1.6;
+    font-size: 16px;
     }
 
     header {
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        background-color: #121212;
-        padding: 10px 20px;
-        border: none;
-        margin-bottom: 0px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    background-color: #121212;
+    padding: 10px 20px;
+    border: none;
+    margin-bottom: 0px;
     }
 </style>
 
 <header class="KB3-header">
     <div class="KB3-user-profile nav-item navbar-dropdown dropdown-user dropdown open-button">
         <a class="nav-link dropdown-toggle hide-arrow p-0"
-           href="javascript:void(0);"
-           data-bs-toggle="dropdown">
+        href="javascript:void(0);"
+        data-bs-toggle="dropdown">
             <div class="avatar avatar-online">
-                <img src="https://www.diydoutu.com/touxiang/20201222-1.jpg" alt class="w-px-40 h-auto rounded-circle" />
+                <img src="@(Model.user.photo != null ? $"data:{Model.user.photo_type};base64," +  Convert.ToBase64String(Model.user.photo) :
+                            Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 rounded-circle" />
             </div>
         </a>
     </div>
@@ -40,82 +42,173 @@
 
 <nav class="KB3-breadcrumb">
     <ul>
-        <li><a href="#">Home</a></li>
-        <li><a href="#">IT (Knowledge Base)</a></li>
-        <li class="KB3-active">Operating Systems - Windows - Windows Vista</li>
+        <li><a href="~/Knowledge/KB_Home">Home</a></li>
+        @if (Model.kb_search_word != null)
+        {
+            <li><a href="~/Knowledge/KB_Search?kb_search_word=@Model.kb_search_word">All (Knowledge Base)</a></li>
+        }
+        else if (Model.kb_search_all != null)
+        {
+            <li><a href="~/Knowledge/KB_Search?showall=all">All (Knowledge Base)</a></li>
+        }
+        else
+        {
+            <li><a href="~/Knowledge/KB_Search?categorytitle=@Model.category.id">@Model.category.title (Knowledge Base)</a></li>
+        }
+        <li class="KB3-active">@Model.knowledge.title</li>
     </ul>
 </nav>
 
-<div class="KB3-search-container">
-    <input type="text" placeholder="Search Title...">
-    <button type="submit"><i class="fas fa-search"></i></button>
+<div class="KB-read-search-section">
+    <form action="~/Knowledge/KB_Search" method="get" class="KB-read-search-container">
+        <input autocomplete="off" type="text" name="kb_search_word" placeholder="Search Title...">
+        <button type="submit"><i class="fas fa-search"></i></button>
+    </form>
 </div>
 
 <main class="KB3-main">
     <div class="KB3-article-container">
         <div class="KB3-article-main">
             <div class="KB3-article-header">
-                <div class="KB3-article-id">KB0000018</div>
-                <div class="KB3-article-actions">
-                    <button class="KB3-btn KB3-subscribe-btn">Subscribe</button>
-                    <div class="KB3-dropdown">
-                        <button class="KB3-btn KB3-dropdown-btn">Actions <i class="fas fa-chevron-down"></i></button>
-                    </div>
-                </div>
+                <div class="KB3-article-id">@Model.knowledge.kb_number</div>
             </div>
 
-            <h1 class="KB3-article-title">About Windows Vista</h1>
+            <h1 class="KB3-article-title">@Model.knowledge.title</h1>
 
             <div class="KB3-article-meta">
                 <div class="KB3-meta-item">
                     <i class="fas fa-user"></i>
-                    <span>Authored by <a href="#" class="KB3-author-link">Boris Catino</a></span>
+                    <span>Authored by <a href="#" class="KB3-author-link">@Model.knowledge.Author.fullname</a></span>
                 </div>
                 <div class="KB3-meta-item">
                     <i class="fas fa-calendar"></i>
-                    <span>2y ago</span>
-                </div>
-                <div class="KB3-meta-item">
-                    <i class="fas fa-eye"></i>
-                    <span>6 Views</span>
-                </div>
-                <div class="KB3-meta-item">
-                    <div class="KB3-rating">
-                        <span class="KB3-star">&#9734;</span>
-                        <span class="KB3-star">&#9734;</span>
-                        <span class="KB3-star">&#9734;</span>
-                        <span class="KB3-star">&#9734;</span>
-                        <span class="KB3-star">&#9734;</span>
-                    </div>
+                    <span>@Model.knowledge.create_date.ToString("yyyy-MM-dd HH:mm:ss")</span>
                 </div>
             </div>
 
             <div class="KB3-article-content">
-                <h2>About Windows Vista</h2>
-                <p>
-                    Note: If you are migrating from an older operating system, UITS strongly recommends installing Windows 7 rather than Vista. Windows 7 was released three years after Vista and comes with more advanced features and many bug fixes, but has the same hardware requirements. Should you choose to install Vista, use the Windows Vista Upgrade Advisor to make sure your computer is capable of running Vista.
-                </p>
+                @if (Model.knowledge.article != null)
+                {
+                    @Html.Raw(Model.knowledge.article)
+                }
+                else
+                {
+                    @if (Model.knowledge.kb_file != null && Model.knowledge.kb_file.Length > 0)
+                    {
+                        <div class="file-download-container">
+                            <div class="file-download-header">
+                                @{
+                                    string iconClass = "default";
+                                    string fileType = "file";
 
-                <h3>System requirements</h3>
-                <p>
-                    Microsoft's system requirements for Vista are listed below.
-                </p>
-                <p>
-                    Microsoft lists Windows Vista hardware requirements in two categories, Vista Capable and Vista Premium Ready. Vista Capable computers are able to run Vista, but may have limitations in the functionality of some features. Vista Capable minimum hardware requirements are as follows:
-                </p>
-                <ul>
-                    <li>A modern processor (at least 800 MHz)</li>
-                    <li>512 MB of system memory</li>
-                    <li>A graphics processor that is DirectX 9 capable</li>
-                    <li>20 GB of hard drive capacity with 15 GB free space</li>
-                </ul>
+                                    if (!string.IsNullOrEmpty(Model.knowledge.kb_type))
+                                    {
+                                        if (Model.knowledge.kb_type.Contains("pdf"))
+                                        {
+                                            iconClass = "pdf";
+                                            fileType = "PDF document";
+                                        }
+                                        else if (Model.knowledge.kb_type.Contains("word") || Model.knowledge.kb_type.Contains("doc"))
+                                        {
+                                            iconClass = "word";
+                                            fileType = "Word document";
+                                        }
+                                        else if (Model.knowledge.kb_type.Contains("sheet") || Model.knowledge.kb_type.Contains("excel") || Model.knowledge.kb_type.Contains("xls"))
+                                        {
+                                            iconClass = "excel";
+                                            fileType = "Excel spreadsheet";
+                                        }
+                                        else if (Model.knowledge.kb_type.Contains("presentation") || Model.knowledge.kb_type.Contains("ppt"))
+                                        {
+                                            iconClass = "ppt";
+                                            fileType = "PowerPoint presentation";
+                                        }
+                                    }
+                                }
+
+                                <div class="file-icon @iconClass">
+                                    @if (iconClass == "pdf")
+                                    {
+                                        <i class="fa-solid fa-file-pdf"></i>
+                                    }
+                                    else if (iconClass == "word")
+                                    {
+                                        <i class="fa-solid fa-file-word"></i>
+                                    }
+                                    else if (iconClass == "excel")
+                                    {
+                                        <i class="fa-solid fa-file-excel"></i>
+                                    }
+                                    else if (iconClass == "ppt")
+                                    {
+                                        <i class="fa-solid fa-file-powerpoint"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="fa-solid fa-file"></i>
+                                    }
+                                </div>
+
+                                <div class="file-info-wrapper">
+                                    <div class="file-name">Knowledge File - @Model.knowledge.kb_number</div>
+                                    <div class="file-details">@fileType | @(Model.knowledge.kb_file.Length / 1024) KB</div>
+                                </div>
+
+                                <button type="button" class="download-button" onclick="downloadFile(@Model.knowledge.id)">
+                                    <i class="fa-solid fa-download"></i>
+                                    Download
+                                </button>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="file-download-container">
+                            <div class="no-file-message">
+                                <i class="fa-solid fa-file-circle-xmark" style="font-size: 32px; color: #666666; margin-bottom: 12px;"></i>
+                                <p>No knowledge content or file available</p>
+                            </div>
+                        </div>
+                    }
+                }
             </div>
         </div>
 
         <div class="KB3-article-sidebar">
             <div class="KB3-sidebar-section">
                 <h3>Most Useful</h3>
-                <div class="KB3-no-content">No content to display</div>
+                @if (Model.KnowledgeList.Count > 0)
+                {
+                    @foreach(var i in Model.KnowledgeList)
+                    {
+                        @if (Model.kb_search_word != null)
+                        {
+                            <a href="~/Knowledge/KB_Read?kbid=@i.id&kbsearchword=@Model.kb_search_word" class="KB3-knowledge-item">
+                                <p class="KB3-kb-number">@i.kb_number</p>
+                                <p class="KB3-kb-title">@i.title</p>
+                            </a>
+                        }
+                        else if (Model.category != null)
+                        {
+                            <a href="~/Knowledge/KB_Read?kbid=@i.id" class="KB3-knowledge-item">
+                                <p class="KB3-kb-number">@i.kb_number</p>
+                                <p class="KB3-kb-title">@i.title</p>
+                            </a>
+                        }
+                        else
+                        {
+                            <a href="~/Knowledge/KB_Read?kbid=@i.id&showall=all" class="KB3-knowledge-item">
+                                <p class="KB3-kb-number">@i.kb_number</p>
+                                <p class="KB3-kb-title">@i.title</p>
+                            </a>
+                        }
+                        
+                    }
+                }
+                else
+                {
+                    <div class="KB3-no-content">No content to display</div>
+                }
             </div>
         </div>
     </div>
@@ -132,5 +225,9 @@
 
       $('#Knowledge_menu_u_read').addClass("active");
     });
+
+    function downloadFile(id) {
+        window.location.href = '/Knowledge/DownloadKBFile?id=' + id;
+    }
 </script>
 

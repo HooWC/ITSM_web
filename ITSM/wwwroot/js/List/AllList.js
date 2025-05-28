@@ -379,10 +379,8 @@ function filterByStatus() {
     }
 
     var word = "";
-    if (filterFunctionName.includes("Assigned_to_me_Assigned_FilterIncident"))
-        word = "tome";
-    else if (filterFunctionName.includes("Assigned_to_team_Assigned_FilterIncident"))
-        word = "toteam";
+    if (filterFunctionName.includes("Filter_Item_Admin"))
+        word = "admin";
     else if (filterFunctionName.includes("FilterIncident_user"))
         word = "user";
     else

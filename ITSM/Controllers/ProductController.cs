@@ -9,6 +9,7 @@ namespace ITSM.Controllers
     public class ProductController : Controller
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly UserService _userService;
         private readonly User_api _userApi;
         private readonly Todo_api _todoApi;
         private readonly Feedback_api _feedbackApi;
@@ -21,8 +22,9 @@ namespace ITSM.Controllers
         private readonly Product_api _productApi;
         private readonly Department_api _departmentApi;
 
-        public ProductController(IHttpContextAccessor httpContextAccessor)
+        public ProductController(IHttpContextAccessor httpContextAccessor, UserService userService)
         {
+            _userService = userService;
             _httpContextAccessor = httpContextAccessor;
             _userApi = new User_api(httpContextAccessor);
             _todoApi = new Todo_api(httpContextAccessor);
@@ -39,10 +41,7 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Product_List()
         {
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             var productTask = _productApi.GetAllProduct_API();
             var categoryTask = _categoryApi.GetAllCategory_API();
@@ -72,14 +71,7 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Product_Create()
         {
-            // current user info
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
-
-            ViewBag.Photo = currentUser.photo;
-            ViewBag.PhotoType = currentUser.photo_type;
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             var categoryTask = _categoryApi.GetAllCategory_API();
             var departmentTask = _departmentApi.GetAllDepartment_API();
@@ -90,6 +82,7 @@ namespace ITSM.Controllers
 
             var model = new AllModelVM()
             {
+                user = currentUser,
                 CategoryList = allCategory,
                 DepartmentList = allDepartment
             };
@@ -100,14 +93,7 @@ namespace ITSM.Controllers
         [HttpPost]
         public async Task<IActionResult> Product_Create(IFormFile file, Product product)
         {
-            // current user info
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
-
-            ViewBag.Photo = currentUser.photo;
-            ViewBag.PhotoType = currentUser.photo_type;
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             var categoryTask = _categoryApi.GetAllCategory_API();
             var departmentTask = _departmentApi.GetAllDepartment_API();
@@ -120,6 +106,7 @@ namespace ITSM.Controllers
 
             var model = new AllModelVM()
             {
+                user = currentUser,
                 CategoryList = allCategory,
                 DepartmentList = allDepartment
             };
@@ -193,14 +180,7 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Product_Info(int id)
         {
-            // current user info
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
-
-            ViewBag.Photo = currentUser.photo;
-            ViewBag.PhotoType = currentUser.photo_type;
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             var categoryTask = _categoryApi.GetAllCategory_API();
             var departmentTask = _departmentApi.GetAllDepartment_API();
@@ -216,6 +196,7 @@ namespace ITSM.Controllers
 
             var model = new AllModelVM()
             {
+                user = currentUser,
                 product = pro_info,
                 CategoryList = allCategory,
                 DepartmentList = allDepartment
@@ -227,14 +208,7 @@ namespace ITSM.Controllers
         [HttpPost]
         public async Task<IActionResult> Product_Info(IFormFile file, Product product)
         {
-            // current user info
-            var tokenService = new TokenService(_httpContextAccessor);
-            var currentUser_token = tokenService.GetUserInfo();
-
-            var currentUser = await _userApi.FindByIDUser_API(currentUser_token.id);
-
-            ViewBag.Photo = currentUser.photo;
-            ViewBag.PhotoType = currentUser.photo_type;
+            var currentUser = await _userService.GetCurrentUserAsync();
 
             var categoryTask = _categoryApi.GetAllCategory_API();
             var departmentTask = _departmentApi.GetAllDepartment_API();
@@ -249,6 +223,7 @@ namespace ITSM.Controllers
 
             var model = new AllModelVM()
             {
+                user = currentUser,
                 product = pro_info,
                 CategoryList = allCategory,
                 DepartmentList = allDepartment
