@@ -61,7 +61,7 @@ id="layout-navbar">
                         </div>
                         <div class="col-sm-5 text-center text-sm-left">
                             <div class="card-body pb-0 px-0 px-md-6">
-                                <img src="../assets/img/illustrations/man-with-laptop.png"
+                                <img src="~/assets/img/illustrations/man-with-laptop.png"
                                 height="175"
                                 alt="View Badge User" />
                             </div>
@@ -79,7 +79,7 @@ id="layout-navbar">
                             <div class="card-body">
                                 <div class="card-title d-flex align-items-start justify-content-between mb-4">
                                     <div class="avatar flex-shrink-0">
-                                        <img src="../assets/img/icons/unicons/chart-success.png"
+                                        <img src="~/assets/img/icons/unicons/chart-success.png"
                                         alt="chart success"
                                         class="rounded" />
                                     </div>
@@ -93,7 +93,7 @@ id="layout-navbar">
                                             <i class="icon-base bx bx-dots-vertical-rounded text-body-secondary"></i>
                                         </button>
                                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt3">
-                                            <a class="dropdown-item" href="javascript:void(0);">
+                                            <a class="dropdown-item infor-today" href="javascript:void(0);">
                                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                     <circle cx="12" cy="12" r="10"></circle>
                                                     <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
@@ -104,7 +104,11 @@ id="layout-navbar">
                                         </div>
                                     </div>
                                 </div>
-                                <p class="mb-1">Incidents</p>
+                                <p class="mb-1">Incidents 
+                                    <span class="badge bg-label-info" style="font-size:0.5rem;">
+                                        TODAY
+                                    </span>
+                                </p>
                                 <h4 class="card-title mb-3">@Model.today_inc_count</h4>
                                 @if (Model.today_inc_percent != 0)
                                 {
@@ -122,7 +126,7 @@ id="layout-navbar">
                             <div class="card-body">
                                 <div class="card-title d-flex align-items-start justify-content-between mb-4">
                                     <div class="avatar flex-shrink-0">
-                                        <img src="../assets/img/icons/unicons/wallet-info.png"
+                                        <img src="~/assets/img/icons/unicons/wallet-info.png"
                                         alt="wallet info"
                                         class="rounded" />
                                     </div>
@@ -136,7 +140,7 @@ id="layout-navbar">
                                             <i class="icon-base bx bx-dots-vertical-rounded text-body-secondary"></i>
                                         </button>
                                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt6">
-                                            <a class="dropdown-item" href="javascript:void(0);">
+                                            <a class="dropdown-item infor-today" href="javascript:void(0);">
                                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                     <circle cx="12" cy="12" r="10"></circle>
                                                     <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
@@ -147,7 +151,11 @@ id="layout-navbar">
                                         </div>
                                     </div>
                                 </div>
-                                <p class="mb-1">Requests</p>
+                                <p class="mb-1">Requests 
+                                    <span class="badge bg-label-info" style="font-size:0.5rem;">
+                                        TODAY
+                                    </span>
+                                </p>
                                 <h4 class="card-title mb-3">@Model.today_req_count</h4>
                                 @if (Model.today_req_percent != 0)
                                 {
@@ -263,7 +271,7 @@ id="layout-navbar">
                             <div class="card-body">
                                 <div class="card-title d-flex align-items-start justify-content-between mb-4">
                                     <div class="avatar flex-shrink-0">
-                                        <img src="../assets/img/icons/unicons/paypal.png" alt="paypal" class="rounded" />
+                                        <img src="~/assets/img/icons/unicons/paypal.png" alt="paypal" class="rounded" />
                                     </div>
                                     <div class="dropdown">
                                         <button class="btn p-0"
@@ -275,7 +283,7 @@ id="layout-navbar">
                                             <i class="icon-base bx bx-dots-vertical-rounded text-body-secondary"></i>
                                         </button>
                                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt4">
-                                            <a class="dropdown-item" href="javascript:void(0);">
+                                            <a class="dropdown-item infor-today" href="javascript:void(0);">
                                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                     <circle cx="12" cy="12" r="10"></circle>
                                                     <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
@@ -286,7 +294,11 @@ id="layout-navbar">
                                         </div>
                                     </div>
                                 </div>
-                                <p class="mb-1">Feedbacks</p>
+                                <p class="mb-1">Feedbacks 
+                                    <span class="badge bg-label-info" style="font-size:0.5rem;">
+                                        TODAY
+                                    </span>
+                                </p>
                                 <h4 class="card-title mb-3">@Model.today_fd_count</h4>
                                 @if (Model.today_fd_percent != 0)
                                 {
@@ -304,7 +316,7 @@ id="layout-navbar">
                             <div class="card-body">
                                 <div class="card-title d-flex align-items-start justify-content-between mb-4">
                                     <div class="avatar flex-shrink-0">
-                                        <img src="../assets/img/icons/unicons/cc-primary.png" alt="Credit Card" class="rounded" />
+                                        <img src="~/assets/img/icons/unicons/cc-primary.png" alt="Credit Card" class="rounded" />
                                     </div>
                                     <div class="dropdown">
                                         <button class="btn p-0"
@@ -316,7 +328,7 @@ id="layout-navbar">
                                             <i class="icon-base bx bx-dots-vertical-rounded text-body-secondary"></i>
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="cardOpt1">
-                                            <a class="dropdown-item" href="javascript:void(0);">
+                                            <a class="dropdown-item infor-today" href="javascript:void(0);">
                                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                     <circle cx="12" cy="12" r="10"></circle>
                                                     <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
@@ -327,7 +339,11 @@ id="layout-navbar">
                                         </div>
                                     </div>
                                 </div>
-                                <p class="mb-1">Knowledges</p>
+                                <p class="mb-1">Knowledges 
+                                    <span class="badge bg-label-info" style="font-size:0.5rem;">
+                                        TODAY
+                                    </span>
+                                </p>
                                 <h4 class="card-title mb-3">@Model.today_kb_count</h4>
                                 @if (Model.today_kb_percent != 0)
                                 {
@@ -390,8 +406,12 @@ id="layout-navbar">
                 <div class="card h-100">
                     <div class="card-header d-flex justify-content-between">
                         <div class="card-title mb-0">
-                            <h5 class="mb-1 me-2">Total Statistics (User Information)</h5>
-                            <p class="card-subtitle">Analytics data about this week only</p>
+                            <h5 class="mb-1 me-2">Total Statistics (Personal)</h5>
+                            <p class="card-subtitle">
+                                <span class="badge bg-label-info" style="font-size:0.6rem;">
+                                    THIS WEEK DATA
+                                </span>
+                            </p>
                         </div>
                         <div class="dropdown">
                             <button class="btn text-body-secondary p-0"
@@ -504,27 +524,49 @@ id="layout-navbar">
                             <div class="tab-pane fade show active" id="navs-tabs-line-card-income" role="tabpanel">
                                 <div class="d-flex mb-6">
                                     <div class="avatar flex-shrink-0 me-3">
-                                        <img src="../assets/img/icons/unicons/wallet.png" alt="User" />
+                                        <span class="avatar-initial rounded-2 bg-label-primary">
+                                            <i class="fa-solid fa-chart-simple"></i>
+                                        </span>
                                     </div>
                                     <div>
-                                        <p class="mb-0">Total Balance</p>
+                                        <p class="mb-0">
+                                            <span class="badge bg-label-warning">
+                                                YEAR
+                                                <script>
+                                                    document.write(new Date().getFullYear());
+                                                </script>
+                                            </span>
+                                        </p>
                                         <div class="d-flex align-items-center">
-                                            <h6 class="mb-0 me-1">$459.10</h6>
-                                            <small class="text-success fw-medium">
-                                                <i class="icon-base bx bx-chevron-up icon-lg"></i>
-                                                42.9%
-                                            </small>
+                                            <h6 class="mb-0 me-1">@Model.yearly_req_total</h6>
+
+                                            @if (Model.yearly_req_completed_percent > 0){
+                                                <small class="text-success fw-medium">
+                                                    <i class="icon-base bx bx-chevron-up icon-lg"></i>
+                                                    @($"{Model.yearly_req_completed_percent:F2}%")
+                                                </small>
+                                            }else{
+                                                <small class="text-success fw-medium">
+                                                    - 
+                                                    @($"{Model.yearly_req_completed_percent:F2}%")
+                                                </small>
+                                            }
+                                            
                                         </div>
                                     </div>
                                 </div>
                                 <div id="incomeChart"></div>
+                                <div id="requestChartStatsData" data-stats='@Json.Serialize(Model.MonthlyRequestStats)' style="display: none;"></div>
                                 <div class="d-flex align-items-center justify-content-center mt-6 gap-3">
                                     <div class="flex-shrink-0">
                                         <div id="expensesOfWeek"></div>
+                                        <div id="requestOtherStateStatsData" data-stats='@Json.Serialize(Model.yearly_req_other_percent)' style="display: none;"></div>
                                     </div>
                                     <div>
-                                        <h6 class="mb-0">Income this week</h6>
-                                        <small>$39k less than last week</small>
+                                        <h6 class="mb-0">Other state for this year</h6>
+                                        <small>
+                                            @Model.yearly_req_other_count still processing
+                                        </small>
                                     </div>
                                 </div>
                             </div>
@@ -534,7 +576,7 @@ id="layout-navbar">
             </div>
             <!--/ Expense Overview -->
 
-            <!-- Transactions -->
+            <!-- Announcement -->
             <div class="col-md-6 col-lg-4 order-2 mb-6">
                 <div class="card h-100">
                     <div class="card-header d-flex align-items-center justify-content-between">
@@ -593,7 +635,7 @@ id="layout-navbar">
                     </div>
                 </div>
             </div>
-            <!--/ Transactions -->
+            <!--/ Announcement -->
 
         </div>
     </div>

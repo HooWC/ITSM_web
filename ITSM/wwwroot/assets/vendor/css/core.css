@@ -12430,12 +12430,16 @@ li:not(:first-child) .dropdown-item, .dropdown-menu .dropdown-item:not(:first-ch
 }
 
     .d-block:hover{
-        text-decoration:none;
+        text-decoration:underline;
     }
 
-    .d-grid {
-        display: grid !important;
-    }
+.infor-today:hover{
+    text-decoration:none;
+}
+
+.d-grid {
+    display: grid !important;
+}
 
 .d-table {
     display: table !important;

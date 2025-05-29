@@ -158,12 +158,13 @@ document.addEventListener('DOMContentLoaded', function (e) {
       height: 300,
       type: 'bar',
       stacked: true,
-      toolbar: { show: false }
+      toolbar: { show: false },
+      background: 'transparent'
     },
     plotOptions: {
       bar: {
         horizontal: false,
-        columnWidth: '30%',
+        columnWidth: '50%',
         borderRadius: 8,
         startingShape: 'rounded',
         endingShape: 'rounded'
@@ -201,8 +202,8 @@ document.addEventListener('DOMContentLoaded', function (e) {
       }
     },
     grid: {
-      strokeDashArray: 7,
       borderColor: borderColor,
+      strokeDashArray: 7,
       padding: {
         top: 0,
         bottom: -8,
@@ -232,6 +233,9 @@ document.addEventListener('DOMContentLoaded', function (e) {
           fontSize: '13px',
           fontFamily: fontFamily,
           colors: labelColor
+        },
+        formatter: function(val) {
+          return Math.abs(val);
         }
       }
     },
@@ -280,10 +284,16 @@ document.addEventListener('DOMContentLoaded', function (e) {
 
               // Update chart data
             totalRevenueChart.updateOptions({
+              colors: [config.colors.info, config.colors.primary],
               yaxis: {
                 labels: {
+                  style: {
+                    fontSize: '13px',
+                    fontFamily: fontFamily,
+                    colors: labelColor
+                  },
                   formatter: function(val) {
-                    return Math.abs(val); // Show absolute value
+                    return Math.abs(val);
                   }
                 }
               }
@@ -799,11 +809,9 @@ document.addEventListener('DOMContentLoaded', function (e) {
   // --------------------------------------------------------------------
   const incomeChartEl = document.querySelector('#incomeChart'),
     incomeChartConfig = {
-      series: [
-        {
-          data: [21, 30, 22, 42, 26, 35, 29,30,21,15,28,45]
-        }
-      ],
+      series: [{
+        data: []  // 将在下面用实际数据填充
+      }],
       chart: {
         height: 200,
         parentHeightOffset: 0,
@@ -832,7 +840,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
           {
             fillColor: config.colors.white,
             seriesIndex: 0,
-            dataPointIndex: 6,
+            dataPointIndex: 11,  // 更改为12月
             strokeColor: config.colors.primary,
             strokeWidth: 2,
             size: 6,
@@ -866,7 +874,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
         }
       },
       xaxis: {
-          categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
         axisBorder: {
           show: false
         },
@@ -884,22 +892,58 @@ document.addEventListener('DOMContentLoaded', function (e) {
       yaxis: {
         labels: {
           show: false
-        },
-        min: 10,
-        max: 50,
-        tickAmount: 4
+        }
       }
     };
   if (typeof incomeChartEl !== undefined && incomeChartEl !== null) {
     const incomeChart = new ApexCharts(incomeChartEl, incomeChartConfig);
-    incomeChart.render();
+    
+    // 获取请求数据
+    const requestChartElement = document.querySelector('#requestChartStatsData');
+    if (requestChartElement && requestChartElement.dataset.stats) {
+      try {
+        const monthlyData = JSON.parse(requestChartElement.dataset.stats);
+        incomeChartConfig.series[0].data = monthlyData.map(item => item.requestCount);
+        incomeChart.render();
+      } catch (error) {
+        console.error('Error parsing request chart data:', error);
+        incomeChart.render();
+      }
+    } else {
+      incomeChart.render();
+    }
   }
 
   // Expenses Mini Chart - Radial Chart
   // --------------------------------------------------------------------
-  const weeklyExpensesEl = document.querySelector('#expensesOfWeek'),
-    weeklyExpensesConfig = {
-      series: [65],
+  const weeklyExpensesEl = document.querySelector('#expensesOfWeek');
+  
+  if (typeof weeklyExpensesEl !== undefined && weeklyExpensesEl !== null) {
+    // 获取其他状态百分比数据
+    const requestOtherStateElement = document.querySelector('#requestOtherStateStatsData');
+    console.log('requestOtherStateElement:', requestOtherStateElement);
+    
+    let percentValue = 0;
+    
+    if (requestOtherStateElement && requestOtherStateElement.dataset.stats) {
+      console.log('Raw stats data:', requestOtherStateElement.dataset.stats);
+      try {
+        const otherStatePercent = parseFloat(requestOtherStateElement.dataset.stats);
+        console.log('Parsed otherStatePercent:', otherStatePercent);
+        
+        if (!isNaN(otherStatePercent)) {
+          console.log('Setting series to:', otherStatePercent);
+          percentValue = otherStatePercent;
+        }
+      } catch (error) {
+        console.error('Error parsing other state percentage:', error);
+      }
+    } else {
+      console.log('Element or data-stats not found');
+    }
+
+    const weeklyExpensesConfig = {
+      series: [percentValue],
       chart: {
         width: 60,
         height: 60,
@@ -924,7 +968,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
             },
             value: {
               formatter: function (val) {
-                return '$' + parseInt(val);
+                return Math.round(val) + '%';
               },
               offsetY: 5,
               color: legendColor,
@@ -963,7 +1007,8 @@ document.addEventListener('DOMContentLoaded', function (e) {
         }
       }
     };
-  if (typeof weeklyExpensesEl !== undefined && weeklyExpensesEl !== null) {
+
+    console.log('Final config series:', weeklyExpensesConfig.series);
     const weeklyExpenses = new ApexCharts(weeklyExpensesEl, weeklyExpensesConfig);
     weeklyExpenses.render();
   }

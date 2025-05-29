@@ -67,6 +67,26 @@ public class HomeController : Controller
         var today = DateTime.Today;
         var tomorrow = today.AddDays(1); // Get tomorrow's date to calculate today's data
 
+        // Calculate request statistics for this year
+        var startOfYear = new DateTime(today.Year, 1, 1);
+        var endOfYear = new DateTime(today.Year, 12, 31, 23, 59, 59);
+
+        // Get all requests for this year
+        var yearlyRequests = allReq.Where(x => x.create_date >= startOfYear && x.create_date <= endOfYear).ToList();
+        var yearlyRequestsTotal = yearlyRequests.Count;
+
+        // Count completed requests
+        var completedRequests = yearlyRequests.Count(x => x.state == "Completed");
+        var completedRequestsPercent = yearlyRequestsTotal > 0 
+            ? Math.Round((double)completedRequests / yearlyRequestsTotal * 100, 2) 
+            : 0;
+
+        // Request to calculate other status
+        var otherStateRequests = yearlyRequestsTotal - completedRequests;
+        var otherStateRequestsPercent = yearlyRequestsTotal > 0 
+            ? Math.Round((double)otherStateRequests / yearlyRequestsTotal * 100, 2) 
+            : 0;
+
         // Calculate today's statistics
         var today_inc = allInc
             .Where(x => x.create_date >= today && x.create_date < tomorrow)
@@ -118,9 +138,6 @@ public class HomeController : Controller
         var kb_c = allKB.Count(x => x.create_date >= startOfWeek && x.create_date <= endOfWeek);
         var fd_c = allFD.Count(x => x.create_date >= startOfWeek && x.create_date <= endOfWeek);
 
-        var startOfYear = new DateTime(today.Year, 1, 1);
-        var endOfYear = new DateTime(today.Year, 12, 31, 23, 59, 59);
-
         // Calculate todo data
         var todo_c = allTodo.Count(x =>
             x.create_date >= startOfYear &&
@@ -162,6 +179,24 @@ public class HomeController : Controller
 
         // Reverse the list so it's in chronological order
         monthlyTodoStats.Reverse();
+
+        // Calculate request statistics for each month of this year
+        var monthlyRequestStats = new List<MonthlyRequestStats>();
+        for (int month = 1; month <= 12; month++)
+        {
+            var monthStart = new DateTime(currentYear, month, 1);
+            var monthEnd = monthStart.AddMonths(1).AddDays(-1);
+
+            var requestCount = allReq.Count(x => 
+                x.create_date >= monthStart && 
+                x.create_date <= monthEnd);
+
+            monthlyRequestStats.Add(new MonthlyRequestStats
+            {
+                MonthName = monthStart.ToString("MMM"),
+                RequestCount = requestCount
+            });
+        }
 
         var yearlyStats = new Dictionary<int, Dictionary<int, (int resolvedCount, int otherCount)>>();
 
@@ -241,7 +276,13 @@ public class HomeController : Controller
             today_kb_count = today_kb,
             today_kb_percent = kb_percent,
             today_fd_count = today_fd,
-            today_fd_percent = fd_percent
+            today_fd_percent = fd_percent,
+            yearly_req_total = yearlyRequestsTotal,
+            yearly_req_completed_count = completedRequests,
+            yearly_req_completed_percent = completedRequestsPercent,
+            yearly_req_other_count = otherStateRequests,
+            yearly_req_other_percent = otherStateRequestsPercent,
+            MonthlyRequestStats = monthlyRequestStats
         };
 
         if (currentUser.Role.role.ToLower() == "user")

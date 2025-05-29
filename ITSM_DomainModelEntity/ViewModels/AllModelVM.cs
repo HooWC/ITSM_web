@@ -33,6 +33,12 @@ namespace ITSM_DomainModelEntity.ViewModels
         public int ActiveCount { get; set; }
     }
 
+    public class MonthlyRequestStats
+    {
+        public string MonthName { get; set; }
+        public int RequestCount { get; set; }
+    }
+
     public class AllModelVM
     {
         public User? user { get; set; }
@@ -110,16 +116,27 @@ namespace ITSM_DomainModelEntity.ViewModels
         public int today_fd_count { get; set; }
         public double today_fd_percent { get; set; }
 
+        //== 今年Request统计
+        public int yearly_req_total { get; set; }                 // 今年请求总数
+        public int yearly_req_completed_count { get; set; }       // 今年已完成请求数
+        public double yearly_req_completed_percent { get; set; }  // 今年已完成请求百分比
+        public int yearly_req_other_count { get; set; }          // 今年其他状态请求数
+        public double yearly_req_other_percent { get; set; }     // 今年其他状态请求百分比
+
         //== Incidents yearly statistics attributes
         public List<YearlyStats> YearlyIncidentStats { get; set; }
 
         //== Todo monthly statistics
         public List<MonthlyTodoStats> MonthlyTodoStats { get; set; }
 
+        //== Request monthly statistics
+        public List<MonthlyRequestStats> MonthlyRequestStats { get; set; }
+
         public AllModelVM()
         {
             YearlyIncidentStats = new List<YearlyStats>();
             MonthlyTodoStats = new List<MonthlyTodoStats>();
+            MonthlyRequestStats = new List<MonthlyRequestStats>();
         }
     }
 }
