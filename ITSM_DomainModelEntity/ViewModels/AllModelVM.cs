@@ -48,6 +48,8 @@ namespace ITSM_DomainModelEntity.ViewModels
         public List<Category>? CategoryList { get; set; }
         public Announcement? announcement { get; set; }
         public List<Announcement>? AnnouncementList { get; set; }
+        public Myversion? myversion { get; set; }
+        public List<Myversion>? MyversionList { get; set; }  
         public CMDB? CMDB { get; set; }
         public List<CMDB>? CMDBList { get; set; }
         public Department? department { get; set; }

@@ -1,0 +1,113 @@
+﻿@using ITSM_DomainModelEntity.ViewModels
+@model AllModelVM
+@{
+    ViewData["Title"] = "About_ITSM";
+    Layout = "_Layout";
+}
+
+<link rel="icon" type="image/x-icon" href="~/assets/img/favicon/favicon.ico" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="~/css/Info/Info.css" />
+
+<style>
+    /* .layout-page {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    } */
+
+    .dropdown-user {
+        position: fixed;
+        top: 7px;
+        right: 350px;
+        z-index: 1000;
+    }
+</style>
+
+<div class="artic-word-body">
+    <header class="artic-word-header">
+        <p class="artic-word-title"><i class="fa-solid fa-book"></i> About ITSM</p>
+        <div class="nav-item navbar-dropdown dropdown-user dropdown open-button">
+            <a class="nav-link dropdown-toggle hide-arrow p-0"
+               href="javascript:void(0);"
+               data-bs-toggle="dropdown">
+                <div class="avatar avatar-online">
+                    <img src="@(Model.user.photo != null ? $"data:{Model.user.photo_type};base64," +  Convert.ToBase64String(Model.user.photo) :
+                            Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 rounded-circle" />
+                </div>
+            </a>
+        </div>
+    </header>
+    <div class="artic-word-scroll-indicator"></div>
+    <main class="artic-word-main">
+        <h2 class="artic-word-heading">What is ITSM? A Comprehensive Solution for Enhancing Enterprise IT Service Quality.</h2>
+        <p>ITSM (IT Service Management) is a process-based approach used to design, deliver, manage, and improve IT services within an organization. Centered around the user, ITSM leverages systematic and standardized management practices to help businesses improve service efficiency, reduce operational costs, and enhance user satisfaction. In modern enterprises, ITSM is no longer exclusive to large organizations — it has become an essential tool for optimizing IT operations, unifying service processes, and boosting internal collaboration across all types of organizations.</p>
+        <p>A comprehensive ITSM system typically includes multiple core modules. Below is an introduction to five key modules of the HSG ITSM system, which help users fully understand the role and value of ITSM:</p>
+        <hr />
+        <h3>1. Incident Management</h3>
+        <p>Goal: Rapid service recovery and minimized business downtime</p>
+
+        <p>Incident management handles various IT failures, errors, or service interruptions such as system inaccessibility, unstable networks, or application malfunctions. Through standardized workflows, IT teams can classify, assign, track, and resolve incidents in a timely and controlled manner.</p>
+
+        <p>The module supports features like automated notifications, priority management, and SLA (Service Level Agreement) monitoring to ensure high-priority issues receive immediate attention, thereby minimizing business impact.</p>
+        <hr />
+        <h3>2. Request Management</h3>
+        <p>Goal: Standardized service request processes and improved user experience</p>
+        <p>Request management deals with predictable user service needs, such as new account applications, equipment repair, access changes, or software installation. Unlike incidents, these are expected services that can be standardized using templates and workflows.</p>
+        <p>This module allows users to submit requests via online forms, automates approval processes, and enables real-time tracking of request status, thereby increasing IT service efficiency and transparency.</p>
+        <hr />
+        <h3>3. Knowledge Management</h3>
+        <p>Goal: Shared knowledge base to reduce repeated tickets</p>
+
+        <p>The knowledge base module collects and organizes common solutions, user guides, FAQs, and best practices. Based on user input or submitted tickets, the system automatically suggests relevant documentation to help users resolve issues independently, reducing duplicate tickets and inquiries.</p>
+
+        <p>For IT teams, a robust knowledge base facilitates knowledge retention, improves overall efficiency, and ensures consistency in service delivery.</p>
+        <hr />
+        <h3>4. Feedback Management</h3>
+        <p>Goal: Evaluate service quality and drive continuous improvement</p>
+
+        <p>After service delivery, users can provide ratings and feedback through the feedback module. The system generates periodic reports and satisfaction metrics, helping managers identify service bottlenecks and areas for improvement.</p>
+
+        <p>Continuously collecting user feedback is vital for enhancing service quality, building trust, and enabling ongoing optimization.</p>
+        <hr />
+        <h3>5. To-do Management</h3>
+        <p>Goal: Clear task accountability and enhanced team collaboration</p>
+
+        <p>The to-do module provides users and service personnel with a clear task list view, ensuring every task is tracked and addressed without being overlooked.</p>
+
+        <p>This not only improves individual productivity but also facilitates efficient team collaboration and task progress.</p>
+        <hr />
+        <h3>Summary</h3>
+        <p>Through modular design, an ITSM system clarifies and standardizes complex IT service processes, empowering every employee within the enterprise. Whether you're an IT professional, a business user, or part of the management team, this platform enhances communication, collaboration, and responsiveness, helping establish a more stable, efficient, and user-centered IT service framework.</p>
+
+        <p>In the context of digital transformation, selecting and implementing a suitable ITSM system has become a crucial step for organizations striving for high-quality IT operations and overall service excellence.</p>
+    </main>
+    <div class="scroll-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+</div>
+
+
+
+<script>
+    window.addEventListener('scroll', function() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const scrollPercent = scrollTop / docHeight;
+        document.querySelector('.artic-word-scroll-indicator').style.width = scrollPercent * 100 + '%';
+
+        const scrollToTopBtn = document.querySelector('.scroll-to-top');
+        if (scrollTop > 300) {
+            scrollToTopBtn.classList.add('visible');
+        } else {
+            scrollToTopBtn.classList.remove('visible');
+        }
+    });
+    document.querySelector('.scroll-to-top').addEventListener('click', function() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+</script>
+

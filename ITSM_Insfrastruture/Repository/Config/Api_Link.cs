@@ -143,5 +143,14 @@ namespace ITSM_Insfrastruture.Repository.Config
 
         // ============================================================================
 
+        // === For Announcement Part ===
+        // get all & create Announcement  (need token)
+        public static readonly string VersionLink = $"{BaseUrl}/myversions";
+        // search by id & update && delete Announcement  (ID) (need token)
+        public static readonly string VersionSUDLink = $"{BaseUrl}/myversions/";
+        // === For Announcement Part ===
+
+        // ============================================================================
+
     }
 }

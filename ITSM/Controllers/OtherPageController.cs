@@ -49,7 +49,31 @@ namespace ITSM.Controllers
                 user = currentUser
             };
 
-            return View();
+            return View(model);
+        }
+
+        public async Task<IActionResult> About_ITSM()
+        {
+            var currentUser = await _userService.GetCurrentUserAsync();
+
+            var model = new AllModelVM()
+            {
+                user = currentUser
+            };
+
+            return View(model);
+        }
+
+        public async Task<IActionResult> FQA()
+        {
+            var currentUser = await _userService.GetCurrentUserAsync();
+
+            var model = new AllModelVM()
+            {
+                user = currentUser
+            };
+
+            return View(model);
         }
     }
 }

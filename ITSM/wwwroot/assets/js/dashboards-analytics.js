@@ -164,7 +164,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
     plotOptions: {
       bar: {
         horizontal: false,
-        columnWidth: '50%',
+        columnWidth: '40%',
         borderRadius: 8,
         startingShape: 'rounded',
         endingShape: 'rounded'

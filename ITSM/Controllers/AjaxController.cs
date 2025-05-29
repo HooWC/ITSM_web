@@ -28,6 +28,7 @@ namespace ITSM.Controllers
         private readonly Announcement_api _announApi;
         private readonly CMDB_api _cmdbApi;
         private readonly Knowledge_api _kbApi;
+        private readonly Myversion_api _myversionApi;
 
         public AjaxController(IHttpContextAccessor httpContextAccessor)
         {
@@ -45,6 +46,7 @@ namespace ITSM.Controllers
             _announApi = new Announcement_api(httpContextAccessor);
             _cmdbApi = new CMDB_api(httpContextAccessor);
             _kbApi = new Knowledge_api(httpContextAccessor);
+            _myversionApi = new Myversion_api(httpContextAccessor);
         }
 
         private bool IsUserLoggedIn(out User currentUser)
@@ -2742,6 +2744,110 @@ namespace ITSM.Controllers
                     if (KBToDelete != null)
                     {
                         bool result = await _kbApi.DeleteKnowledge_API(id);
+                        if (result)
+                            successCount++;
+                    }
+                }
+
+                if (successCount > 0)
+                {
+                    return Json(new
+                    {
+                        success = true,
+                        message = $"Successfully deleted {successCount} item(s)"
+                    });
+                }
+                else
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Failed to delete items. Items may not exist or you don't have permission"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = $"Error: {ex.Message}" });
+            }
+        }
+
+        /// <summary>
+        /// Knowledge/KB_List
+        public async Task<IActionResult> SearchVersion(string searchTerm, string filterBy = "version")
+        {
+            if (string.IsNullOrEmpty(searchTerm))
+                return Json(new List<Feedback>());
+
+            if (!IsUserLoggedIn(out var currentUser))
+                return Json(new { success = false, message = "Not logged in" });
+
+            var VersionTask = _myversionApi.GetAllMyversion_API();
+
+            await Task.WhenAll(VersionTask);
+
+            var allVersion = VersionTask.Result;
+
+            var userVersion = new List<Myversion>();
+
+            userVersion = allVersion.OrderByDescending(x => x.id).ToList();
+
+            List<Myversion> filteredVersions;
+
+            if (searchTerm == "re_entrynovalue")
+            {
+                filteredVersions = userVersion;
+            }
+            else
+            {
+                switch (filterBy.ToLower())
+                {
+                    case "version":
+                        filteredVersions = userVersion
+                            .Where(t => t.version_num != null && t.version_num.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                    default:
+                        filteredVersions = userVersion;
+                        break;
+                }
+            }
+
+            var result = filteredVersions.Select(t => new {
+                t.id,
+                t.version_num,
+                release_date = t.release_date.ToString("yyyy-MM-dd HH:mm:ss")
+            });
+
+            return Json(result);
+        }
+
+        /// <summary>
+        /// Knowledge/KB_List
+        [HttpPost]
+        public async Task<IActionResult> DeleteVersions([FromBody] List<int> ids)
+        {
+
+            if (ids == null || !ids.Any())
+                return Json(new { success = false, message = "No items selected for deletion" });
+
+            if (!IsUserLoggedIn(out var currentUser))
+                return Json(new { success = false, message = "Not logged in" });
+
+            try
+            {
+                int successCount = 0;
+
+                foreach (var id in ids)
+                {
+                    var allVersions = await _myversionApi.GetAllMyversion_API();
+                    var VersionToDelete = new Myversion();
+                    VersionToDelete = allVersions.FirstOrDefault(x => x.id == id);
+
+
+                    if (VersionToDelete != null)
+                    {
+                        bool result = await _myversionApi.DeleteMyversion_API(id);
                         if (result)
                             successCount++;
                     }

@@ -1,0 +1,147 @@
+﻿
+@{
+    ViewData["Title"] = "Incident_Priority_Info";
+    Layout = "_Layout_Info";
+}
+
+<header class="artic-word-header">
+    <p class="artic-word-title"><i class="fas fa-tasks"></i> ITSM Incident Priority</p>
+</header>
+<div class="artic-word-scroll-indicator"></div>
+<main class="artic-word-main">
+    <h2>A Key Mechanism for IT Service Requests</h2>
+    <p>
+        In the ITSM (IT Service Management) incident system, <strong>priority</strong> is a critical factor that determines the order in which service requests or incidents are addressed. A well-designed priority mechanism helps IT teams allocate resources and dispatch tickets efficiently based on business impact and urgency, thereby ensuring business continuity and improving response effectiveness.
+    </p>
+
+    <hr />
+
+    <h3>1. Composition of Priority: Impact × Urgency</h3>
+    <p>
+        In practice, priority is not determined subjectively, but rather through the combination of two key dimensions:
+    </p>
+
+    <p>
+        <strong>Impact</strong>: The scope of the effect an incident or request has on the business or users. It is classified as:
+        <ul>
+            <li><strong>1 - High</strong>: Affects the entire organization or critical business functions.</li>
+            <li><strong>2 - Medium</strong>: Affects specific departments or non-critical business functions.</li>
+            <li><strong>3 - Low</strong>: Affects individual users or low-sensitivity scenarios.</li>
+        </ul>
+    </p>
+
+    <p>
+        <strong>Urgency</strong>: How quickly the issue needs to be resolved. It is classified as:
+        <ul>
+            <li><strong>1 - High</strong>: Must be resolved immediately to avoid major consequences.</li>
+            <li><strong>2 - Medium</strong>: Should be addressed soon, but some delay is acceptable.</li>
+            <li><strong>3 - Low</strong>: Flexible resolution time that does not impact business continuity.</li>
+        </ul>
+    </p>
+
+    <p>
+        By combining these two dimensions, incidents and requests can be assessed more scientifically to determine their priority.
+    </p>
+
+    <hr />
+
+    <h3>2. Priority Mapping Table</h3>
+
+    <table border="1" cellpadding="8" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Impact</th>
+                <th>Urgency</th>
+                <th>Priority</th>
+                <th>Color Indicator</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1 - High</td>
+                <td>1 - High</td>
+                <td>1 - Critical</td>
+                <td style="color: darkred;">🔴🔴🔴</td>
+            </tr>
+            <tr>
+                <td>1 - High</td>
+                <td>2 - Medium</td>
+                <td>2 - High</td>
+                <td style="color: red;">🔴🔴</td>
+            </tr>
+            <tr>
+                <td>1 - High</td>
+                <td>3 - Low</td>
+                <td>3 - Moderate</td>
+                <td style="color: orange;">🟡</td>
+            </tr>
+            <tr>
+                <td>2 - Medium</td>
+                <td>1 - High</td>
+                <td>2 - High</td>
+                <td style="color: red;">🔴🔴</td>
+            </tr>
+            <tr>
+                <td>2 - Medium</td>
+                <td>2 - Medium</td>
+                <td>3 - Moderate</td>
+                <td style="color: orange;">🟡</td>
+            </tr>
+            <tr>
+                <td>2 - Medium</td>
+                <td>3 - Low</td>
+                <td>4 - Low</td>
+                <td style="color: green;">🟢</td>
+            </tr>
+            <tr>
+                <td>3 - Low</td>
+                <td>1 - High</td>
+                <td>3 - Moderate</td>
+                <td style="color: orange;">🟡</td>
+            </tr>
+            <tr>
+                <td>3 - Low</td>
+                <td>2 - Medium</td>
+                <td>4 - Low</td>
+                <td style="color: green;">🟢</td>
+            </tr>
+            <tr>
+                <td>3 - Low</td>
+                <td>3 - Low</td>
+                <td>5 - Planning</td>
+                <td style="color: teal;">🟦</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr />
+
+    <h3>3. The Purpose of Priority</h3>
+    <p>
+        <strong>Improved Response Efficiency</strong><br />
+        High-priority issues are addressed first, preventing prolonged disruptions to critical business services.
+    </p>
+
+    <p>
+        <strong>Rational Resource Allocation</strong><br />
+        Support personnel and technical resources are assigned dynamically according to priority, minimizing waste.
+    </p>
+
+    <p>
+        <strong>Enhanced User Trust</strong><br />
+        A transparent, visible priority mechanism increases confidence and satisfaction with IT services.
+    </p>
+
+    <hr />
+
+    <h3>4. Practical Recommendations</h3>
+    <p><strong>Auto-Assign Priority</strong>: Use rules in the ticketing system to automatically determine priority based on impact and urgency.</p>
+    <p><strong>Support Manual Adjustment</strong>: Allow human intervention for special cases to ensure flexibility.</p>
+    <p><strong>Color-Based Identification</strong>: Use color indicators in ticket lists and dashboards to enhance visibility and facilitate faster response.</p>
+
+</main>
+<div class="scroll-to-top">
+    <i class="fas fa-arrow-up"></i>
+</div>
+
+
