@@ -11,7 +11,7 @@ namespace ITSM_DomainModelEntity.ViewModels
     {
         public int Month { get; set; }
         public int ResolvedCount { get; set; }
-        public int OtherCount { get; set; }
+        public int? OtherCount { get; set; }
     }
 
     public class YearlyStats
@@ -25,6 +25,12 @@ namespace ITSM_DomainModelEntity.ViewModels
             MonthlyData = new Dictionary<int, MonthlyStats>();
             Growth = 0;
         }
+    }
+
+    public class MonthlyTodoStats
+    {
+        public string MonthName { get; set; }
+        public int ActiveCount { get; set; }
     }
 
     public class AllModelVM
@@ -60,7 +66,6 @@ namespace ITSM_DomainModelEntity.ViewModels
         public string? kb_search_all { get; set; }
 
         //== Personal
-
         public User User { get; set; }
         public int CompletedTodo { get; set; }
         public int TodoCount { get; set; }
@@ -92,18 +97,29 @@ namespace ITSM_DomainModelEntity.ViewModels
         public int todo_count { get; set; }
         public double todo_d_count { get; set; }
 
-        // Analysis Incidents Data
+        //== Today data
+        public int today_inc_count { get; set; }
+        public double today_inc_percent { get; set; }  
+        
+        public int today_req_count { get; set; }
+        public double today_req_percent { get; set; }  
+        
+        public int today_kb_count { get; set; }
+        public double today_kb_percent { get; set; }   
+        
+        public int today_fd_count { get; set; }
+        public double today_fd_percent { get; set; }
+
+        //== Incidents yearly statistics attributes
         public List<YearlyStats> YearlyIncidentStats { get; set; }
+
+        //== Todo monthly statistics
+        public List<MonthlyTodoStats> MonthlyTodoStats { get; set; }
 
         public AllModelVM()
         {
             YearlyIncidentStats = new List<YearlyStats>();
+            MonthlyTodoStats = new List<MonthlyTodoStats>();
         }
-
-        // Today data
-        public int int_t_count { get; set; }
-        public int req_t_count { get; set; }
-        public int kb_t_count { get; set; }
-        public int fd_t_count { get; set; }
     }
 }

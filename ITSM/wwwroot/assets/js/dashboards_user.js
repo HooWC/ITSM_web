@@ -505,107 +505,136 @@ document.addEventListener('DOMContentLoaded', function (e) {
 
     // Profit Report Line Chart
     // --------------------------------------------------------------------
-    const profileReportChartEl = document.querySelector('#profileReportChart'),
-        profileReportChartConfig = {
-            chart: {
-                height: 75,
-                width: 240,
-                type: 'line',
-                toolbar: {
+    const profileReportChartEl = document.querySelector('#profileReportChart');
+
+    // Get Todo statistics
+    const todoStatsElement = document.querySelector('#todoStatsDataMonth');
+    //console.log('Todo Stats Element:', todoStatsElement);
+    let todoData = [0, 0, 0, 0, 0, 0];  // Default is 6 months of data
+
+    if (todoStatsElement && todoStatsElement.dataset.stats) {
+        try {
+            const statsData = JSON.parse(todoStatsElement.dataset.stats);
+            let monthNames = [];
+
+            if (Array.isArray(statsData) && statsData.length === 6) {
+                todoData = statsData.map(item => {
+                    monthNames.push(item.monthName);
+                    return item.activeCount || 0;
+                });
+            }
+
+            const profileReportChartConfig = {
+                chart: {
+                    height: 75,
+                    width: 240,
+                    type: 'line',
+                    toolbar: {
+                        show: false
+                    },
+                    dropShadow: {
+                        enabled: true,
+                        top: 10,
+                        left: 5,
+                        blur: 3,
+                        color: config.colors.warning,
+                        opacity: 0.15
+                    },
+                    sparkline: {
+                        enabled: true
+                    }
+                },
+                grid: {
+                    show: false,
+                    padding: {
+                        right: 8
+                    }
+                },
+                colors: [config.colors.warning],
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    width: 5,
+                    curve: 'smooth'
+                },
+                series: [
+                    {
+                        data: todoData
+                    }
+                ],
+                xaxis: {
+                    categories: monthNames,
+                    labels: {
+                        show: true,
+                        style: {
+                            colors: '#777',
+                            fontSize: '12px'
+                        }
+                    },
+                    axisBorder: {
+                        show: false
+                    },
+                    axisTicks: {
+                        show: false
+                    }
+                },
+                yaxis: {
                     show: false
                 },
-                dropShadow: {
-                    enabled: true,
-                    top: 10,
-                    left: 5,
-                    blur: 3,
-                    color: config.colors.warning,
-                    opacity: 0.15
-                },
-                sparkline: {
-                    enabled: true
-                }
-            },
-            grid: {
-                show: false,
-                padding: {
-                    right: 8
-                }
-            },
-            colors: [config.colors.warning],
-            dataLabels: {
-                enabled: false
-            },
-            stroke: {
-                width: 5,
-                curve: 'smooth'
-            },
-            series: [
-                {
-                    data: [110, 270, 145, 245, 205, 285]
-                }
-            ],
-            xaxis: {
-                show: false,
-                lines: {
-                    show: false
-                },
-                labels: {
-                    show: false
-                },
-                axisBorder: {
-                    show: false
-                }
-            },
-            yaxis: {
-                show: false
-            },
-            responsive: [
-                {
-                    breakpoint: 1700,
-                    options: {
-                        chart: {
-                            width: 200
+                responsive: [
+                    {
+                        breakpoint: 1700,
+                        options: {
+                            chart: {
+                                width: 200
+                            }
+                        }
+                    },
+                    {
+                        breakpoint: 1579,
+                        options: {
+                            chart: {
+                                width: 180
+                            }
+                        }
+                    },
+                    {
+                        breakpoint: 1500,
+                        options: {
+                            chart: {
+                                width: 160
+                            }
+                        }
+                    },
+                    {
+                        breakpoint: 1450,
+                        options: {
+                            chart: {
+                                width: 140
+                            }
+                        }
+                    },
+                    {
+                        breakpoint: 1400,
+                        options: {
+                            chart: {
+                                width: 240
+                            }
                         }
                     }
-                },
-                {
-                    breakpoint: 1579,
-                    options: {
-                        chart: {
-                            width: 180
-                        }
-                    }
-                },
-                {
-                    breakpoint: 1500,
-                    options: {
-                        chart: {
-                            width: 160
-                        }
-                    }
-                },
-                {
-                    breakpoint: 1450,
-                    options: {
-                        chart: {
-                            width: 140
-                        }
-                    }
-                },
-                {
-                    breakpoint: 1400,
-                    options: {
-                        chart: {
-                            width: 240
-                        }
-                    }
-                }
-            ]
-        };
-    if (typeof profileReportChartEl !== undefined && profileReportChartEl !== null) {
-        const profileReportChart = new ApexCharts(profileReportChartEl, profileReportChartConfig);
-        profileReportChart.render();
+                ]
+            };
+
+            if (typeof profileReportChartEl !== undefined && profileReportChartEl !== null) {
+                const profileReportChart = new ApexCharts(profileReportChartEl, profileReportChartConfig);
+                profileReportChart.render();
+            }
+        } catch (error) {
+            console.error('Error parsing todo stats data:', error);
+        }
+    } else {
+        console.log('Todo Stats Element or data not found');
     }
 
     // Order Statistics Chart

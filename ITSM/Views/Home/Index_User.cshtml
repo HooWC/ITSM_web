@@ -75,25 +75,25 @@
                                             </span>
                                         </div>
                                         <div class="mt-sm-auto">
-                                            
-                                                @if (Model.todo_d_count > 0)
-                                                {
-                                                    <span class="text-success text-nowrap fw-medium">
-                                                        <i class="icon-base bx bx-up-arrow-alt"></i> @($"{Model.todo_d_count:F2}%")
-                                                    </span>
-                                                }
-                                                else
-                                                {
-                                                    <span class="text-success text-nowrap fw-medium">
-                                                        - @($"{Model.todo_d_count:F2}%")
-                                                    </span>
-                                                }
 
-                                            </span>
+                                            @if (Model.todo_d_count > 0)
+                                            {
+                                                <span class="text-success text-nowrap fw-medium">
+                                                    <i class="icon-base bx bx-up-arrow-alt"></i> @($"{Model.todo_d_count:F2}%")
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-success text-nowrap fw-medium">
+                                                    - @($"{Model.todo_d_count:F2}%")
+                                                </span>
+                                            }
+
                                             <h4 class="mb-0">@Model.todo_count</h4>
                                         </div>
                                     </div>
                                     <div id="profileReportChart"></div>
+                                    <div id="todoStatsDataMonth" data-stats='@Json.Serialize(Model.MonthlyTodoStats)' style="display: none;"></div>
                                 </div>
                             </div>
                         </div>

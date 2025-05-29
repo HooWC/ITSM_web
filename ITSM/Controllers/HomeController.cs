@@ -65,6 +65,46 @@ public class HomeController : Controller
         var allTodo = todoTask.Result;
 
         var today = DateTime.Today;
+        var tomorrow = today.AddDays(1); // Get tomorrow's date to calculate today's data
+
+        // Calculate today's statistics
+        var today_inc = allInc
+            .Where(x => x.create_date >= today && x.create_date < tomorrow)
+            .Count();
+
+        var today_req = allReq
+            .Where(x => x.create_date >= today && x.create_date < tomorrow)
+            .Count();
+
+        var today_kb = allKB
+            .Where(x => x.create_date >= today && x.create_date < tomorrow)
+            .Count();
+
+        var today_fd = allFD
+            .Where(x => x.create_date >= today && x.create_date < tomorrow)
+            .Count();
+
+        // Calculate historical average data (excluding today)
+        var past_inc_total = allInc.Count(x => x.create_date < today);
+        var past_req_total = allReq.Count(x => x.create_date < today);
+        var past_kb_total = allKB.Count(x => x.create_date < today);
+        var past_fd_total = allFD.Count(x => x.create_date < today);
+
+        // Calculate percentage change
+        double CalcTodayShare(double today_value, double history_total)
+        {
+            if (history_total == 0)
+            {
+                return today_value > 0 ? 100 : 0;
+            }
+
+            return (today_value / history_total) * 100;
+        }
+
+        var inc_percent = Math.Round(CalcTodayShare(today_inc, past_inc_total), 2);
+        var req_percent = Math.Round(CalcTodayShare(today_req, past_req_total), 2);
+        var kb_percent = Math.Round(CalcTodayShare(today_kb, past_kb_total), 2);
+        var fd_percent = Math.Round(CalcTodayShare(today_fd, past_fd_total), 2);
 
         // Get the Monday of this week (Monday is the first day of the week)
         var startOfWeek = today.AddDays(-(int)today.DayOfWeek + (int)DayOfWeek.Monday);
@@ -72,34 +112,57 @@ public class HomeController : Controller
         // Sunday this week
         var endOfWeek = startOfWeek.AddDays(7).AddSeconds(-1); // 23:59:59
 
-        var fd_c = allFD
-                   .Where(x => x.user_id == currentUser.id && x.create_date >= startOfWeek && x.create_date <= endOfWeek)
-                   .Count();
+        // Calculate weekly data
+        var inc_c = allInc.Count(x => x.create_date >= startOfWeek && x.create_date <= endOfWeek);
+        var req_c = allReq.Count(x => x.create_date >= startOfWeek && x.create_date <= endOfWeek);
+        var kb_c = allKB.Count(x => x.create_date >= startOfWeek && x.create_date <= endOfWeek);
+        var fd_c = allFD.Count(x => x.create_date >= startOfWeek && x.create_date <= endOfWeek);
 
-        var inc_c = allInc
-                   .Where(x => x.sender == currentUser.id && x.create_date >= startOfWeek && x.create_date <= endOfWeek)
-                   .Count();
+        var startOfYear = new DateTime(today.Year, 1, 1);
+        var endOfYear = new DateTime(today.Year, 12, 31, 23, 59, 59);
 
-        var req_c = allReq
-                   .Where(x => x.sender == currentUser.id && x.create_date >= startOfWeek && x.create_date <= endOfWeek)
-                   .Count();
+        // Calculate todo data
+        var todo_c = allTodo.Count(x =>
+            x.create_date >= startOfYear &&
+            x.create_date <= endOfYear &&
+            x.user_id == currentUser.id);
 
-        var kb_c = allKB
-                   .Where(x => x.author == currentUser.id && x.create_date >= startOfWeek && x.create_date <= endOfWeek)
-                   .Count();
+        var todo_d = allTodo.Count(x =>
+            x.create_date >= startOfYear &&
+            x.create_date <= endOfYear &&
+            x.active &&
+            x.user_id == currentUser.id);
 
-        var thisYear = DateTime.Now.Year;
+        var todo_percent = todo_c == 0 ? 0 : Math.Round((double)todo_d / todo_c * 100, 2);
 
-        var year_todo = allTodo.Where(x => x.create_date.Year == thisYear).ToList();
+        // Calculate monthly todo statistics
+        var monthlyTodoStats = new List<MonthlyTodoStats>();
+        var currentMonth = today.Month;
+        var currentYear = today.Year;
 
-        var todo_c = year_todo.Where(x => x.user_id == currentUser.id).Count();
+        // Get the last 6 months (including current month)
+        for (int i = 0; i < 6; i++)
+        {
+            var targetDate = today.AddMonths(-i);
+            var monthStart = new DateTime(targetDate.Year, targetDate.Month, 1);
+            var monthEnd = monthStart.AddMonths(1).AddDays(-1);
 
-        var todo_d_c = year_todo.Where(x => x.user_id == currentUser.id && x.active == true).Count();
+            var activeCount = allTodo.Count(x => 
+                x.create_date >= monthStart && 
+                x.create_date <= monthEnd && 
+                x.active &&
+                x.user_id == currentUser.id);
 
-        double todo_percent = todo_c == 0 ? 0 : (double)todo_d_c / todo_c * 100;
+            monthlyTodoStats.Add(new MonthlyTodoStats
+            {
+                MonthName = targetDate.ToString("MMM"),
+                ActiveCount = activeCount
+            });
+        }
 
-        // Get event statistics for the current year and the previous two years
-        var currentYear = DateTime.Now.Year;
+        // Reverse the list so it's in chronological order
+        monthlyTodoStats.Reverse();
+
         var yearlyStats = new Dictionary<int, Dictionary<int, (int resolvedCount, int otherCount)>>();
 
         // Initialize three years of data structure
@@ -154,7 +217,7 @@ public class HomeController : Controller
 
             // Calculate Growth (percentage of resolved incidents)
             yearStats.Growth = totalIncidents > 0 ? Math.Round((double)totalResolved / totalIncidents * 100, 1) : 0;
-            
+
             yearlyIncidentStats.Add(yearStats);
         }
 
@@ -169,7 +232,16 @@ public class HomeController : Controller
             AnnouncementList = allAnn.OrderByDescending(x => x.id).Take(6).ToList(),
             todo_count = todo_c,
             todo_d_count = todo_percent,
-            YearlyIncidentStats = yearlyIncidentStats
+            YearlyIncidentStats = yearlyIncidentStats,
+            MonthlyTodoStats = monthlyTodoStats,
+            today_inc_count = today_inc,
+            today_inc_percent = inc_percent,
+            today_req_count = today_req,
+            today_req_percent = req_percent,
+            today_kb_count = today_kb,
+            today_kb_percent = kb_percent,
+            today_fd_count = today_fd,
+            today_fd_percent = fd_percent
         };
 
         if (currentUser.Role.role.ToLower() == "user")
