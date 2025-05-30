@@ -1983,7 +1983,7 @@ namespace ITSM.Controllers
                     filteredReqs = userReqs.Where(t => t.state == "In Progress").ToList();
                     break;
                 case "on_hold":
-                    filteredReqs = userReqs.Where(t => t.state == "On Hold").ToList();
+                    filteredReqs = userReqs.Where(t => t.state == "On-Hold").ToList();
                     break;
                 case "completed":
                     filteredReqs = userReqs.Where(t => t.state == "Completed").ToList();
