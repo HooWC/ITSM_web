@@ -208,7 +208,33 @@ $(document).on('change', '#table-select-all, #select-all', function () {
 });
 
 // Delete button click event
-$('#deleteButton').click(function () {
+$('#deleteButton').click(function (e) {
+    // console.log("delete first time");
+    e.stopPropagation();
+    // console.log("Delete button clicked - showing confirmation box");
+
+    const overlay = document.getElementById('error-box-overlay');
+    overlay.classList.remove('hidden');
+
+    const deleteButton = document.querySelector('.error-box-button-box');
+    deleteButton.addEventListener('click', function () {
+        // console.log("Delete confirmed");
+        DeleteItem();
+        overlay.classList.add('hidden');
+    });
+
+    overlay.addEventListener('click', function () {
+        overlay.classList.add('hidden');
+    });
+
+    const errorBox = document.getElementById('error-box');
+    errorBox.addEventListener('click', function (e) {
+        e.stopPropagation();
+    });
+    
+});
+
+function DeleteItem() {
     if ($(this).prop('disabled')) return;
 
     // Get all selected todo IDs
@@ -251,7 +277,7 @@ $('#deleteButton').click(function () {
             // console.error('Delete Error:', error);
         }
     });
-});
+}
 
 // Apply paging Function
 function applyPagination() {

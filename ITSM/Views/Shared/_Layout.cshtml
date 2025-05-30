@@ -42,6 +42,7 @@ data-bs-theme="dark">
     <link rel="stylesheet" href="~/css/KB/KB_Search.css" />
     <link rel="stylesheet" href="~/css/OtherPage/session_page.css" />
     <link rel="stylesheet" href="~/css/Version/version_view.css" />
+    <link rel="stylesheet" href="~/css/Inc/error_box.css" />
 
     <!-- build:css assets/vendor/css/theme.css  -->
     <link rel="stylesheet" href="~/assets/vendor/css/core.css" />
@@ -175,6 +176,22 @@ data-bs-theme="dark">
                         </a>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Box -->
+    <div id="error-box-overlay" class="hidden">
+        <div id="error_box_container">
+            <div id="error-box">
+                <div class="error-box-face2">
+                    <div class="error-box-eye"></div>
+                    <div class="error-box-eye error-box-right"></div>
+                    <div class="error-box-mouth error-box-sad"></div>
+                </div>
+                <div class="error-box-shadow error-box-move"></div>
+                <div class="error-box-message"><h1 class="error-box-alert">Goodbye?</h1></div>
+                <button class="error-box-button-box"><h1 class="error-box-red">Delete</h1></button>
             </div>
         </div>
     </div>
@@ -384,7 +401,7 @@ data-bs-theme="dark">
                         </ul>
                     </li>
 
-                    @if (Model.user.Role.role.ToLower() == "admin")
+                    @if (Model.user.Role.role.ToLower() == "admin" || Model.user.Role.role.ToLower() == "itil")
                     {
                         <!-- CMDB -->
                         <li class="menu-item" id="CMDB_menu">
@@ -405,11 +422,7 @@ data-bs-theme="dark">
                                 </li>
                             </ul>
                         </li>
-                    }
 
-
-                    @if (Model.user.Role.role.ToLower() == "admin" || Model.user.Role.role.ToLower() == "itil")
-                    {
                         <!-- Announcement -->
                         <li class="menu-item" id="Announcement_menu">
                             <a href="javascript:void(0)" class="menu-link menu-toggle">
@@ -612,7 +625,7 @@ data-bs-theme="dark">
         <!-- Overlay -->
         <div class="layout-overlay layout-menu-toggle"></div>
     </div>
-    <!-- / Layout wrapper -->
+
 
     @* <div class="buy-now">
         <a href="#"
@@ -620,30 +633,23 @@ data-bs-theme="dark">
     </div> *@
 
     <!-- Core JS -->
-
     <script src="~/assets/vendor/libs/jquery/jquery.js"></script>
-
     <script src="~/assets/vendor/libs/popper/popper.js"></script>
     <script src="~/assets/vendor/js/bootstrap.js"></script>
-
     <script src="~/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
-
     <script src="~/assets/vendor/js/menu.js"></script>
 
-    <!-- endbuild -->
     <!-- Vendors JS -->
     <script src="~/assets/vendor/libs/apex-charts/apexcharts.js"></script>
 
     <!-- Main JS -->
-
     <script src="~/assets/js/main.js"></script>
-
-    <!-- Page JS -->
-    
 
     <!-- Place this tag before closing body tag for github widget button. -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
+
     <!-- <script src="../dist/css/style1.js"></script> -->
+
     <!-- ============================================= -->
     <!-- My JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
