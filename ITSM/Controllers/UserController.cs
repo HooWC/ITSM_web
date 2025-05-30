@@ -124,9 +124,9 @@ namespace ITSM.Controllers
             {
                 byte[] fileBytes = null;
 
-                if (file != null && file.Length > 50_000_000)
+                if (file != null && file.Length > 20_000_000)
                 {
-                    ViewBag.Error = "File size exceeds 50MB limit";
+                    ViewBag.Error = "File size exceeds 20MB limit";
                     return View(model);
                 }
 
