@@ -16,6 +16,7 @@ namespace ITSM_Insfrastruture.Repository.Api
     {
         private readonly string _allDepartmentUrl = Api_Link.DepartmentLink;
         private readonly string _sudDepartmentUrl = Api_Link.DepartmentSUDLink;
+        private readonly string _getallDepartmentmentUrl = Api_Link.DepartmentGetAllLink;
         private readonly HttpClient _client;
         private readonly TokenService _tokenService;
 
@@ -35,6 +36,20 @@ namespace ITSM_Insfrastruture.Repository.Api
 
                 _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenModel.Token);
                 string jsonStr = await _client.GetStringAsync(_allDepartmentUrl);
+                return JsonConvert.DeserializeObject<List<Department>>(jsonStr) ?? new List<Department>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"EX GetAllDepartment_API: {ex.Message}");
+                return new List<Department>();
+            }
+        }
+
+        public async Task<List<Department>> GetAll_With_No_Token_Department_API()
+        {
+            try
+            {
+                string jsonStr = await _client.GetStringAsync(_getallDepartmentmentUrl);
                 return JsonConvert.DeserializeObject<List<Department>>(jsonStr) ?? new List<Department>();
             }
             catch (Exception ex)

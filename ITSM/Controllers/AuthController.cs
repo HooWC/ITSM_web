@@ -10,6 +10,7 @@ using ITSM_DomainModelEntity.Models;
 using ITSM_Insfrastruture.Repository.Config;
 using System.Text;
 using System.Security.Cryptography;
+using ITSM_DomainModelEntity.ViewModels;
 
 namespace ITSM.Controllers
 {
@@ -18,6 +19,8 @@ namespace ITSM.Controllers
         private readonly Auth_api _authApi;
         private readonly TokenService _tokenService;
         private readonly User_api _userApi;
+        private readonly Role_api _roleApi;
+        private readonly Department_api _departmentApi;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         public AuthController(IHttpContextAccessor httpContextAccessor)
@@ -26,9 +29,11 @@ namespace ITSM.Controllers
             _authApi = new Auth_api(httpContextAccessor);
             _tokenService = new TokenService(httpContextAccessor);
             _userApi = new User_api(httpContextAccessor);
+            _roleApi = new Role_api(httpContextAccessor);
+            _departmentApi = new Department_api(httpContextAccessor);
         }
 
-        public IActionResult Login()
+        public async Task<IActionResult> Login()
         {
             try
             {
@@ -56,8 +61,21 @@ namespace ITSM.Controllers
                 Console.WriteLine($"An error occurred while checking the token: {ex.Message}");
                 Console.WriteLine($"Exception stack: {ex.StackTrace}");
             }
+
+            var RoleTask = _roleApi.GetAll_With_No_Token_Role_API();
+            var DepartmentTask = _departmentApi.GetAll_With_No_Token_Department_API();
+            await Task.WhenAll(RoleTask, DepartmentTask);
+
+            var allRole = RoleTask.Result;
+            var allDepartment = DepartmentTask.Result;
+
+            var model = new AllModelVM()
+            {
+                RoleList = allRole,
+                DepartmentList = allDepartment
+            };
             
-            return View();
+            return View(model);
         }
 
         [HttpPost]

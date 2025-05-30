@@ -1,6 +1,8 @@
-﻿@{
-	ViewData["Title"] = "Login";
-	Layout = null;
+﻿@using ITSM_DomainModelEntity.ViewModels
+@model AllModelVM
+@{
+    ViewData["Title"] = "Login";
+    Layout = null;
 }
 
 <!DOCTYPE html>
@@ -157,9 +159,10 @@
                                                         <div class="form-group" style="flex: 1;">
                                                             <div class="form-select-wrapper">
                                                                 <select class="form-select" name="role_id" required>
-                                                                    <option value="3">User</option>
-                                                                    <option value="2">ITIL</option>
-                                                                    <option value="1">Admin</option>
+                                                                    @foreach (var i in Model.RoleList)
+                                                                    {
+                                                                        <option value="@i.id">@i.role</option>
+                                                                    }
                                                                 </select>
                                                                 <i class="select-icon uil uil-user-circle"></i>
                                                                 <i class="select-arrow uil uil-angle-down"></i>
@@ -168,13 +171,10 @@
                                                         <div class="form-group" style="flex: 1;">
                                                             <div class="form-select-wrapper">
                                                                 <select class="form-select" name="department_id" required>
-                                                                    <option value="1">IT</option>
-                                                                    <option value="2">Human Resources</option>
-                                                                    <option value="3">Information Technology</option>
-                                                                    <option value="4">Finance</option>
-                                                                    <option value="5">Marketing</option>
-                                                                    <option value="6">Operations</option>
-                                                                    <option value="7">Other</option>
+                                                                    @foreach (var i in Model.DepartmentList)
+                                                                    {
+                                                                        <option value="@i.id">@i.name</option>
+                                                                    }
                                                                 </select>
                                                                 <i class="select-icon uil uil-users-alt"></i>
                                                                 <i class="select-arrow uil uil-angle-down"></i>

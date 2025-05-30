@@ -47,6 +47,9 @@ namespace ITSM_Insfrastruture.Repository.Config
         public static readonly string RoleLink = $"{BaseUrl}/roles";
         // search by id & update && delete todo  (ID) (need token)
         public static readonly string RoleSUDLink = $"{BaseUrl}/roles/";
+
+        // no token
+        public static readonly string RoleGetAllLink = $"{BaseUrl}/roles/getall";
         // === For Role Part ===
 
         // ============================================================================
@@ -112,6 +115,9 @@ namespace ITSM_Insfrastruture.Repository.Config
         public static readonly string DepartmentLink = $"{BaseUrl}/departments";
         // search by id & update && delete Department  (ID) (need token)
         public static readonly string DepartmentSUDLink = $"{BaseUrl}/departments/";
+
+        // no token
+        public static readonly string DepartmentGetAllLink = $"{BaseUrl}/departments/getall";
         // === For Department Part ===
 
         // ============================================================================

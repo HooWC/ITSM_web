@@ -16,6 +16,7 @@ namespace ITSM_Insfrastruture.Repository.Api
     {
         private readonly string _allRoleUrl = Api_Link.RoleLink;
         private readonly string _sudRoleUrl = Api_Link.RoleSUDLink;
+        private readonly string _getallRoleUrl = Api_Link.RoleGetAllLink;
         private readonly HttpClient _client;
         private readonly TokenService _tokenService;
 
@@ -35,6 +36,20 @@ namespace ITSM_Insfrastruture.Repository.Api
 
                 _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenModel.Token);
                 string jsonStr = await _client.GetStringAsync(_allRoleUrl);
+                return JsonConvert.DeserializeObject<List<Role>>(jsonStr) ?? new List<Role>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"EX GetAllRole_API: {ex.Message}");
+                return new List<Role>();
+            }
+        }
+
+        public async Task<List<Role>> GetAll_With_No_Token_Role_API()
+        {
+            try
+            {
+                string jsonStr = await _client.GetStringAsync(_getallRoleUrl);
                 return JsonConvert.DeserializeObject<List<Role>>(jsonStr) ?? new List<Role>();
             }
             catch (Exception ex)
