@@ -94,7 +94,7 @@
                     <a href="#" class="inc-tab-dropdown-item" data-status="rejected">Rejected</a>
                 </div>
             </div>
-            <button class="inc-tab-new-button item-delete-btn show-error-box-btn" id="deleteButton" disabled>Delete</button>
+            @* <button class="inc-tab-new-button item-delete-btn show-error-box-btn" id="deleteButton" disabled>Delete</button> *@
             <button class="inc-tab-new-button" onclick="window.location.href='/Request/Service_Catalog';">New</button>
             <div class="nav-item navbar-dropdown dropdown-user dropdown open-button">
                 <a class="nav-link dropdown-toggle hide-arrow p-0"
@@ -109,18 +109,18 @@
         </div>
     </header>
 
-    <div class="inc-tab-table-options">
+    @* <div class="inc-tab-table-options">
         <div class="inc-tab-checkbox-container">
             <input type="checkbox" id="select-all">
         </div>
         <span class="inc-tab-all-text">All</span>
-    </div>
+    </div> *@
 
     <div class="inc-tab-table-container">
         <table class="inc-tab-incidents-table">
             <thead>
                 <tr>
-                    <th class="inc-tab-checkbox-column"></th>
+                   @*  <th class="inc-tab-checkbox-column"></th> *@
                     <th class="inc-tab-sortable number-column" id="sortByNumber">Number <i class="fas fa-arrow-up" id="sortIcon"></i></th>
                     <th class="r_product_id">Product Id</th>
                     <th class="r_user">User</th>
@@ -138,7 +138,7 @@
                 @foreach (var i in Model.RequestList)
                 {
                     <tr class="incident-item" data-id="@i.id">
-                        <td><input type="checkbox" class="item-checkbox"></td>
+                        @* <td><input type="checkbox" class="item-checkbox"></td> *@
                         <td class="inc-tab-incident-number" data-label="Number">
                             <a href="~/Request/Req_Info?id=@i.id&role=User">@i.req_id</a>
                         </td>

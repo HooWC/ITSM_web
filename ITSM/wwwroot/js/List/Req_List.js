@@ -463,7 +463,7 @@ function updateRequestTable(data) {
 
         var row = `
                     <tr class="incident-item" data-id="${req.id}">
-                        <td><input type="checkbox" class="item-checkbox"></td>
+                        
                         <td class="inc-tab-incident-number" data-label="Number">
                             <a href="/Request/Req_Info?id=${req.id}">${req.req_id}</a>
                         </td>

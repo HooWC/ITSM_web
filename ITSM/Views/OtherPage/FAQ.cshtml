@@ -1,0 +1,257 @@
+﻿
+@{
+    ViewData["Title"] = "FAQ";
+}
+
+<style>
+    .layout-page {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin:30px;
+    }
+
+    .dropdown-user {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+    }
+    .faq-section summary {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+</style>
+
+<div class="nav-item navbar-dropdown dropdown-user dropdown open-button">
+    <a class="nav-link dropdown-toggle hide-arrow p-0"
+       href="javascript:void(0);"
+       data-bs-toggle="dropdown">
+        <div class="avatar avatar-online">
+            <img src="@(Model.user.photo != null ? $"data:{Model.user.photo_type};base64," +  Convert.ToBase64String(Model.user.photo) :
+                            Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 rounded-circle" />
+        </div>
+    </a>
+</div>
+
+<div class="faq-section">
+
+    <details>
+        <summary class="summary_faq">
+            <h5 class="faq_title">Can I change my password?</h5>
+            <span class="material-symbols-outlined">expand_more</span>
+        </summary>
+        <p>Of course! You can click "Forgot Password" on the login page to reset it, or go to your profile page and select "Edit" to change your password. Alternatively, you can contact the IT department for assistance.</p>
+    </details>
+    <hr>
+
+    <details>
+        <summary class="summary_faq">
+            <h5 class="faq_title">Can deleted data be recovered?</h5>
+            <span class="material-symbols-outlined">expand_more</span>
+        </summary>
+        <p>It depends on the system’s backup strategy. Contact the administrator to attempt data recovery. If no backup exists, the data may not be recoverable.</p>
+    </details>
+    <hr>
+
+    <details>
+        <summary class="summary_faq">
+            <h5 class="faq_title">What if I forget my password?</h5>
+            <span class="material-symbols-outlined">expand_more</span>
+        </summary>
+        <p>Click the “Forgot Password” link on the login page and follow the prompts to reset it. If you encounter issues, please contact the IT department for assistance.</p>
+    </details>
+    <hr>
+
+    <details>
+        <summary class="summary_faq">
+            <h5 class="faq_title">What should I do if the system crashes or becomes inaccessible?</h5>
+            <span class="material-symbols-outlined">expand_more</span>
+        </summary>
+        <p>Please contact the IT department immediately. They will help you troubleshoot and restore access as soon as possible.</p>
+    </details>
+    <hr>
+
+    <details>
+        <summary class="summary_faq">
+            <h5 class="faq_title">Why don’t I have access to certain features?</h5>
+            <span class="material-symbols-outlined">expand_more</span>
+        </summary>
+        <p>This might be because your account role does not have the required permissions. Contact the IT department to request access.</p>
+    </details>
+    <hr>
+
+    <details>
+        <summary class="summary_faq">
+            <h5 class="faq_title">How do I submit a new ticket?</h5>
+            <span class="material-symbols-outlined">expand_more</span>
+        </summary>
+        <p>After logging in, click "Create Incident" and fill in the required information before submitting.</p>
+    </details>
+    <hr>
+
+    <details>
+        <summary class="summary_faq">
+            <h5 class="faq_title">Can I modify a ticket after submitting it?</h5>
+            <span class="material-symbols-outlined">expand_more</span>
+        </summary>
+        <p>Yes! You can find the ticket in the Table List and click "Edit" to modify the details.</p>
+    </details>
+    <hr>
+
+    <details>
+        <summary class="summary_faq">
+            <h5 class="faq_title">How can I check the progress of my ticket?</h5>
+            <span class="material-symbols-outlined">expand_more</span>
+        </summary>
+        <p>Go to the All view to see the current status of your ticket.</p>
+    </details>
+    <hr>
+
+    <details>
+        <summary class="summary_faq">
+            <h5 class="faq_title">What should I do if the system is slow or lagging?</h5>
+            <span class="material-symbols-outlined">expand_more</span>
+        </summary>
+        <p>Try refreshing the page or logging out and back in. If the issue persists, please contact the IT department for performance troubleshooting.</p>
+    </details>
+    <hr>
+
+    <details>
+        <summary class="summary_faq">
+            <h5 class="faq_title">Which browsers are supported?</h5>
+            <span class="material-symbols-outlined">expand_more</span>
+        </summary>
+        <p>We recommend Chrome, Edge, or Firefox. Some older browsers may not support the latest features.</p>
+    </details>
+    <hr>
+
+    <details>
+        <summary class="summary_faq">
+            <h5 class="faq_title">How often is the system data backed up?</h5>
+            <span class="material-symbols-outlined">expand_more</span>
+        </summary>
+        <p>The backup frequency is configured by the administrator, typically daily or monthly. Please confirm with the IT department.</p>
+    </details>
+    <hr>
+
+    <details>
+        <summary class="summary_faq">
+            <h5 class="faq_title">What are the common roles and permissions?</h5>
+            <span class="material-symbols-outlined">expand_more</span>
+        </summary>
+        <p>Examples include User (can submit tickets only), ITIL (can handle tickets), Admin (manages users, permissions, and system settings), etc. Please refer to the system settings for details.</p>
+    </details>
+    <hr>
+
+    <details>
+        <summary class="summary_faq">
+            <h5 class="faq_title">Can I submit multiple issues in one ticket?</h5>
+            <span class="material-symbols-outlined">expand_more</span>
+        </summary>
+        <p>No! Each ticket should only correspond to one issue to facilitate tracking and resolution. If you have multiple issues, please submit separate tickets.</p>
+    </details>
+    <hr>
+
+    <details>
+        <summary class="summary_faq">
+            <h5 class="faq_title">Why hasn’t my ticket been processed for a long time?</h5>
+            <span class="material-symbols-outlined">expand_more</span>
+        </summary>
+        <p>It might be due to a lower priority setting. If urgent, please contact the responsible team or the IT department for escalation.</p>
+    </details>
+    <hr>
+
+    <details>
+        <summary class="summary_faq">
+            <h5 class="faq_title">Can the ITSM system integrate with other systems?</h5>
+            <span class="material-symbols-outlined">expand_more</span>
+        </summary>
+        <p>Yes! The ITSM system supports integrations such as CMDB monitoring to enhance overall operational efficiency.</p>
+    </details>
+    <hr>
+
+    <details>
+        <summary class="summary_faq">
+            <h5 class="faq_title">Will the system automatically log me out after a period of inactivity?</h5>
+            <span class="material-symbols-outlined">expand_more</span>
+        </summary>
+        <p>No, once you are logged in, you will remain logged in for up to 99 years unless you manually log out.</p>
+    </details>
+    <hr>
+
+    <details>
+        <summary class="summary_faq">
+            <h5 class="faq_title">Can I withdraw a submitted ticket?</h5>
+            <span class="material-symbols-outlined">expand_more</span>
+        </summary>
+        <p>Generally, you cannot withdraw a ticket after submission, but you can click “Close” or “Cancel,” or contact the IT department to close it for you.</p>
+    </details>
+    <hr>
+
+    <details>
+        <summary class="summary_faq">
+            <h5 class="faq_title">What should I do if the system is down?</h5>
+            <span class="material-symbols-outlined">expand_more</span>
+        </summary>
+        <p>If the system is down or experiencing major issues, please contact the IT department immediately. We will work to restore service as quickly as possible.</p>
+    </details>
+    <hr>
+
+    <details>
+        <summary class="summary_faq">
+            <h5 class="faq_title">Why can’t I select some options?</h5>
+            <span class="material-symbols-outlined">expand_more</span>
+        </summary>
+        <p>It may be due to permission settings or the current ticket status. Please contact the relevant personnel or the IT department if you have questions.</p>
+    </details>
+    <hr>
+
+    <details>
+        <summary class="summary_faq">
+            <h5 class="faq_title">How do I view my ticket history?</h5>
+            <span class="material-symbols-outlined">expand_more</span>
+        </summary>
+        <p>In the All view, you can see all your historical tickets and their processing results.</p>
+    </details>
+    <hr>
+
+    <details>
+        <summary class="summary_faq">
+            <h5 class="faq_title">How is ticket priority assigned?</h5>
+            <span class="material-symbols-outlined">expand_more</span>
+        </summary>
+        <p>Ticket priority is assigned automatically or manually based on business impact and urgency: e.g., High (urgent), Medium (important), or Low (general).</p>
+    </details>
+    <hr>
+
+    <details>
+        <summary class="summary_faq">
+            <h5 class="faq_title">Can I change the priority of a ticket?</h5>
+            <span class="material-symbols-outlined">expand_more</span>
+        </summary>
+        <p>Yes! You can modify the priority in the Edit view.</p>
+    </details>
+    <hr>
+
+    <details>
+        <summary class="summary_faq">
+            <h5 class="faq_title">Can a ticket be escalated for urgent handling?</h5>
+            <span class="material-symbols-outlined">expand_more</span>
+        </summary>
+        <p>Yes! Add “Urgent” in the ticket remarks or contact support staff to explain the situation directly.</p>
+    </details>
+    <hr>
+
+    <details>
+        <summary class="summary_faq">
+            <h5 class="faq_title">Does the system support multiple languages?</h5>
+            <span class="material-symbols-outlined">expand_more</span>
+        </summary>
+        <p>Currently, the system only supports English.</p>
+    </details>
+    <hr>
+
+</div>
+

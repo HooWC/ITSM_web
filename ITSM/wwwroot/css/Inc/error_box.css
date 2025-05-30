@@ -242,31 +242,6 @@
     }
 }
 
-footer {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    text-align: center;
-    font-size: 1em;
-    text-transform: uppercase;
-    padding: 10px;
-    font-family: 'Lato', sans-serif;
-}
-
-    footer p {
-        color: #ef8d9c;
-        letter-spacing: 2px;
-    }
-
-    footer a {
-        color: #b0db7d;
-        text-decoration: none;
-    }
-
-        footer a:hover {
-            color: #ffc39e;
-        }
-
 #error-box.hidden {
     display: none;
 }

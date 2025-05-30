@@ -64,7 +64,7 @@ namespace ITSM.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> FQA()
+        public async Task<IActionResult> FAQ()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
 

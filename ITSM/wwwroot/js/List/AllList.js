@@ -493,7 +493,7 @@ function updateIncidentTable(data) {
 
         var row = `
                     <tr class="incident-item" data-id="${inc.id}">
-                        <td><input type="checkbox" class="item-checkbox"></td>
+                        
                         <td class="inc-tab-incident-number" data-label="Number">
                             <a href="/IncidentManagement/Inc_Info_Form?id=${inc.id}">${inc.inc_number}</a>
                         </td>
