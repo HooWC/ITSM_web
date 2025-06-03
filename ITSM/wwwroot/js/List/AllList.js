@@ -1,5 +1,5 @@
 ﻿var currentPage = 1;
-var itemsPerPage = 18;
+var itemsPerPage = 15;
 var IncidentItems = $('.incident-item').length;
 var IncidentPages = Math.ceil(IncidentItems / itemsPerPage);
 

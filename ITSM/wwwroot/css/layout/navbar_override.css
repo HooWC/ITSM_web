@@ -1,0 +1,18 @@
+
+.nav_avatar_part {
+    max-width: 100% !important;
+    padding: 0 10px !important;
+    margin:10px 20px 0px 20px;
+    display:flex;
+    flex-wrap:wrap;
+    border-radius:3px;
+}
+
+.table-responsive {
+    margin: 0 !important;
+    width: 100% !important;
+}
+
+.layout-page {
+    margin-left: 0 !important;
+} 

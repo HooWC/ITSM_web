@@ -1,7 +1,57 @@
 ﻿
 @{
     ViewData["Title"] = "State_Info";
+    Layout = "_Layout_Info";
 }
 
-<h1>State_Info</h1>
+<header class="artic-word-header">
+    <p class="artic-word-title"><i class="fa-solid fa-book"></i> ITSM State</p>
+</header>
+<div class="artic-word-scroll-indicator"></div>
+<main class="artic-word-main">
+    <h2 class="artic-word-heading">State Description</h2>
+    <p>In an ITSM (IT Service Management) system, State is used to identify the current processing stage of a ticket, helping users and technical support staff understand the progress and status of an issue. Below are the common states and their definitions:</p>
+    <hr />
+    <ul>
+        <li>
+            <strong>Pedding</strong><br>
+            Indicates that the ticket has just been created and has not yet started processing. At this stage, the system or personnel have not yet assigned the task, or the task has not yet entered the workflow.
+        </li>
+        <li>
+            <strong>In Progress</strong><br>
+            Indicates that the ticket has been accepted and is being worked on. Technical support staff are analyzing the issue, implementing solutions, or carrying out necessary repairs.
+        </li>
+        <li>
+            <strong>On-Hold</strong><br>
+            Indicates that the ticket is temporarily paused due to reasons such as awaiting user feedback, pending external resources, or dependencies on other processes. The ticket will resume processing once the conditions are met.
+        </li>
+        <li>
+            <strong>Resolved</strong><br>
+            Indicates that the issue has been handled and confirmed as resolved by technical support, and the ticket is now in its final resolution state.<br>
+            ⚠️ Only users with the <strong>Admin</strong> and <strong>ITIL</strong> roles can set a ticket status to Resolved.<br>
+            ⚠️ Once set to Resolved, the ticket cannot be <strong>Reopened</strong>.
+        </li>
+        <li>
+            <strong>Closed</strong><br>
+            Indicates that the ticket has been formally completed, the issue is resolved and confirmed, and the ticket is officially closed by the system.<br>
+            ⚠️ If needed, a Closed ticket can be Reopened to re-enter the <strong>Pedding</strong> state for further processing.
+        </li>
+        <li>
+            <strong>Completed</strong><br>
+            Indicates that the requested item or task has been successfully completed and verified. This status is typically used in the Request module to confirm that the requested work is done.
+        </li>
+        <li>
+            <strong>Rejected</strong><br>
+            Indicates that the request has been reviewed and rejected, and no further action will be taken. This status is used in the Request module when a request is declined.
+        </li>
+    </ul>
+    <hr />
+    <h3>Summary:</h3>
+    <p>Through these states, the ITSM system helps users and support staff clearly track the issue-handling process, ensuring that problems are resolved in a timely and efficient manner. The “Resolved” state cannot be Reopened, ensuring the problem has been fully addressed; while the “Closed” state can be Reopened if necessary for further action.</p>
+    <hr />
+    <p>If you have any questions, please contact the IT department or the relevant person in charge.</p>
+</main>
+<div class="scroll-to-top">
+    <i class="fas fa-arrow-up"></i>
+</div>
 

@@ -32,6 +32,8 @@
     }
 </style>
 
+
+
 <div class="pro-file-container" style="width: 100%; display: flex;">
 
     <div class="pro-file-main-area" style="width: 75%; display: flex;">
@@ -83,7 +85,7 @@
                                             <i class="icon-base bx bx-dots-vertical-rounded text-body-secondary"></i>
                                         </button>
                                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt3">
-                                            <a class="dropdown-item" href="javascript:void(0);">View More</a>
+                                            <a class="dropdown-item" href="~/IncidentManagement/User_All">View More</a>
                                         </div>
                                     </div>
                                 </div>
@@ -165,7 +167,7 @@
                                             <i class="icon-base bx bx-dots-vertical-rounded text-body-secondary"></i>
                                         </button>
                                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt4">
-                                            <a class="dropdown-item" href="javascript:void(0);">View More</a>
+                                            <a class="dropdown-item" href="~/Request/User_All">View More</a>
                                         </div>
                                     </div>
                                 </div>
@@ -221,7 +223,7 @@
                                             <i class="icon-base bx bx-dots-vertical-rounded text-body-secondary"></i>
                                         </button>
                                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt4">
-                                            <a class="dropdown-item" href="javascript:void(0);">View More</a>
+                                            <a class="dropdown-item" href="~/Knowledge/KB_List_User">View More</a>
                                         </div>
                                     </div>
                                 </div>
@@ -251,7 +253,7 @@
                                             <i class="icon-base bx bx-dots-vertical-rounded text-body-secondary"></i>
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="cardOpt1">
-                                            <a class="dropdown-item" href="javascript:void(0);">View More</a>
+                                            <a class="dropdown-item" href="~/Feedback/Feedback_List">View More</a>
                                         </div>
                                     </div>
                                 </div>
@@ -297,17 +299,16 @@
                     </a>
                 </div>
 
-                <div class="pro-file-notify pro-file-alert">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M4 4h16c1.1 0 2 .9 2 2v12a2 2 0 01-2 2H4c-1.1 0-2-.9-2-2V6a2 2 0 012-2zm0 2v12h16V6H4zm2 2h12v2H6V8zm0 4h8v2H6v-2z" />
-                    </svg>
+                <div class="pro-file-notify">
+                    <a href="javascript:void(0);" id="home_log_out">
+                        <svg class="logout-button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+                            <path d="M16 17l5-5-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M21 12H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M4 4h8v16H4z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </a>
                 </div>
 
-                <div class="pro-file-notify">
-                    <svg class="open-button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
-                        <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                    </svg>
-                </div>
 
             </div>
             <div class="pro-file-progress-status">@Model.CompletedTodo/@Model.AllTodo</div>
@@ -378,23 +379,35 @@
       }
 
       $('#Prosonal_menu_profile').addClass("active");
+
+      $('#home_log_out').on('click', function () {
+            $.ajax({
+                url: '/Ajax/_Logout',
+                method: 'GET',
+                success: function (response) {
+                    if (response.success) {
+                        window.location.href = '/Auth/Login';
+                    } else {
+                        console.error('Login Failed:', response.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Login Error:', error);
+                }
+            });
+        });
       
-      // 处理所有卡片的高度一致
       function adjustCardHeights() {
-        // 重置所有卡片高度
         $('.card').height('auto');
         
-        // 手机视图不处理等高卡片，每个卡片单独适应内容
         if ($(window).width() <= 480) {
           return;
         }
         
-        // 按行分组调整高度
         var rows = [];
         var currentTop = -1;
         var currentRow = -1;
         
-        // 将卡片按行分组
         $('.card').each(function(i) {
           var top = $(this).offset().top;
           if (Math.abs(top - currentTop) > 10) {
@@ -405,7 +418,6 @@
           rows[currentRow].push($(this));
         });
         
-        // 为每一行设置相同高度
         for (var i = 0; i < rows.length; i++) {
           var maxHeight = 0;
           for (var j = 0; j < rows[i].length; j++) {
@@ -427,13 +439,11 @@
           $('.pro-file-user-profile-area').css('width', '25%');
         }
         
-        // 延迟调整卡片高度，确保布局已完成
         setTimeout(adjustCardHeights, 100);
       });
       
       $(window).trigger('resize');
       
-      // 处理进度条
       function updateProgressBar() {
         var completed = @Model.CompletedTodo;
         var total = @Model.AllTodo;
@@ -448,7 +458,6 @@
       
       updateProgressBar();
       
-      // 在DOM加载完后调整高度
       setTimeout(adjustCardHeights, 500);
     });
 </script>

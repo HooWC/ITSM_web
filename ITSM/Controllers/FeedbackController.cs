@@ -60,7 +60,7 @@ namespace ITSM.Controllers
             var allUsers = userTask.Result;
             var allRoles = roleTask.Result;
 
-            var feedList = currentUser.role_id == allRoles.Where(x => x.role == "User").FirstOrDefault()?.id
+            var feedList = currentUser.role_id == allRoles.Where(x => x.role.ToLower() == "user" || x.role.ToLower() == "itil").FirstOrDefault()?.id
                 ? allFeed.Where(x => x.user_id == currentUser.id).OrderByDescending(y => y.id).ToList()
                 : allFeed.OrderByDescending(y => y.id).ToList();
 

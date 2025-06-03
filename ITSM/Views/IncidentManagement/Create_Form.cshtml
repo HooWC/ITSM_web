@@ -46,7 +46,7 @@
                     <line x1="4" y1="18" x2="20" y2="18"></line>
                 </svg>
             </button>
-            <button class="inc-cre-btn inc-cre-btn-icon" onclick="window.open('/Info/Info_Personal_Todo', '_blank')">
+            <button class="inc-cre-btn inc-cre-btn-icon" onclick="window.open('/Info/Form_Info', '_blank')">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="12" cy="12" r="10"></circle>
                     <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
@@ -111,7 +111,7 @@
 
                     <div class="inc-cre-form-group">
                         <label for="category" class="inc-cre-form-label">Category
-                            <button type="button" class="inc-cre-btn-help">
+                            <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/CaSub_Info', '_blank')">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <circle cx="12" cy="12" r="10"></circle>
                                     <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
@@ -131,7 +131,7 @@
 
                     <div class="inc-cre-form-group">
                         <label for="subcategory" class="inc-cre-form-label">Subcategory
-                            <button type="button" class="inc-cre-btn-help">
+                            <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/CaSub_Info', '_blank')">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <circle cx="12" cy="12" r="10"></circle>
                                     <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
@@ -147,7 +147,7 @@
                     <div class="inc-cre-form-group">
                         <label for="assignment-group" class="inc-cre-form-label inc-cre-required">
                             Assignment group
-                            <button type="button" class="inc-cre-btn-help">
+                            <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/Assigned_Info', '_blank')">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <circle cx="12" cy="12" r="10"></circle>
                                     <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
@@ -172,7 +172,7 @@
                     <div class="inc-cre-form-group">
                         <label for="state" class="inc-cre-form-label">
                             State
-                            <button type="button" class="inc-cre-btn-help">
+                            <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/State_Info', '_blank')">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <circle cx="12" cy="12" r="10"></circle>
                                     <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
@@ -246,7 +246,7 @@
                     <div class="inc-cre-form-group">
                         <label for="assigned-to" class="inc-cre-form-label">
                             Assigned to
-                            <button type="button" class="inc-cre-btn-help">
+                            <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/Assigned_Info', '_blank')">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <circle cx="12" cy="12" r="10"></circle>
                                     <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
@@ -269,18 +269,18 @@
             </div>
 
             <div class="inc-cre-form-group inc-cre-short-description-group">
-                <label for="short-description" class="inc-cre-form-label inc-cre-required">Short description</label>
+                <label for="short-description" class="inc-cre-form-label inc-cre-required">
+                    Short description
+                    <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/Short_Description_Info', '_blank')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                    </button>
+                </label>
                 <div class="inc-cre-input-with-actions">
                     <input autocomplete="off" type="text" id="short-description" name="short_description" class="inc-cre-form-control" required>
-                    <div class="inc-cre-action-buttons">
-                        <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/Short_Description_Info', '_blank')">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                                <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                            </svg>
-                        </button>
-                    </div>
                 </div>
             </div>
 
@@ -551,42 +551,42 @@
               loadDepartments(); // If the data has not been loaded, reload it
               setTimeout(function() {
                   if (departmentList && departmentList.length > 0) {
-                      openModal("选择分配组", departmentList, $("#assignment-group"));
+                      openModal("Select assignment group", departmentList, $("#assignment-group"));
                   } else {
-                      // alert("无法加载部门数据，请刷新页面重试");
+                      // alert("Unable to load department data, please refresh the page and try again");
                   }
               }, 500);
           }
       });
       
-      // 点击Assigned To搜索按钮
+      // Click the Assigned To search button
       $("#assigned-to-search").on('click', function() {
           if (!selectedDepartmentId) {
-              // alert("请先选择分配组");
+              // alert("Please select the allocation group first");
               return;
           }
           
-          // 检查是否已有缓存的用户数据
+          // Check if there is already cached user data
           if (usersByDepartment[selectedDepartmentId]) {
-              openModal("选择分配人员", usersByDepartment[selectedDepartmentId], $("#assigned-to"));
+              openModal("Select assignees", usersByDepartment[selectedDepartmentId], $("#assigned-to"));
           } else {
               loadUsersByDepartment(selectedDepartmentId);
           }
       });
       
-      // 点击模态框关闭按钮
+      // Click the modal box close button
       $(".inc-cre-modal-close").click(function() {
           closeModal();
       });
       
-      // 点击模态框外部关闭
+      // Click outside the modal to close it
       $(document).on('click', '.inc-cre-modal', function(e) {
           if ($(e.target).hasClass('inc-cre-modal')) {
               closeModal();
           }
       });
       
-      // 选择表格行
+      // Select table row
       $(document).on('click', '.inc-cre-modal-table tbody tr', function() {
           var selectedName = $(this).data('name');
           var selectedId = $(this).data('id');
@@ -594,15 +594,15 @@
           if (currentInputField) {
               currentInputField.val(selectedName);
               
-              // 如果选择的是部门，则启用Assigned to
+              // If you select a department, enable Assigned to
               if (currentInputField.attr('id') === 'assignment-group') {
                   selectedDepartmentId = selectedId;
-                  $("#assignment-group-id").val(selectedId); // 将ID保存到隐藏输入框
+                  $("#assignment-group-id").val(selectedId); // Save the ID to a hidden input box
                   $("#assigned-to-search").prop('disabled', false);
-                  $("#assigned-to").val(''); // 清空之前选择的用户
-                  $("#assigned-to-id").val(''); // 清空之前选择的用户ID
+                      $("#assigned-to").val(''); // Clear previously selected users
+                  $("#assigned-to-id").val(''); // Clear the previously selected user ID
               } else if (currentInputField.attr('id') === 'assigned-to') {
-                  // 如果选择的是用户，保存用户ID
+                  // If user is selected, save the user ID
                   $("#assigned-to-id").val(selectedId);
               }
           }
@@ -610,7 +610,7 @@
           closeModal();
       });
       
-      // 模态框中的搜索功能
+      // Search functionality in a modal
       $("#inc-cre-search-input").on('keyup', function() {
           var value = $(this).val().toLowerCase();
           $(".inc-cre-modal-table tbody tr").filter(function() {
@@ -618,26 +618,26 @@
           });
       });
       
-      // 加载部门数据
+      // Load department data
       loadDepartments();
       
-      // Notes部分功能
-      // 更新活动数量
+      // Notes Some functions
+      // Update activity count
       function updateActivityCount() {
           var count = $(".inc-cre-activity-item").length;
           $("#activity-count").text(count);
       }
       
-      // 初始化更新活动数量
+      // Initialize update activity count
       updateActivityCount();
       
-      // 发布工作笔记
+      // Post work notes
       $(".inc-cre-btn-post").click(function() {
           var workNotes = $("#work-notes").val().trim();
           var isCustomerVisible = $("#customer-visible").is(":checked");
           
           if (workNotes) {
-              // 获取当前时间
+              // Get current time
               var now = new Date();
               var dateString = now.getFullYear() + '-' + 
                               ('0' + (now.getMonth() + 1)).slice(-2) + '-' + 
@@ -645,15 +645,15 @@
                               ('0' + now.getHours()).slice(-2) + ':' + 
                               ('0' + now.getMinutes()).slice(-2) + ':' + 
                               ('0' + now.getSeconds()).slice(-2);
-              
-              // 创建新的活动项
+
+                  // Create new activity item
               var newActivity = $('<div class="inc-cre-activity-item">' +
                   '<div class="inc-cre-user-avatar">' +
                       '<img src="https://www.diydoutu.com/touxiang/20201222-1.jpg" alt="Current User">' +
                   '</div>' +
                   '<div class="inc-cre-activity-content">' +
                       '<div class="inc-cre-activity-header">' +
-                          '<span class="inc-cre-user-name">' + $("#assigned-to").val() || '当前用户' + '</span>' +
+                          '<span class="inc-cre-user-name">' + $("#assigned-to").val() || 'Current User' + '</span>' +
                           '<span class="inc-cre-activity-time">Work notes • ' + dateString + '</span>' +
                       '</div>' +
                       '<div class="inc-cre-activity-details">' +
@@ -662,16 +662,16 @@
                   '</div>' +
               '</div>');
               
-              // 添加到活动容器的顶部
+              // Add to the top of the active container
               $(".inc-cre-activity-container").prepend(newActivity);
               
-              // 清空文本框
+              // Clear text box
               $("#work-notes").val('');
               
-              // 更新活动数量
+              // Update activity count
               updateActivityCount();
           } else {
-              // alert("请输入工作笔记内容");
+              // alert("Please enter the work notes content");
           }
       });
     });

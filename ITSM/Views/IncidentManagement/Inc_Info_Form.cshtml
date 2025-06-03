@@ -119,6 +119,10 @@
     .inc-cre-btn-closed:hover{
     background-color: #590d0d;
     }
+
+    select.inc-cre-form-control{
+    margin-bottom:5px;
+    }
 </style>
 
 <div class="inc-cre-container">
@@ -144,7 +148,7 @@
                     <line x1="4" y1="18" x2="20" y2="18"></line>
                 </svg>
             </button>
-            <button class="inc-cre-btn inc-cre-btn-icon" onclick="window.open('/Info/Info_Personal_Todo', '_blank')">
+            <button class="inc-cre-btn inc-cre-btn-icon" onclick="window.open('/Info/Form_Info', '_blank')">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="12" cy="12" r="10"></circle>
                     <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
@@ -155,7 +159,10 @@
             @if (Model.incident.state != "Resolved" && Model.incident.state != "Closed")
             {
                 <button class="inc-cre-btn inc-cre-btn-closed" id="close-button">Closed</button>
-                <button class="inc-cre-btn inc-cre-btn-resolve" id="resolve-button">Resolve</button>
+                if (Model.user.Role.role.ToLower() != "user")
+                {
+                    <button class="inc-cre-btn inc-cre-btn-resolve" id="resolve-button">Resolve</button>
+                }
                 <button class="inc-cre-btn inc-cre-btn-submit" onclick="document.getElementById('incidentForm').submit();">Save</button>
             }
             else if (Model.incident.state == "Closed")
@@ -223,7 +230,7 @@
                     <div class="inc-cre-form-group">
                         <label for="category" class="inc-cre-form-label">
                             Category
-                            <button type="button" class="inc-cre-btn-help">
+                            <button type="button" class="inc-cre-btn-help" class="inc-cre-btn-help" onclick="window.open('/Info/CaSub_Info', '_blank')">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <circle cx="12" cy="12" r="10"></circle>
                                     <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
@@ -244,7 +251,7 @@
                     <div class="inc-cre-form-group">
                         <label for="subcategory" class="inc-cre-form-label">
                             Subcategory
-                            <button type="button" class="inc-cre-btn-help">
+                            <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/CaSub_Info', '_blank')">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <circle cx="12" cy="12" r="10"></circle>
                                     <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
@@ -260,7 +267,7 @@
                     <div class="inc-cre-form-group">
                         <label for="assignment-group" class="inc-cre-form-label inc-cre-required">
                             Assignment group
-                            <button type="button" class="inc-cre-btn-help">
+                            <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/Assigned_Info', '_blank')">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <circle cx="12" cy="12" r="10"></circle>
                                     <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
@@ -285,7 +292,7 @@
                     <div class="inc-cre-form-group">
                         <label for="state" class="inc-cre-form-label">
                             State
-                            <button type="button" class="inc-cre-btn-help">
+                            <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/State_Info', '_blank')">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <circle cx="12" cy="12" r="10"></circle>
                                     <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
@@ -294,8 +301,6 @@
                             </button>
                         </label>
                         <select id="state" name="state" class="inc-cre-form-control">
-                            @* <option value="Closed" selected="@(Model.Inc.state == "Closed")">Closed</option> *@
-                            @* <option value="Cancelled">Cancelled</option> *@
                             @if (Model.incident.state == "Resolved")
                             {
                                 <option value="Resolved" selected="@(Model.incident.state == "Resolved")">Resolved</option>
@@ -316,7 +321,7 @@
                     <div class="inc-cre-form-group">
                         <label for="impact" class="inc-cre-form-label">
                             Impact
-                            <button type="button" class="inc-cre-btn-help">
+                            <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/Incident_Priority_Info', '_blank')">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <circle cx="12" cy="12" r="10"></circle>
                                     <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
@@ -334,7 +339,7 @@
                     <div class="inc-cre-form-group">
                         <label for="urgency" class="inc-cre-form-label">
                             Urgency
-                            <button type="button" class="inc-cre-btn-help">
+                            <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/Incident_Priority_Info', '_blank')">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <circle cx="12" cy="12" r="10"></circle>
                                     <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
@@ -374,7 +379,7 @@
                     <div class="inc-cre-form-group">
                         <label for="assigned-to" class="inc-cre-form-label">
                             Assigned to
-                            <button type="button" class="inc-cre-btn-help">
+                            <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/Assigned_Info', '_blank')">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <circle cx="12" cy="12" r="10"></circle>
                                     <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
@@ -397,7 +402,16 @@
             </div>
 
             <div class="inc-cre-form-group inc-cre-short-description-group">
-                <label for="short-description" class="inc-cre-form-label inc-cre-required">Short description</label>
+                <label for="short-description" class="inc-cre-form-label inc-cre-required">
+                    Short description
+                    <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/Short_Description_Info', '_blank')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                    </button>
+                </label>
                 <div class="inc-cre-input-with-actions">
                     @if (Model.incident.state != "Resolved" && Model.incident.state != "Closed")
                     {
@@ -407,15 +421,6 @@
                     {
                         <input type="text" autocomplete="off" maxlength="100" id="short-description" name="short_description" class="inc-cre-form-control" value="@Model.incident.short_description" readonly required>
                     }
-                    <div class="inc-cre-action-buttons">
-                        <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/Short_Description_Info', '_blank')">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                                <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                            </svg>
-                        </button>
-                    </div>
                 </div>
             </div>
 
@@ -450,13 +455,13 @@
                     <div class="inc-cre-notes-header">
                         <div class="inc-cre-watch-list">
                             <span>Work notes list</span>
-                            <div class="inc-cre-info-icon">
+                            <button type="button" class="inc-cre-btn-help" style="margin-left:5px;" onclick="window.open('/Info/Work_Notes_Info', '_blank')">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <circle cx="12" cy="12" r="10"></circle>
                                     <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
                                     <line x1="12" y1="17" x2="12.01" y2="17"></line>
                                 </svg>
-                            </div>
+                            </button>
                         </div>
                     </div>
 
@@ -480,63 +485,81 @@
         </div>
     </div>
 
-    <div class="inc-cre-tab-section">
-        <div class="inc-cre-tabs">
-            <button class="inc-cre-tab active">Resolve</button>
-        </div>
+    @if (Model.incident.state == "Resolved" || Model.incident.state == "Closed" || Model.user.Role.role.ToLower() != "user")
+    {
+        <div class="inc-cre-tab-section">
+            <div class="inc-cre-tabs">
+                <button class="inc-cre-tab active">Resolve</button>
+            </div>
 
-        <div class="inc-cre-tab-content">
-            <div id="notes-tab" class="inc-cre-tab-pane active">
-                <div class="inc-cre-resolve-container">
-                    <div class="inc-cre-notes-header">
-                        <div class="inc-cre-watch-list">
-                            <span>Resolve Reason</span>
-                            <div class="inc-cre-info-icon">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                                </svg>
+            <div class="inc-cre-tab-content">
+                <div id="notes-tab" class="inc-cre-tab-pane active">
+                    <div class="inc-cre-resolve-container">
+                        <div class="inc-cre-notes-header">
+                            <div class="inc-cre-watch-list">
+                                <span>Resolve Reason</span>
+                                <button type="button" class="inc-cre-btn-help" style="margin-left:5px;" onclick="window.open('/Info/Resolve_Reason_Info', '_blank')">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                    </svg>
+                                </button>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="inc-cre-resolve-input-area" id="resolve-input-area">
-                        <select id="resolve-type" name="resolveType" class="inc-cre-form-control inc-cre-resolve-select">
-                            <option value="">-- Select Resolution Type --</option>
-                            <option value="Permanent Fix">Permanent Fix</option>
-                            <option value="Work Around">Work Around</option>
-                            <option value="Not Fixed">Not Fixed</option>
-                            <option value="No Issue Found">No Issue Found</option>
-                            <option value="Automatically Resolved">Automatically Resolved</option>
-                            <option value="Resolved">Resolved</option>
-                        </select>
-                        <textarea id="resolve-notes" name="resolveNotes" class="inc-cre-notes-textarea" placeholder="Enter resolution details..."></textarea>
-                    </div>
+                        <div class="inc-cre-resolve-input-area" id="resolve-input-area">
+                            <select id="resolve-type" name="resolveType" class="inc-cre-form-control inc-cre-resolve-select">
+                                <option value="">-- Select Resolution Type --</option>
+                                <optgroup label="Technical Resolution">
+                                    <option value="Permanent Fix">Permanent Fix</option>
+                                    <option value="Configuration Change">Configuration Change</option>
+                                    <option value="Patch/Update Applied">Patch/Update Applied</option>
+                                    <option value="Hardware Replacement">Hardware Replacement</option>
+                                    <option value="Script/Automation">Script/Automation</option>
+                                    <option value="Work Around">Work Around</option>
+                                    <option value="Automatically Resolved">Automatically Resolved</option>
+                                </optgroup>
+                                <optgroup label="Non-Technical Resolution">
+                                    <option value="User Education">User Education</option>
+                                    <option value="Vendor Support">Vendor Support</option>
+                                    <option value="Out of Scope">Out of Scope</option>
+                                    <option value="No Issue Found">No Issue Found</option>
+                                    <option value="Not Fixed">Not Fixed</option>
+                                    <option value="Known Error">Known Error</option>
+                                </optgroup>
+                                <option value="Resolved">Resolved</option>
+                            </select>
+                            <textarea id="resolve-notes" name="resolveNotes" class="inc-cre-notes-textarea" placeholder="Enter resolution details..."></textarea>
+                        </div>
 
-                    @if (Model.incident.state == "Resolved" || Model.incident.state == "Closed")
-                    {
-                        <div class="inc-cre-resolve-history-section resolution-history-section" id="resolution-history-section">
-                            <h3 class="inc-cre-section-title">Resolution Information</h3>
-                            <div class="inc-cre-resolve-history-container">
-                                <div id="resolution-history-content">
-                                    <!-- Resolved History -->
+                        @if (Model.incident.state == "Resolved" || Model.incident.state == "Closed")
+                        {
+                            <div class="inc-cre-resolve-history-section resolution-history-section" id="resolution-history-section">
+                                <h3 class="inc-cre-section-title">Resolution Information</h3>
+                                <div class="inc-cre-resolve-history-container">
+                                    <div id="resolution-history-content">
+                                        <!-- Resolved History -->
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    }
+                        }
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    }
 
     @if (Model.incident.state != "Resolved" && Model.incident.state != "Closed")
     {
         <footer class="inc-cre-form-footer">
             <div class="inc-cre-footer-buttons">
-                <button type="button" class="inc-cre-btn inc-cre-btn-submit-footer" onclick="document.getElementById('incidentForm').submit();">Save</button>
-                <button type="button" class="inc-cre-btn inc-cre-btn-resolve-footer" id="resolve-button-footer">Resolve</button>
                 <button type="button" class="inc-cre-btn inc-cre-btn-closed-footer" id="close-button-footer">Closed</button>
+                @if (Model.user.Role.role.ToLower() != "user")
+                {
+                    <button type="button" class="inc-cre-btn inc-cre-btn-resolve-footer" id="resolve-button-footer">Resolve</button>
+                }
+                <button type="button" class="inc-cre-btn inc-cre-btn-submit-footer" onclick="document.getElementById('incidentForm').submit();">Save</button>
             </div>
         </footer>
     }
@@ -607,8 +630,6 @@
       else{
           $('#Incidents_menu_all_user').addClass("active");
       }
-
-        $('#Incidents_menu_all').addClass("active");
 
       // Check if it is resolved or closed
       var isResolved = "@Model.incident.state" === "Resolved";
@@ -985,19 +1006,18 @@
                           
                           // Create a new activity item
                           var newActivity = $('<div class="inc-cre-activity-item">' +
-                              '<div class="inc-cre-user-avatar">' +
-                                  '<img src="' + (response.note.user_avatar ? 'data:image/jpeg;base64,' + response.note.user_avatar : 'https://www.diydoutu.com/touxiang/20201222-1.jpg') + '" alt="' + response.note.user_name + '">' +
-                              '</div>' +
-                              '<div class="inc-cre-activity-content">' +
-                                  '<div class="inc-cre-activity-header">' +
-                                      '<span class="inc-cre-user-name">' + response.note.user_name + '</span>' +
-                                      '<span class="inc-cre-activity-time">Work notes • ' + dateString + '</span>' +
+                                  '<div class="inc-cre-user-avatar">' +
+                                      '<img src="@(Model.user.photo != null ? $"data:{Model.user.photo_type};base64," + Convert.ToBase64String(Model.user.photo) : Url.Content("~/img/avatar/user_avatar.jpg"))" alt="' + response.note.user_name + '" class="w-px-40 rounded-circle">' +
                                   '</div>' +
-                                  '<div class="inc-cre-activity-details">' +
-                                      '<div class="inc-cre-work-note-content">' + response.note.message.replace(/\n/g, '<br>') + '</div>' +
-                                  '</div>' +
-                              '</div>' +
-                          '</div>');
+                                  '<div class="inc-cre-activity-content">' +
+                                      '<div class="inc-cre-activity-header">' +
+                                          '<span class="inc-cre-user-name">' + response.note.user_name + '</span>' +
+                                          '<span class="inc-cre-activity-time">Work notes • ' + dateString + '</span>' +
+                                      '</div>' +
+                                      '<div class="inc-cre-activity-details">' +
+                                          '<div class="inc-cre-work-note-content">' + response.note.message.replace(/\n/g, '<br>') + '</div>' +
+                                      '</div>' +
+                                  '</div>');
                           
                           // Add to the top of the active container
                           $(".inc-cre-activity-container").prepend(newActivity);

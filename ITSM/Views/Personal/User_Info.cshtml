@@ -131,7 +131,7 @@
                     <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
                 </svg>
             </button>
-            <button class="inc-cre-btn inc-cre-btn-icon" onclick="window.open('/Info/Info_Personal_Todo', '_blank')">
+            <button class="inc-cre-btn inc-cre-btn-icon" onclick="window.open('/Info/Form_Info', '_blank')">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="12" cy="12" r="10"></circle>
                     <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
@@ -184,7 +184,7 @@
             <div class="inc-cre-form-grid">
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
-                        <label for="emp_id" class="inc-cre-form-label">Employee Number</label>
+                        <label for="emp_id" class="inc-cre-form-label inc-cre-required">Employee Number</label>
                         <input type="text" name="emp_id" id="emp_id" class="inc-cre-form-control" value="@Model.user.emp_id">
                     </div>
                 </div>
@@ -255,7 +255,7 @@
             <div class="inc-cre-form-group inc-cre-short-description-group">
                 <label for="role_code" class="inc-cre-form-label">
                     Role Code (If you change the new Role)
-                    <button type="button" class="inc-cre-btn-help">
+                    <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/Role_Code_Info', '_blank')">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="12" cy="12" r="10"></circle>
                             <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
@@ -338,7 +338,7 @@
                     <div class="inc-cre-form-group">
                         <label for="password" class="inc-cre-form-label">
                             Old Password
-                            <button type="button" class="inc-cre-btn-help">
+                            <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/User_Password_Info', '_blank')">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <circle cx="12" cy="12" r="10"></circle>
                                     <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
@@ -354,7 +354,7 @@
                     <div class="inc-cre-form-group">
                         <label for="new_password" class="inc-cre-form-label">
                             New Password (Required old password)
-                            <button type="button" class="inc-cre-btn-help">
+                            <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/User_Password_Info', '_blank')">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <circle cx="12" cy="12" r="10"></circle>
                                     <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
@@ -377,7 +377,7 @@
 
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
-                        <label for="ud" class="inc-cre-form-label inc-cre-required">Update Date</label>
+                        <label for="ud" class="inc-cre-form-label">Update Date</label>
                         <input type="text" name="ud" id="ud" autocomplete="off" class="inc-cre-form-control" value="@Model.user.update_date?.ToString("yyyy-MM-dd HH:mm:ss")" readonly>
                     </div>
                 </div>

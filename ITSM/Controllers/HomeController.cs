@@ -133,10 +133,10 @@ public class HomeController : Controller
         var endOfWeek = startOfWeek.AddDays(7).AddSeconds(-1); // 23:59:59
 
         // Calculate weekly data
-        var inc_c = allInc.Count(x => x.create_date >= startOfWeek && x.create_date <= endOfWeek);
-        var req_c = allReq.Count(x => x.create_date >= startOfWeek && x.create_date <= endOfWeek);
-        var kb_c = allKB.Count(x => x.create_date >= startOfWeek && x.create_date <= endOfWeek);
-        var fd_c = allFD.Count(x => x.create_date >= startOfWeek && x.create_date <= endOfWeek);
+        var inc_c = allInc.Count(x => x.create_date >= startOfWeek && x.create_date <= endOfWeek && x.sender == currentUser.id);
+        var req_c = allReq.Count(x => x.create_date >= startOfWeek && x.create_date <= endOfWeek && x.sender == currentUser.id);
+        var kb_c = allKB.Count(x => x.create_date >= startOfWeek && x.create_date <= endOfWeek && x.author == currentUser.id);
+        var fd_c = allFD.Count(x => x.create_date >= startOfWeek && x.create_date <= endOfWeek && x.user_id == currentUser.id);
 
         // Calculate todo data
         var todo_c = allTodo.Count(x =>

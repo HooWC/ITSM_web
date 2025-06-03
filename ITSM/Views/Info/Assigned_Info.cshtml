@@ -1,7 +1,45 @@
 ﻿
 @{
     ViewData["Title"] = "Assigned_Info";
+    Layout = "_Layout_Info";
 }
 
-<h1>Assigned_Info</h1>
+<header class="artic-word-header">
+    <p class="artic-word-title"><i class="fa-solid fa-book"></i> ITSM Assignment</p>
+</header>
+<div class="artic-word-scroll-indicator"></div>
+<main class="artic-word-main">
+    <h2 class="artic-word-heading">Assignment</h2>
+    <p>In an ITSM system, the Assignment module is used to assign tickets (or tasks) to specific support groups and personnel to resolve issues more efficiently. Assignment mainly includes the following two parts:</p>
+    <hr />
+    <ul>
+        <li>Assignment group</li>
+        <li>Assigned to</li>
+    </ul>
+    <hr />
+    <h3>1. Assignment Group</h3>
+    <p>First, users need to select the Assignment group, i.e., the department or support team to which the issue will be assigned (e.g., IT, HR, Sales, etc.).</p>
+    <p>After selecting the Assignment group, the system automatically loads the list of assignable personnel belonging to that group.</p>
+    <hr />
+    <h3>2. Assigned To</h3>
+    <p>Assigned to refers to the specific support personnel. After selecting an Assignment group, users can select the desired assignee from the Assigned to field.</p>
+    <p>Only users with Admin and ITIL roles can see the Assigned to option and perform assignment operations in the system.</p>
+    <hr />
+    <h3>3. Permissions</h3>
+    <p>Only Admin and ITIL users have permission to assist users in processing issues. Regular users just need to submit the request.</p>
+    <p>When regular users submit a ticket, they cannot specify the Assigned to field; they can only select the Assignment group. The system then automatically assigns the ticket, or an authorized user assigns it manually.</p>
+    <hr />
+    <h3>4. Use Case</h3>
+    <p>The user submits a ticket and selects an Assignment group (for example, "Software Group").</p>
+    <p>The system automatically loads the members of the software group into the Assigned to field.</p>
+    <p>An Admin or ITIL user then selects the specific support personnel from Assigned to and completes the assignment.</p>
+    <hr />
+    <h3>5. Summary</h3>
+    <p>The Assignment feature enables more refined ticket management and flow by reasonably setting the assignment group and assignee, ensuring issues are handled in a timely and efficient manner.</p>
+    <hr />
+    <p>If you have any questions, please contact the IT department or the relevant person in charge.</p>
+</main>
+<div class="scroll-to-top">
+    <i class="fas fa-arrow-up"></i>
+</div>
 

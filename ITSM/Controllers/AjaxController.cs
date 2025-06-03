@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System;
 using ITSM_DomainModelEntity.FunctionModels;
 using System.Data;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace ITSM.Controllers
 {
@@ -271,10 +272,24 @@ namespace ITSM.Controllers
 
             try
             {
-                var usersInDepartment = await _userApi.GetAllUser_API();
-                var result = usersInDepartment.Where(x => x.department_id == departmentId).ToList();
+                var userTask = _userApi.GetAllUser_API();
+                var roleTask = _roleApi.GetAllRole_API();
+                await Task.WhenAll(roleTask, userTask);
+
+                var allRole = roleTask.Result;
+                var usersInDepartment = userTask.Result;
+
+                var result = usersInDepartment
+                    .Select(user =>
+                    {
+                        user.Role = allRole.FirstOrDefault(r => r.id == user.role_id);
+                        return user;
+                    })
+                    .Where(user => user.department_id == departmentId && user.Role.role.ToLower() != "user")
+                    .ToList();
 
                 return Json(result);
+
             }
             catch (Exception ex)
             {
@@ -1327,7 +1342,7 @@ namespace ITSM.Controllers
                 var productTask = _productApi.GetAllProduct_API();
                 await Task.WhenAll(productTask);
 
-                var allProduct = await productTask;
+                var allProduct = productTask.Result;
 
                 foreach (var id in ids)
                 {

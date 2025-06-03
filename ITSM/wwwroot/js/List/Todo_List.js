@@ -1,5 +1,5 @@
 ﻿var currentPage = 1;
-var itemsPerPage = 18;
+var itemsPerPage = 15;
 var totalItems = $('.todo-item').length;
 var totalPages = Math.ceil(totalItems / itemsPerPage);
 

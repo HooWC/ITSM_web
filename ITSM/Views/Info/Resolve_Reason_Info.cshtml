@@ -1,7 +1,114 @@
 ﻿
 @{
     ViewData["Title"] = "Resolve_Reason_Info";
+    Layout = "_Layout_Info";
 }
 
-<h1>Resolve_Reason_Info</h1>
+<header class="artic-word-header">
+    <p class="artic-word-title"><i class="fa-solid fa-book"></i> ITSM Incident - Work Notes</p>
+</header>
+<div class="artic-word-scroll-indicator"></div>
+<main class="artic-word-main">
+    <h2 class="artic-word-heading">What is Resolve Reason?</h2>
+    <p>
+        In an ITSM (IT Service Management) system, the <strong>Resolve Reason</strong> field is used by technical support staff or administrators to provide a brief explanation when an issue is resolved or closed. This explanation describes how the issue was resolved, making it easier to address similar issues in the future.
+    </p>
+    <p><strong>⚠️ Only Admin and ITIL users can fill in the Resolve Reason.</strong></p>
+    <hr />
+    <h2>When to enter a Resolve Reason?</h2>
+    <p>
+        A Resolve Reason should only be entered when the issue has been fully addressed, the error has been corrected, or appropriate actions have been taken. This ensures that the recorded information is accurate and complete, helping to build a knowledge base and enabling quicker issue resolution in the future.
+    </p>
+    <hr />
+    <h2>List of Resolve Reason Options</h2>
+    <p>
+        Below is a table listing all available Resolve Reason options in the system, grouped into "Technical Resolution" and "Non-Technical Resolution" categories, plus a "Resolved" option.
+    </p>
+
+    <table border="1" cellpadding="5" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>Option</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Technical Resolution</td>
+                <td>Permanent Fix</td>
+                <td>The issue was fully resolved through a permanent repair or change.</td>
+            </tr>
+            <tr>
+                <td>Technical Resolution</td>
+                <td>Configuration Change</td>
+                <td>The issue was resolved by modifying system configurations.</td>
+            </tr>
+            <tr>
+                <td>Technical Resolution</td>
+                <td>Patch/Update Applied</td>
+                <td>The issue was resolved by installing a patch or update.</td>
+            </tr>
+            <tr>
+                <td>Technical Resolution</td>
+                <td>Hardware Replacement</td>
+                <td>The issue was resolved by replacing hardware components.</td>
+            </tr>
+            <tr>
+                <td>Technical Resolution</td>
+                <td>Script/Automation</td>
+                <td>The issue was resolved by using a script or automation tool.</td>
+            </tr>
+            <tr>
+                <td>Technical Resolution</td>
+                <td>Work Around</td>
+                <td>The issue was temporarily resolved using a workaround.</td>
+            </tr>
+            <tr>
+                <td>Technical Resolution</td>
+                <td>Automatically Resolved</td>
+                <td>The issue was automatically resolved by the system or tool.</td>
+            </tr>
+            <tr>
+                <td>Non-Technical Resolution</td>
+                <td>User Education</td>
+                <td>The issue was resolved by explaining or training the user.</td>
+            </tr>
+            <tr>
+                <td>Non-Technical Resolution</td>
+                <td>Vendor Support</td>
+                <td>The issue was resolved by contacting vendor support.</td>
+            </tr>
+            <tr>
+                <td>Non-Technical Resolution</td>
+                <td>Out of Scope</td>
+                <td>The issue was outside the support scope and has been closed.</td>
+            </tr>
+            <tr>
+                <td>Non-Technical Resolution</td>
+                <td>No Issue Found</td>
+                <td>No issue was found, or the problem did not exist.</td>
+            </tr>
+            <tr>
+                <td>Non-Technical Resolution</td>
+                <td>Not Fixed</td>
+                <td>The issue was not fixed, and the ticket has been closed.</td>
+            </tr>
+            <tr>
+                <td>Non-Technical Resolution</td>
+                <td>Known Error</td>
+                <td>The issue is a known error and has been logged accordingly.</td>
+            </tr>
+            <tr>
+                <td>Other</td>
+                <td>Resolved</td>
+                <td>The issue has been resolved, but the specific resolution was not specified.</td>
+            </tr>
+        </tbody>
+    </table>
+</main>
+<div class="scroll-to-top">
+    <i class="fas fa-arrow-up"></i>
+</div>
+
 
