@@ -27,19 +27,6 @@
     }
 </style>
 
-<header class="KB3-header">
-    <div class="KB3-user-profile nav-item navbar-dropdown dropdown-user dropdown open-button">
-        <a class="nav-link dropdown-toggle hide-arrow p-0"
-        href="javascript:void(0);"
-        data-bs-toggle="dropdown">
-            <div class="avatar avatar-online">
-                <img src="@(Model.user.photo != null ? $"data:{Model.user.photo_type};base64," +  Convert.ToBase64String(Model.user.photo) :
-                            Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 rounded-circle" />
-            </div>
-        </a>
-    </div>
-</header>
-
 <nav class="KB3-breadcrumb">
     <ul>
         <li><a href="~/Knowledge/KB_Home">Home</a></li>

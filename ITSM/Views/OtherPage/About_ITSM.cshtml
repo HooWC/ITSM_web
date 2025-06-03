@@ -10,35 +10,11 @@
 <link rel="stylesheet" href="~/css/Info/Info.css" />
 
 <style>
-    /* .layout-page {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    } */
 
-    .dropdown-user {
-        position: fixed;
-        top: 7px;
-        right: 350px;
-        z-index: 1000;
-    }
 </style>
 
 <div class="artic-word-body">
-    <header class="artic-word-header">
-        <p class="artic-word-title"><i class="fa-solid fa-book"></i> About ITSM</p>
-        <div class="nav-item navbar-dropdown dropdown-user dropdown open-button">
-            <a class="nav-link dropdown-toggle hide-arrow p-0"
-               href="javascript:void(0);"
-               data-bs-toggle="dropdown">
-                <div class="avatar avatar-online">
-                    <img src="@(Model.user.photo != null ? $"data:{Model.user.photo_type};base64," +  Convert.ToBase64String(Model.user.photo) :
-                            Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 rounded-circle" />
-                </div>
-            </a>
-        </div>
-    </header>
-    <div class="artic-word-scroll-indicator"></div>
+    
     <main class="artic-word-main">
         <h2 class="artic-word-heading">What is ITSM? A Comprehensive Solution for Enhancing Enterprise IT Service Quality.</h2>
         <p>ITSM (IT Service Management) is a process-based approach used to design, deliver, manage, and improve IT services within an organization. Centered around the user, ITSM leverages systematic and standardized management practices to help businesses improve service efficiency, reduce operational costs, and enhance user satisfaction. In modern enterprises, ITSM is no longer exclusive to large organizations — it has become an essential tool for optimizing IT operations, unifying service processes, and boosting internal collaboration across all types of organizations.</p>

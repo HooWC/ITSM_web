@@ -33,19 +33,6 @@
 <div class="ser-cat-app-container" style="background-color: #121212; height: 100vh; overflow-y: auto;">
 
     <div class="ser-cat-app-content">
-        <div class="ser-cat-app-content-header">
-            <h1 class="ser-cat-app-content-headerText">Service Catalog</h1>
-            <div class="nav-item navbar-dropdown dropdown-user dropdown open-button">
-                <a class="nav-link dropdown-toggle hide-arrow p-0"
-                href="javascript:void(0);"
-                data-bs-toggle="dropdown">
-                    <div class="avatar avatar-online">
-                        <img src="@(Model.user.photo != null ? $"data:{Model.user.photo_type};base64," +  Convert.ToBase64String(Model.user.photo) :
-                            Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 rounded-circle" />
-                    </div>
-                </a>
-            </div>
-        </div>
         <div class="ser-cat-app-content-actions">
             <input class="ser-cat-search-bar" placeholder="Search..." type="text">
             <div class="ser-cat-app-content-actions-wrapper">
