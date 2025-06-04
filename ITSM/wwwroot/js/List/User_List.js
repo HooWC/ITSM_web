@@ -462,7 +462,7 @@ function errorLogin(error) {
 function phone_function() {
     // Phone Design
     if (/Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-        $(".phone_request_hide_design").hide();
+        $(".phone_user_hide_design").hide();
         $('.inc-tab-incidents-table th.number-column').css('width', '28%');
         $(".inc-tab-incidents-table th.u_fullname").css('width', '32%');
         $(".inc-tab-incidents-table th.u_department").css('width', '24%');

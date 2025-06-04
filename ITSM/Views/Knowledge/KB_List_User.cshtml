@@ -49,9 +49,9 @@
                     <a href="#" class="inc-tab-dropdown-item" data-filter="number">Number</a>
                     <a href="#" class="inc-tab-dropdown-item" data-filter="author">Author</a>
                     <a href="#" class="inc-tab-dropdown-item" data-filter="title">Title</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="short_description">Short Description</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="create_date">Create Date</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="update_date">Update Date</a>
+                    <a href="#" class="inc-tab-dropdown-item phone_kownledge_hide_design" data-filter="short_description">Short Description</a>
+                    <a href="#" class="inc-tab-dropdown-item phone_kownledge_hide_design" data-filter="create_date">Create Date</a>
+                    <a href="#" class="inc-tab-dropdown-item phone_kownledge_hide_design" data-filter="update_date">Update Date</a>
                 </div>
             </div>
             <div class="inc-tab-search-container">
@@ -73,8 +73,8 @@
                 <button class="inc-tab-dropdown-toggle" id="statusDropdown">All <i class="fas fa-chevron-down"></i></button>
                 <div class="inc-tab-dropdown-menu" id="statusMenu" style="display:none;">
                     <a href="#" class="inc-tab-dropdown-item" data-status="all">All</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-status="active">Active</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-status="inactive">Inactive</a>
+                    <a href="#" class="inc-tab-dropdown-item phone_kownledge_hide_design" data-status="active">Active</a>
+                    <a href="#" class="inc-tab-dropdown-item phone_kownledge_hide_design" data-status="inactive">Inactive</a>
                 </div>
             </div>
             <button class="inc-tab-new-button item-delete-btn show-error-box-btn" id="deleteButton" disabled>Delete</button>
@@ -99,10 +99,10 @@
                     <th class="inc-tab-sortable number-column" id="sortByNumber">Number <i class="fas fa-arrow-up" id="sortIcon"></i></th>
                     <th class="author">Author</th>
                     <th class="title">Title</th>
-                    <th class="short_description">Short Description</th>
-                    <th class="create_date">Create Date</th>
-                    <th class="update_date">Update Date</th>
-                    <th class="active">Active</th>
+                    <th class="short_description phone_kownledge_hide_design">Short Description</th>
+                    <th class="create_date phone_kownledge_hide_design">Create Date</th>
+                    <th class="update_date phone_kownledge_hide_design">Update Date</th>
+                    <th class="active phone_kownledge_hide_design">Active</th>
                 </tr>
             </thead>
             <tbody id="incTableBody">
@@ -123,10 +123,10 @@
                         </td>
                         <td data-label="a_fullname">@i.Author.fullname</td>
                         <td data-label="title">@i.title</td>
-                        <td data-label="short_description">@i.short_description</td>
-                        <td data-label="create_date">@i.create_date.ToString("yyyy-MM-dd HH:mm:ss")</td>
-                        <td data-label="update_date">@i.updated.ToString("yyyy-MM-dd HH:mm:ss")</td>
-                        <td data-label="active">@(i.active ? "Active" : "Inactive")</td>
+                        <td data-label="short_description" class="phone_kownledge_hide_design">@i.short_description</td>
+                        <td data-label="create_date" class="phone_kownledge_hide_design">@i.create_date.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                        <td data-label="update_date" class="phone_kownledge_hide_design">@i.updated.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                        <td data-label="active" class="phone_kownledge_hide_design">@(i.active ? "Active" : "Inactive")</td>
                     </tr>
                 }
 

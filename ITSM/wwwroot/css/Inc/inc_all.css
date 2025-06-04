@@ -455,7 +455,7 @@ input[type="checkbox"] {
     }
 
     .inc-tab-new-button {
-        width: 48%;
+        /*width: 48%;*/
         font-size: 90%;
     }
 }

@@ -3,6 +3,8 @@ var itemsPerPage = 15;
 var IncidentItems = $('.incident-item').length;
 var IncidentPages = Math.ceil(IncidentItems / itemsPerPage);
 
+phone_function();
+
 // Set default filter field and status
 var currentFilter = 'number';
 var currentStatus = 'all';
@@ -431,15 +433,16 @@ function updateProductTable(data) {
                             <a href="/Product/Product_Info?id=${product.id}">${product.pro_number}</a>
                         </td>
                         <td data-label="Item_title">${product.item_title}</td>
-                        <td data-label="Description">${product.description}</td>
-                        <td data-label="C_Title">${product.category_name}</td>
-                        <td data-label="R_Name">${product.department_name}</td>
+                        <td data-label="Description" class="phone_product_hide_design">${product.description}</td>
+                        <td data-label="C_Title" class="phone_product_hide_design">${product.category_name}</td>
+                        <td data-label="R_Name" class="phone_product_hide_design">${product.department_name}</td>
                         <td data-label="Product_Type">${product.product_type}</td>
                         <td data-label="Quantity">${product.quantity}</td>
-                        <td data-label="Active">${product.active}</td>
+                        <td data-label="Active" class="phone_product_hide_design">${product.active}</td>
                     </tr>
                 `;
         tableBody.append(row);
+        phone_function()
     });
 
     // Reinitialize paging
@@ -455,5 +458,17 @@ function errorLogin(error) {
 
     if (msg === "Not logged in") {
         window.location.href = "/Auth/Login";
+    }
+}
+
+function phone_function() {
+    // Phone Design
+    if (/Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        $(".phone_product_hide_design").hide();
+        $('.inc-tab-incidents-table th.number-column').css('width', '28%');
+        $(".inc-tab-incidents-table th.p_title").css('width', '35%');
+        $(".inc-tab-incidents-table th.p_product_type").css('width', '20%');
+        $(".inc-tab-incidents-table th.p_quantity").css('width', '17%');
+        $(".all-title-header-front").css('font-size', '1rem');
     }
 }

@@ -274,9 +274,9 @@ body {
 }
 
 @media (max-width: 768px) {
-    .KB1-card {
+    /*.KB1-card {
         width: 100%;
-    }
+    }*/
 
     .KB1-search-container {
         width: 90%;

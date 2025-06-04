@@ -3,6 +3,8 @@ var itemsPerPage = 15;
 var IncidentItems = $('.incident-item').length;
 var IncidentPages = Math.ceil(IncidentItems / itemsPerPage);
 
+phone_function();
+
 let searchFunctionName = $('#forAjaxGetFunctionName_search').text();
 let sortFunctionName = $('#forAjaxGetFunctionName_sort').text();
 let filterFunctionName = $('#forAjaxGetFunctionName_filter').text();
@@ -463,13 +465,14 @@ function updateKnowledgeTable(data) {
                         </td>
                         <td data-label="a_fullname">${kb.author}</td>
                         <td data-label="title">${kb.title}</td>
-                        <td data-label="short_description">${kb.short_description}</td>
-                        <td data-label="create_date">${kb.create_date}</td>
-                        <td data-label="update_date">${kb.update_date}</td>
-                        <td data-label="active">${kb.active}</td>
+                        <td data-label="short_description" class="phone_kownledge_hide_design">${kb.short_description}</td>
+                        <td data-label="create_date" class="phone_kownledge_hide_design">${kb.create_date}</td>
+                        <td data-label="update_date" class="phone_kownledge_hide_design">${kb.update_date}</td>
+                        <td data-label="active" class="phone_kownledge_hide_design">${kb.active}</td>
                     </tr>
                 `;
         tableBody.append(row);
+        phone_function()
     });
 
     // Reinitialize paging
@@ -485,5 +488,16 @@ function errorLogin(error) {
 
     if (msg === "Not logged in") {
         window.location.href = "/Auth/Login";
+    }
+}
+
+function phone_function() {
+    // Phone Design
+    if (/Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        $(".phone_kownledge_hide_design").hide();
+        $('.inc-tab-incidents-table th.number-column').css('width', '28%');
+        $(".inc-tab-incidents-table th.author").css('width', '30%');
+        $(".inc-tab-incidents-table th.title").css('width', '42%');
+        $(".all-title-header-front").css('font-size', '1rem');
     }
 }

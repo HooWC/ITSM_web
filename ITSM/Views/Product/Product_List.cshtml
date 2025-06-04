@@ -51,10 +51,10 @@
                 <div class="inc-tab-dropdown-menu" id="filterMenu" style="display:none;">
                     <a href="#" class="inc-tab-dropdown-item" data-filter="number">Number</a>
                     <a href="#" class="inc-tab-dropdown-item" data-filter="title">Title</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="description">Description</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="category">Category</a>
+                    <a href="#" class="inc-tab-dropdown-item phone_product_hide_design" data-filter="description">Description</a>
+                    <a href="#" class="inc-tab-dropdown-item phone_product_hide_design" data-filter="category">Category</a>
                     <a href="#" class="inc-tab-dropdown-item" data-filter="product_type">Product Type</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="responsible">Responsible</a>
+                    <a href="#" class="inc-tab-dropdown-item phone_product_hide_design" data-filter="responsible">Responsible</a>
                     <a href="#" class="inc-tab-dropdown-item" data-filter="quantity">Quantity</a>
                 </div>
             </div>
@@ -77,8 +77,8 @@
                 <button class="inc-tab-dropdown-toggle" id="statusDropdown">All <i class="fas fa-chevron-down"></i></button>
                 <div class="inc-tab-dropdown-menu" id="statusMenu" style="display:none;">
                     <a href="#" class="inc-tab-dropdown-item" data-status="all">All</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-status="active">Active</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-status="inactive">Inactive</a>
+                    <a href="#" class="inc-tab-dropdown-item phone_kownledge_hide_design" data-status="active">Active</a>
+                    <a href="#" class="inc-tab-dropdown-item phone_kownledge_hide_design" data-status="inactive">Inactive</a>
                 </div>
             </div>
             <button class="inc-tab-new-button item-delete-btn show-error-box-btn" id="deleteButton" disabled>Delete</button>
@@ -101,12 +101,12 @@
                     <th class="inc-tab-checkbox-column"></th>
                     <th class="inc-tab-sortable number-column" id="sortByNumber">Number <i class="fas fa-arrow-up" id="sortIcon"></i></th>
                     <th class="p_title">Title</th>
-                    <th class="p_description">Description</th>
-                    <th class="p_category">Category</th>
-                    <th class="p_responsible">Responsible</th>
+                    <th class="p_description phone_product_hide_design">Description</th>
+                    <th class="p_category phone_product_hide_design">Category</th>
+                    <th class="p_responsible phone_product_hide_design">Responsible</th>
                     <th class="p_product_type">Product Type</th>
                     <th class="p_quantity">Quantity</th>
-                    <th class="p_active">Active</th>
+                    <th class="p_active phone_product_hide_design">Active</th>
                 </tr>
             </thead>
             <tbody id="incTableBody">
@@ -119,12 +119,12 @@
                             <a href="~/Product/Product_Info?id=@i.id">@i.pro_number</a>
                         </td>
                         <td data-label="Item_title">@i.item_title</td>
-                        <td data-label="Description">@i.description</td>
-                        <td data-label="C_Title">@i.Category.title</td>
-                        <td data-label="R_Name">@i.ResponsibleDepartment.name</td>
+                        <td data-label="Description" class="phone_product_hide_design">@i.description</td>
+                        <td data-label="C_Title" class="phone_product_hide_design">@i.Category.title</td>
+                        <td data-label="R_Name" class="phone_product_hide_design">@i.ResponsibleDepartment.name</td>
                         <td data-label="Product_Type">@i.product_type</td>
                         <td data-label="Quantity">@i.quantity</td>
-                        <td data-label="Active">@(i.active ? "Active" : "Inactive")</td>
+                        <td data-label="Active" class="phone_product_hide_design">@(i.active ? "Active" : "Inactive")</td>
                     </tr>
                 }
 
