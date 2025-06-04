@@ -3,6 +3,8 @@ var itemsPerPage = 15;
 var IncidentItems = $('.incident-item').length;
 var IncidentPages = Math.ceil(IncidentItems / itemsPerPage);
 
+phone_function()
+
 // Set default filter field and status
 var currentFilter = 'number';
 var currentStatus = 'all';
@@ -426,7 +428,7 @@ function updateAnnouncementTable(data) {
     tableBody.empty();
 
     if (data.length === 0) {
-        tableBody.append('<tr><td colspan="6" class="text-center">No matching Announcement found 2</td></tr>');
+        tableBody.append('<tr><td colspan="6" class="text-center">No matching Announcement found</td></tr>');
         IncidentItems = 0;
         IncidentPages = 0;
         updatePaginationInfo();
@@ -443,17 +445,17 @@ function updateAnnouncementTable(data) {
     $.each(data, function (index, ann) {
         var row = `
                     <tr class="incident-item" data-id="${ann.id}">
-                        <td><input type="checkbox" class="item-checkbox"></td>
                         <td class="inc-tab-incident-number" data-label="Number">
                             <a href="${role_name}?id=${ann.id}">${ann.at_number}</a>
                         </td>
                         <td data-label="title">${ann.ann_title}</td>
                         <td data-label="u_fullname">${ann.fullname}</td>
-                        <td data-label="create date">${ann.create_date}</td>
-                        <td data-label="update date">${ann.update_date}</td>
+                        <td data-label="create date" class="phone_announcement_hide_design">${ann.create_date}</td>
+                        <td data-label="update date" class="phone_announcement_hide_design">${ann.update_date}</td>
                     </tr>
                 `;
         tableBody.append(row);
+        phone_function()
     });
 
     // Reinitialize paging
@@ -469,5 +471,16 @@ function errorLogin(error) {
 
     if (msg === "Not logged in") {
         window.location.href = "/Auth/Login";
+    }
+}
+
+function phone_function() {
+    // Phone Design
+    if (/Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        $(".phone_announcement_hide_design").hide();
+        $('.inc-tab-incidents-table th.number-column').css('width', '28%');
+        $(".inc-tab-incidents-table th.title").css('width', '42%');
+        $(".inc-tab-incidents-table th.create-by").css('width', '30%');
+        $(".all-title-header-front").css('font-size', '1rem');
     }
 }

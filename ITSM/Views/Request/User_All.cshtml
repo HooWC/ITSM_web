@@ -58,14 +58,14 @@
                 <button class="inc-tab-dropdown-toggle" id="filterDropdown">Number <i class="fas fa-chevron-down"></i></button>
                 <div class="inc-tab-dropdown-menu" id="filterMenu" style="display:none;">
                     <a href="#" class="inc-tab-dropdown-item" data-filter="number">Request ID</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="product_id">Product ID</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="user">User</a>
+                    <a href="#" class="inc-tab-dropdown-item phone_request_hide_design" data-filter="product_id">Product ID</a>
+                    <a href="#" class="inc-tab-dropdown-item phone_request_hide_design" data-filter="user">User</a>
                     <a href="#" class="inc-tab-dropdown-item" data-filter="product_type">Product Type</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="assignment_group">Assignment Group</a>
+                    <a href="#" class="inc-tab-dropdown-item phone_request_hide_design" data-filter="assignment_group">Assignment Group</a>
                     <a href="#" class="inc-tab-dropdown-item" data-filter="quantity">Quantity</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="updated_by">Updated By</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="create_date">Create Date</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="closed_date">Closed Date</a>
+                    <a href="#" class="inc-tab-dropdown-item phone_request_hide_design" data-filter="updated_by">Updated By</a>
+                    <a href="#" class="inc-tab-dropdown-item phone_request_hide_design" data-filter="create_date">Create Date</a>
+                    <a href="#" class="inc-tab-dropdown-item phone_request_hide_design" data-filter="closed_date">Closed Date</a>
                 </div>
             </div>
             <div class="inc-tab-search-container">
@@ -111,17 +111,17 @@
         <table class="inc-tab-incidents-table">
             <thead>
                 <tr>
-                   @*  <th class="inc-tab-checkbox-column"></th> *@
+                    @* <th class="inc-tab-checkbox-column"></th> *@
                     <th class="inc-tab-sortable number-column" id="sortByNumber">Number <i class="fas fa-arrow-up" id="sortIcon"></i></th>
-                    <th class="r_product_id">Product Id</th>
-                    <th class="r_user">User</th>
+                    <th class="r_product_id phone_request_hide_design">Product Id</th>
+                    <th class="r_user phone_request_hide_design">User</th>
                     <th class="r_product_type">Product Type</th>
                     <th class="r_state">State</th>
-                    <th class="r_assignment_group">Assignment Group</th>
+                    <th class="r_assignment_group phone_request_hide_design">Assignment Group</th>
                     <th class="r_quantity">Quantity</th>
-                    <th class="r_update_by">Updated By</th>
-                    <th class="r_create_date">Create Date</th>
-                    <th class="r_closed_date">Closed Date</th>
+                    <th class="r_update_by phone_request_hide_design">Updated By</th>
+                    <th class="r_create_date phone_request_hide_design">Create Date</th>
+                    <th class="r_closed_date phone_request_hide_design">Closed Date</th>
                 </tr>
             </thead>
             <tbody id="incTableBody">
@@ -131,17 +131,17 @@
                     <tr class="incident-item" data-id="@i.id">
                         @* <td><input type="checkbox" class="item-checkbox"></td> *@
                         <td class="inc-tab-incident-number" data-label="Number">
-                            <a href="~/Request/Req_Info?id=@i.id&role=User">@i.req_id</a>
+                            <a href="~/Request/Req_Info?id=@i.id&role=Admin">@i.req_id</a>
                         </td>
-                        <td data-label="Product_Number">@i.Product.pro_number</td>
-                        <td data-label="Full_Name">@i.Sender.fullname</td>
+                        <td data-label="Product_Number" class="phone_request_hide_design">@i.Product.pro_number</td>
+                        <td data-label="Full_Name" class="phone_request_hide_design">@i.Sender.fullname</td>
                         <td data-label="Product_Type">@i.Product.product_type</td>
                         <td data-label="State">@i.state</td>
-                        <td data-label="AssignmentGroup">@i.AssignmentGroup.name</td>
+                        <td data-label="AssignmentGroup" class="phone_request_hide_design">@i.AssignmentGroup.name</td>
                         <td data-label="Quantity">@i.quantity</td>
-                        <td data-label="Updated_By">@i.UpdatedBy.fullname</td>
-                        <td data-label="Create_Date">@i.create_date.ToString("yyyy-MM-dd HH:mm:ss")</td>
-                        <td data-label="Closed_date">@(i.closed_date != null ? i.closed_date?.ToString("yyyy-MM-dd HH:mm:ss") : "-")</td>
+                        <td data-label="Updated_By" class="phone_request_hide_design">@i.UpdatedBy.fullname</td>
+                        <td data-label="Create_Date" class="phone_request_hide_design">@i.create_date.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                        <td data-label="Closed_date" class="phone_request_hide_design">@(i.closed_date != null ? i.closed_date?.ToString("yyyy-MM-dd HH:mm:ss") : "-")</td>
                     </tr>
                 }
 

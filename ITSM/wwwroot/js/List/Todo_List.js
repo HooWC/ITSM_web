@@ -3,6 +3,8 @@ var itemsPerPage = 15;
 var totalItems = $('.todo-item').length;
 var totalPages = Math.ceil(totalItems / itemsPerPage);
 
+phone_function();
+
 // Set default filter field and status
 var currentFilter = 'number';
 var currentStatus = 'all';
@@ -442,12 +444,13 @@ function updateTodoTable(data) {
                           <a href="/Personal/Todo_Edit?id=${todo.id}">${todo.todo_id}
                       </td>
                       <td data-label="title">${todo.title}</td>
-                      <td data-label="create_date">${formatDate(todo.create_date)}</td>
-                      <td data-label="update_date">${todo.update_date}</td>
+                      <td data-label="create_date" class="phone_todo_hide_design">${formatDate(todo.create_date)}</td>
+                      <td data-label="update_date" class="phone_todo_hide_design">${todo.update_date}</td>
                       <td data-label="active">${todo.active ? "Completed" : "Doing"}</td>
                   </tr>
               `;
         tableBody.append(row);
+        phone_function();
     });
 
     // Reinitialize paging
@@ -463,5 +466,16 @@ function errorLogin(error) {
 
     if (msg === "Not logged in") {
         window.location.href = "/Auth/Login";
+    }
+}
+
+function phone_function() {
+    // Phone Design
+    if (/Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        $(".phone_todo_hide_design").hide();
+        $('.inc-tab-incidents-table th.active-column').css('width', '26%');
+        $(".inc-tab-incidents-table th.title-column").css('width', '45%');
+        $(".inc-tab-incidents-table th.number-column").css('width', '25%');
+        $(".all-title-header-front").css('font-size', '1rem');
     }
 }

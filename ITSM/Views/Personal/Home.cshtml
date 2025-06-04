@@ -43,6 +43,17 @@
             width: 36px !important;
             height: 36px !important;
         }
+
+        .pro-file-user-profile-area {
+            width: 100% !important;
+            min-width: unset !important;
+            margin: 0 auto !important;
+            max-width: 500px !important;
+        }
+
+        .pro-file-container {
+            justify-content: center !important;
+        }
     }
     
     @@media screen and (max-width: 480px) {
@@ -54,12 +65,16 @@
             width: 36px !important;
             height: 36px !important;
         }
+
+        .pro-file-user-profile-area {
+            padding: 0 15px !important;
+        }
     }
 </style>
 
 <div class="pro-file-container" style="width: 100%; display: flex;">
 
-    <div class="pro-file-main-area" style="width: 75%; display: flex;">
+    <div class="pro-file-main-area" id="for-phone-pro-file-main-area" style="width: 75%; display: flex;">
 
         <div class="pro-file-main-container" style="width: 100%; display: flex;">
             <div class="pro-file-inbox-container mobile-full-width" style="width: 40%; max-height: 100vh; overflow-y: auto;">
@@ -466,6 +481,12 @@
       updateProgressBar();
       
       setTimeout(adjustCardHeights, 500);
+
+      // Phone Design
+      if (/Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        $("#for-phone-pro-file-main-area").hide();
+        $(".pro-file-user-profile-area").show();
+      }
     });
 </script>
 

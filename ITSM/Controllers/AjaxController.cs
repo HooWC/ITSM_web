@@ -185,13 +185,14 @@ namespace ITSM.Controllers
             else
                 sortedTodos = userTodos.OrderBy(x => x.id).ToList();
 
-            var result = sortedTodos.Select(x => new {
-                x.id,
-                x.title,
-                x.user_id,
-                x.active,
-                create_date = x.create_date.ToString("yyyy-MM-dd HH:mm:ss"),
-                update_date = x.update_date.ToString("yyyy-MM-dd HH:mm:ss")
+            var result = sortedTodos.Select(t => new {
+                t.id,
+                t.todo_id,
+                t.title,
+                t.user_id,
+                t.active,
+                create_date = t.create_date.ToString("yyyy-MM-dd HH:mm:ss"),
+                update_date = t.update_date.ToString("yyyy-MM-dd HH:mm:ss")
             });
 
             return Json(result);

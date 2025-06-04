@@ -570,7 +570,7 @@ select.inc-cre-form-control {
 
     .inc-cre-header-right {
         width: 100%;
-        justify-content: space-between;
+        justify-content: end;
     }
 
     /* Further spacing adjustments */
@@ -598,7 +598,7 @@ select.inc-cre-form-control {
     .inc-cre-back-button,
     .inc-cre-menu-button,
     .inc-cre-btn-icon {
-        width: 28px;
+        width: 58px;
         height: 28px;
     }
 
@@ -614,7 +614,6 @@ select.inc-cre-form-control {
     }
 }
 
-/* 模态框样式 */
 .inc-cre-modal {
     display: none;
     position: fixed;
@@ -771,7 +770,6 @@ select.inc-cre-form-control {
     background-color: var(--btn-hover);
 }
 
-/* 响应式调整 */
 @media (max-width: 768px) {
     .inc-cre-modal-content {
         width: 95%;
@@ -802,14 +800,12 @@ select.inc-cre-form-control {
 
 /*===*/
 
-/* Notes部分的样式 */
 .inc-cre-notes-container {
     padding: 15px;
     border-radius: 4px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-/* 错误提示样式 */
 .inc-cre-error-alert {
     display: flex;
     justify-content: space-between;

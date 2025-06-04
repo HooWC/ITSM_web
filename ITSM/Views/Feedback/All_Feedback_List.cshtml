@@ -40,8 +40,8 @@
                     <a href="#" class="inc-tab-dropdown-item" data-filter="number">Number</a>
                     <a href="#" class="inc-tab-dropdown-item" data-filter="message">Message</a>
                     <a href="#" class="inc-tab-dropdown-item" data-filter="user">User</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="create_date">Create Date</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="update_date">Update Date</a>
+                    <a href="#" class="inc-tab-dropdown-item phone_feedback_hide_design" data-filter="create_date">Create Date</a>
+                    <a href="#" class="inc-tab-dropdown-item phone_feedback_hide_design" data-filter="update_date">Update Date</a>
                 </div>
             </div>
             <div class="inc-tab-search-container">
@@ -80,8 +80,8 @@
                     <th class="inc-tab-sortable number-column" id="sortByNumber">Number <i class="fas fa-arrow-up" id="sortIcon"></i></th>
                     <th class="message">Message</th>
                     <th class="user">User</th>
-                    <th class="create-date">Create date</th>
-                    <th class="update-date">Update date</th>
+                    <th class="create-date phone_feedback_hide_design">Create date</th>
+                    <th class="update-date phone_feedback_hide_design">Update date</th>
                 </tr>
             </thead>
             <tbody id="incTableBody">
@@ -95,8 +95,8 @@
                         </td>
                         <td data-label="message">@i.message</td>
                         <td data-label="fullname">@i.User.fullname</td>
-                        <td data-label="create date">@i.create_date.ToString("yyyy-MM-dd HH:mm:ss")</td>
-                        <td data-label="update date">@i.update_date.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                        <td data-label="create date" class="phone_feedback_hide_design">@i.create_date.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                        <td data-label="update date" class="phone_feedback_hide_design">@i.update_date.ToString("yyyy-MM-dd HH:mm:ss")</td>
                     </tr>
                 }
 

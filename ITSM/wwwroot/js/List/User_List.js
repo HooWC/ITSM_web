@@ -3,6 +3,8 @@ var itemsPerPage = 15;
 var IncidentItems = $('.incident-item').length;
 var IncidentPages = Math.ceil(IncidentItems / itemsPerPage);
 
+phone_function()
+
 let searchFunctionName = $('#forAjaxGetFunctionName_search').text();
 let sortFunctionName = $('#forAjaxGetFunctionName_sort').text();
 /*let filterFunctionName = $('#forAjaxGetFunctionName_filter').text();*/
@@ -427,17 +429,18 @@ function updateUserTable(data) {
                             <a href="/User/User_Info?id=${u.id}">${u.emp_id}</a>
                         </td>
                         <td data-label="Fullname">${u.fullname}</td>
-                        <td data-label="Email">${u.email}</td>
-                        <td data-label="Gender">${u.gender}</td>
+                        <td data-label="Email" class="phone_user_hide_design">${u.email}</td>
+                        <td data-label="Gender" class="phone_user_hide_design">${u.gender}</td>
                         <td data-label="D_Name">${u.departmentName}</td>
-                        <td data-label="Title">${u.title}</td>
-                        <td data-label="Mobile_Phone">${u.mobile_phone}</td>
-                        <td data-label="R_Role">${u.role}</td>
-                        <td data-label="Race">${u.race}</td>
+                        <td data-label="Title" class="phone_user_hide_design">${u.title}</td>
+                        <td data-label="Mobile_Phone" class="phone_user_hide_design">${u.mobile_phone}</td>
+                        <td data-label="R_Role" class="phone_user_hide_design">${u.role}</td>
+                        <td data-label="Race" class="phone_user_hide_design">${u.race}</td>
                         <td data-label="Active">${u.active}</td>
                     </tr>
                 `;
         tableBody.append(row);
+        phone_function()
     });
 
     // Reinitialize paging
@@ -455,3 +458,16 @@ function errorLogin(error) {
         window.location.href = "/Auth/Login";
     }
 }
+
+function phone_function() {
+    // Phone Design
+    if (/Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        $(".phone_request_hide_design").hide();
+        $('.inc-tab-incidents-table th.number-column').css('width', '28%');
+        $(".inc-tab-incidents-table th.u_fullname").css('width', '32%');
+        $(".inc-tab-incidents-table th.u_department").css('width', '24%');
+        $(".inc-tab-incidents-table th.u_active").css('width', '16%');
+        $(".all-title-header-front").css('font-size', '1rem');
+    }
+}
+    

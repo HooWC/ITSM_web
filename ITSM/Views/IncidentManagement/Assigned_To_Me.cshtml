@@ -54,14 +54,14 @@
                 <button class="inc-tab-dropdown-toggle" id="filterDropdown">Number <i class="fas fa-chevron-down"></i></button>
                 <div class="inc-tab-dropdown-menu" id="filterMenu" style="display:none;">
                     <a href="#" class="inc-tab-dropdown-item" data-filter="number">Number</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="short_description">Short description</a>
+                    <a href="#" class="inc-tab-dropdown-item phone_incident_hide_design" data-filter="short_description">Short description</a>
                     <a href="#" class="inc-tab-dropdown-item" data-filter="priority">Priority</a>
                     <a href="#" class="inc-tab-dropdown-item" data-filter="state">State</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="category">Category</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="assignment_group">Assignment group</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="assigned_to">Assigned to</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="opened">Opened</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="updated">updated</a>
+                    <a href="#" class="inc-tab-dropdown-item phone_incident_hide_design" data-filter="category">Category</a>
+                    <a href="#" class="inc-tab-dropdown-item phone_incident_hide_design" data-filter="assignment_group">Assignment group</a>
+                    <a href="#" class="inc-tab-dropdown-item phone_incident_hide_design" data-filter="assigned_to">Assigned to</a>
+                    <a href="#" class="inc-tab-dropdown-item phone_incident_hide_design" data-filter="opened">Opened</a>
+                    <a href="#" class="inc-tab-dropdown-item phone_incident_hide_design" data-filter="updated">updated</a>
                 </div>
             </div>
             <div class="inc-tab-search-container">
@@ -109,14 +109,14 @@
                 <tr>
                     @* <th class="inc-tab-checkbox-column"></th> *@
                     <th class="inc-tab-sortable number-column" id="sortByNumber">Number <i class="fas fa-arrow-up" id="sortIcon"></i></th>
-                    <th class="i_short-column">Short description</th>
+                    <th class="i_short-column phone_incident_hide_design">Short description</th>
                     <th class="i_priority-column">Priority</th>
                     <th class="i_state-column">State</th>
-                    <th class="i_category-column">Category</th>
-                    <th class="i_assignment-group-column">Assignment group</th>
-                    <th class="i_assigned-to-column">Assigned to</th>
-                    <th class="i_create-date-column">Opened</th>
-                    <th class="i_update-date-column">Updated</th>
+                    <th class="i_category-column phone_incident_hide_design">Category</th>
+                    <th class="i_assignment-group-column phone_incident_hide_design">Assignment group</th>
+                    <th class="i_assigned-to-column phone_incident_hide_design">Assigned to</th>
+                    <th class="i_create-date-column phone_incident_hide_design">Opened</th>
+                    <th class="i_update-date-column phone_incident_hide_design">Updated</th>
                 </tr>
             </thead>
             <tbody id="incTableBody">
@@ -128,7 +128,7 @@
                         <td class="inc-tab-incident-number" data-label="Number">
                             <a href="~/IncidentManagement/Inc_Info_Form?id=@i.id&role=ToMe">@i.inc_number</a>
                         </td>
-                        <td data-label="short description">@i.short_description</td>
+                        <td data-label="short description" class="phone_incident_hide_design">@i.short_description</td>
                         <td data-label="priority">
                             @{
                                 string priorityClass = "inc-tab-priority ";
@@ -156,11 +156,11 @@
                             <span class="@priorityClass">@i.priority</span>
                         </td>
                         <td data-label="state">@i.state</td>
-                        <td data-label="category">@i.category</td>
-                        <td data-label="assignment group">@(i.AssignmentGroup?.name)</td>
-                        <td data-label="assigned to">@(i.AssignedTo?.fullname)</td>
-                        <td data-label="create date">@i.create_date.ToString("yyyy-MM-dd HH:mm:ss")</td>
-                        <td data-label="update date">@i.updated.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                        <td data-label="category" class="phone_incident_hide_design">@i.category</td>
+                        <td data-label="assignment group" class="phone_incident_hide_design">@(i.AssignmentGroup?.name)</td>
+                        <td data-label="assigned to" class="phone_incident_hide_design">@(i.AssignedTo?.fullname)</td>
+                        <td data-label="create date" class="phone_incident_hide_design">@i.create_date.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                        <td data-label="update date" class="phone_incident_hide_design">@i.updated.ToString("yyyy-MM-dd HH:mm:ss")</td>
                     </tr>
                 }
 

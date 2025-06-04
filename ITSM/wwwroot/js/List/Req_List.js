@@ -7,6 +7,8 @@ let searchFunctionName = $('#forAjaxGetFunctionName_search').text();
 let sortFunctionName = $('#forAjaxGetFunctionName_sort').text();
 let filterFunctionName = $('#forAjaxGetFunctionName_filter').text();
 
+phone_function();
+
 // Set default filter field and status
 var currentFilter = 'number';
 var currentStatus = 'all';
@@ -463,22 +465,22 @@ function updateRequestTable(data) {
 
         var row = `
                     <tr class="incident-item" data-id="${req.id}">
-                        
                         <td class="inc-tab-incident-number" data-label="Number">
                             <a href="/Request/Req_Info?id=${req.id}">${req.req_id}</a>
                         </td>
-                        <td data-label="Product_Number">${req.product_id}</td>
-                        <td data-label="Full_Name">${req.user_name}</td>
+                        <td data-label="Product_Number" class="phone_request_hide_design">${req.product_id}</td>
+                        <td data-label="Full_Name" class="phone_request_hide_design">${req.user_name}</td>
                         <td data-label="Product_Type">${req.product_type}</td>
                         <td data-label="State">${req.state}</td>
-                        <td data-label="AssignmentGroup">${req.assignment_group}</td>
+                        <td data-label="AssignmentGroup" class="phone_request_hide_design">${req.assignment_group}</td>
                         <td data-label="Quantity">${req.quantity}</td>
-                        <td data-label="Updated_By">${req.update_by}</td>
-                        <td data-label="Create_Date">${req.create_date}</td>
-                        <td data-label="Closed_date">${req.closed_date}</td>
+                        <td data-label="Updated_By" class="phone_request_hide_design">${req.update_by}</td>
+                        <td data-label="Create_Date" class="phone_request_hide_design">${req.create_date}</td>
+                        <td data-label="Closed_date" class="phone_request_hide_design">${req.closed_date}</td>
                     </tr>
                 `;
         tableBody.append(row);
+        phone_function()
     });
 
     // Reinitialize paging
@@ -496,3 +498,16 @@ function errorLogin(error) {
         window.location.href = "/Auth/Login";
     }
 }
+
+function phone_function() {
+    // Phone Design
+    if (/Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        $(".phone_request_hide_design").hide();
+        $('.inc-tab-incidents-table th.number-column').css('width', '28%');
+        $(".inc-tab-incidents-table th.r_product_type").css('width', '32%');
+        $(".inc-tab-incidents-table th.r_state").css('width', '22%');
+        $(".inc-tab-incidents-table th.r_quantity").css('width', '18%');
+        $(".all-title-header-front").css('font-size', '1rem');
+    }
+}
+

@@ -275,3 +275,15 @@
     .show-error-box-btn:hover {
         background: #3aa76d;
     }
+
+@media (max-width: 480px) {
+    .show-error-box-btn {
+        width: 48%;
+        font-size: 90%;
+    }
+
+    #error-box{
+        width: 70%;
+    }
+
+}

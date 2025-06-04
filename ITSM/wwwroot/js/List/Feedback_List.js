@@ -3,6 +3,8 @@ var itemsPerPage = 15;
 var IncidentItems = $('.incident-item').length;
 var IncidentPages = Math.ceil(IncidentItems / itemsPerPage);
 
+phone_function()
+
 let searchFunctionName = $('#forAjaxGetFunctionName_search').text();
 let sortFunctionName = $('#forAjaxGetFunctionName_sort').text();
 let DeleteFunctionName = $('#forAjaxGetFunctionName_delete').text();
@@ -469,11 +471,12 @@ function updateFeedbackTable(data) {
                         </td>
                         <td data-label="message">${feed.message}</td>
                         <td data-label="fullname">${feed.user}</td>
-                        <td data-label="create date">${feed.create_date}</td>
-                        <td data-label="update date">${feed.update_date}</td>
+                        <td data-label="create date" class="phone_feedback_hide_design">${feed.create_date}</td>
+                        <td data-label="update date" class="phone_feedback_hide_design">${feed.update_date}</td>
                     </tr>
                 `;
         tableBody.append(row);
+        phone_function()
     });
 
     // Reinitialize paging
@@ -489,5 +492,16 @@ function errorLogin(error) {
 
     if (msg === "Not logged in") {
         window.location.href = "/Auth/Login";
+    }
+}
+
+function phone_function() {
+    // Phone Design
+    if (/Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        $(".phone_feedback_hide_design").hide();
+        $('.inc-tab-incidents-table th.number-column').css('width', '28%');
+        $(".inc-tab-incidents-table th.r_product_type").css('width', '42%');
+        $(".inc-tab-incidents-table th.r_state").css('width', '30%');
+        $(".all-title-header-front").css('font-size', '1rem');
     }
 }

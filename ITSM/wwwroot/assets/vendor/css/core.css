@@ -25114,9 +25114,11 @@ li:not(:first-child) .dropdown-item, .dropdown-menu .dropdown-item:not(:first-ch
     flex-grow: 0;
     flex-shrink: 0;
     block-size: 1.375rem;
-    font-size: 1.375rem;
+    font-size: 1rem;
     inline-size: 1.375rem;
     margin-inline-end: 0.5rem;
+    display:flex;
+    align-content:center;
 }
 
 .menu:not(.menu-no-animation) .menu-icon {
@@ -25229,6 +25231,7 @@ li:not(:first-child) .dropdown-item, .dropdown-menu .dropdown-item:not(:first-ch
         .menu-vertical .menu-inner {
             flex: 1 1 auto;
             flex-direction: column;
+            margin-bottom:2%;
         }
 
             .menu-vertical .menu-inner > .menu-item {

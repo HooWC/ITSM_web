@@ -149,7 +149,7 @@
             <div class="col-12 col-xxl-8 order-2 order-md-3 order-xxl-2 mb-6 total-revenue">
                 <div class="card">
                     <div class="row row-bordered g-0">
-                        <div class="col-lg-8">
+                        <div class="col-lg-8" id="show-data-of-totalRevenueChart">
                             <div class="card-header d-flex align-items-center justify-content-between">
                                 <div class="card-title mb-0">
                                     <h5 class="m-0 me-2">Analysis Incidents</h5>
@@ -644,5 +644,11 @@
       if (!$target.hasClass('active') || !$target.hasClass('open')) {
           $target.addClass('active open');
       }
+
+      // Phone Design
+      if (/Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        $("#show-data-of-totalRevenueChart").hide();
+      }
+
     });
 </script>

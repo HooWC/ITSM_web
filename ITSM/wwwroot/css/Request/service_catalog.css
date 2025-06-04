@@ -619,6 +619,12 @@
         }
 }
 
+@media (max-width: 480px) {
+    .ser-cat-app-container {
+        padding-bottom: 100px;
+    }
+}
+
 .ser-cat-gridView .ser-cat-products-row .ser-cat-cell-more-button {
     border: none;
     padding: 0;

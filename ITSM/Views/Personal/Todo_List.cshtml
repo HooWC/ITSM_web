@@ -54,6 +54,12 @@
         width: 12%;
     }
 
+    25
+    45
+    26
+    -19
+    -13
+
     /* .item-delete-btn{
         background: #6b0421;
     }
@@ -96,8 +102,8 @@
                 <div class="inc-tab-dropdown-menu" id="filterMenu" style="display:none;">
                     <a href="#" class="inc-tab-dropdown-item" data-filter="number">Number</a>
                     <a href="#" class="inc-tab-dropdown-item" data-filter="title">Title</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="create_date">Create Date</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="update_date">Update Date</a>
+                    <a href="#" class="inc-tab-dropdown-item phone_todo_hide_design" data-filter="create_date">Create Date</a>
+                    <a href="#" class="inc-tab-dropdown-item phone_todo_hide_design" data-filter="update_date">Update Date</a>
                 </div>
             </div>
             <div class="inc-tab-search-container">
@@ -142,8 +148,8 @@
                     <th class="inc-tab-checkbox-column"></th>
                     <th class="inc-tab-sortable number-column" id="sortByNumber">Number <i class="fas fa-arrow-up" id="sortIcon"></i></th>
                     <th class="title-column">Title</th>
-                    <th class="create-date-column">Create date</th>
-                    <th class="update-date-column">Update date</th>
+                    <th class="create-date-column phone_todo_hide_design">Create date</th>
+                    <th class="update-date-column phone_todo_hide_design">Update date</th>
                     <th class="active-column">Active</th>
                 </tr>
             </thead>
@@ -157,8 +163,8 @@
                             <a href="~/Personal/Todo_Edit?id=@i.id">@i.todo_id</a>
                         </td>
                         <td data-label="title">@i.title</td>
-                        <td data-label="create date">@i.create_date.ToString("yyyy-MM-dd HH:mm:ss")</td>
-                        <td data-label="update date">@i.update_date.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                        <td data-label="create date" class="phone_todo_hide_design">@i.create_date.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                        <td data-label="update date" class="phone_todo_hide_design">@i.update_date.ToString("yyyy-MM-dd HH:mm:ss")</td>
                         <td data-label="active">@((i.active == true) ? "Completed" : "Doing")</td>
                     </tr>
                 }

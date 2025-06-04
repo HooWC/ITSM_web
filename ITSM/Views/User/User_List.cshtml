@@ -68,11 +68,11 @@
                 <div class="inc-tab-dropdown-menu" id="filterMenu" style="display:none;">
                     <a href="#" class="inc-tab-dropdown-item" data-filter="emp_id">EMP ID</a>
                     <a href="#" class="inc-tab-dropdown-item" data-filter="fullname">Full Name</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="email">Email</a>
+                    <a href="#" class="inc-tab-dropdown-item phone_user_hide_design" data-filter="email">Email</a>
                     <a href="#" class="inc-tab-dropdown-item" data-filter="department">Department</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="title">Title</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="mobile">Mobile Phone</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="role">Role</a>
+                    <a href="#" class="inc-tab-dropdown-item phone_user_hide_design" data-filter="title">Title</a>
+                    <a href="#" class="inc-tab-dropdown-item phone_user_hide_design" data-filter="mobile">Mobile Phone</a>
+                    <a href="#" class="inc-tab-dropdown-item phone_user_hide_design" data-filter="role">Role</a>
                 </div>
             </div>
             <div class="inc-tab-search-container">
@@ -118,13 +118,13 @@
                     <th class="inc-tab-checkbox-column"></th>
                     <th class="inc-tab-sortable number-column" id="sortByNumber">EMP ID <i class="fas fa-arrow-up" id="sortIcon"></i></th>
                     <th class="u_fullname">Full Name</th>
-                    <th class="u_email">Email</th>
-                    <th class="u_gender">Gender</th>
+                    <th class="u_email phone_user_hide_design">Email</th>
+                    <th class="u_gender phone_user_hide_design">Gender</th>
                     <th class="u_department">Department</th>
-                    <th class="u_title">Title</th>
-                    <th class="u_mobilephone">Mobile Phone</th>
-                    <th class="u_role">Role</th>
-                    <th class="u_race">Race</th>
+                    <th class="u_title phone_user_hide_design">Title</th>
+                    <th class="u_mobilephone phone_user_hide_design">Mobile Phone</th>
+                    <th class="u_role phone_user_hide_design">Role</th>
+                    <th class="u_race phone_user_hide_design">Race</th>
                     <th class="u_active">Active</th>
                 </tr>
             </thead>
@@ -138,13 +138,13 @@
                             <a href="~/User/User_Info?id=@i.id">@i.emp_id</a>
                         </td>
                         <td data-label="Fullname">@i.fullname</td>
-                        <td data-label="Email">@i.email</td>
-                        <td data-label="Gender">@i.gender</td>
+                        <td data-label="Email" class="phone_user_hide_design">@i.email</td>
+                        <td data-label="Gender" class="phone_user_hide_design">@i.gender</td>
                         <td data-label="D_Name">@i.Department.name</td>
-                        <td data-label="Title">@i.title</td>
-                        <td data-label="Mobile_Phone">@i.mobile_phone</td>
-                        <td data-label="R_Role">@i.Role.role</td>
-                        <td data-label="Race">@i.race</td>
+                        <td data-label="Title" class="phone_user_hide_design">@i.title</td>
+                        <td data-label="Mobile_Phone" class="phone_user_hide_design">@i.mobile_phone</td>
+                        <td data-label="R_Role" class="phone_user_hide_design">@i.Role.role</td>
+                        <td data-label="Race" class="phone_user_hide_design">@i.race</td>
                         <td data-label="Active">@(i.active ? "Active" : "Blocked")</td>
                     </tr>
                 }

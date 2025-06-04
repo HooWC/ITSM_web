@@ -3,6 +3,8 @@ var itemsPerPage = 15;
 var IncidentItems = $('.incident-item').length;
 var IncidentPages = Math.ceil(IncidentItems / itemsPerPage);
 
+phone_function()
+
 let searchFunctionName = $('#forAjaxGetFunctionName_search').text();
 let sortFunctionName = $('#forAjaxGetFunctionName_sort').text();
 let filterFunctionName = $('#forAjaxGetFunctionName_filter').text();
@@ -493,21 +495,21 @@ function updateIncidentTable(data) {
 
         var row = `
                     <tr class="incident-item" data-id="${inc.id}">
-                        
                         <td class="inc-tab-incident-number" data-label="Number">
                             <a href="/IncidentManagement/Inc_Info_Form?id=${inc.id}">${inc.inc_number}</a>
                         </td>
-                        <td data-label="short description">${inc.short_description}</td>
+                        <td data-label="short description" class="phone_incident_hide_design">${inc.short_description}</td>
                         <td data-label="priority"><span class="${priorityClass}">${inc.priority}</span></td>
                         <td data-label="state">${inc.state}</td>
-                        <td data-label="category">${inc.category}</td>
-                        <td data-label="assignment group">${inc.assignment_group}</td>
-                        <td data-label="assigned to">${inc.assigned_to}</td>
-                        <td data-label="create date">${inc.create_date}</td>
-                        <td data-label="update date">${inc.update_date}</td>
+                        <td data-label="category" class="phone_incident_hide_design">${inc.category}</td>
+                        <td data-label="assignment group" class="phone_incident_hide_design">${inc.assignment_group}</td>
+                        <td data-label="assigned to" class="phone_incident_hide_design">${inc.assigned_to}</td>
+                        <td data-label="create date" class="phone_incident_hide_design">${inc.create_date}</td>
+                        <td data-label="update date" class="phone_incident_hide_design">${inc.update_date}</td>
                     </tr>
                 `;
         tableBody.append(row);
+        phone_function()
     });
 
     // Reinitialize paging
@@ -523,5 +525,16 @@ function errorLogin(error) {
 
     if (msg === "Not logged in") {
         window.location.href = "/Auth/Login";
+    }
+}
+
+function phone_function() {
+    // Phone Design
+    if (/Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        $(".phone_incident_hide_design").hide();
+        $('.inc-tab-incidents-table th.number-column').css('width', '28%');
+        $(".inc-tab-incidents-table th.i_priority-column").css('width', '45%');
+        $(".inc-tab-incidents-table th.i_state-column").css('width', '27%');
+        $(".all-title-header-front").css('font-size', '1rem');
     }
 }
