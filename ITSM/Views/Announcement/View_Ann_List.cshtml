@@ -63,18 +63,18 @@
         </div>
     </header>
 
-    <div class="inc-tab-table-options">
+    @* <div class="inc-tab-table-options">
         <div class="inc-tab-checkbox-container">
             <input type="checkbox" id="select-all">
         </div>
         <span class="inc-tab-all-text">All</span>
-    </div>
+    </div> *@
 
     <div class="inc-tab-table-container">
         <table class="inc-tab-incidents-table">
             <thead>
                 <tr>
-                    <th class="inc-tab-checkbox-column"></th>
+                    @* <th class="inc-tab-checkbox-column"></th> *@
                     <th class="inc-tab-sortable number-column" id="sortByNumber">Number <i class="fas fa-arrow-up" id="sortIcon"></i></th>
                     <th class="title">Title</th>
                     <th class="create-by">Create By</th>
@@ -87,7 +87,7 @@
                 @foreach (var i in Model.AnnouncementList)
                 {
                     <tr class="incident-item" data-id="@i.id">
-                        <td><input type="checkbox" class="item-checkbox"></td>
+                        @* <td><input type="checkbox" class="item-checkbox"></td> *@
                         <td class="inc-tab-incident-number" data-label="Number">
                             <a href="~/Announcement/View_Ann_Info?id=@i.id">@i.at_number</a>
                         </td>
@@ -110,6 +110,8 @@
         <button class="inc-tab-pagination-button" id="lastPageBtn"><i class="fas fa-angle-double-right"></i></button>
     </div>
 </div>
+
+<span style="display:none" id="for_search">_view</span>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="~/js/List/Ann_List.js"></script>

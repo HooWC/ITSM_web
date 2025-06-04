@@ -7,6 +7,8 @@ var IncidentPages = Math.ceil(IncidentItems / itemsPerPage);
 var currentFilter = 'number';
 var currentStatus = 'all';
 
+let searchFunctionName = $('#for_search').text();
+
 // Initialize pagination
 initPagination();
 
@@ -424,7 +426,7 @@ function updateAnnouncementTable(data) {
     tableBody.empty();
 
     if (data.length === 0) {
-        tableBody.append('<tr><td colspan="6" class="text-center">No matching Announcement found</td></tr>');
+        tableBody.append('<tr><td colspan="6" class="text-center">No matching Announcement found 2</td></tr>');
         IncidentItems = 0;
         IncidentPages = 0;
         updatePaginationInfo();
@@ -432,12 +434,18 @@ function updateAnnouncementTable(data) {
         return;
     }
 
+    var role_name = "";
+    if (searchFunctionName.includes("_admin"))
+        role_name = "/Announcement/Ann_Info";
+    else
+        role_name = "/Announcement/View_Ann_Info";
+
     $.each(data, function (index, ann) {
         var row = `
                     <tr class="incident-item" data-id="${ann.id}">
                         <td><input type="checkbox" class="item-checkbox"></td>
                         <td class="inc-tab-incident-number" data-label="Number">
-                            <a href="/Announcement/Ann_Info?id=${ann.id}">${ann.at_number}</a>
+                            <a href="${role_name}?id=${ann.id}">${ann.at_number}</a>
                         </td>
                         <td data-label="title">${ann.ann_title}</td>
                         <td data-label="u_fullname">${ann.fullname}</td>

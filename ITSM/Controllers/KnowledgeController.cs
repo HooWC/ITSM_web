@@ -289,7 +289,7 @@ namespace ITSM.Controllers
 
             List<Knowledge> kbs;
             if (kb_search_word != null)
-                kbs = allKB.Where(x => x.title.Contains(kb_search_word)).ToList();
+                kbs = allKB.Where(x => x.title.ToLower().Contains(kb_search_word.ToLower())).ToList();
             else if (showall != null)
                 kbs = allKB;
             else if (category_info != null)

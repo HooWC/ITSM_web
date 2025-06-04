@@ -657,7 +657,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
             },
             labels: ['Incidents', 'Requests', 'Feedbacks', 'Knowledges'],
             series: [incident, request, feedback, knowledge],
-            colors: [config.colors.success, config.colors.primary, config.colors.secondary, config.colors.info],
+            colors: [config.colors.primary, config.colors.success, config.colors.info, config.colors.secondary ],
             stroke: {
                 width: 5,
                 colors: [cardColor]

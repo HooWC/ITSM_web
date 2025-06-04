@@ -15,6 +15,21 @@
         text-decoration: none;
     }
     
+    .pro-file-members {
+        width: 36px !important;
+        height: 36px !important;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 12px;
+        flex-shrink: 0;
+    }
+    
+    .pro-file-member-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 12px;
+    }
+    
     @@media screen and (max-width: 768px) {
         .col-md-4 {
             width: 50%;
@@ -23,16 +38,24 @@
         .mobile-full-width {
             width: 100% !important;
         }
+        
+        .pro-file-members {
+            width: 36px !important;
+            height: 36px !important;
+        }
     }
     
     @@media screen and (max-width: 480px) {
         .col-md-4 {
             width: 100%;
         }
+        
+        .pro-file-members {
+            width: 36px !important;
+            height: 36px !important;
+        }
     }
 </style>
-
-
 
 <div class="pro-file-container" style="width: 100%; display: flex;">
 
@@ -64,16 +87,18 @@
                     <button class="pro-file-add-button" id="refresh-button" onclick="location.reload();">Refresh</button>
                 </div>
             </div>
-            <div class="col-xxl-8 col-lg-12 col-md-12 order-1 mobile-full-width" style="max-height: 100vh; overflow-y: auto; padding:20px; width: 60%;">
+            <div class="col-xxl-8 col-lg-12 col-md-12 order-1 mobile-full-width middle_any_data" style="max-height: 100vh; overflow-y: auto; padding:20px; width: 60%;">
                 <div class="row g-4">
 
-                    <!-- Row: Inc / Inc Pedding / Inc In Progress -->
+                    <!-- Row: Inc / Inc Pedding / Inc In Resolved -->
                     <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 mb-0">
                         <div class="card">
                             <div class="card-body">
                                 <div class="card-title d-flex align-items-start justify-content-between">
                                     <div class="avatar flex-shrink-0">
-                                        <img src="~/assets/img/icons/unicons/paypal.png" alt="paypal" class="rounded" />
+                                        <span class="avatar-initial rounded-2 bg-label-primary">
+                                            <i class="fa-solid fa-screwdriver-wrench rounded"></i>
+                                        </span>
                                     </div>
                                     <div class="dropdown">
                                         <button class="btn p-0"
@@ -99,7 +124,9 @@
                             <div class="card-body">
                                 <div class="card-title d-flex align-items-start justify-content-between">
                                     <div class="avatar flex-shrink-0">
-                                        <img src="~/assets/img/icons/unicons/cc-primary.png" alt="Credit Card" class="rounded" />
+                                        <span class="avatar-initial rounded-2 bg-label-primary">
+                                            <i class="fa-solid fa-screwdriver-wrench rounded"></i>
+                                        </span>
                                     </div>
                                 </div>
                                 <span class="fw-medium d-block mb-1" title="Incidents Pedding">Incidents Pedding</span>
@@ -112,37 +139,9 @@
                             <div class="card-body">
                                 <div class="card-title d-flex align-items-start justify-content-between">
                                     <div class="avatar flex-shrink-0">
-                                        <img src="~/assets/img/icons/unicons/cc-primary.png" alt="Credit Card" class="rounded" />
-                                    </div>
-                                </div>
-                                <span class="fw-medium d-block mb-1" title="Incidents In Progress">Incidents In Progress</span>
-                                <h3 class="card-title mb-2">@Model.InProgressInc</h3>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Row: Inc On-Hold / Inc Resolved / Req -->
-                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 mb-0">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="card-title d-flex align-items-start justify-content-between">
-                                    <div class="avatar flex-shrink-0">
-                                        <img src="~/assets/img/icons/unicons/cc-primary.png" alt="Credit Card" class="rounded" />
-                                    </div>
-                                </div>
-                                <span class="fw-medium d-block mb-1" title="Incidents On-Hold">Incidents On-Hold</span>
-                                <h3 class="card-title mb-2">@Model.OnHoldInc</h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 mb-0">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="card-title d-flex align-items-start justify-content-between">
-                                    <div class="avatar flex-shrink-0">
-                                        <img src="~/assets/img/icons/unicons/chart-success.png"
-                                             alt="chart success"
-                                             class="rounded" />
+                                        <span class="avatar-initial rounded-2 bg-label-primary">
+                                            <i class="fa-solid fa-screwdriver-wrench rounded"></i>
+                                        </span>
                                     </div>
                                 </div>
                                 <span class="fw-medium d-block mb-1" title="Incidents Resolved">Incidents Resolved</span>
@@ -150,12 +149,16 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Row: Req / Req Pedding / Req Completed -->
                     <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 mb-0">
                         <div class="card">
                             <div class="card-body">
                                 <div class="card-title d-flex align-items-start justify-content-between">
                                     <div class="avatar flex-shrink-0">
-                                        <img src="~/assets/img/icons/unicons/paypal.png" alt="paypal" class="rounded" />
+                                        <span class="avatar-initial rounded bg-label-success">
+                                            <i class="icon-base fa-solid fa-desktop rounded"></i>
+                                        </span>
                                     </div>
                                     <div class="dropdown">
                                         <button class="btn p-0"
@@ -176,14 +179,14 @@
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- Row: Req Pedding / Req Resolved / Knowledges -->
                     <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 mb-0">
                         <div class="card">
                             <div class="card-body">
                                 <div class="card-title d-flex align-items-start justify-content-between">
                                     <div class="avatar flex-shrink-0">
-                                        <img src="~/assets/img/icons/unicons/cc-primary.png" alt="Credit Card" class="rounded" />
+                                        <span class="avatar-initial rounded bg-label-success">
+                                            <i class="icon-base fa-solid fa-desktop rounded"></i>
+                                        </span>
                                     </div>
                                 </div>
                                 <span class="fw-medium d-block mb-1" title="Requests Pedding">Requests Pedding</span>
@@ -196,11 +199,43 @@
                             <div class="card-body">
                                 <div class="card-title d-flex align-items-start justify-content-between">
                                     <div class="avatar flex-shrink-0">
-                                        <img src="~/assets/img/icons/unicons/chart.png" alt="Todos" class="rounded" />
+                                        <span class="avatar-initial rounded bg-label-success">
+                                            <i class="icon-base fa-solid fa-desktop rounded"></i>
+                                        </span>
                                     </div>
                                 </div>
-                                <span class="fw-medium d-block mb-1" title="Requests Resolved">Requests Resolved</span>
+                                <span class="fw-medium d-block mb-1" title="Requests Resolved">Requests Completed</span>
                                 <h3 class="card-title mb-2">@Model.CompletedReq</h3>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Row:  Feedback / Knowledge -->
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 mb-0">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="card-title d-flex align-items-start justify-content-between">
+                                    <div class="avatar flex-shrink-0">
+                                        <span class="avatar-initial rounded bg-label-info">
+                                            <i class="icon-base fa-solid fa-comments rounded"></i>
+                                        </span>
+                                    </div>
+                                    <div class="dropdown">
+                                        <button class="btn p-0"
+                                                type="button"
+                                                id="cardOpt1"
+                                                data-bs-toggle="dropdown"
+                                                aria-haspopup="true"
+                                                aria-expanded="false">
+                                            <i class="icon-base bx bx-dots-vertical-rounded text-body-secondary"></i>
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="cardOpt1">
+                                            <a class="dropdown-item" href="~/Feedback/Feedback_List">View More</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="fw-medium d-block mb-1" title="Feedback">Feedback</span>
+                                <h3 class="card-title mb-2">@Model.AllFeedback</h3>
                             </div>
                         </div>
                     </div>
@@ -209,9 +244,9 @@
                             <div class="card-body">
                                 <div class="card-title d-flex align-items-start justify-content-between">
                                     <div class="avatar flex-shrink-0">
-                                        <img src="~/assets/img/icons/unicons/wallet.png"
-                                             alt="User"
-                                             class="rounded" />
+                                        <span class="avatar-initial rounded bg-label-secondary">
+                                            <i class="icon-base fa-solid fa-book-open-reader rounded"></i>
+                                        </span>
                                     </div>
                                     <div class="dropdown">
                                         <button class="btn p-0"
@@ -233,35 +268,7 @@
                         </div>
                     </div>
                     
-                    <!-- Row: Feedback -->
-                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 mb-0">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="card-title d-flex align-items-start justify-content-between">
-                                    <div class="avatar flex-shrink-0">
-                                        <img src="~/assets/img/icons/unicons/wallet-info.png"
-                                             alt="wallet info"
-                                             class="rounded" />
-                                    </div>
-                                    <div class="dropdown">
-                                        <button class="btn p-0"
-                                        type="button"
-                                        id="cardOpt1"
-                                        data-bs-toggle="dropdown"
-                                        aria-haspopup="true"
-                                        aria-expanded="false">
-                                            <i class="icon-base bx bx-dots-vertical-rounded text-body-secondary"></i>
-                                        </button>
-                                        <div class="dropdown-menu" aria-labelledby="cardOpt1">
-                                            <a class="dropdown-item" href="~/Feedback/Feedback_List">View More</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <span class="fw-medium d-block mb-1" title="Feedback">Feedback</span>
-                                <h3 class="card-title mb-2">@Model.AllFeedback</h3>
-                            </div>
-                        </div>
-                    </div>
+                    
 
                 </div>
             </div>

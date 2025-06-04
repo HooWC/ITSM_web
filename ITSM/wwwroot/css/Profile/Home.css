@@ -42,10 +42,10 @@ img {
 .pro-file-container {
     background-color: var(--theme-bg-color);
     display: flex;
-    max-width: 1600px;
     height: 100vh;
     overflow: hidden;
     margin: 0 auto;
+    margin-top:1%;
     /*padding:0px 14px;*/
 }
 
@@ -575,6 +575,7 @@ img {
     align-items: center;
     transition: 0.4s ease;
 }
+
 
 .pro-file-msg-title {
     font-weight: 600;
@@ -1491,14 +1492,11 @@ img {
     }
 }
 
-/* 手机版本响应式设计 */
 @media screen and (max-width: 768px) {
-    /* 在移动视图中强制显示视图切换按钮 */
     #mobile-toggle-menu {
         display: flex !important;
     }
 
-    /* 重写现有样式 */
     .pro-file-container {
         flex-direction: column;
         overflow-y: auto;

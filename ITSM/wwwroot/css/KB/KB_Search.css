@@ -95,8 +95,8 @@ body {
     .KB2-search-container input {
         flex: 1;
         padding: 12px 20px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
+        border: none;
+        border-radius: 3px;
         font-size: clamp(13px, 1.2vw, 14px);
         margin-right: 10px;
     }
@@ -223,15 +223,20 @@ body {
             text-decoration: none;
         }
 
-.KB2-result-path {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 5px;
-    color: #9c9999;
-    font-size: clamp(12px, 1vw, 13px);
-    margin-bottom: 10px;
-}
+            .KB2-result-content h3 a:hover{
+                color:dodgerblue;
+                text-decoration:none;
+            }
+
+            .KB2-result-path {
+                display: flex;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 5px;
+                color: #9c9999;
+                font-size: clamp(12px, 1vw, 13px);
+                margin-bottom: 10px;
+            }
 
     .KB2-result-path i {
         font-size: 8px;

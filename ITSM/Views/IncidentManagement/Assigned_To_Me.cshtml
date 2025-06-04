@@ -5,6 +5,44 @@
     Layout = "_Layout";
 }
 
+<style>
+    .inc-tab-incidents-table th.number-column {
+        width: 8%;
+    }
+
+    .inc-tab-incidents-table th.i_short-column {
+        width: 16%;
+    }
+
+    .inc-tab-incidents-table th.i_create-date-column {
+        width: 12%;
+    }
+
+    .inc-tab-incidents-table th.i_update-date-column {
+        width: 12%;
+    }
+
+    .inc-tab-incidents-table th.i_priority-column {
+        width: 10%;
+    }
+
+    .inc-tab-incidents-table th.i_state-column {
+        width: 9%;
+    }
+
+    .inc-tab-incidents-table th.i_category-column {
+        width: 9%;
+    }
+
+    .inc-tab-incidents-table th.i_assignment-group-column {
+        width: 12%;
+    }
+
+    .inc-tab-incidents-table th.i_assigned-to-column {
+        width: 12%;
+    }
+</style>
+
 <div class="inc-tab-container">
     <header>
         <div class="inc-tab-header-left">
@@ -71,14 +109,14 @@
                 <tr>
                     @* <th class="inc-tab-checkbox-column"></th> *@
                     <th class="inc-tab-sortable number-column" id="sortByNumber">Number <i class="fas fa-arrow-up" id="sortIcon"></i></th>
-                    <th class="short-column">Short description</th>
-                    <th class="priority-column">Priority</th>
-                    <th class="state-column">State</th>
-                    <th class="category-column">Category</th>
-                    <th class="assignment-group-column">Assignment group</th>
-                    <th class="assigned-to-column">Assigned to</th>
-                    <th class="create-date-column">Opened</th>
-                    <th class="update-date-column">Updated</th>
+                    <th class="i_short-column">Short description</th>
+                    <th class="i_priority-column">Priority</th>
+                    <th class="i_state-column">State</th>
+                    <th class="i_category-column">Category</th>
+                    <th class="i_assignment-group-column">Assignment group</th>
+                    <th class="i_assigned-to-column">Assigned to</th>
+                    <th class="i_create-date-column">Opened</th>
+                    <th class="i_update-date-column">Updated</th>
                 </tr>
             </thead>
             <tbody id="incTableBody">

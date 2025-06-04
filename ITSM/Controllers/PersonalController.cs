@@ -72,8 +72,6 @@ namespace ITSM.Controllers
             var incident_list = incident.Take(9).ToList();
             var incident_r_count = incident.Count(x => x.state == "Resolved");
             var incident_p_count = incident.Count(x => x.state == "Pedding");
-            var incident_i_count = incident.Count(x => x.state == "In Progress");
-            var incident_o_count = incident.Count(x => x.state == "On-Hold");
             var incident_all_count = incident.Count;
 
             var allUser = userTask.Result;
@@ -81,8 +79,8 @@ namespace ITSM.Controllers
 
             var allReq = reqTask.Result;
             var req = allReq.Where(x => x.sender == currentUser.id).ToList();
-            var req_r_count = req.Count(x => x.state == "Resolved");
-            var req_p_count = req.Count(x => x.state == "Pending");
+            var req_c_count = req.Count(x => x.state == "Completed");
+            var req_p_count = req.Count(x => x.state == "Pedding");
             var req_all_count = req.Count;
 
             var allKnowledge = knowledgeTask.Result;
@@ -110,9 +108,7 @@ namespace ITSM.Controllers
                 CompletedInc = incident_r_count,
                 AllReq = req_all_count,
                 ApplyReq = req_p_count,
-                InProgressInc = incident_i_count,
-                OnHoldInc = incident_o_count,
-                CompletedReq = req_r_count,
+                CompletedReq = req_c_count,
                 AllKnowledge = knowledge_count,
                 AllFeedback = feedback_count,
                 DepartmentName = getDepartmentName,

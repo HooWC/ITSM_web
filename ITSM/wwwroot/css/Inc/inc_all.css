@@ -157,7 +157,8 @@ input[type="checkbox"] {
         padding: 10px 15px;
         font-weight: 500;
         border-bottom: 1px solid #333;
-        white-space: nowrap;
+        white-space: normal;
+        max-width: 0;
     }
 
     .inc-tab-incidents-table td {
@@ -165,79 +166,69 @@ input[type="checkbox"] {
         border-bottom: 1px solid #333;
         word-wrap: break-word;
         overflow-wrap: break-word;
+        white-space: normal;
+        max-width: 0;
     }
 
         /* Column width adjustments */
         .inc-tab-incidents-table th:nth-child(1),
         .inc-tab-incidents-table td:nth-child(1) {
             width: 40px;
-            white-space: nowrap;
         }
 
         .inc-tab-incidents-table th:nth-child(2),
         .inc-tab-incidents-table td:nth-child(2) {
             width: 120px;
-            white-space: nowrap;
         }
 
         .inc-tab-incidents-table th:nth-child(3),
         .inc-tab-incidents-table td:nth-child(3) {
             width: 10%;
-            white-space: normal;
         }
 
         .inc-tab-incidents-table th:nth-child(4),
         .inc-tab-incidents-table td:nth-child(4) {
             width: 20%;
-            white-space: normal;
         }
 
         .inc-tab-incidents-table th:nth-child(5),
         .inc-tab-incidents-table td:nth-child(5) {
             width: 8%;
-            white-space: normal;
         }
 
         .inc-tab-incidents-table th:nth-child(6),
         .inc-tab-incidents-table td:nth-child(6) {
             width: 8%;
-            white-space: normal;
         }
 
         .inc-tab-incidents-table th:nth-child(7),
         .inc-tab-incidents-table td:nth-child(7) {
             width: 8%;
-            white-space: nowrap;
         }
 
         .inc-tab-incidents-table th:nth-child(8),
         .inc-tab-incidents-table td:nth-child(8) {
             width: 8%;
-            white-space: nowrap;
         }
 
         .inc-tab-incidents-table th:nth-child(9),
         .inc-tab-incidents-table td:nth-child(9) {
             width: 10%;
-            white-space: normal;
         }
 
         .inc-tab-incidents-table th:nth-child(10),
         .inc-tab-incidents-table td:nth-child(10) {
             width: 10%;
-            white-space: normal;
         }
 
         .inc-tab-incidents-table th:nth-child(11),
         .inc-tab-incidents-table td:nth-child(11) {
             width: 10%;
-            white-space: normal;
         }
 
         .inc-tab-incidents-table th:nth-child(12),
         .inc-tab-incidents-table td:nth-child(12) {
             width: 8%;
-            white-space: nowrap;
         }
 
     .inc-tab-incidents-table tbody tr:hover {
@@ -263,7 +254,6 @@ input[type="checkbox"] {
     align-items: center;
 }
 
-    /* 1 - Critical 深红色 */
     .inc-tab-priority.priority-1::before,
     .inc-tab-priority.critical::before {
         content: "";
@@ -271,11 +261,10 @@ input[type="checkbox"] {
         width: 10px;
         height: 10px;
         border-radius: 50%;
-        background-color: #8B0000; /* 深红色 */
+        background-color: #8B0000; 
         margin-right: 5px;
     }
 
-    /* 2 - High 红色 */
     .inc-tab-priority.priority-2::before,
     .inc-tab-priority.high::before {
         content: "";
@@ -283,11 +272,10 @@ input[type="checkbox"] {
         width: 10px;
         height: 10px;
         border-radius: 50%;
-        background-color: #FF0000; /* 红色 */
+        background-color: #FF0000; 
         margin-right: 5px;
     }
 
-    /* 3 - Moderate 黄色 */
     .inc-tab-priority.priority-3::before,
     .inc-tab-priority.moderate::before {
         content: "";
@@ -295,11 +283,10 @@ input[type="checkbox"] {
         width: 10px;
         height: 10px;
         border-radius: 50%;
-        background-color: #FFFF00; /* 黄色 */
+        background-color: #FFFF00; 
         margin-right: 5px;
     }
 
-    /* 4 - Low 青色 */
     .inc-tab-priority.priority-4::before,
     .inc-tab-priority.low::before {
         content: "";
@@ -307,11 +294,10 @@ input[type="checkbox"] {
         width: 10px;
         height: 10px;
         border-radius: 50%;
-        background-color: #00FFFF; /* 青色 */
+        background-color: #00FFFF; 
         margin-right: 5px;
     }
 
-    /* 5 - Planning 浅青色 */
     .inc-tab-priority.priority-5::before,
     .inc-tab-priority.planning::before {
         content: "";
@@ -319,11 +305,10 @@ input[type="checkbox"] {
         width: 10px;
         height: 10px;
         border-radius: 50%;
-        background-color: #E0FFFF; /* 浅青色 */
+        background-color: #E0FFFF; 
         margin-right: 5px;
     }
 
-/* Pagination Styles */
 .inc-tab-pagination {
     display: flex;
     align-items: center;
@@ -356,7 +341,6 @@ input[type="checkbox"] {
     font-size: 14px;
 }
 
-/* Responsive Styles */
 @media (max-width: 1200px) {
     .inc-tab-table-container {
         overflow-x: auto;
@@ -510,15 +494,15 @@ input[type="checkbox"] {
 }
 
 .inc-tab-incidents-table th.create-date-column {
-    width: 9%;
+    width: 11%;
 }
 
 .inc-tab-incidents-table th.update-date-column {
-    width: 9%;
+    width: 11%;
 }
 
 .inc-tab-incidents-table th.priority-column {
-    width: 12%;
+    width: 11%;
 }
 
 .inc-tab-incidents-table th.state-column {
@@ -526,7 +510,7 @@ input[type="checkbox"] {
 }
 
 .inc-tab-incidents-table th.category-column {
-    width: 12%;
+    width: 9%;
 }
 
 .inc-tab-incidents-table th.assignment-group-column {
