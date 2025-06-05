@@ -181,9 +181,9 @@ namespace ITSM.Controllers
 
             List<Todo> sortedTodos;
             if (sortOrder.ToLower() == "desc")
-                sortedTodos = userTodos.OrderByDescending(x => x.id).ToList();
-            else
                 sortedTodos = userTodos.OrderBy(x => x.id).ToList();
+            else
+                sortedTodos = userTodos.OrderByDescending(x => x.id).ToList();
 
             var result = sortedTodos.Select(t => new {
                 t.id,
@@ -2173,6 +2173,10 @@ namespace ITSM.Controllers
             try
             {
                 var reqData = await _reqApi.FindByIDRequest_API(req_id);
+                var productData = await _productApi.FindByIDProduct_API(reqData.pro_id);
+
+                var allRole = await _roleApi.GetAllRole_API();
+                currentUser.Role = allRole.FirstOrDefault(x => x.id == currentUser.role_id);
 
                 if (reqData == null)
                     return Json(new { success = false, message = "Request not found" });
@@ -2181,10 +2185,22 @@ namespace ITSM.Controllers
                 reqData.closed_date = DateTime.Now;
                 reqData.updated_by = currentUser.id;
 
-                bool result = await _reqApi.UpdateRequest_API(reqData);
+                if (productData.product_type == "Product")
+                {
+                    var pro_count = productData.quantity + reqData.quantity;
+                    if(pro_count > 0)
+                    {
+                        productData.active = true;
+                        productData.quantity = pro_count;
+
+                        await _productApi.UpdateProduct_API(productData);
+                    }
+                }
+
+                bool result = await _reqApi.UpdateRequest_API(reqData); 
 
                 if (result)
-                    return Json(new { success = true });
+                    return Json(new { success = true, role = currentUser.Role.role.ToLower() });
                 else
                     return Json(new { success = false, message = "Failed to update request" });
             }
@@ -2205,6 +2221,10 @@ namespace ITSM.Controllers
             try
             {
                 var reqData = await _reqApi.FindByIDRequest_API(req_id);
+                var productData = await _productApi.FindByIDProduct_API(reqData.pro_id);
+
+                var allRole = await _roleApi.GetAllRole_API();
+                currentUser.Role = allRole.FirstOrDefault(x => x.id == currentUser.role_id);
 
                 if (reqData == null)
                     return Json(new { success = false, message = "Request not found" });
@@ -2213,10 +2233,24 @@ namespace ITSM.Controllers
                 reqData.closed_date = null;
                 reqData.updated_by = currentUser.id;
 
+                if (productData.product_type == "Product")
+                {
+                    var pro_count = productData.quantity - reqData.quantity;
+                    if (pro_count < 0)
+                        return Json(new { success = false, message = "Not enough product" });
+                    else
+                    {
+                        if (pro_count <= 0)
+                            productData.active = false;
+                        productData.quantity = pro_count;
+                        await _productApi.UpdateProduct_API(productData);
+                    }
+                }
+
                 bool result = await _reqApi.UpdateRequest_API(reqData);
 
                 if (result)
-                    return Json(new { success = true });
+                    return Json(new { success = true, role = currentUser.Role.role.ToLower() });
                 else
                     return Json(new { success = false, message = "Failed to update request" });
             }

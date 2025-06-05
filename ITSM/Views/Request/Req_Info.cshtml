@@ -283,9 +283,16 @@
                             }
                             @if (selectState != "Completed" && selectState != "Rejected")
                             {
-                                <option value="Pedding" selected="@(selectState == "Pedding")">Pedding</option>
-                                <option value="In Progress" selected="@(selectState == "In Progress")">In Progress</option>
-                                <option value="On-Hold" selected="@(selectState == "On-Hold")">On-Hold</option>
+                                @if (Model.user.Role.role.ToLower() != "user")
+                                {
+                                    <option value="Pedding" selected="@(selectState == "Pedding")">Pedding</option>
+                                    <option value="In Progress" selected="@(selectState == "In Progress")">In Progress</option>
+                                    <option value="On-Hold" selected="@(selectState == "On-Hold")">On-Hold</option>
+                                }
+                                else
+                                {
+                                    <option value="@selectState" selected="selected">@selectState</option>
+                                }
                             }
                             else if (selectState == "Completed")
                             {
@@ -383,7 +390,7 @@
                   if (response.success) {
                       window.location.href = '/Request/User_All';
                   } else {
-                      // alert("Failed to resolve incident: " + response.message);
+                      alert("Error: " + response.message);
                   }
               },
               error: function(xhr, status, error) {
@@ -406,9 +413,14 @@
               },
               success: function(response) {
                   if (response.success) {
-                      window.location.href = '/Request/User_All';
+                      if(response.roleBack != "user"){
+                          window.location.href = '/Request/All';
+                      }
+                      else{
+                          window.location.href = '/Request/User_All';
+                      }
                   } else {
-                      // alert(": " + response.message);
+                      alert("Error: " + response.message);
                   }
               },
               error: function(xhr, status, error) {
@@ -429,9 +441,14 @@
               },
               success: function(response) {
                   if (response.success) {
-                      window.location.href = '/Request/User_All';
+                      if(response.roleBack != "user"){
+                          window.location.href = '/Request/All';
+                      }
+                      else{
+                          window.location.href = '/Request/User_All';
+                      }
                   } else {
-                      // alert(": " + response.message);
+                      alert("Error: " + response.message);
                   }
               },
               error: function(xhr, status, error) {

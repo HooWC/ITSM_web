@@ -555,13 +555,14 @@
                 </div>
             }
 
-            <div class="file-upload-container">
+            <div class="file-upload-container" id="phone-hide-upload-file">
                 <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
-                <label for="file" class="file-upload-label">Drag and drop files here or click to browse</label>
-                <input type="file" id="file" name="file" class="file-upload-input" accept=".xlsx,.xls,.doc,.docx,.pdf,.txt,.csv,.ppt,.pptx,.zip,.rar">
-                <button type="button" id="browseBtn" class="file-upload-btn">Browse Files</button>
-                <div class="file-info">Supports Excel, Word, PDF, PowerPoint and various file formats</div>
-                <div id="selectedFile" class="selected-file"></div>
+                <label class="file-upload-label" id="for-mobile-aleart">The phone doesn't support Import; use a computer instead.</label>
+                <label for="file" class="file-upload-label phone-hide-upload-file">Drag and drop files here or click to browse</label>
+                <input type="file" id="file" name="file" class="file-upload-input phone-hide-upload-file" accept=".xlsx,.xls,.doc,.docx,.pdf,.txt,.csv,.ppt,.pptx,.zip,.rar">
+                <button type="button" id="browseBtn" class="file-upload-btn phone-hide-upload-file">Browse Files</button>
+                <div class="file-info phone-hide-upload-file">Supports Excel, Word, PDF, PowerPoint and various file formats</div>
+                <div id="selectedFile" class="selected-file phone-hide-upload-file"></div>
             </div>
         </form>
     </main>
@@ -582,6 +583,14 @@
             $('#Knowledge_menu_all').addClass('active');
         } else if (role === 'user') {
             $('#Knowledge_menu_all_user').addClass('active');
+        }
+
+        // Phone Design
+        if (/Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+            $(".phone-hide-upload-file").hide();
+            $("#for-mobile-aleart").show();
+        }else{
+            $("#for-mobile-aleart").hide();
         }
 
         $('#browseBtn').click(function() {            $('#file').click();        });        $('#file').change(function() {            var fileName = $(this).val().split('\\').pop();            if (fileName) {                $('#selectedFile').text('Selected file: ' + fileName).show();                $('.file-upload-container').css('border-color', '#3a86ff');            } else {                $('#selectedFile').hide();                $('.file-upload-container').css('border-color', '#444444');            }

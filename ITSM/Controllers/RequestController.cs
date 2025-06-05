@@ -369,6 +369,8 @@ namespace ITSM.Controllers
                 info_pro.quantity = root - req.quantity;
                 if (info_pro.quantity <= 0)
                     info_pro.active = false;
+                else
+                    info_pro.active = true;
 
                 await _productApi.UpdateProduct_API(info_pro);
             }

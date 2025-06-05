@@ -499,5 +499,6 @@ function phone_function() {
         $(".inc-tab-incidents-table th.author").css('width', '30%');
         $(".inc-tab-incidents-table th.title").css('width', '42%');
         $(".all-title-header-front").css('font-size', '1rem');
+        $("#phone-hide-upload-file").hide();
     }
 }
