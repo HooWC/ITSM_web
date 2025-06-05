@@ -453,7 +453,7 @@ function updateRequestTable(data) {
     tableBody.empty();
 
     if (data.length === 0) {
-        tableBody.append('<tr><td colspan="11" class="text-center">No matching Request found</td></tr>');
+        tableBody.append('<tr><td colspan="10" class="text-center">No matching Request found</td></tr>');
         IncidentItems = 0;
         IncidentPages = 0;
         updatePaginationInfo();
