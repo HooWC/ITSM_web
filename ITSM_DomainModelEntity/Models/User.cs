@@ -48,8 +48,8 @@ namespace ITSM_DomainModelEntity.Models
         [ForeignKey("Role")]
         public int? role_id { get; set; }
 
-        [StringLength(50)]
-        public string? username { get; set; }
+        //[StringLength(50)]
+        //public string? username { get; set; }
 
         [StringLength(255)]
         public string? password { get; set; }
@@ -65,8 +65,14 @@ namespace ITSM_DomainModelEntity.Models
 
         public string? photo_type { get; set; }
 
+        public bool approve { get; set; }
+
+        [ForeignKey("M_User")]
+        public int? Manager {  get; set; }
+
         // Navigation properties
         public virtual Role? Role { get; set; }
         public virtual Department? Department { get; set; }
+        public virtual User? M_User { get; set; }
     }
 }

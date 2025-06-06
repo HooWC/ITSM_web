@@ -328,7 +328,6 @@ namespace ITSM_Insfrastruture.Repository.Api
                 var userVerificationData = new
                 {
                     emp_id = user.emp_id,
-                    username = user.username
                 };
 
                 var jsonStr = new StringContent(JsonConvert.SerializeObject(userVerificationData), Encoding.UTF8, "application/json");
@@ -350,7 +349,6 @@ namespace ITSM_Insfrastruture.Repository.Api
                 var passwordResetData = new
                 {
                     emp_id = user.emp_id,
-                    username = user.username,
                     password = user.password
                 };
 

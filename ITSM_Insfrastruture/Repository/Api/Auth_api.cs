@@ -29,7 +29,7 @@ namespace ITSM_Insfrastruture.Repository.Api
             _tokenService = new TokenService(httpContextAccessor);
         }
 
-        public async Task<bool> LoginAsync(string emp_id, string username, string password)
+        public async Task<bool> LoginAsync(string emp_id, string password)
         {
             try
             {
@@ -43,7 +43,7 @@ namespace ITSM_Insfrastruture.Repository.Api
                     return true;
                 }
 
-                var loginData = new { emp_id, username, password };
+                var loginData = new { emp_id, password };
                 var content = new StringContent(System.Text.Json.JsonSerializer.Serialize(loginData), Encoding.UTF8, "application/json");
                 var response = await _client.PostAsync(_authUrl, content);
 
@@ -58,7 +58,6 @@ namespace ITSM_Insfrastruture.Repository.Api
                         {
                             Token = authResult.token,
                             UserId = authResult.user.id,
-                            Username = authResult.user.username,
                             EmpId = authResult.user.emp_id
                         };
 
@@ -148,14 +147,15 @@ namespace ITSM_Insfrastruture.Repository.Api
                 business_phone = apiUser.business_phone,
                 mobile_phone = apiUser.mobile_phone,
                 role_id = apiUser.role_id,
-                username = apiUser.username,
                 password = apiUser.password,
                 race = apiUser.race,
                 update_date = apiUser.update_date,
                 create_date = apiUser.create_date ?? DateTime.Now,
                 active = apiUser.active,
                 photo = apiUser.photo,
-                photo_type = apiUser.photo_type
+                photo_type = apiUser.photo_type,
+                approve = apiUser.approve,
+                Manager = apiUser.Manager,
             };
 
             return user;
@@ -180,7 +180,6 @@ namespace ITSM_Insfrastruture.Repository.Api
             public class UserInfo
             {
                 public int id { get; set; }
-                public string username { get; set; }
                 public string emp_id { get; set; }
             }
         }

@@ -79,7 +79,7 @@ namespace ITSM.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(string emp_id, string username, string password)
+        public async Task<IActionResult> Login(string emp_id, string password)
         {
             var RoleTask = _roleApi.GetAll_With_No_Token_Role_API();
             var DepartmentTask = _departmentApi.GetAll_With_No_Token_Department_API();
@@ -94,7 +94,7 @@ namespace ITSM.Controllers
                 DepartmentList = allDepartment
             };
 
-            if (string.IsNullOrEmpty(emp_id) || string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            if (string.IsNullOrEmpty(emp_id) ||  string.IsNullOrEmpty(password))
             {
                 ViewBag.ErrorMessage = "Please fill in all required fields";
                 return View(model);
@@ -102,13 +102,13 @@ namespace ITSM.Controllers
 
             try
             {
-                bool loginResult = await _authApi.LoginAsync(emp_id, username, password);
+                bool loginResult = await _authApi.LoginAsync(emp_id, password);
 
                 if (loginResult)
                     return RedirectToAction("Index", "Home");
                 else
                 {
-                    ViewBag.ErrorMessage = "Wrong username or password. Try again.";
+                    ViewBag.ErrorMessage = "Wrong employee id or password. Try again.";
                     return View(model);
                 }
             }
@@ -157,7 +157,6 @@ namespace ITSM.Controllers
                 if (string.IsNullOrEmpty(user.emp_id) || 
                     string.IsNullOrEmpty(user.fullname) || 
                     string.IsNullOrEmpty(user.email) ||
-                    string.IsNullOrEmpty(user.username) || 
                     string.IsNullOrEmpty(user.password) ||
                     string.IsNullOrEmpty(user.mobile_phone) ||
                     string.IsNullOrEmpty(role_code) ||
@@ -219,9 +218,10 @@ namespace ITSM.Controllers
                     business_phone = user.business_phone == null ? null : user.business_phone,
                     mobile_phone = user.mobile_phone,
                     role_id = user.role_id,
-                    username = user.username,
                     password = user.password,
-                    race = user.race
+                    race = user.race,
+                    approve = false,
+                    Manager = null
                 };
                 
                 // Register Api
@@ -235,7 +235,7 @@ namespace ITSM.Controllers
                 }
 
                 // Automatically log in after successful registration
-                bool loginResult = await _authApi.LoginAsync(user.emp_id, user.username, user.password);
+                bool loginResult = await _authApi.LoginAsync(user.emp_id, user.password);
                 
                 if (loginResult)
                     return RedirectToAction("Index", "Home");

@@ -338,14 +338,15 @@ namespace ITSM_Insfrastruture.Repository.Token
                 business_phone = original.business_phone,
                 mobile_phone = original.mobile_phone,
                 role_id = original.role_id,
-                username = original.username,
                 password = original.password,
                 race = original.race,
                 update_date = original.update_date,
                 create_date = original.create_date,
                 active = original.active,
-                photo = null, // 不存储photo数据
-                photo_type = original.photo_type // 但保留类型信息
+                photo = null,
+                photo_type = original.photo_type,
+                approve = original.approve,
+                Manager = original.Manager
             };
         }
 
@@ -388,7 +389,6 @@ namespace ITSM_Insfrastruture.Repository.Token
                     {
                         if (_httpContextAccessor.HttpContext.Session != null)
                         {
-                            // 创建不包含photo的用户对象副本进行序列化
                             var userInfoForStorage = CreateUserWithoutPhoto(userInfo);
                             var userInfoJson = System.Text.Json.JsonSerializer.Serialize(userInfoForStorage);
                             _httpContextAccessor.HttpContext.Session.SetString(UserInfoKey, userInfoJson);
@@ -405,17 +405,14 @@ namespace ITSM_Insfrastruture.Repository.Token
                 Console.WriteLine($"Error getting user info from Cookie: {ex.Message}");
             }
             
-            // 如果Session和Cookie中都没有用户信息，尝试从API获取
             try
             {
                 var tokenModel = GetToken();
                 if (tokenModel != null && tokenModel.UserId > 0)
                 {
-                    // 异步获取用户信息并等待结果
                     userInfo = FetchUserInfoFromApiAsync(tokenModel).GetAwaiter().GetResult();
                     if (userInfo != null)
                     {
-                        // 保存获取到的用户信息
                         SaveUserInfo(userInfo);
                         return userInfo;
                     }
@@ -495,14 +492,12 @@ namespace ITSM_Insfrastruture.Repository.Token
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenModel.Token);
                     
-                    // 从API获取用户信息
                     var response = await client.GetAsync($"{_F_U_UserUrl}{tokenModel.UserId}");
                     
                     if (response.IsSuccessStatusCode)
                     {
                         var jsonResponse = await response.Content.ReadAsStringAsync();
                         
-                        // 处理数组格式返回
                         if (jsonResponse.TrimStart().StartsWith("["))
                         {
                             var users = JsonConvert.DeserializeObject<User[]>(jsonResponse);
@@ -511,7 +506,6 @@ namespace ITSM_Insfrastruture.Repository.Token
                                 return users[0];
                             }
                         }
-                        // 处理单个对象格式返回
                         else
                         {
                             var user = JsonConvert.DeserializeObject<User>(jsonResponse);

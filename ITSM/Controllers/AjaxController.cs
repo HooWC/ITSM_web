@@ -419,6 +419,8 @@ namespace ITSM.Controllers
                 userIncs = allIncs.Where(x => x.assigned_to == currentUser.id).OrderByDescending(y => y.id).ToList();
             else if (filterword == "toteam")
                 userIncs = allIncs.Where(x => x.assignment_group == currentUser.department_id).OrderByDescending(y => y.id).ToList();
+            else if (filterword == "closed")
+                userIncs = allIncs.Where(x => (x.assigned_to == currentUser.id || x.updated_by == currentUser.id) && x.state == "Closed").OrderByDescending(y => y.id).ToList();
             else if (filterword == "user")
                 userIncs = allIncs.Where(x => x.sender == currentUser.id).OrderByDescending(y => y.id).ToList();
             else

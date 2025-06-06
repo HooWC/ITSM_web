@@ -165,7 +165,7 @@ function sortIncidents() {
         word = "resolve";
     else if (sortFunctionName.includes("Closed_Assigned_SortIncident"))
         word = "closed";
-    else if (sortFunctionName.includes("Assigned_to_me_Closed_Assigned_SortIncident"))
+    else if (sortFunctionName.includes("Assigned_to_me_Assigned_SortIncident"))
         word = "tome";
     else if (sortFunctionName.includes("Assigned_to_team_Assigned_SortIncident"))
         word = "toteam";
@@ -409,6 +409,12 @@ function filterByStatus() {
     var word = "";
     if (filterFunctionName.includes("Filter_Item_Admin"))
         word = "admin";
+    else if (filterFunctionName.includes("Assigned_to_me_Assigned_FilterIncident"))
+        word = "tome"
+    else if (filterFunctionName.includes("Assigned_to_team_Assigned_FilterIncident"))
+        word = "toteam"
+    else if (filterFunctionName.includes("Closed_Assigned_FilterIncident"))
+        word = "closed"
     else if (filterFunctionName.includes("FilterIncident_user"))
         word = "user";
     else

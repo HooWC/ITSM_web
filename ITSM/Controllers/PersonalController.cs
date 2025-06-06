@@ -321,8 +321,7 @@ namespace ITSM.Controllers
                 !string.IsNullOrEmpty(user.fullname) &&
                 !string.IsNullOrEmpty(user.email) &&
                 !string.IsNullOrEmpty(user.title) &&
-                !string.IsNullOrEmpty(user.mobile_phone) &&
-                !string.IsNullOrEmpty(user.username))
+                !string.IsNullOrEmpty(user.mobile_phone))
             {
                 byte[] fileBytes = null;
 
@@ -357,13 +356,13 @@ namespace ITSM.Controllers
                     {
                         try
                         {
-                            bool loginResult = await _authApi.LoginAsync(user.emp_id, user.username, user.password);
+                            bool loginResult = await _authApi.LoginAsync(user.emp_id, user.password);
 
                             if (loginResult)
                                 info_user.password = new_password;
                             else
                             {
-                                ViewBag.Error = "Wrong username or password. Try again.";
+                                ViewBag.Error = "Wrong employee id or password. Try again.";
                                 return View(model);
                             }
                         }
@@ -379,7 +378,6 @@ namespace ITSM.Controllers
 
                 bool emailEmpid = allUser.Any(u => u.emp_id.ToLower() == user.emp_id.ToLower() && u.id != user.id);
                 bool emailExists = allUser.Any(u => u.email == user.email && u.id != user.id);
-                bool usernameExists = allUser.Any(u => u.username == user.username && u.id != user.id);
                 bool mobilephoneExists = allUser.Any(u => u.mobile_phone == user.mobile_phone && u.id != user.id);
                 bool businessphoneExists = !string.IsNullOrWhiteSpace(user.business_phone) &&
                                             allUser.Any(u => u.business_phone == user.business_phone && u.id != user.id);
@@ -393,12 +391,6 @@ namespace ITSM.Controllers
                 if (emailExists)
                 {
                     ViewBag.Error = "This email is already in use.";
-                    return View(model);
-                }
-
-                if (usernameExists)
-                {
-                    ViewBag.Error = "This username is already in use.";
                     return View(model);
                 }
 
@@ -423,7 +415,6 @@ namespace ITSM.Controllers
                 info_user.race = user.race;
                 info_user.business_phone = user.business_phone;
                 info_user.mobile_phone = user.mobile_phone;
-                info_user.username = user.username;
 
                 // Prefix
                 if (user.gender == "Male")
