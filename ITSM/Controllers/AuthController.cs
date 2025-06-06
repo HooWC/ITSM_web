@@ -81,10 +81,23 @@ namespace ITSM.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(string emp_id, string username, string password)
         {
+            var RoleTask = _roleApi.GetAll_With_No_Token_Role_API();
+            var DepartmentTask = _departmentApi.GetAll_With_No_Token_Department_API();
+            await Task.WhenAll(RoleTask, DepartmentTask);
+
+            var allRole = RoleTask.Result;
+            var allDepartment = DepartmentTask.Result;
+
+            var model = new AllModelVM()
+            {
+                RoleList = allRole,
+                DepartmentList = allDepartment
+            };
+
             if (string.IsNullOrEmpty(emp_id) || string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
                 ViewBag.ErrorMessage = "Please fill in all required fields";
-                return View();
+                return View(model);
             }
 
             try
@@ -96,7 +109,7 @@ namespace ITSM.Controllers
                 else
                 {
                     ViewBag.ErrorMessage = "Wrong username or password. Try again.";
-                    return View();
+                    return View(model);
                 }
             }
             catch (Exception ex)
@@ -105,7 +118,7 @@ namespace ITSM.Controllers
                 Console.WriteLine($"Ex Message: {ex.Message}");
                 Console.WriteLine($"Ex StackTrace: {ex.StackTrace}");
                 ViewBag.ErrorMessage = "An error occurred during login, please try again later";
-                return View();
+                return View(model);
             }
         }
 
