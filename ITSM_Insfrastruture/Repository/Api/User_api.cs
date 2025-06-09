@@ -59,7 +59,6 @@ namespace ITSM_Insfrastruture.Repository.Api
                             {
                                 Token = registerResult.token,
                                 UserId = registerResult.user.id,
-                                Username = registerResult.user.username,
                                 EmpId = registerResult.user.emp_id
                             };
 
@@ -107,7 +106,7 @@ namespace ITSM_Insfrastruture.Repository.Api
                 }
                 else if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
                 {
-                    errorMessage = "Username or employee ID already exists";
+                    errorMessage = "Employee ID already exists";
                 }
 
                 return new RegisterResult
@@ -188,7 +187,7 @@ namespace ITSM_Insfrastruture.Repository.Api
                 }
                 else if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
                 {
-                    errorMessage = "Username or employee ID already exists";
+                    errorMessage = "Employee ID already exists";
                 }
                 return new RegisterResult
                 {
@@ -215,7 +214,6 @@ namespace ITSM_Insfrastruture.Repository.Api
             public class UserInfo
             {
                 public int id { get; set; }
-                public string username { get; set; }
                 public string emp_id { get; set; }
             }
         }
