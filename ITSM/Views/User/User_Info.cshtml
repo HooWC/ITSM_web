@@ -7,104 +7,104 @@
 
 <style>
     * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
     }
 
     body {
-        font-family: 'Segoe UI', Arial, sans-serif;
-        background-color: var(--background-color);
-        color: var(--text-color);
-        line-height: 1.5;
-        margin: 0;
-        min-height: 100vh;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.5;
+    margin: 0;
+    min-height: 100vh;
     }
 
     .inc-file-cre-form-padding {
-        padding: 4px 0px 0px 5px;
+    padding: 4px 0px 0px 5px;
     }
 
     .inc-cre-product-image-container {
-        margin-bottom: 1.25rem;
-        border-radius: 0.375rem;
-        overflow: hidden;
-        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
-        max-width: 100%;
-        height: auto;
+    margin-bottom: 1.25rem;
+    border-radius: 0.375rem;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+    max-width: 100%;
+    height: auto;
     }
 
     .inc-cre-product-image-wrapper {
-        position: relative;
-        width: 100%;
-        height: 0;
-        padding-bottom: 25%; 
-        overflow: hidden;
-        background-color: #121212;
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 25%; 
+    overflow: hidden;
+    background-color: #121212;
     }
 
     .inc-cre-product-image {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: contain; 
-        transition: transform 0.5s ease;
-        background-color: #121212;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain; 
+    transition: transform 0.5s ease;
+    background-color: #121212;
     }
 
     .inc-cre-product-image-overlay {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 50%, transparent 100%);
-        padding: 0.75rem 1.25rem;
-        color: white;
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 50%, transparent 100%);
+    padding: 0.75rem 1.25rem;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     }
 
     .inc-cre-product-title {
-        margin: 0 0 0.25rem 0;
-        font-weight: 600;
-        font-size: 1rem;
+    margin: 0 0 0.25rem 0;
+    font-weight: 600;
+    font-size: 1rem;
     }
 
     .inc-cre-product-description {
-        margin: 0;
-        opacity: 0.9;
-        font-size: 0.75rem;
+    margin: 0;
+    opacity: 0.9;
+    font-size: 0.75rem;
     }
 
     .inc-cre-product-image-wrapper:hover .inc-cre-product-image {
-        transform: scale(1.03);
+    transform: scale(1.03);
     }
 
     .inc-cre-product-image-wrapper.square {
-        padding-bottom: 25%; 
+    padding-bottom: 25%; 
     }
 
     .inc-cre-product-image.landscape {
-        object-position: center;
+    object-position: center;
     }
 
     .inc-cre-product-image.portrait {
-        object-position: center;
+    object-position: center;
     }
 
     .inc-cre-short-description-group {
-        margin-top: 0px;
+    margin-top: 0px;
     }
 
     @@media (max-width: 768px) {
-        .inc-cre-product-image-wrapper {
-            padding-bottom: 35%; 
-        }
+    .inc-cre-product-image-wrapper {
+    padding-bottom: 35%; 
+    }
 
-            .inc-cre-product-image-wrapper.square {
-                padding-bottom: 35%;
-            }
+    .inc-cre-product-image-wrapper.square {
+    padding-bottom: 35%;
+    }
     }
 </style>
 
@@ -113,8 +113,8 @@
         <div class="inc-cre-header-left">
             <button class="inc-cre-menu-button">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                     stroke-linejoin="round">
+                stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
                     <path d="M4 21v-4.586a1 1 0 0 1 .293-.707l11-11a1 1 0 0 1 1.414 0l2.586 2.586a1 1 0 0 1 0 1.414l-11 11A1 1 0 0 1 8.586 21H4z"></path>
                 </svg>
             </button>
@@ -126,7 +126,7 @@
         <div class="inc-cre-header-right">
             <button class="inc-cre-btn inc-cre-btn-icon" onclick="location.href='/Personal/Home'">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"
-                     xmlns="http://www.w3.org/2000/svg">
+                xmlns="http://www.w3.org/2000/svg">
                     <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
                 </svg>
             </button>
@@ -241,9 +241,9 @@
                 </div>
             </div>
 
-            <div class="inc-cre-form-group inc-cre-short-description-group">
+            @* <div class="inc-cre-form-group inc-cre-short-description-group">
                 <label for="role_code" class="inc-cre-form-label">
-                    Role Code (If you change the new Role)
+                    Role Code (If you change to Admin role)
                     <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/Role_Code_Info', '_blank')">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="12" cy="12" r="10"></circle>
@@ -255,7 +255,7 @@
                 <div class="inc-cre-input-with-actions">
                     <input type="text" name="role_code" id="role_code" autocomplete="off" class="inc-cre-form-control">
                 </div>
-            </div>
+            </div> *@
 
             <div class="inc-cre-form-grid">
                 <div class="inc-cre-form-column">
@@ -298,12 +298,34 @@
             </div>
 
             <div class="inc-cre-form-grid">
-                <!-- <div class="inc-cre-form-column">
+                <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
-                        <label for="username" class="inc-cre-form-label inc-cre-required">Username</label>
-                        <input type="text" name="username" minlength="6" autocomplete="off" id="username" class="inc-cre-form-control" required>
+                        <label for="m_user" class="inc-cre-form-label">Manager Name</label>
+                        <input type="text" minlength="6" autocomplete="off" value="@((Model.info_user.M_User != null && Model.info_user.M_User.fullname != null) ? Model.info_user.M_User.fullname : "")" id="m_user" class="inc-cre-form-control" readonly>
                     </div>
-                </div> -->
+                </div>
+
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="r_manager" class="inc-cre-form-label">Manager</label>
+                        <select id="r_manager" name="r_manager" class="inc-cre-form-control">
+                            @{
+                                var selectManagerRole = (Model.info_user.r_manager != null) ? Model.info_user.r_manager : false;
+                            }
+                            <option value="true" selected="@(selectManagerRole ? "selected" : null)">Yes</option>
+                            <option value="false" selected="@(selectManagerRole == false ? "selected" : null)">No</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="inc-cre-form-grid">
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="approve" class="inc-cre-form-label">Approve</label>
+                        <input type="text" name="approve" minlength="6" autocomplete="off" id="approve" class="inc-cre-form-control" value="@(!Model.info_user.approve ? "No" : "Yes")" readonly>
+                    </div>
+                </div>
 
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
@@ -320,7 +342,7 @@
             </div>
 
             <div class="inc-cre-form-grid">
-                <div class="inc-cre-form-column">
+                @* <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="password" class="inc-cre-form-label">
                             Old Password
@@ -334,12 +356,12 @@
                         </label>
                         <input type="password" name="password" id="password" class="inc-cre-form-control" autocomplete="off" required>
                     </div>
-                </div>
+                </div> *@
 
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="new_password" class="inc-cre-form-label">
-                            New Password (Required old password)
+                            New Password (At least 6 word)
                             <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/User_Password_Info', '_blank')">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <circle cx="12" cy="12" r="10"></circle>

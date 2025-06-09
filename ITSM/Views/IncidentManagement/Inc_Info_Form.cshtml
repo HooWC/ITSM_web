@@ -303,7 +303,7 @@
                             {
                                 @if(Model.user.Role.role.ToLower() != "user")
                                 {
-                                    <option value="Pedding" selected="@(Model.incident.state == "Pedding")">Pedding</option>
+                                    <option value="Pending" selected="@(Model.incident.state == "Pending")">Pending</option>
                                     <option value="In Progress" selected="@(Model.incident.state == "In Progress")">In Progress</option>
                                     <option value="On-Hold" selected="@(Model.incident.state == "On-Hold")">On-Hold</option>
                                 }

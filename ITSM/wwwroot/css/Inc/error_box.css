@@ -55,11 +55,10 @@
 
 #error-box {
     position: absolute;
-    width: 35%;
+    width: 40%;
     height: 100%;
     background: linear-gradient(to bottom left, #ef8d9c 40%, #ffc39e 100%);
-    border-radius: 15px;
-    box-shadow: 3px 3px 10px rgba(203, 205, 211, 10);
+    border-radius: 5px;
     perspective: 40px;
     margin: 0 auto;
     z-index: 11;

@@ -433,8 +433,8 @@ namespace ITSM.Controllers
 
             switch (status.ToLower())
             {
-                case "pedding":
-                    filteredIncs = userIncs.Where(t => t.state == "Pedding").ToList();
+                case "pending":
+                    filteredIncs = userIncs.Where(t => t.state == "Pending").ToList();
                     break;
                 case "inprogress":
                     filteredIncs = userIncs.Where(t => t.state == "In Progress").ToList();
@@ -865,8 +865,8 @@ namespace ITSM.Controllers
                 incData.assignment_group = inc.assignment_group;
                 incData.assigned_to = inc.assigned_to == 0 ? null : inc.assigned_to;
 
-                //Change status to Pedding
-                incData.state = "Pedding";
+                //Change status to Pending
+                incData.state = "Pending";
                 incData.updated_by = currentUser.id;
 
                 bool result = await _incApi.UpdateIncident_API(incData);
@@ -1607,21 +1607,12 @@ namespace ITSM.Controllers
                             .Where(t => t.fullname != null && t.fullname.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
                             .ToList();
                         break;
-                    case "email":
-                        filteredUsers = userList
-                            .Where(t => t.email != null && t.email.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                            .ToList();
-                        break;
+                    
                     case "department":
                         var filterDepartments = allDepartments.Where(x => x.name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
                         filteredUsers = (from i in userList
                                          join d in filterDepartments on i.department_id equals d.id
                                          select i).ToList();
-                        break;
-                    case "title":
-                        filteredUsers = userList
-                            .Where(t => t.title != null && t.title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                            .ToList();
                         break;
                     case "mobile":
                         filteredUsers = userList
@@ -1634,6 +1625,22 @@ namespace ITSM.Controllers
                                          join d in filterRoles on i.role_id equals d.id
                                          select i).ToList();
                         break;
+                    case "manager_name":
+                        var filtermanager = allUsers.Where(x => x.fullname.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+                        filteredUsers = (from i in userList
+                                         join rm in filtermanager on i.Manager equals rm.id
+                                         select i).ToList();
+                        break;
+                    case "r_manager":
+                        filteredUsers = userList
+                            .Where(t => (t.r_manager ? "Yes" : "No").Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                    case "approve":
+                        filteredUsers = userList
+                            .Where(t => (t.approve ? "Yes" : "No").Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
                     default:
                         filteredUsers = userList;
                         break;
@@ -1644,13 +1651,15 @@ namespace ITSM.Controllers
                 t.id,
                 t.emp_id,
                 t.fullname,
-                t.email,
                 t.gender,
                 departmentName = allDepartments.FirstOrDefault(d => d.id == t.department_id)?.name ?? "",
-                t.title,
                 t.mobile_phone,
                 role = allRoles.FirstOrDefault(d => d.id == t.role_id)?.role ?? "",
-                t.race,
+                r_manager = t.r_manager ? "Yes" : "No",
+                approve = t.approve ? "Yes" : "No",
+                m_user_fullname = t.Manager == null
+                    ? "Null"
+                    : allUsers.FirstOrDefault(x => x.id == t.Manager)?.fullname ?? "Null",
                 active = t.active == true ? "Active" : "Blocked"
             });
 
@@ -1690,13 +1699,15 @@ namespace ITSM.Controllers
                 t.id,
                 t.emp_id,
                 t.fullname,
-                t.email,
                 t.gender,
                 departmentName = allDepartments.FirstOrDefault(d => d.id == t.department_id)?.name ?? "",
-                t.title,
                 t.mobile_phone,
                 role = allRoles.FirstOrDefault(d => d.id == t.role_id)?.role ?? "",
-                t.race,
+                r_manager = t.r_manager ? "Yes" : "No",
+                approve = t.approve ? "Yes" : "No",
+                m_user_fullname = t.Manager == null
+                    ? "Null"
+                    : allUsers.FirstOrDefault(x => x.id == t.Manager)?.fullname ?? "Null",
                 active = t.active == true ? "Active" : "Blocked"
             });
 
@@ -1727,13 +1738,15 @@ namespace ITSM.Controllers
                 t.id,
                 t.emp_id,
                 t.fullname,
-                t.email,
                 t.gender,
                 departmentName = allDepartments.FirstOrDefault(d => d.id == t.department_id)?.name ?? "",
-                t.title,
                 t.mobile_phone,
                 role = allRoles.FirstOrDefault(d => d.id == t.role_id)?.role ?? "",
-                t.race,
+                r_manager = t.r_manager ? "Yes" : "No",
+                approve = t.approve ? "Yes" : "No",
+                m_user_fullname = t.Manager == null
+                    ? "Null"
+                    : allUsers.FirstOrDefault(x => x.id == t.Manager)?.fullname ?? "Null",
                 active = t.active == true ? "Active" : "Blocked"
             });
 
@@ -1765,7 +1778,6 @@ namespace ITSM.Controllers
                 }
             }
 
-            var allResetUsers = await _userApi.GetAllUser_API();
             var userList = allUsers.Where(x => x.id != currentUser.id).OrderByDescending(y => y.id).ToList();
 
             var allDepartments = await _departmentApi.GetAllDepartment_API();
@@ -1777,13 +1789,15 @@ namespace ITSM.Controllers
                 t.id,
                 t.emp_id,
                 t.fullname,
-                t.email,
                 t.gender,
                 departmentName = allDepartments.FirstOrDefault(d => d.id == t.department_id)?.name ?? "",
-                t.title,
                 t.mobile_phone,
                 role = allRoles.FirstOrDefault(d => d.id == t.role_id)?.role ?? "",
-                t.race,
+                r_manager = t.r_manager ? "Yes" : "No",
+                approve = t.approve ? "Yes" : "No",
+                m_user_fullname = t.Manager == null
+                    ? "Null"
+                    : allUsers.FirstOrDefault(x => x.id == t.Manager)?.fullname ?? "Null",
                 active = t.active == true ? "Active" : "Blocked"
             });
 
@@ -1815,7 +1829,6 @@ namespace ITSM.Controllers
                 }
             }
 
-            var allResetUsers = await _userApi.GetAllUser_API();
             var userList = allUsers.Where(x => x.id != currentUser.id).OrderByDescending(y => y.id).ToList();
 
             var allDepartments = await _departmentApi.GetAllDepartment_API();
@@ -1827,17 +1840,121 @@ namespace ITSM.Controllers
                 t.id,
                 t.emp_id,
                 t.fullname,
-                t.email,
                 t.gender,
                 departmentName = allDepartments.FirstOrDefault(d => d.id == t.department_id)?.name ?? "",
-                t.title,
                 t.mobile_phone,
                 role = allRoles.FirstOrDefault(d => d.id == t.role_id)?.role ?? "",
-                t.race,
+                r_manager = t.r_manager ? "Yes" : "No",
+                approve = t.approve ? "Yes" : "No",
+                m_user_fullname = t.Manager == null
+                    ? "Null"
+                    : allUsers.FirstOrDefault(x => x.id == t.Manager)?.fullname ?? "Null",
                 active = t.active == true ? "Active" : "Blocked"
             });
 
             return Json(result);
+        }
+
+        /// <summary>
+        /// User/Approve User
+        [HttpPost]
+        public async Task<IActionResult> ApproveUsers([FromBody] List<int> ids)
+        {
+            if (ids == null || !ids.Any())
+                return Json(new { success = false, message = "No items selected for active" });
+
+            if (!IsUserLoggedIn(out var currentUser))
+                return Json(new { success = false, message = "Not logged in" });
+
+            var allUsers = await _userApi.GetAllUser_API();
+
+            foreach (var id in ids)
+            {
+                var userApprove = allUsers.FirstOrDefault(t => t.id == id);
+
+                if (userApprove != null)
+                {
+                    // Approve User
+                    userApprove.approve = true;
+                    await _userApi.UpdateUser_API(userApprove);
+                }
+            }
+
+            var userList = allUsers
+                .Where(
+                    x => x.department_id == currentUser.department_id &&
+                         x.approve == false &&
+                         x.r_manager == false &&
+                         x.id != currentUser.id
+                ).OrderByDescending(x => x.id).ToList();
+
+            var allDepartments = await _departmentApi.GetAllDepartment_API();
+            var allRoles = await _roleApi.GetAllRole_API();
+
+            List<User> ReNewUsers = userList;
+
+            var result = ReNewUsers.Select(t => new {
+                t.id,
+                t.emp_id,
+                t.fullname,
+                t.gender,
+                departmentName = allDepartments.FirstOrDefault(d => d.id == t.department_id)?.name ?? "",
+                t.mobile_phone,
+                approve = t.approve ? "Yes" : "No"
+            });
+
+            return Json(result);
+        }
+
+        /// <summary>
+        /// User/Approve User
+        [HttpPost]
+        public async Task<IActionResult> DeleteUser([FromBody] List<int> ids)
+        {
+            if (ids == null || !ids.Any())
+                return Json(new { success = false, message = "No items selected for deletion" });
+
+            if (!IsUserLoggedIn(out var currentUser))
+                return Json(new { success = false, message = "Not logged in" });
+
+            try
+            {
+                int successCount = 0;
+
+                foreach (var id in ids)
+                {
+                    var allUser = await _userApi.GetAllUser_API();
+                    var UserToDelete = allUser.FirstOrDefault(x => x.id == id);
+
+                    if (UserToDelete != null)
+                    {
+                        bool result = await _userApi.DeleteTodo_API(id);
+                        if (result)
+                            successCount++;
+                    }
+                }
+
+                if (successCount > 0)
+                {
+                    return Json(new
+                    {
+                        success = true,
+                        message = $"Successfully deleted {successCount} item(s)"
+                    });
+                }
+                else
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Failed to delete items. Items may not exist or you don't have permission"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = $"Error: {ex.Message}" });
+            }
         }
 
         /// <summary>
@@ -1991,8 +2108,8 @@ namespace ITSM.Controllers
 
             switch (status.ToLower())
             {
-                case "pedding":
-                    filteredReqs = userReqs.Where(t => t.state == "Pedding").ToList();
+                case "pending":
+                    filteredReqs = userReqs.Where(t => t.state == "Pending").ToList();
                     break;
                 case "rejected":
                     filteredReqs = userReqs.Where(t => t.state == "Rejected").ToList();
@@ -2231,7 +2348,7 @@ namespace ITSM.Controllers
                 if (reqData == null)
                     return Json(new { success = false, message = "Request not found" });
 
-                reqData.state = "Pedding";
+                reqData.state = "Pending";
                 reqData.closed_date = null;
                 reqData.updated_by = currentUser.id;
 

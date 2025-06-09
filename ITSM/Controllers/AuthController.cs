@@ -17,20 +17,23 @@ namespace ITSM.Controllers
     public class AuthController : Controller
     {
         private readonly Auth_api _authApi;
+        private readonly UserService _userService;
         private readonly TokenService _tokenService;
         private readonly User_api _userApi;
         private readonly Role_api _roleApi;
         private readonly Department_api _departmentApi;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AuthController(IHttpContextAccessor httpContextAccessor)
+        public AuthController(IHttpContextAccessor httpContextAccessor, UserService userService)
         {
+            _userService = userService;
             _httpContextAccessor = httpContextAccessor;
             _authApi = new Auth_api(httpContextAccessor);
             _tokenService = new TokenService(httpContextAccessor);
             _userApi = new User_api(httpContextAccessor);
             _roleApi = new Role_api(httpContextAccessor);
             _departmentApi = new Department_api(httpContextAccessor);
+            _userService = userService;
         }
 
         public async Task<IActionResult> Login()
@@ -105,7 +108,25 @@ namespace ITSM.Controllers
                 bool loginResult = await _authApi.LoginAsync(emp_id, password);
 
                 if (loginResult)
+                {
+                    var currentUser = await _userService.GetCurrentUserAsync();
+
+                    if (!currentUser.active)
+                    {
+                        ViewBag.ErrorMessage = "Your account has been blocked, please contact your supervisor.";
+                        _tokenService.ClearToken();
+                        return View(model);
+                    }
+
+                    if (!currentUser.approve && !currentUser.r_manager && currentUser.Role.role.ToLower() != "admin")
+                    {
+                        ViewBag.ErrorMessage = "Your account is still under application, please wait for your supervisor's approval.";
+                        _tokenService.ClearToken();
+                        return View(model);
+                    }
+
                     return RedirectToAction("Index", "Home");
+                }
                 else
                 {
                     ViewBag.ErrorMessage = "Wrong employee id or password. Try again.";
@@ -114,7 +135,6 @@ namespace ITSM.Controllers
             }
             catch (Exception ex)
             {
-                // Log any exceptions
                 Console.WriteLine($"Ex Message: {ex.Message}");
                 Console.WriteLine($"Ex StackTrace: {ex.StackTrace}");
                 ViewBag.ErrorMessage = "An error occurred during login, please try again later";
@@ -127,7 +147,7 @@ namespace ITSM.Controllers
             return View();
         }
 
-        [HttpPost]
+        [HttpPost] // No use this function , already remove
         public async Task<IActionResult> ForgotPassword(User user)
         {
             bool res = await _userApi.VerifyUserWithoutToken(user);
@@ -149,18 +169,28 @@ namespace ITSM.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(User user, string role_code, string register_code)
+        public async Task<IActionResult> Register(User user)
         {
+            var RoleTask = _roleApi.GetAll_With_No_Token_Role_API();
+            var DepartmentTask = _departmentApi.GetAll_With_No_Token_Department_API();
+            await Task.WhenAll(RoleTask, DepartmentTask);
+
+            var allRole = RoleTask.Result;
+            var allDepartment = DepartmentTask.Result;
+
+            var model = new AllModelVM()
+            {
+                RoleList = allRole,
+                DepartmentList = allDepartment
+            };
+
             try
             {
-                // Check If Null
                 if (string.IsNullOrEmpty(user.emp_id) || 
                     string.IsNullOrEmpty(user.fullname) || 
                     string.IsNullOrEmpty(user.email) ||
                     string.IsNullOrEmpty(user.password) ||
-                    string.IsNullOrEmpty(user.mobile_phone) ||
-                    string.IsNullOrEmpty(role_code) ||
-                    string.IsNullOrEmpty(register_code))
+                    string.IsNullOrEmpty(user.mobile_phone))
                 {
                     ViewBag.ErrorMessage = "Please fill in all required fields";
                     return View("Login");
@@ -174,37 +204,6 @@ namespace ITSM.Controllers
                 else
                     user.prefix = "-";
 
-                // Register Code
-                if (register_code != Info.RegisterCode)
-                {
-                    ViewBag.ErrorMessage = "Register Code Error";
-                    return View("Login");
-                }
-
-                // Role Code
-                string expectedRoleCode;
-                switch (user.role_id)
-                {
-                    case 1: // Admin
-                        expectedRoleCode = Info.AdminCode;
-                        break;
-                    case 2: // ITIL
-                        expectedRoleCode = Info.ITILCode;
-                        break;
-                    case 3: // User
-                        expectedRoleCode = Info.UserCode;
-                        break;
-                    default:
-                        ViewBag.ErrorMessage = "Role Error";
-                        return View("Login");
-                }
-
-                if (role_code != expectedRoleCode)
-                {
-                    ViewBag.ErrorMessage = "Role Code Error";
-                    return View("Login");
-                }
-
                 var newuser = new User()
                 {
                     emp_id = user.emp_id,
@@ -217,41 +216,31 @@ namespace ITSM.Controllers
                     title = user.title,
                     business_phone = user.business_phone == null ? null : user.business_phone,
                     mobile_phone = user.mobile_phone,
-                    role_id = user.role_id,
+                    role_id = allRole.FirstOrDefault(x => x.role.ToLower() == "user").id,
                     password = user.password,
                     race = user.race,
                     approve = false,
-                    Manager = null
+                    Manager = null,
+                    r_manager = false
                 };
                 
                 // Register Api
-                var userApi = new User_api(_httpContextAccessor);
-                var registerResult = await userApi.Register_User(newuser);
+                bool resule = await _userApi.Register_User(newuser);
                 
-                if (!registerResult.Success)
+                if (!resule)
                 {
-                    ViewBag.ErrorMessage = registerResult.Message ?? "Registration failed";
-                    return View("Login");
+                    ViewBag.ErrorMessage = "Registration failed, please try again";
+                    return View("Login", model);
                 }
 
-                // Automatically log in after successful registration
-                bool loginResult = await _authApi.LoginAsync(user.emp_id, user.password);
-                
-                if (loginResult)
-                    return RedirectToAction("Index", "Home");
-                else
-                {
-                    // If creation succeeds but login fails
-                    ViewBag.ErrorMessage = "Registration was successful, but automatic login failed.";
-                    return View("Login");
-                }
+                return View("Login", model);
             }
             catch (Exception ex)
             {
                 ViewBag.ErrorMessage = "EX: " + ex.Message;
                 Console.WriteLine($"Register Error: {ex.Message}");
                 Console.WriteLine($"Ex Error: {ex.StackTrace}");
-                return View("Login");
+                return View("Login", model);
             }
         }
     }

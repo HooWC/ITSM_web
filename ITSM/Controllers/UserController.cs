@@ -60,6 +60,10 @@ namespace ITSM.Controllers
             {
                 i.Department = allDep.FirstOrDefault(x => x.id == i.department_id);
                 i.Role = allRole.FirstOrDefault(x => x.id == i.role_id);
+                if(i.Manager != null)
+                    i.M_User = allUser.FirstOrDefault(x => x.id == i.Manager);
+                else
+                    i.M_User = null;
             }
 
             var model = new AllModelVM()
@@ -93,7 +97,7 @@ namespace ITSM.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UserCreate(IFormFile file, User user, string role_code)
+        public async Task<IActionResult> UserCreate(IFormFile file, User user)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
 
@@ -114,7 +118,6 @@ namespace ITSM.Controllers
             };
 
             if (!string.IsNullOrEmpty(user.emp_id) &&
-                !string.IsNullOrEmpty(role_code) &&
                 !string.IsNullOrEmpty(user.fullname) &&
                 !string.IsNullOrEmpty(user.password) &&
                 !string.IsNullOrEmpty(user.email) &&
@@ -187,7 +190,9 @@ namespace ITSM.Controllers
                     password = user.password,
                     race = user.race,
                     approve = false,
-                    Manager = null
+                    Manager = null,
+                    r_manager = user.r_manager,
+                    role_id = user.role_id,
                 };
 
                 if (fileBytes != null)
@@ -203,32 +208,6 @@ namespace ITSM.Controllers
                     newuser.prefix = "Ms.";
                 else
                     newuser.prefix = "-";
-
-                // role
-                string expectedRoleCode;
-                switch (user.role_id)
-                {
-                    case 1: // Admin
-                        expectedRoleCode = Info.AdminCode;
-                        break;
-                    case 2: // ITIL
-                        expectedRoleCode = Info.ITILCode;
-                        break;
-                    case 3: // User
-                        expectedRoleCode = Info.UserCode;
-                        break;
-                    default:
-                        ViewBag.Error = "Role Error";
-                        return View(model);
-                }
-
-                if (role_code != expectedRoleCode)
-                {
-                    ViewBag.Error = "Role Code Error";
-                    return View(model);
-                }
-
-                newuser.role_id = user.role_id;
 
                 var registerResult = await _userApi.AdminCreateUser(newuser);
 
@@ -253,14 +232,21 @@ namespace ITSM.Controllers
 
             var departmentTask = _departmentApi.GetAllDepartment_API();
             var roleTask = _roleApi.GetAllRole_API();
-            await Task.WhenAll(departmentTask, roleTask);
+            var userTask = _userApi.GetAllUser_API();
+            await Task.WhenAll(departmentTask, roleTask, userTask);
 
             var allDepartment = departmentTask.Result;
             var allRole = roleTask.Result;
+            var allUser = userTask.Result;
 
             var info_user = await _userApi.FindByIDUser_API(id);
             info_user.Department = allDepartment.Where(x => x.id == currentUser.department_id).FirstOrDefault();
             info_user.Role = allRole.Where(x => x.id == currentUser.role_id).FirstOrDefault();
+
+            if (info_user.Manager != null)
+                info_user.M_User = allUser.FirstOrDefault(x => x.id == info_user.Manager);
+            else
+                info_user.M_User = null;
 
             var model = new AllModelVM()
             {
@@ -274,7 +260,7 @@ namespace ITSM.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> User_Info(User user, string role_code, string new_password)
+        public async Task<IActionResult> User_Info(User user, string new_password)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
 
@@ -305,43 +291,52 @@ namespace ITSM.Controllers
                 !string.IsNullOrEmpty(user.title) &&
                 !string.IsNullOrEmpty(user.mobile_phone))
             {
-               
-                if (user.password != null && new_password != null)
+                if (new_password != null)
                 {
-                    if (user.password == new_password)
-                    {
-                        ViewBag.Error = "The old and new passwords cannot be the same. Please try again.";
-                        return View(model);
-                    }
-                    else if (new_password.Length <= 6)
+                    if (new_password.Length < 6)
                     {
                         ViewBag.Error = "The mew password must be at least 6 word. Please try again.";
                         return View(model);
                     }
-                    else
-                    {
-                        try
-                        {
-                            bool loginResult = await _authApi.LoginAsync(user.emp_id, user.password);
 
-                            if (loginResult)
-                                info_user.password = new_password;
-                            else
-                            {
-                                ViewBag.Error = "Wrong employee id or password. Try again.";
-                                return View(model);
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine($"Ex Message: {ex.Message}");
-                            Console.WriteLine($"Ex StackTrace: {ex.StackTrace}");
-                            ViewBag.Error = "An error occurred during login, please try again later";
-                            return View(model);
-                        }
-                    }
+                    info_user.password = new_password;
                 }
+               
+                //if (user.password != null && new_password != null)
+                //{
+                //    if (user.password == new_password)
+                //    {
+                //        ViewBag.Error = "The old and new passwords cannot be the same. Please try again.";
+                //        return View(model);
+                //    }
+                //    else if (new_password.Length <= 6)
+                //    {
+                //        ViewBag.Error = "The mew password must be at least 6 word. Please try again.";
+                //        return View(model);
+                //    }
+                //    else
+                //    {
+                //        try
+                //        {
+                //            bool loginResult = await _authApi.LoginAsync(user.emp_id, user.password);
 
+                //            if (loginResult)
+                //                info_user.password = new_password;
+                //            else
+                //            {
+                //                ViewBag.Error = "Wrong employee id or password. Try again.";
+                //                return View(model);
+                //            }
+                //        }
+                //        catch (Exception ex)
+                //        {
+                //            Console.WriteLine($"Ex Message: {ex.Message}");
+                //            Console.WriteLine($"Ex StackTrace: {ex.StackTrace}");
+                //            ViewBag.Error = "An error occurred during login, please try again later";
+                //            return View(model);
+                //        }
+                //    }
+                //}
 
                 bool emailEmpid = allUser.Any(u => u.emp_id.ToLower() == user.emp_id.ToLower() && u.id != user.id);
                 bool emailExists = allUser.Any(u => u.email == user.email && u.id != user.id);
@@ -383,6 +378,8 @@ namespace ITSM.Controllers
                 info_user.business_phone = user.business_phone;
                 info_user.mobile_phone = user.mobile_phone;
                 info_user.active = user.active;
+                info_user.role_id = user.role_id;
+                info_user.r_manager = user.r_manager;
 
                 // Prefix
                 if (user.gender == "Male")
@@ -393,34 +390,34 @@ namespace ITSM.Controllers
                     info_user.prefix = "-";
 
                 // role
-                if (user.role_id != info_user.role_id)
-                {
-                    // Role Code
-                    string expectedRoleCode;
-                    switch (user.role_id)
-                    {
-                        case 1: // Admin
-                            expectedRoleCode = Info.AdminCode;
-                            break;
-                        case 2: // ITIL
-                            expectedRoleCode = Info.ITILCode;
-                            break;
-                        case 3: // User
-                            expectedRoleCode = Info.UserCode;
-                            break;
-                        default:
-                            ViewBag.Error = "Role Error";
-                            return View(model);
-                    }
+                //if (user.role_id != info_user.role_id)
+                //{
+                //    // Role Code
+                //    string expectedRoleCode;
+                //    switch (user.role_id)
+                //    {
+                //        case 1: // Admin
+                //            expectedRoleCode = Info.AdminCode;
+                //            break;
+                //        case 2: // ITIL
+                //            expectedRoleCode = Info.ITILCode;
+                //            break;
+                //        case 3: // User
+                //            expectedRoleCode = Info.UserCode;
+                //            break;
+                //        default:
+                //            ViewBag.Error = "Role Error";
+                //            return View(model);
+                //    }
 
-                    if (role_code != expectedRoleCode)
-                    {
-                        ViewBag.Error = "Role Code Error";
-                        return View(model);
-                    }
+                //    if (role_code != expectedRoleCode)
+                //    {
+                //        ViewBag.Error = "Role Code Error";
+                //        return View(model);
+                //    }
 
-                    info_user.role_id = user.role_id;
-                }
+                //    info_user.role_id = user.role_id;
+                //}
 
                 bool result = await _userApi.UpdateUser_API(info_user);
 
@@ -438,6 +435,47 @@ namespace ITSM.Controllers
                 return View(model);
             }
         }
+
+        public async Task<IActionResult> User_Approve_List()
+        {
+            var currentUser = await _userService.GetCurrentUserAsync();
+
+            var userTask = _userApi.GetAllUser_API();
+            var depTask = _depApi.GetAllDepartment_API();
+            var roleTask = _roleApi.GetAllRole_API();
+            await Task.WhenAll(userTask, depTask, roleTask);
+
+            var allUser = userTask.Result;
+            var allDep = depTask.Result;
+            var allRole = roleTask.Result;
+
+            var myApproveUser = allUser
+                .Where(
+                    x => x.department_id == currentUser.department_id &&
+                         x.approve == false &&
+                         x.r_manager == false &&
+                         x.id != currentUser.id
+                ).OrderByDescending(x => x.id).ToList();
+
+            foreach (var i in myApproveUser)
+            {
+                i.Department = allDep.FirstOrDefault(x => x.id == i.department_id);
+                i.Role = allRole.FirstOrDefault(x => x.id == i.role_id);
+                if (i.Manager != null)
+                    i.M_User = allUser.FirstOrDefault(x => x.id == i.Manager);
+                else
+                    i.M_User = null;
+            }
+
+            var model = new AllModelVM()
+            {
+                user = currentUser,
+                UserList = myApproveUser
+            };
+
+            return View(model);
+        }
+
 
         private string GetMimeTypeFromFileSignature(byte[] fileBytes)
         {

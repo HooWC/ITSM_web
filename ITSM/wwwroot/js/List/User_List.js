@@ -429,13 +429,13 @@ function updateUserTable(data) {
                             <a href="/User/User_Info?id=${u.id}">${u.emp_id}</a>
                         </td>
                         <td data-label="Fullname">${u.fullname}</td>
-                        <td data-label="Email" class="phone_user_hide_design">${u.email}</td>
                         <td data-label="Gender" class="phone_user_hide_design">${u.gender}</td>
                         <td data-label="D_Name">${u.departmentName}</td>
-                        <td data-label="Title" class="phone_user_hide_design">${u.title}</td>
                         <td data-label="Mobile_Phone" class="phone_user_hide_design">${u.mobile_phone}</td>
                         <td data-label="R_Role" class="phone_user_hide_design">${u.role}</td>
-                        <td data-label="Race" class="phone_user_hide_design">${u.race}</td>
+                        <td data-label="r_manager" class="phone_user_hide_design">${u.r_manager}</td>
+                        <td data-label="m_user" class="phone_user_hide_design">${u.m_user_fullname}</td>
+                        <td data-label="approve" class="phone_user_hide_design">${u.approve}</td>
                         <td data-label="Active">${u.active}</td>
                     </tr>
                 `;

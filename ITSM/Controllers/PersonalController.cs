@@ -71,7 +71,7 @@ namespace ITSM.Controllers
             var incident = allIncident.Where(x => x.sender == currentUser.id).OrderByDescending(y => y.id).ToList();
             var incident_list = incident.Take(9).ToList();
             var incident_r_count = incident.Count(x => x.state == "Resolved");
-            var incident_p_count = incident.Count(x => x.state == "Pedding");
+            var incident_p_count = incident.Count(x => x.state == "Pending");
             var incident_all_count = incident.Count;
 
             var allUser = userTask.Result;
@@ -80,7 +80,7 @@ namespace ITSM.Controllers
             var allReq = reqTask.Result;
             var req = allReq.Where(x => x.sender == currentUser.id).ToList();
             var req_c_count = req.Count(x => x.state == "Completed");
-            var req_p_count = req.Count(x => x.state == "Pedding");
+            var req_p_count = req.Count(x => x.state == "Pending");
             var req_all_count = req.Count;
 
             var allKnowledge = knowledgeTask.Result;

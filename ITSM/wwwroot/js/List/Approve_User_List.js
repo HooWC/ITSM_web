@@ -3,8 +3,11 @@ var itemsPerPage = 15;
 var IncidentItems = $('.incident-item').length;
 var IncidentPages = Math.ceil(IncidentItems / itemsPerPage);
 
+phone_function()
+
 // Set default filter field and status
-var currentFilter = 'role';
+var currentFilter = 'emp_id';
+var currentStatus = 'all';
 
 // Initialize pagination
 initPagination();
@@ -43,7 +46,7 @@ $('.inc-tab-dropdown-item[data-filter]').click(function (e) {
 
     // If search box is not empty, perform search
     if ($('#searchInput').val().trim() !== '') {
-        searchRole();
+        searchUsers();
     }
 });
 
@@ -110,7 +113,7 @@ $('#lastPageBtn').click(function () {
 
 // Search box input event
 $('#searchInput').on('keyup', function () {
-    searchRole();
+    searchUsers();
 });
 
 // Refresh button click event
@@ -132,10 +135,50 @@ function initPagination() {
     updatePaginationButtons();
 }
 
+// Sort variable
+var currentSortOrder = 'asc'; // Default ascending order
+
+// Sort by Number click event
+$('#sortByNumber').click(function () {
+    // Toggle sort order
+    currentSortOrder = currentSortOrder === 'asc' ? 'desc' : 'asc';
+
+    // Update sort icon
+    if (currentSortOrder === 'asc') {
+        $('#sortIcon').removeClass('fa-arrow-down').addClass('fa-arrow-up');
+    } else {
+        $('#sortIcon').removeClass('fa-arrow-up').addClass('fa-arrow-down');
+    }
+
+    // Call the sort API
+    sortUsers();
+});
+
+// Sort todos function
+function sortUsers() {
+
+    $.ajax({
+        url: '/Ajax/SortUser',
+        method: 'GET',
+        data: {
+            sortOrder: currentSortOrder
+        },
+        success: function (data) {
+            updateUserTable(data);
+            resetPagination();
+        },
+        error: function (error) {
+            errorLogin(error);
+            // console.error('Sort Error:', error);
+        }
+    });
+}
+
 // Check selection and toggle delete button
 function checkSelection() {
     var hasChecked = $('.item-checkbox:checked').length > 0;
     $('#deleteButton').prop('disabled', !hasChecked);
+    $('#approveButton').prop('disabled', !hasChecked);
 }
 
 // Handle checkbox changes
@@ -183,7 +226,7 @@ $('#deleteButton').click(function (e) {
     errorBox.addEventListener('click', function (e) {
         e.stopPropagation();
     });
-    
+
 });
 
 function DeleteItem() {
@@ -205,7 +248,7 @@ function DeleteItem() {
 
     // Send delete request
     $.ajax({
-        url: '/Ajax/DeleteRole',
+        url: '/Ajax/DeleteUser',
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(selectedIds),
@@ -230,6 +273,38 @@ function DeleteItem() {
         }
     });
 }
+
+// Approve button click event
+$('#approveButton').click(function () {
+    if ($(this).prop('disabled')) return;
+
+    var selectedIds = [];
+    $('.item-checkbox:checked').each(function () {
+        var todoId = $(this).closest('tr').attr('data-id');
+        if (todoId) {
+            selectedIds.push(parseInt(todoId));
+        }
+    });
+
+    if (selectedIds.length === 0) {
+        return;
+    }
+
+    $.ajax({
+        url: '/Ajax/ApproveUsers',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(selectedIds),
+        success: function (data) {
+            updateUserTable(data);
+            resetPagination();
+        },
+        error: function (error) {
+            errorLogin(error);
+            // console.error('Delete Error:', error);
+        }
+    });
+});
 
 // Apply paging Function
 function applyPagination() {
@@ -288,21 +363,21 @@ function updatePaginationButtons() {
 }
 
 // Search Todo List Function
-function searchRole() {
+function searchUsers() {
     var searchTerm = $('#searchInput').val().trim();
     if (searchTerm === '') {
         searchTerm = "re_entrynovalue";
     }
 
     $.ajax({
-        url: '/Ajax/SearchRole',
+        url: '/Ajax/SearchUser',
         method: 'GET',
         data: {
             searchTerm: searchTerm,
             filterBy: currentFilter
         },
         success: function (data) {
-            updateRoleTable(data);
+            updateUserTable(data);
             if (currentStatus !== 'all') {
                 filterTableByStatus(currentStatus);
             }
@@ -317,13 +392,63 @@ function searchRole() {
     });
 }
 
+// Filter Select
+function filterByStatus() {
+    if (currentStatus === 'all') {
+        // Filter All active
+        if ($('#searchInput').val().trim() !== '') {
+            searchUsers();
+        } else {
+            location.reload();
+        }
+        return;
+    }
+
+    $.ajax({
+        url: '/Ajax/FilterUserByStatus',
+        method: 'GET',
+        data: {
+            status: currentStatus
+        },
+        success: function (data) {
+            updateUserTable(data);
+
+            // Reset pagination
+            resetPagination();
+        },
+        error: function (error) {
+            errorLogin(error);
+            // console.error('Filter Error:', error);
+        }
+    });
+}
+
+// Filter Active
+function filterTableByStatus(status) {
+    if (status === 'all') return;
+
+    var rows = $('#incTableBody tr');
+    rows.each(function () {
+        var statusCell = $(this).find('td:last-child').text().trim();
+        if ((status === 'doing' && statusCell === 'Doing') ||
+            (status === 'completed' && statusCell === 'Completed')) {
+            $(this).show();
+        } else {
+            $(this).hide();
+        }
+    });
+
+    // Reset pagination
+    resetPagination();
+}
+
 // Update Todo table function
-function updateRoleTable(data) {
+function updateUserTable(data) {
     var tableBody = $('#incTableBody');
     tableBody.empty();
 
     if (data.length === 0) {
-        tableBody.append('<tr><td colspan="6" class="text-center">No matching Role found</td></tr>');
+        tableBody.append('<tr><td colspan="7" class="text-center">No matching User found</td></tr>');
         IncidentItems = 0;
         IncidentPages = 0;
         updatePaginationInfo();
@@ -331,15 +456,22 @@ function updateRoleTable(data) {
         return;
     }
 
-    $.each(data, function (index, role) {
+    $.each(data, function (index, u) {
         var row = `
-                    <tr class="incident-item" data-id="${role.id}">
-                        <td class="inc-tab-incident-number" data-label="Role">
-                            <a href="/Role/Role_Info?id=${role.id}">${role.role}</a>
+                    <tr class="incident-item" data-id="${u.id}">
+                        <td><input type="checkbox" class="item-checkbox"></td>
+                        <td class="inc-tab-incident-number" data-label="Number">
+                            <a href="/User/User_Info?id=${u.id}">${u.emp_id}</a>
                         </td>
+                        <td data-label="Fullname">${u.fullname}</td>
+                        <td data-label="Gender" class="phone_user_hide_design">${u.gender}</td>
+                        <td data-label="D_Name">${u.departmentName}</td>
+                        <td data-label="Mobile_Phone" class="phone_user_hide_design">${u.mobile_phone}</td>
+                        <td data-label="approve" class="phone_user_hide_design">${u.approve}</td>
                     </tr>
                 `;
         tableBody.append(row);
+        phone_function()
     });
 
     // Reinitialize paging
@@ -355,5 +487,17 @@ function errorLogin(error) {
 
     if (msg === "Not logged in") {
         window.location.href = "/Auth/Login";
+    }
+}
+
+function phone_function() {
+    // Phone Design
+    if (/Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        $(".phone_user_hide_design").hide();
+        $('.inc-tab-incidents-table th.number-column').css('width', '28%');
+        $(".inc-tab-incidents-table th.u_fullname").css('width', '32%');
+        $(".inc-tab-incidents-table th.u_department").css('width', '24%');
+        $(".inc-tab-incidents-table th.u_active").css('width', '16%');
+        $(".all-title-header-front").css('font-size', '1rem');
     }
 }

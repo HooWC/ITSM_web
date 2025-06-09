@@ -38,24 +38,16 @@
                     <line x1="12" y1="17" x2="12.01" y2="17"></line>
                 </svg>
             </button>
-            <button class="inc-tab-new-button item-delete-btn show-error-box-btn" id="deleteButton" disabled>Delete</button>
-            <button class="inc-tab-new-button" onclick="window.location.href='/Role/Role_Create';">New</button>
+            @* <button class="inc-tab-new-button item-delete-btn show-error-box-btn" id="deleteButton" disabled>Delete</button>
+            <button class="inc-tab-new-button" onclick="window.location.href='/Role/Role_Create';">New</button> *@
 
         </div>
     </header>
-
-    <div class="inc-tab-table-options">
-        <div class="inc-tab-checkbox-container">
-            <input type="checkbox" id="select-all">
-        </div>
-        <span class="inc-tab-all-text">All</span>
-    </div>
 
     <div class="inc-tab-table-container">
         <table class="inc-tab-incidents-table">
             <thead>
                 <tr>
-                    <th class="inc-tab-checkbox-column"></th>
                     <th class="inc-tab-sortable role-column">Role</th>
                 </tr>
             </thead>
@@ -64,7 +56,6 @@
                 @foreach (var i in Model.RoleList)
                 {
                     <tr class="incident-item" data-id="@i.id">
-                        <td><input type="checkbox" class="item-checkbox"></td>
                         <td class="inc-tab-incident-number" data-label="Role">
                             <a href="~/Role/Role_Info?id=@i.id">@i.role</a>
                         </td>

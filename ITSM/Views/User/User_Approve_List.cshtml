@@ -1,59 +1,43 @@
 ﻿@using ITSM_DomainModelEntity.ViewModels
 @model AllModelVM
 @{
-    ViewData["Title"] = "User_List";
+    ViewData["Title"] = "User_Approve_List";
     Layout = "_Layout";
 }
 
 <style>
     .inc-tab-incidents-table th.number-column {
-        width: 8%;
+        width: 12%;
     }
 
     .inc-tab-incidents-table th.u_fullname {
-        width: 17%;
+        width: 22%;
     }
 
     .inc-tab-incidents-table th.u_approve {
-        width: 8%;
+        width: 12%;
     }
 
     .inc-tab-incidents-table th.u_gender {
-        width: 6%;
+        width: 12%;
     }
 
     .inc-tab-incidents-table th.u_department {
-        width: 15%;
-    }
-
-    .inc-tab-incidents-table th.u_manager_name {
-        width: 15%;
+        width: 25%;
     }
 
     .inc-tab-incidents-table th.u_mobilephone {
-        width: 10%;
+        width: 17%;
     }
 
-    .inc-tab-incidents-table th.u_role {
-        width: 6%;
-    }
-
-    .inc-tab-incidents-table th.u_role_manager {
-        width: 8%;
-    }
-
-    .inc-tab-incidents-table th.u_active {
-        width: 7%;
-    }
-
-    .item-active-btn{
+    .item-active-btn {
         background: #0f6135;
-        transition:all .2s ease-in-out;
+        transition: all .2s ease-in-out;
     }
 
-    .item-active-btn:hover{
+        .item-active-btn:hover {
             background: #0b522c;
-    }
+        }
 </style>
 
 <div class="inc-tab-container">
@@ -62,24 +46,7 @@
             <button class="inc-tab-icon-button">
                 <i class="fas fa-list"></i>
             </button>
-            <h2 class="all-title-header-front">Users</h2>
-            <div class="inc-tab-dropdown">
-                <button class="inc-tab-dropdown-toggle" id="filterDropdown">EMP ID<i class="fas fa-chevron-down"></i></button>
-                <div class="inc-tab-dropdown-menu" id="filterMenu" style="display:none;">
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="emp_id">EMP ID</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="fullname">Full Name</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="department">Department</a>
-                    <a href="#" class="inc-tab-dropdown-item phone_user_hide_design" data-filter="title">Title</a>
-                    <a href="#" class="inc-tab-dropdown-item phone_user_hide_design" data-filter="mobile">Mobile Phone</a>
-                    <a href="#" class="inc-tab-dropdown-item phone_user_hide_design" data-filter="role">Role</a>
-                    <a href="#" class="inc-tab-dropdown-item phone_user_hide_design" data-filter="r_manager">Role Manager</a>
-                    <a href="#" class="inc-tab-dropdown-item phone_user_hide_design" data-filter="manager_name">Manager Name</a>
-                    <a href="#" class="inc-tab-dropdown-item phone_user_hide_design" data-filter="approve">Approve</a>
-                </div>
-            </div>
-            <div class="inc-tab-search-container">
-                <input type="text" placeholder="Search" class="inc-tab-search-input" id="searchInput">
-            </div>
+            <h2 class="all-title-header-front">Approve</h2>
         </div>
         <div class="inc-tab-header-right">
             <button class="inc-tab-icon-button" id="refreshButton">
@@ -92,17 +59,8 @@
                     <line x1="12" y1="17" x2="12.01" y2="17"></line>
                 </svg>
             </button>
-            <div class="inc-tab-dropdown">
-                <button class="inc-tab-dropdown-toggle" id="statusDropdown">All <i class="fas fa-chevron-down"></i></button>
-                <div class="inc-tab-dropdown-menu" id="statusMenu" style="display:none;">
-                    <a href="#" class="inc-tab-dropdown-item" data-status="all">All</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-status="active">Active</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-status="blocked">Blocked </a>
-                </div>
-            </div>
-            <button class="inc-tab-new-button item-active-btn" id="activeButton" disabled>Active</button>
-            <button class="inc-tab-new-button item-delete-btn" id="blockButton" disabled>Blocked</button>
-            <button class="inc-tab-new-button" onclick="window.location.href='/User/UserCreate';">New</button>
+            <button class="inc-tab-new-button item-delete-btn" id="deleteButton" disabled>Delete</button>
+            <button class="inc-tab-new-button item-active-btn" id="approveButton" disabled>Approve</button>
         </div>
     </header>
 
@@ -118,16 +76,12 @@
             <thead>
                 <tr>
                     <th class="inc-tab-checkbox-column"></th>
-                    <th class="inc-tab-sortable number-column" id="sortByNumber">EMP ID <i class="fas fa-arrow-up" id="sortIcon"></i></th>
+                    <th class="inc-tab-sortable number-column" id="sortByNumber">EMP ID</th>
                     <th class="u_fullname">Full Name</th>
                     <th class="u_gender phone_user_hide_design">Gender</th>
                     <th class="u_department">Department</th>
                     <th class="u_mobilephone phone_user_hide_design">Mobile Phone</th>
-                    <th class="u_role phone_user_hide_design">Role</th>
-                    <th class="u_role_manager phone_user_hide_design">Manager</th>
-                    <th class="u_manager_name phone_user_hide_design">Manager Name</th>
                     <th class="u_approve phone_user_hide_design">Approve</th>
-                    <th class="u_active">Active</th>
                 </tr>
             </thead>
             <tbody id="incTableBody">
@@ -143,11 +97,7 @@
                         <td data-label="Gender" class="phone_user_hide_design">@i.gender</td>
                         <td data-label="D_Name">@((i.Department != null) ? i.Department.name : "N/A")</td>
                         <td data-label="Mobile_Phone" class="phone_user_hide_design">@i.mobile_phone</td>
-                        <td data-label="R_Role" class="phone_user_hide_design">@((i.Role != null) ? i.Role.role : "N/A")</td>
-                        <td data-label="r_manager" class="phone_user_hide_design">@(i.r_manager ? "Yes" : "No")</td>
-                        <td data-label="m_user" class="phone_user_hide_design">@((i.M_User != null && i.M_User.fullname != null) ? i.M_User.fullname : "Null")</td>
                         <td data-label="approve" class="phone_user_hide_design">@(i.approve ? "Yes" : "No")</td>
-                        <td data-label="Active">@(i.active ? "Active" : "Blocked")</td>
                     </tr>
                 }
 
@@ -165,16 +115,14 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="~/js/List/User_List.js"></script>
+<script src="~/js/List/Approve_User_List.js"></script>
 <script>
       $(function () {
-        var $target = $('#User_menu');
+        var $target = $('#Approve_menu_u');
         if (!$target.hasClass('active') || !$target.hasClass('open')) {
             $('.menu-item').removeClass('active open');
             $target.addClass('active open');
         }
-
-        $('#User_menu_all').addClass("active");
     });
 </script>
 

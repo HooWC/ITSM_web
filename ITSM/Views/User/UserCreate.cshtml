@@ -235,22 +235,6 @@
                 </div>
             </div>
 
-            <div class="inc-cre-form-group inc-cre-short-description-group">
-                <label for="role_code" class="inc-cre-form-label inc-cre-required">
-                    Role Code
-                    <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/Role_Code_Info', '_blank')">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                        </svg>
-                    </button>
-                </label>
-                <div class="inc-cre-input-with-actions">
-                    <input type="text" name="role_code" id="role_code" class="inc-cre-form-control" autocomplete="off">
-                </div>
-            </div>
-
             <div class="inc-cre-form-grid">
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
@@ -289,12 +273,22 @@
             </div>
 
             <div class="inc-cre-form-grid">
-                <!-- <div class="inc-cre-form-column">
+
+                <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
-                        <label for="username" class="inc-cre-form-label inc-cre-required">Username</label>
-                        <input type="text" name="username" minlength="6" id="username" class="inc-cre-form-control" autocomplete="off" required>
+                        <label for="password" class="inc-cre-form-label inc-cre-required">
+                            Password
+                            <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/User_Password_Info', '_blank')">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                </svg>
+                            </button>
+                        </label>
+                        <input type="password" name="password" id="password" class="inc-cre-form-control" autocomplete="off" required>
                     </div>
-                </div> -->
+                </div>
 
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
@@ -314,20 +308,12 @@
             </div>
 
             <div class="inc-cre-form-grid">
-                <div class="inc-cre-form-column">
-                    <div class="inc-cre-form-group">
-                        <label for="password" class="inc-cre-form-label inc-cre-required">
-                            Password
-                            <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/User_Password_Info', '_blank')">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                                </svg>
-                            </button>
-                        </label>
-                        <input type="password" name="password" id="password" class="inc-cre-form-control" autocomplete="off" required>
-                    </div>
+                <div class="inc-cre-form-group">
+                    <label for="r_manager" class="inc-cre-form-label">Manager</label>
+                    <select id="r_manager" name="r_manager" class="inc-cre-form-control">
+                        <option value="false">No</option>
+                        <option value="true">Yes</option>
+                    </select>
                 </div>
 
             </div>

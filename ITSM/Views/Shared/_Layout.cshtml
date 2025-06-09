@@ -370,6 +370,17 @@ data-bs-theme="dark">
                         </a>
                     </li>
 
+                    @if (Model.user.r_manager)
+                    {
+                        <!-- Manager User Approve View -->
+                        <li class="menu-item" id="Approve_menu_u">
+                            <a href="~/User/User_Approve_List" class="menu-link">
+                                <i class="menu-icon tf-icons fa-solid fa-person-circle-check"></i>
+                                <div class="text-truncate" data-i18n="Dashboards">Approve</div>
+                            </a>
+                        </li>
+                    }
+
                     <!-- Feedback -->
                     <li class="menu-item" id="Feedback_menu">
                         <a href="javascript:void(0)" class="menu-link menu-toggle">
@@ -499,11 +510,11 @@ data-bs-theme="dark">
                                         <div class="text-truncate" data-i18n="Perfect Scrollbar">All</div>
                                     </a>
                                 </li>
-                                <li class="menu-item" id="Role_menu_create">
+                                @* <li class="menu-item" id="Role_menu_create">
                                     <a href="~/Role/Role_Create" class="menu-link">
                                         <div class="text-truncate" data-i18n="Text Divider">Create New</div>
                                     </a>
-                                </li>
+                                </li> *@
                             </ul>
                         </li>
 

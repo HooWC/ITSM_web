@@ -33,96 +33,115 @@ namespace ITSM_Insfrastruture.Repository.Api
             _tokenService = new TokenService(httpContextAccessor);
         }
 
-        public async Task<RegisterResult> Register_User(User user)
+        //public async Task<RegisterResult> Register_User(User user)
+        //{
+        //    try
+        //    {
+        //        var jsonStr = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
+
+        //        // Output request content for debugging
+        //        // Console.WriteLine($"Json Content: {await jsonStr.ReadAsStringAsync()}");
+
+        //        var response = await _client.PostAsync(_registerUrl, jsonStr);
+
+        //        var responseContent = await response.Content.ReadAsStringAsync();
+
+        //        if (response.IsSuccessStatusCode)
+        //        {
+        //            try
+        //            {
+        //                var registerResult = JsonConvert.DeserializeObject<AuthResponse>(responseContent);
+
+        //                if (registerResult != null && !string.IsNullOrEmpty(registerResult.token))
+        //                {
+        //                    // Save Token
+        //                    var tokenModel = new TokenModel
+        //                    {
+        //                        Token = registerResult.token,
+        //                        UserId = registerResult.user.id,
+        //                        EmpId = registerResult.user.emp_id
+        //                    };
+
+        //                    _tokenService.SaveToken(tokenModel);
+
+        //                    // Register success then save user infomation
+        //                    await FetchAndSaveUserInfo(registerResult.user.id);
+
+        //                    return new RegisterResult { Success = true };
+        //                }
+        //                else
+        //                {
+        //                    return new RegisterResult
+        //                    {
+        //                        Success = false,
+        //                        Message = "Registration was successful but no valid token was received"
+        //                    };
+        //                }
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                Console.WriteLine($"Ex Error: {ex.Message}");
+        //                return new RegisterResult
+        //                {
+        //                    Success = false,
+        //                    Message = "Unable to parse server response"
+        //                };
+        //            }
+        //        }
+
+        //        // Handling registration failures
+        //        string errorMessage = "Registration failed";
+
+        //        if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+        //        {
+        //            try
+        //            {
+        //                var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(responseContent);
+        //                errorMessage = errorResponse?.message ?? "Invalid request";
+        //            }
+        //            catch
+        //            {
+        //                errorMessage = $"Invalid request: {responseContent}";
+        //            }
+        //        }
+        //        else if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
+        //        {
+        //            errorMessage = "Employee ID already exists";
+        //        }
+
+        //        return new RegisterResult
+        //        {
+        //            Success = false,
+        //            Message = errorMessage
+        //        };
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine($"Ex Message: {ex.Message}");
+        //        return new RegisterResult
+        //        {
+        //            Success = false,
+        //            Message = $"Register Ex Error: {ex.Message}"
+        //        };
+        //    }
+        //}
+
+        public async Task<bool> Register_User(User user)
         {
             try
             {
                 var jsonStr = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
-
-                // Output request content for debugging
-                // Console.WriteLine($"Json Content: {await jsonStr.ReadAsStringAsync()}");
-
                 var response = await _client.PostAsync(_registerUrl, jsonStr);
 
-                var responseContent = await response.Content.ReadAsStringAsync();
+                var responseStr = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"RESPONSE UPDATE: {responseStr}");
 
-                if (response.IsSuccessStatusCode)
-                {
-                    try
-                    {
-                        var registerResult = JsonConvert.DeserializeObject<AuthResponse>(responseContent);
-
-                        if (registerResult != null && !string.IsNullOrEmpty(registerResult.token))
-                        {
-                            // Save Token
-                            var tokenModel = new TokenModel
-                            {
-                                Token = registerResult.token,
-                                UserId = registerResult.user.id,
-                                EmpId = registerResult.user.emp_id
-                            };
-
-                            _tokenService.SaveToken(tokenModel);
-
-                            // Register success then save user infomation
-                            await FetchAndSaveUserInfo(registerResult.user.id);
-
-                            return new RegisterResult { Success = true };
-                        }
-                        else
-                        {
-                            return new RegisterResult
-                            {
-                                Success = false,
-                                Message = "Registration was successful but no valid token was received"
-                            };
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Ex Error: {ex.Message}");
-                        return new RegisterResult
-                        {
-                            Success = false,
-                            Message = "Unable to parse server response"
-                        };
-                    }
-                }
-
-                // Handling registration failures
-                string errorMessage = "Registration failed";
-
-                if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
-                {
-                    try
-                    {
-                        var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(responseContent);
-                        errorMessage = errorResponse?.message ?? "Invalid request";
-                    }
-                    catch
-                    {
-                        errorMessage = $"Invalid request: {responseContent}";
-                    }
-                }
-                else if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
-                {
-                    errorMessage = "Employee ID already exists";
-                }
-
-                return new RegisterResult
-                {
-                    Success = false,
-                    Message = errorMessage
-                };
+                return response.IsSuccessStatusCode;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Ex Message: {ex.Message}");
-                return new RegisterResult
-                {
-                    Success = false,
-                    Message = $"Register Ex Error: {ex.Message}"
-                };
+                Console.WriteLine($"EX Register_User: {ex.Message}");
+                return false;
             }
         }
 
@@ -280,6 +299,25 @@ namespace ITSM_Insfrastruture.Repository.Api
             catch (Exception ex)
             {
                 Console.WriteLine($"EX UpdateUser_API: {ex.Message}");
+                return false;
+            }
+        }
+
+        public async Task<bool> DeleteTodo_API(int id)
+        {
+            try
+            {
+                var tokenModel = _tokenService.GetToken();
+                if (tokenModel == null) return false;
+
+                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenModel.Token);
+                var response = await _client.DeleteAsync($"{_F_U_UserUrl}{id}");
+
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"EX DeleteTodo_API: {ex.Message}");
                 return false;
             }
         }

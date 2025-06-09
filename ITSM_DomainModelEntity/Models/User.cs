@@ -70,6 +70,8 @@ namespace ITSM_DomainModelEntity.Models
         [ForeignKey("M_User")]
         public int? Manager {  get; set; }
 
+        public bool r_manager { get; set; }
+
         // Navigation properties
         public virtual Role? Role { get; set; }
         public virtual Department? Department { get; set; }
