@@ -46,6 +46,7 @@ data-bs-theme="dark">
     <link rel="stylesheet" href="~/css/Version/version_view.css" />
     <link rel="stylesheet" href="~/css/Inc/error_box.css" />
     <link rel="stylesheet" href="~/css/layout/navbar_override.css" />
+    <link rel="stylesheet" href="~/css/Inc/show_pictures.css" />
 
     <!-- build:css assets/vendor/css/theme.css  -->
     <link rel="stylesheet" href="~/assets/vendor/css/core.css" />
@@ -270,14 +271,14 @@ data-bs-theme="dark">
                             {
                                 <li class="menu-item" id="Incidents_menu_all">
                                     <a href="~/IncidentManagement/All" class="menu-link">
-                                        <div class="text-truncate" data-i18n="Connections">All (Admin)</div>
+                                        <div class="text-truncate" data-i18n="Connections">All</div>
                                     </a>
                                 </li>
                             }
 
                             <li class="menu-item" id="Incidents_menu_all_user">
                                 <a href="~/IncidentManagement/User_All" class="menu-link">
-                                    <div class="text-truncate" data-i18n="Connections">All (User)</div>
+                                    <div class="text-truncate" data-i18n="Connections">Your Ticket</div>
                                 </a>
                             </li>
                             <li class="menu-item" id="Incidents_menu_create">
@@ -286,7 +287,7 @@ data-bs-theme="dark">
                                 </a>
                             </li>
 
-                            @if (@Model.user.Role.role.ToLower() == "admin" || @Model.user.Role.role.ToLower() == "itil")
+                            @if (@Model.user.Role.role.ToLower() == "admin")
                             {
                                 <li class="menu-item" id="Incidents_menu_assigned">
                                     <a href="~/IncidentManagement/Assigned_To_Me" class="menu-link">
@@ -323,23 +324,23 @@ data-bs-theme="dark">
                             {
                                 <li class="menu-item" id="Requests_child_all">
                                     <a href="~/Request/All" class="menu-link">
-                                        <div class="text-truncate" data-i18n="Connections">All (Admin)</div>
+                                        <div class="text-truncate" data-i18n="Connections">All</div>
                                     </a>
                                 </li>
                             }
 
                             <li class="menu-item" id="Requests_child_all_User">
                                 <a href="~/Request/User_All" class="menu-link">
-                                    <div class="text-truncate" data-i18n="Connections">All (User)</div>
+                                    <div class="text-truncate" data-i18n="Connections">Your Ticket</div>
                                 </a>
                             </li>
                             <li class="menu-item" id="Requests_child_service_catalog">
                                 <a href="~/Request/Service_Catalog" class="menu-link">
-                                    <div class="text-truncate" data-i18n="Connections">Service Catalog</div>
+                                    <div class="text-truncate" data-i18n="Connections">Hardware</div>
                                 </a>
                             </li>
 
-                            @if (Model.user.Role.role.ToLower() == "admin" || Model.user.Role.role.ToLower() == "itil")
+                            @if (Model.user.Role.role.ToLower() == "admin")
                             {
                                 <li class="menu-item" id="Requests_child_assigned">
                                     <a href="~/Request/Assigned_To_Us" class="menu-link">
@@ -410,7 +411,7 @@ data-bs-theme="dark">
                         </ul>
                     </li>
 
-                    @if (Model.user.Role.role.ToLower() == "admin" || Model.user.Role.role.ToLower() == "itil")
+                    @if (Model.user.Role.role.ToLower() == "admin")
                     {
                         <!-- CMDB -->
                         <li class="menu-item" id="CMDB_menu">

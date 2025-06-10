@@ -100,6 +100,8 @@ namespace ITSM_Insfrastruture.Repository.Config
         public static readonly string IncidentLink = $"{BaseUrl}/incidents";
         // search by id & update && delete Incident  (ID) (need token)
         public static readonly string IncidentSUDLink = $"{BaseUrl}/incidents/";
+
+        public static readonly string IncIDLink = $"{BaseUrl}/incidents/incid/";
         // === For Incident Part ===
 
         // ============================================================================
@@ -157,6 +159,33 @@ namespace ITSM_Insfrastruture.Repository.Config
         public static readonly string VersionLink = $"{BaseUrl}/myversions";
         // search by id & update && delete Announcement  (ID) (need token)
         public static readonly string VersionSUDLink = $"{BaseUrl}/myversions/";
+        // === For Announcement Part ===
+
+        // ============================================================================
+
+        // === For Announcement Part ===
+        // get all & create Announcement  (need token)
+        public static readonly string IncPhotosLink = $"{BaseUrl}/incident_photos";
+        // search by id & update && delete Announcement  (ID) (need token)
+        public static readonly string IncPhotosSUDLink = $"{BaseUrl}/incident_photos/";
+        // === For Announcement Part ===
+
+        // ============================================================================
+
+        // === For Announcement Part ===
+        // get all & create Announcement  (need token)
+        public static readonly string SucategoryLink = $"{BaseUrl}/sucategory";
+        // search by id & update && delete Announcement  (ID) (need token)
+        public static readonly string SucategorySUDLink = $"{BaseUrl}/sucategory/";
+        // === For Announcement Part ===
+
+        // ============================================================================
+
+        // === For Announcement Part ===
+        // get all & create Announcement  (need token)
+        public static readonly string IncidentCategoryLink = $"{BaseUrl}/incident_category";
+        // search by id & update && delete Announcement  (ID) (need token)
+        public static readonly string IncidentCategorySUDLink = $"{BaseUrl}/incident_category/";
         // === For Announcement Part ===
 
         // ============================================================================

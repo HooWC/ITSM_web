@@ -16,6 +16,7 @@ namespace ITSM_Insfrastruture.Repository.Api
     {
         private readonly string _allIncUrl = Api_Link.IncidentLink;
         private readonly string _sudIncUrl = Api_Link.IncidentSUDLink;
+        private readonly string _IncIDUrl = Api_Link.IncIDLink;
         private readonly HttpClient _client;
         private readonly TokenService _tokenService;
 
@@ -53,6 +54,25 @@ namespace ITSM_Insfrastruture.Repository.Api
 
                 _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenModel.Token);
                 var jsonStr = await _client.GetStringAsync($"{_sudIncUrl}{id}");
+                var incidentList = JsonConvert.DeserializeObject<List<Incident>>(jsonStr);
+                return incidentList?.FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"EX FindByIDIncident_API: {ex.Message}");
+                return null;
+            }
+        }
+
+        public async Task<Incident> FindByIncIDIncident_API(string inc_number)
+        {
+            try
+            {
+                var tokenModel = _tokenService.GetToken();
+                if (tokenModel == null) return null;
+
+                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenModel.Token);
+                var jsonStr = await _client.GetStringAsync($"{_IncIDUrl}{inc_number}");
                 var incidentList = JsonConvert.DeserializeObject<List<Incident>>(jsonStr);
                 return incidentList?.FirstOrDefault();
             }

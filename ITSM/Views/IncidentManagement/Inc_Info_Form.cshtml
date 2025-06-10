@@ -119,8 +119,16 @@
     background-color: #590d0d;
     }
 
-    select.inc-cre-form-control{
-    margin-bottom:5px;
+    #modalImage {
+        max-width: 100%;
+        max-height: 90vh;
+        object-fit: contain;
+        margin: auto;
+        display: block;
+    }
+
+    .inc-file-cre-form-padding {
+    padding: 5px 0px 0px 5px;
     }
 </style>
 
@@ -200,7 +208,7 @@
         }
 
 
-        <form id="incidentForm" class="inc-cre-incident-form" action="~/IncidentManagement/Inc_Info_Form" method="post">
+        <form id="incidentForm" class="inc-cre-incident-form" action="~/IncidentManagement/Inc_Info_Form" method="post" enctype="multipart/form-data">
             <input type="text" name="id" id="id" class="inc-cre-form-control" value="@Model.incident.id" style="display:none;" readonly>
             <input type="text" name="roleBack" id="roleBack" class="inc-cre-form-control" value="@Model.roleBack" style="display:none;" readonly>
             <div class="inc-cre-form-grid">
@@ -254,7 +262,7 @@
                         </select>
                     </div>
 
-                    <div class="inc-cre-form-group">
+                    @* <div class="inc-cre-form-group">
                         <label for="assignment-group" class="inc-cre-form-label inc-cre-required">
                             Assignment group
                             <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/Assigned_Info', '_blank')">
@@ -275,7 +283,7 @@
                                 </svg>
                             </button>
                         </div>
-                    </div>
+                    </div> *@
                 </div>
 
                 <div class="inc-cre-form-column">
@@ -315,7 +323,7 @@
                         </select>
                     </div>
 
-                    <div class="inc-cre-form-group">
+                    @* <div class="inc-cre-form-group">
                         <label for="impact" class="inc-cre-form-label">
                             Impact
                             <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/Incident_Priority_Info', '_blank')">
@@ -331,7 +339,7 @@
                             <option value="2 - Medium" selected="@(Model.incident.impact == "2 - Medium")">2 - Medium</option>
                             <option value="3 - Low" selected="@(Model.incident.impact == "3 - Low")">3 - Low</option>
                         </select>
-                    </div>
+                    </div> *@
 
                     <div class="inc-cre-form-group">
                         <label for="urgency" class="inc-cre-form-label">
@@ -351,7 +359,7 @@
                         </select>
                     </div>
 
-                    <div class="inc-cre-form-group">
+                    @* <div class="inc-cre-form-group">
                         <label for="priority" class="inc-cre-form-label">
                             Priority
                             <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/Incident_Priority_Info', '_blank')">
@@ -371,9 +379,9 @@
                                 <line x1="12" y1="8" x2="12.01" y2="8"></line>
                             </svg>
                         </div>
-                    </div>
+                    </div> *@
 
-                    <div class="inc-cre-form-group">
+                    @* <div class="inc-cre-form-group">
                         <label for="assigned-to" class="inc-cre-form-label">
                             Assigned to
                             <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/Assigned_Info', '_blank')">
@@ -394,7 +402,24 @@
                                 </svg>
                             </button>
                         </div>
+                    </div> *@
+
+                    <div class="inc-cre-form-group">
+                        <div class="inc-cre-form-group">
+                            <label for="file" class="inc-cre-form-label">
+                                Pictures (Maximum size per file: 50MB)
+                                <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/Photo_Info', '_blank')">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                    </svg>
+                                </button>
+                            </label>
+                            <input type="file" name="files" id="file" multiple class="inc-cre-form-control inc-file-cre-form-padding">
+                        </div>
                     </div>
+
                 </div>
             </div>
 
@@ -435,6 +460,81 @@
         </form>
     </main>
 
+    @if (Model.Incident_Photos_List != null)
+    {
+        <div class="inc-cre-related-search-container">
+            <button class="inc-cre-btn inc-cre-btn-related-search">
+                Pictures
+            </button>
+        </div>
+
+        <div class="inc-cre-tab-section">
+            <div class="inc-cre-tabs">
+                <button class="inc-cre-tab active">Event related pictures</button>
+            </div>
+
+            <div class="inc-cre-tab-content">
+                <div id="notes-tab" class="inc-cre-tab-pane active">
+                    <div class="inc-cre-notes-container">
+                        <div class="inc-cre-images-container">
+                            <div class="inc-cre-images-grid">
+                                @foreach (var i in Model.Incident_Photos_List)
+                                {
+                                    <div class="inc-cre-image-item" onclick="showImage('@(i.photo != null ? $"data:{i.photo_type};base64,{Convert.ToBase64String(i.photo)}" : "")')">
+                                        <img src="@(i.photo != null ? $"data:{i.photo_type};base64,{Convert.ToBase64String(i.photo)}" : "")"
+                                             alt="incident photo">
+                                        <div class="inc-cre-image-overlay">
+                                            <span class="inc-cre-image-zoom">
+                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <circle cx="11" cy="11" r="8"></circle>
+                                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                                    <line x1="11" y1="8" x2="11" y2="14"></line>
+                                                    <line x1="8" y1="11" x2="14" y2="11"></line>
+                                                </svg>
+                                            </span>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        <div id="imageModal" class="image-modal">
+                            <button class="image-close-btn"></button>
+                            <div class="image-modal-content">
+                                <img id="modalImage" src="" alt="Zoomed Image">
+                            </div>
+                        </div>
+
+                        <script>
+                            function showImage(src) {
+                                var modal = document.getElementById('imageModal');
+                                var modalImg = document.getElementById('modalImage');
+                                modal.style.display = "block";
+                                modalImg.src = src;
+                            }
+
+                            document.querySelector('.image-close-btn').onclick = function() {
+                                document.getElementById('imageModal').style.display = "none";
+                            }
+
+                            document.getElementById('imageModal').onclick = function(e) {
+                                if (e.target === this || e.target.id === 'modalImage') {
+                                    this.style.display = "none";
+                                }
+                            }
+
+                            document.addEventListener('keydown', function(e) {
+                                if (e.key === 'Escape') {
+                                    document.getElementById('imageModal').style.display = "none";
+                                }
+                            });
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    
     <div class="inc-cre-related-search-container">
         <button class="inc-cre-btn inc-cre-btn-related-search">
             Notes & Resolve
@@ -599,7 +699,13 @@
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<div id="imageModal" class="image-modal">
+    <button class="image-close-btn"></button>
+    <div class="image-modal-content">
+        <img id="modalImage" src="" alt="Zoomed Image">
+    </div>
+</div>
+
 <script>
     $(function () {
       var $target = $('#Incidents_menu');
@@ -1014,7 +1120,8 @@
                                       '<div class="inc-cre-activity-details">' +
                                           '<div class="inc-cre-work-note-content">' + response.note.message.replace(/\n/g, '<br>') + '</div>' +
                                       '</div>' +
-                                  '</div>');
+                                  '</div>' +
+                              '</div>');
                           
                           // Add to the top of the active container
                           $(".inc-cre-activity-container").prepend(newActivity);
@@ -1231,6 +1338,78 @@
                   alert("错误: " + error);
               }
           });
+      });
+
+      // 初始化 Lightbox
+      lightbox.option({
+          'resizeDuration': 200,
+          'wrapAround': true,
+          'albumLabel': "图片 %1 / %2",
+          'fadeDuration': 300,
+          'imageFadeDuration': 300,
+          'positionFromTop': 50,
+          'disableScrolling': true,
+          'showImageNumberLabel': true,
+          'alwaysShowNavOnTouchDevices': true,
+          'fitImagesInViewport': true,
+          'maxWidth': 1200,
+          'maxHeight': 800,
+          'showImageNumberLabel': false,
+          'fadeDuration': 200,
+          'imageFadeDuration': 200
+      });
+
+      // 添加自定义关闭按钮
+      $(document).on('click', '[data-lightbox]', function() {
+          setTimeout(function() {
+              if ($('.lb-closeBtn').length === 0) {
+                  $('.lb-container').append('<button class="lb-closeBtn" title="关闭"></button>');
+              }
+          }, 100);
+      });
+
+      // 点击关闭按钮关闭 lightbox
+      $(document).on('click', '.lb-closeBtn', function() {
+          lightbox.end();
+      });
+
+      // 点击背景关闭 lightbox
+      $(document).on('click', '.lb-overlay', function() {
+          lightbox.end();
+      });
+
+      // ESC 键关闭 lightbox
+      $(document).keyup(function(e) {
+          if (e.key === "Escape") {
+              lightbox.end();
+          }
+      });
+
+      // 图片查看功能
+      window.showImage = function(src) {
+          var modal = document.getElementById('imageModal');
+          var modalImg = document.getElementById('modalImage');
+          modal.style.display = "block";
+          modalImg.src = src;
+      }
+
+      // 点击关闭按钮关闭模态框
+      $('.image-close-btn').click(function() {
+          $('#imageModal').hide();
+      });
+
+      // 点击模态框背景关闭
+      $('#imageModal').click(function(e) {
+          if (e.target === this || e.target.id === 'modalImage') {
+              $(this).hide();
+          }
+      });
+
+      // ESC键关闭模态框
+      $(document).keydown(function(e) {
+          if (e.key === 'Escape') {
+              $('#imageModal').hide();
+          }
       });
     });
 </script>

@@ -54,10 +54,10 @@
                 <button class="inc-tab-dropdown-toggle" id="filterDropdown">Number <i class="fas fa-chevron-down"></i></button>
                 <div class="inc-tab-dropdown-menu" id="filterMenu" style="display:none;">
                     <a href="#" class="inc-tab-dropdown-item" data-filter="number">Number</a>
-                    <a href="#" class="inc-tab-dropdown-item phone_incident_hide_design" data-filter="short_description">Short description</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="priority">Priority</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-filter="urgency">Urgency</a>
                     <a href="#" class="inc-tab-dropdown-item" data-filter="state">State</a>
                     <a href="#" class="inc-tab-dropdown-item phone_incident_hide_design" data-filter="category">Category</a>
+                    <a href="#" class="inc-tab-dropdown-item phone_incident_hide_design" data-filter="sucategory">Sucategory</a>
                     <a href="#" class="inc-tab-dropdown-item phone_incident_hide_design" data-filter="assignment_group">Assignment group</a>
                     <a href="#" class="inc-tab-dropdown-item phone_incident_hide_design" data-filter="assigned_to">Assigned to</a>
                     <a href="#" class="inc-tab-dropdown-item phone_incident_hide_design" data-filter="opened">Opened</a>
@@ -109,10 +109,10 @@
                 <tr>
                     @* <th class="inc-tab-checkbox-column"></th> *@
                     <th class="inc-tab-sortable number-column" id="sortByNumber">Number <i class="fas fa-arrow-up" id="sortIcon"></i></th>
-                    <th class="i_short-column phone_incident_hide_design">Short description</th>
-                    <th class="i_priority-column">Priority</th>
+                    <th class="i_urgency-column">Urgency</th>
                     <th class="i_state-column">State</th>
                     <th class="i_category-column phone_incident_hide_design">Category</th>
+                    <th class="i_sucategory-column phone_incident_hide_design">Sucategory</th>
                     <th class="i_assignment-group-column  phone_incident_hide_design">Assignment group</th>
                     <th class="i_assigned-to-column phone_incident_hide_design">Assigned to</th>
                     <th class="i_create-date-column phone_incident_hide_design">Opened</th>
@@ -124,7 +124,7 @@
                 @foreach (var i in Model.IncidentList)
                 {
                     <tr class="incident-item" data-id="@i.id">
-                       @*  <td><input type="checkbox" class="item-checkbox"></td> *@
+                        @* <td><input type="checkbox" class="item-checkbox"></td> *@
                         <td class="inc-tab-incident-number" data-label="Number">
                             <a href="~/IncidentManagement/Inc_Info_Form?id=@i.id&role=Admin">@i.inc_number</a>
                         </td>
