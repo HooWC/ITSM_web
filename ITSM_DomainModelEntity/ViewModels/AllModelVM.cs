@@ -137,6 +137,16 @@ namespace ITSM_DomainModelEntity.ViewModels
         //== Incident Photos List
         public List<IncidentPhotos> Incident_Photos_List { get; set; }
 
+        //== Sucategory List
+        public List<Sucategory> Sucategory_List { get; set; }
+
+        public Sucategory? Su_Category {  get; set; }
+
+        //== Incident Category List
+        public List<Incidentcategory> Incident_Category_List { get; set; }
+
+        public Incidentcategory? Incident_Category { get; set; }
+
         public AllModelVM()
         {
             YearlyIncidentStats = new List<YearlyStats>();

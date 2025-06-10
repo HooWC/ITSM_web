@@ -19,6 +19,8 @@ namespace ITSM.Controllers
         private readonly Department_api _depApi;
         private readonly Role_api _roleApi;
         private readonly Category_api _categoryApi;
+        private readonly Sucategory_api _sucategoryApi;
+        private readonly Incident_Category_api _incidentcategoryApi;
 
         public CategoryController(IHttpContextAccessor httpContextAccessor, UserService userService)
         {
@@ -32,6 +34,8 @@ namespace ITSM.Controllers
             _depApi = new Department_api(httpContextAccessor);
             _roleApi = new Role_api(httpContextAccessor);
             _categoryApi = new Category_api(httpContextAccessor);
+            _sucategoryApi = new Sucategory_api(httpContextAccessor);
+            _incidentcategoryApi = new Incident_Category_api(httpContextAccessor);
             _userService = userService;
         }
 
@@ -152,6 +156,150 @@ namespace ITSM.Controllers
                 ViewBag.Error = "Update Category Error";
                 return View(model);
             }
+        }
+
+        public async Task<IActionResult> Inc_Category_List()
+        {
+            var currentUser = await _userService.GetCurrentUserAsync();
+
+            var allIncidentCategory = await _incidentcategoryApi.GetAllIncidentcategory_API();
+
+            var inccategoryList = allIncidentCategory.OrderByDescending(y => y.id).ToList();
+
+            var model = new AllModelVM
+            {
+                user = currentUser,
+                Incident_Category_List = inccategoryList
+            };
+
+            return View(model);
+        }
+
+        public async Task<IActionResult> Inc_Category_Create()
+        {
+            var currentUser = await _userService.GetCurrentUserAsync();
+
+            var model = new AllModelVM
+            {
+                user = currentUser
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Inc_Category_Create(Incidentcategory incCategory)
+        {
+            var currentUser = await _userService.GetCurrentUserAsync();
+
+            var model = new AllModelVM
+            {
+                user = currentUser
+            };
+
+            if (incCategory.name == null)
+            {
+                ViewBag.Error = "Please fill in all required fields";
+                return View(model);
+            }
+
+            var allIncidentCategory = await _incidentcategoryApi.GetAllIncidentcategory_API();
+            var sameData = allIncidentCategory.Where(x => x.name.ToLower() == incCategory.name.ToLower()).ToList();
+            if(sameData.Count > 0)
+            {
+                ViewBag.Error = "This name already exist.";
+                return View(model);
+            }
+
+            Incidentcategory new_inc_category = new Incidentcategory()
+            {
+                name = incCategory.name
+            };
+
+            bool result = await _incidentcategoryApi.CreateIncidentcategory_API(new_inc_category);
+
+            if (result)
+                return RedirectToAction("Inc_Category_List", "Category");
+            else
+            {
+                ViewBag.Error = "Create Incident Category Error";
+                return View(model);
+            }
+        }
+
+        public async Task<IActionResult> Inc_Category_Info(int id)
+        {
+            var currentUser = await _userService.GetCurrentUserAsync();
+
+            var inccategory = await _incidentcategoryApi.FindByIDIncidentcategory_API(id);
+
+            var model = new AllModelVM
+            {
+                user = currentUser,
+                Incident_Category = inccategory
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Inc_Category_Info(Incidentcategory incCategory)
+        {
+            var currentUser = await _userService.GetCurrentUserAsync();
+
+            var inccategoryTask = await _incidentcategoryApi.FindByIDIncidentcategory_API(incCategory.id);
+
+            var model = new AllModelVM
+            {
+                user = currentUser,
+                Incident_Category = inccategoryTask
+            };
+
+            if (incCategory.name == null)
+            {
+                ViewBag.Error = "Please fill in all required fields";
+                return View(model);
+            }
+
+            var allIncidentCategory = await _incidentcategoryApi.GetAllIncidentcategory_API();
+            var sameData = allIncidentCategory.Where(x => x.name.ToLower() == incCategory.name.ToLower() && x.id != incCategory.id).ToList();
+            if (sameData.Count > 0)
+            {
+                ViewBag.Error = "This name already exist.";
+                return View(model);
+            }
+
+            inccategoryTask.name = incCategory.name;
+
+            bool result = await _incidentcategoryApi.UpdateIncidentcategory_API(inccategoryTask);
+
+            if (result)
+                return RedirectToAction("Inc_Category_List", "Category");
+            else
+            {
+                ViewBag.Error = "Update Incident Category Error";
+                return View(model);
+            }
+        }
+
+        public async Task<IActionResult> Sucategory_List()
+        {
+            var currentUser = await _userService.GetCurrentUserAsync();
+
+            var categoryTask = _categoryApi.GetAllCategory_API();
+            await Task.WhenAll(categoryTask);
+
+            var allCategory = categoryTask.Result;
+
+            var categoryList = allCategory.OrderByDescending(y => y.id).ToList();
+
+            var model = new AllModelVM
+            {
+                user = currentUser,
+                CategoryList = categoryList
+            };
+
+            return View(model);
         }
     }
 }

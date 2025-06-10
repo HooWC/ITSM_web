@@ -44,6 +44,29 @@ namespace ITSM_Insfrastruture.Repository.Api
             }
         }
 
+        //public async Task<Incidentcategory> FindByIDIncidentcategory_API(int id)
+        //{
+        //    try
+        //    {
+        //        var tokenModel = _tokenService.GetToken();
+        //        if (tokenModel == null) return null;
+
+        //        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenModel.Token);
+        //        var jsonStr = await _client.GetStringAsync($"{_sudIncidentcategoryUrl}{id}");
+        //        var IncidentcategoryList = JsonConvert.DeserializeObject<List<Incidentcategory>>(jsonStr);
+
+        //        //var responseStr = await response.Content.ReadAsStringAsync();
+        //        //Console.WriteLine($"RESPONSE UPDATE: {responseStr}");
+
+        //        return IncidentcategoryList?.FirstOrDefault();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine($"EX FindByIDIncidentcategory_API: {ex.Message}");
+        //        return null;
+        //    }
+        //}
+
         public async Task<Incidentcategory> FindByIDIncidentcategory_API(int id)
         {
             try
@@ -53,6 +76,7 @@ namespace ITSM_Insfrastruture.Repository.Api
 
                 _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenModel.Token);
                 var jsonStr = await _client.GetStringAsync($"{_sudIncidentcategoryUrl}{id}");
+
                 var IncidentcategoryList = JsonConvert.DeserializeObject<List<Incidentcategory>>(jsonStr);
                 return IncidentcategoryList?.FirstOrDefault();
             }
