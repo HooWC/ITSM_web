@@ -12,39 +12,39 @@ using Newtonsoft.Json;
 
 namespace ITSM_Insfrastruture.Repository.Api
 {
-    public class Sucategory_api
+    public class Subcategory_api
     {
-        private readonly string _allSucategoryUrl = Api_Link.SucategoryLink;
-        private readonly string _sudSucategoryUrl = Api_Link.SucategorySUDLink;
+        private readonly string _allSubcategoryUrl = Api_Link.SubcategoryLink;
+        private readonly string _sudSubcategoryUrl = Api_Link.SubcategorySUDLink;
         private readonly HttpClient _client;
         private readonly TokenService _tokenService;
 
-        public Sucategory_api(IHttpContextAccessor httpContextAccessor)
+        public Subcategory_api(IHttpContextAccessor httpContextAccessor)
         {
             _client = new HttpClient();
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             _tokenService = new TokenService(httpContextAccessor);
         }
 
-        public async Task<List<Sucategory>> GetAllSucategory_API()
+        public async Task<List<Subcategory>> GetAllSubcategory_API()
         {
             try
             {
                 var tokenModel = _tokenService.GetToken();
-                if (tokenModel == null) return new List<Sucategory>();
+                if (tokenModel == null) return new List<Subcategory>();
 
                 _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenModel.Token);
-                string jsonStr = await _client.GetStringAsync(_allSucategoryUrl);
-                return JsonConvert.DeserializeObject<List<Sucategory>>(jsonStr) ?? new List<Sucategory>();
+                string jsonStr = await _client.GetStringAsync(_allSubcategoryUrl);
+                return JsonConvert.DeserializeObject<List<Subcategory>>(jsonStr) ?? new List<Subcategory>();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"EX GetAllSucategory_API: {ex.Message}");
-                return new List<Sucategory>();
+                Console.WriteLine($"EX GetAllSubcategory_API: {ex.Message}");
+                return new List<Subcategory>();
             }
         }
 
-        public async Task<Sucategory> FindByIDSucategory_API(int id)
+        public async Task<Subcategory> FindByIDSubcategory_API(int id)
         {
             try
             {
@@ -52,18 +52,18 @@ namespace ITSM_Insfrastruture.Repository.Api
                 if (tokenModel == null) return null;
 
                 _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenModel.Token);
-                var jsonStr = await _client.GetStringAsync($"{_sudSucategoryUrl}{id}");
-                var SucategoryList = JsonConvert.DeserializeObject<List<Sucategory>>(jsonStr);
-                return SucategoryList?.FirstOrDefault();
+                var jsonStr = await _client.GetStringAsync($"{_sudSubcategoryUrl}{id}");
+                var SubcategoryList = JsonConvert.DeserializeObject<List<Subcategory>>(jsonStr);
+                return SubcategoryList?.FirstOrDefault();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"EX FindByIDSucategory_API: {ex.Message}");
+                Console.WriteLine($"EX FindByIDSubcategory_API: {ex.Message}");
                 return null;
             }
         }
 
-        public async Task<bool> UpdateSucategory_API(Sucategory Sucategory)
+        public async Task<bool> UpdateSubcategory_API(Subcategory Subcategory)
         {
             try
             {
@@ -71,19 +71,19 @@ namespace ITSM_Insfrastruture.Repository.Api
                 if (tokenModel == null) return false;
 
                 _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenModel.Token);
-                var jsonStr = new StringContent(JsonConvert.SerializeObject(Sucategory), Encoding.UTF8, "application/json");
-                var response = await _client.PutAsync($"{_sudSucategoryUrl}{Sucategory.id}", jsonStr);
+                var jsonStr = new StringContent(JsonConvert.SerializeObject(Subcategory), Encoding.UTF8, "application/json");
+                var response = await _client.PutAsync($"{_sudSubcategoryUrl}{Subcategory.id}", jsonStr);
 
                 return response.IsSuccessStatusCode;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"EX UpdateSucategory_API: {ex.Message}");
+                Console.WriteLine($"EX UpdateSubcategory_API: {ex.Message}");
                 return false;
             }
         }
 
-        public async Task<bool> CreateSucategory_API(Sucategory Sucategory)
+        public async Task<bool> CreateSubcategory_API(Subcategory Subcategory)
         {
             try
             {
@@ -91,19 +91,19 @@ namespace ITSM_Insfrastruture.Repository.Api
                 if (tokenModel == null) return false;
 
                 _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenModel.Token);
-                var jsonStr = new StringContent(JsonConvert.SerializeObject(Sucategory), Encoding.UTF8, "application/json");
-                var response = await _client.PostAsync(_allSucategoryUrl, jsonStr);
+                var jsonStr = new StringContent(JsonConvert.SerializeObject(Subcategory), Encoding.UTF8, "application/json");
+                var response = await _client.PostAsync(_allSubcategoryUrl, jsonStr);
 
                 return response.IsSuccessStatusCode;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"EX CreateSucategory_API: {ex.Message}");
+                Console.WriteLine($"EX CreateSubcategory_API: {ex.Message}");
                 return false;
             }
         }
 
-        public async Task<bool> DeleteSucategory_API(int id)
+        public async Task<bool> DeleteSubcategory_API(int id)
         {
             try
             {
@@ -111,13 +111,13 @@ namespace ITSM_Insfrastruture.Repository.Api
                 if (tokenModel == null) return false;
 
                 _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenModel.Token);
-                var response = await _client.DeleteAsync($"{_sudSucategoryUrl}{id}");
+                var response = await _client.DeleteAsync($"{_sudSubcategoryUrl}{id}");
 
                 return response.IsSuccessStatusCode;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"EX DeleteSucategory_API: {ex.Message}");
+                Console.WriteLine($"EX DeleteSubcategory_API: {ex.Message}");
                 return false;
             }
         }

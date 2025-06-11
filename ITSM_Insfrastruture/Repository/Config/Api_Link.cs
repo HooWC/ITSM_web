@@ -174,9 +174,9 @@ namespace ITSM_Insfrastruture.Repository.Config
 
         // === For Announcement Part ===
         // get all & create Announcement  (need token)
-        public static readonly string SucategoryLink = $"{BaseUrl}/sucategory";
+        public static readonly string SubcategoryLink = $"{BaseUrl}/subcategory";
         // search by id & update && delete Announcement  (ID) (need token)
-        public static readonly string SucategorySUDLink = $"{BaseUrl}/sucategory/";
+        public static readonly string SubcategorySUDLink = $"{BaseUrl}/subcategory/";
         // === For Announcement Part ===
 
         // ============================================================================

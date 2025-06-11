@@ -22,6 +22,8 @@ namespace ITSM.Controllers
         private readonly Department_api _depApi;
         private readonly Role_api _roleApi;
         private readonly Incident_Photos_api _incphotosApi;
+        private readonly Subcategory_api _subcategoryApi;
+        private readonly Incident_Category_api _inccategoryApi;
 
         public IncidentManagementController(IHttpContextAccessor httpContextAccessor, UserService userService)
         {
@@ -35,6 +37,8 @@ namespace ITSM.Controllers
             _depApi = new Department_api(httpContextAccessor);
             _roleApi = new Role_api(httpContextAccessor);
             _incphotosApi = new Incident_Photos_api(httpContextAccessor);
+            _subcategoryApi = new Subcategory_api(httpContextAccessor);
+            _inccategoryApi = new Incident_Category_api(httpContextAccessor);
             _userService = userService;
         }
 
@@ -42,19 +46,15 @@ namespace ITSM.Controllers
         {
             var currentUser = await _userService.GetCurrentUserAsync();
 
-            // Making concurrent API requests
             var inc = _incApi.GetAllIncident_API();
             var dep = _depApi.GetAllDepartment_API();
             var user = _userApi.GetAllUser_API();
 
-            // Wait for all tasks to complete
             await Task.WhenAll(inc, dep, user);
 
-            // get incident list data
             var allInc = inc.Result;
             var incList = allInc.OrderByDescending(y => y.id).ToList();
 
-            // get user and department data
             var allDepartments = dep.Result;
             var allUsers = user.Result;
 
@@ -112,9 +112,19 @@ namespace ITSM.Controllers
         {
             var currentUser = await _userService.GetCurrentUserAsync();
 
+            var inc_categoryTask = _inccategoryApi.GetAllIncidentcategory_API();
+            var sucategoryTask = _subcategoryApi.GetAllSubcategory_API();
+
+            await Task.WhenAll(inc_categoryTask, sucategoryTask);
+
+            var allIncCategory = inc_categoryTask.Result;
+            var allSucategory = sucategoryTask.Result;
+
             var model = new AllModelVM
             {
-                user = currentUser
+                user = currentUser,
+                Incident_Category_List = allIncCategory,
+                Subcategory_List = allSucategory
             };
 
             return View(model);

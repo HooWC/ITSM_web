@@ -1,0 +1,142 @@
+﻿@using ITSM_DomainModelEntity.ViewModels
+@model AllModelVM
+@{
+    ViewData["Title"] = "Subcategory_Create";
+    Layout = "_Layout";
+}
+
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: 'Segoe UI', Arial, sans-serif;
+        background-color: var(--background-color);
+        color: var(--text-color);
+        line-height: 1.5;
+        margin: 0;
+        min-height: 100vh;
+    }
+</style>
+
+<div class="inc-cre-container">
+    <header class="inc-cre-header">
+        <div class="inc-cre-header-left">
+            <button class="inc-cre-menu-button">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                     stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="12" y1="18" x2="12" y2="12"></line>
+                    <line x1="9" y1="15" x2="15" y2="15"></line>
+                </svg>
+            </button>
+            <div class="inc-cre-title-group">
+                <div class="inc-cre-title">Subcategory Form</div>
+                <div class="inc-cre-subtitle">New record</div>
+            </div>
+        </div>
+        <div class="inc-cre-header-right">
+            <button class="inc-cre-btn inc-cre-btn-icon" onclick="location.href='/Category/Subcategory_List'">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="4" y1="6" x2="20" y2="6"></line>
+                    <line x1="4" y1="12" x2="20" y2="12"></line>
+                    <line x1="4" y1="18" x2="20" y2="18"></line>
+                </svg>
+            </button>
+            <button class="inc-cre-btn inc-cre-btn-icon" onclick="window.open('/Info/Form_Info', '_blank')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+            </button>
+            <button class="inc-cre-btn inc-cre-btn-submit" onclick="document.getElementById('incidentForm').submit();">Submit</button>
+
+        </div>
+    </header>
+
+    <main class="inc-cre-form-wrapper">
+
+        @if (!string.IsNullOrEmpty(ViewBag.Error as string))
+        {
+            <div id="error-notification" class="error-notification">
+                <div class="error-notification-content">
+                    <div class="error-notification-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                    </div>
+                    <div class="error-notification-text">
+                        <div class="error-notification-title">Submission failed</div>
+                        <div class="error-notification-message" id="error-notification-message">@ViewBag.Error</div>
+                    </div>
+                </div>
+                <button type="button" class="error-notification-close" id="error-notification-close">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+        }
+
+
+        <form id="incidentForm" class="inc-cre-incident-form" action="~/Category/Subcategory_Create" method="post">
+
+            <div class="inc-cre-form-group inc-cre-short-description-group">
+                <label for="subcategory" class="inc-cre-form-label inc-cre-required">Subcategory Name</label>
+                <div class="inc-cre-input-with-actions">
+                    <input type="text" autocomplete="off" name="subcategory" id="subcategory" class="inc-cre-form-control" required>
+                </div>
+            </div>
+
+            <div class="inc-cre-form-grid">
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="category" class="inc-cre-form-label">Category</label>
+                        <select id="category" name="category" class="inc-cre-form-control">
+                            @foreach (var item in Model.Incident_Category_List)
+                            {
+                                <option value="@item.id">@item.name</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="department_id" class="inc-cre-form-label">Department</label>
+                        <select id="department_id" name="department_id" class="inc-cre-form-control">
+                            @foreach (var item in Model.DepartmentList)
+                            {
+                                <option value="@item.id">@item.name</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </main>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+    $(function () {
+      var $target = $('#Subcategory_menu');
+      if (!$target.hasClass('active') || !$target.hasClass('open')) {
+          $('.menu-item').removeClass('active open');
+          $target.addClass('active open');
+      }
+
+      $('#Subcategory_menu_create').addClass("active");
+    });
+</script>
+

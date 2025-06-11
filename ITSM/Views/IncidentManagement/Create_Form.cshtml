@@ -30,7 +30,7 @@
     }
 
     .inc-file-cre-form-padding {
-        padding: 5px 0px 0px 5px;
+        padding: 4px 0px 0px 5px;
     }
 </style>
 
@@ -124,13 +124,11 @@
                                 </svg>
                             </button>
                         </label>
-                        <select id="category" name="category" class="inc-cre-form-control">
-                            <option value="Hardware" selected>Hardware</option>
-                            <option value="Software">Software</option>
-                            <option value="Network">Network</option>
-                            <option value="Email">Email</option>
-                            <option value="Database">Database</option>
-                            <option value="Others">Others</option>
+                        <select id="category" name="category" class="inc-cre-form-control" required>
+                            @foreach (var category in Model.Incident_Category_List)
+                            {
+                                <option value="@category.id">@category.name</option>
+                            }
                         </select>
                     </div>
 
@@ -144,8 +142,7 @@
                                 </svg>
                             </button>
                         </label>
-                        <select id="subcategory" name="subcategory" class="inc-cre-form-control">
-                            <option selected>-- None --</option>
+                        <select id="subcategory" name="subcategory" class="inc-cre-form-control" required>
                         </select>
                     </div>
 
@@ -364,337 +361,375 @@
       $('#Incidents_menu_create').addClass("active");
 
           // Update Priority Logic
-      function updatePriority() {
-          var impact = $("#impact").val();
-          var urgency = $("#urgency").val();
-              var priority = "5 - Planning"; // default value
+      // function updatePriority() {
+      //     var impact = $("#impact").val();
+      //     var urgency = $("#urgency").val();
+      //         var priority = "5 - Planning"; // default value
           
-          if (impact === "1 - High" && urgency === "1 - High") {
-              priority = "1 - Critical";
-          } else if ((impact === "1 - High" && urgency === "2 - Medium") || 
-                     (impact === "2 - Medium" && urgency === "1 - High")) {
-              priority = "2 - High";
-          } else if ((impact === "1 - High" && urgency === "3 - Low") || 
-                     (impact === "2 - Medium" && urgency === "2 - Medium") || 
-                     (impact === "3 - Low" && urgency === "1 - High")) {
-              priority = "3 - Moderate";
-          } else if ((impact === "2 - Medium" && urgency === "3 - Low") || 
-                     (impact === "3 - Low" && urgency === "2 - Medium")) {
-              priority = "4 - Low";
-          } else if (impact === "3 - Low" && urgency === "3 - Low") {
-              priority = "5 - Planning";
-          }
+      //     if (impact === "1 - High" && urgency === "1 - High") {
+      //         priority = "1 - Critical";
+      //     } else if ((impact === "1 - High" && urgency === "2 - Medium") || 
+      //                (impact === "2 - Medium" && urgency === "1 - High")) {
+      //         priority = "2 - High";
+      //     } else if ((impact === "1 - High" && urgency === "3 - Low") || 
+      //                (impact === "2 - Medium" && urgency === "2 - Medium") || 
+      //                (impact === "3 - Low" && urgency === "1 - High")) {
+      //         priority = "3 - Moderate";
+      //     } else if ((impact === "2 - Medium" && urgency === "3 - Low") || 
+      //                (impact === "3 - Low" && urgency === "2 - Medium")) {
+      //         priority = "4 - Low";
+      //     } else if (impact === "3 - Low" && urgency === "3 - Low") {
+      //         priority = "5 - Planning";
+      //     }
           
-          $("#priority-value").text(priority);
-          $("#priority-hidden").val(priority);
-      }
+      //     $("#priority-value").text(priority);
+      //     $("#priority-hidden").val(priority);
+      // }
       
-      // Update Priority when Impact or Urgency changes
-      $("#impact, #urgency").change(function() {
-          updatePriority();
-      });
+      // // Update Priority when Impact or Urgency changes
+      // $("#impact, #urgency").change(function() {
+      //     updatePriority();
+      // });
       
-      // Initialize Priority when the page loads
-      updatePriority();
+      // // Initialize Priority when the page loads
+      // updatePriority();
       
-      // Define the Subcategory options for each Category
-      var subcategories = {
-          "Hardware": [
-              "Laptop/Desktop",
-              "Monitor",
-              "Printer",
-              "Keyboard/Mouse",
-              "Hard Disk",
-              "Power Supply",
-              "Battery",
-              "Peripheral Devices",
-              "Other"
-          ],
-          "Software": [
-              "Microsoft Office",
-              "IHub",
-              "HSG ITSM",
-              "ERP System",
-              "Website / Web Application",
-              "Mobile App",
-              "Antivirus",
-              "Browser",
-              "License Issues",
-              "Other"
-          ],
-          "Network": [
-              "Wi-Fi Connectivity",
-              "LAN Issue",
-              "Internet Down",
-              "VPN Problem",
-              "Switch/Router",
-              "DNS Issue",
-              "Network Performance",
-              "Other"
-          ],
-          "Email": [
-              "Cannot Send/Receive",
-              "Outlook Issue",
-              "Email Configuration",
-              "Other"
-          ],
-          "Database": [
-              "Connection Failure",
-              "Data Corruption",
-              "Query Timeout",
-              "Backup Failure",
-              "Performance Issue",
-              "Access Denied",
-              "Other"
-          ],
-          "Others": [
-              "General Inquiry",
-              "How-To Support",
-              "Not Categorized",
-              "Scheduled Maintenance",
-              "Other"
-          ]
-      };
+      // // Define the Subcategory options for each Category
+      // var subcategories = {
+      //     "Hardware": [
+      //         "Laptop/Desktop",
+      //         "Monitor",
+      //         "Printer",
+      //         "Keyboard/Mouse",
+      //         "Hard Disk",
+      //         "Power Supply",
+      //         "Battery",
+      //         "Peripheral Devices",
+      //         "Other"
+      //     ],
+      //     "Software": [
+      //         "Microsoft Office",
+      //         "IHub",
+      //         "HSG ITSM",
+      //         "ERP System",
+      //         "Website / Web Application",
+      //         "Mobile App",
+      //         "Antivirus",
+      //         "Browser",
+      //         "License Issues",
+      //         "Other"
+      //     ],
+      //     "Network": [
+      //         "Wi-Fi Connectivity",
+      //         "LAN Issue",
+      //         "Internet Down",
+      //         "VPN Problem",
+      //         "Switch/Router",
+      //         "DNS Issue",
+      //         "Network Performance",
+      //         "Other"
+      //     ],
+      //     "Email": [
+      //         "Cannot Send/Receive",
+      //         "Outlook Issue",
+      //         "Email Configuration",
+      //         "Other"
+      //     ],
+      //     "Database": [
+      //         "Connection Failure",
+      //         "Data Corruption",
+      //         "Query Timeout",
+      //         "Backup Failure",
+      //         "Performance Issue",
+      //         "Access Denied",
+      //         "Other"
+      //     ],
+      //     "Others": [
+      //         "General Inquiry",
+      //         "How-To Support",
+      //         "Not Categorized",
+      //         "Scheduled Maintenance",
+      //         "Other"
+      //     ]
+      // };
       
-      // Initialize Subcategory
-      function updateSubcategories() {
-          var category = $("#category").val();
-          var $subcategory = $("#subcategory");
+      // // Initialize Subcategory
+      // function updateSubcategories() {
+      //     var category = $("#category").val();
+      //     var $subcategory = $("#subcategory");
           
-          // Clear existing options
-          $subcategory.empty();
+      //     // Clear existing options
+      //     $subcategory.empty();
           
-          // Add new option
-          if (subcategories[category]) {
-              $.each(subcategories[category], function(index, value) {
-                  $subcategory.append($("<option></option>").text(value).val(value));
-              });
-          }
-      }
+      //     // Add new option
+      //     if (subcategories[category]) {
+      //         $.each(subcategories[category], function(index, value) {
+      //             $subcategory.append($("<option></option>").text(value).val(value));
+      //         });
+      //     }
+      // }
       
-      // Initialized when the page loads
-      updateSubcategories();
+      // // Initialized when the page loads
+      // updateSubcategories();
       
-      // Update Subcategory when Category selection changes
-      $("#category").change(function() {
-          updateSubcategories();
-      });
+      // // Update Subcategory when Category selection changes
+      // $("#category").change(function() {
+      //     updateSubcategories();
+      // });
       
       // Modal box function
-      var currentInputField = null;
-      var selectedDepartmentId = null;
-      var departmentList = [];
-      var usersByDepartment = {};
+      // var currentInputField = null;
+      // var selectedDepartmentId = null;
+      // var departmentList = [];
+      // var usersByDepartment = {};
       
-      // Get department data from the server
-      function loadDepartments() {
-          $.ajax({
-              url: '/Ajax/DepartmentData',
-              type: 'GET',
-              dataType: 'json',
-              success: function(data) {
-                  departmentList = data;
-                  // console.log("Department data loaded successfully:", data);
-              },
-              error: function(xhr, status, error) {
-                  // console.error("Failed to load department data:", error);
-              }
-          });
-      }
+      // // Get department data from the server
+      // function loadDepartments() {
+      //     $.ajax({
+      //         url: '/Ajax/DepartmentData',
+      //         type: 'GET',
+      //         dataType: 'json',
+      //         success: function(data) {
+      //             departmentList = data;
+      //             // console.log("Department data loaded successfully:", data);
+      //         },
+      //         error: function(xhr, status, error) {
+      //             // console.error("Failed to load department data:", error);
+      //         }
+      //     });
+      // }
       
-      // Load department data
-      loadDepartments();
+      // // Load department data
+      // loadDepartments();
       
-      // Get user data based on department ID
-      function loadUsersByDepartment(departmentId) {
-          $.ajax({
-              url: '/Ajax/AssignedToData',
-              type: 'POST',
-              data: { departmentId: departmentId },
-              dataType: 'json',
-              success: function(data) {
-                  if (data && Array.isArray(data)) {
-                      usersByDepartment[departmentId] = data;
-                      openModal("Select assignees", data, $("#assigned-to"));
-                  } else if (data && data.success === false) {
-                      // console.error("Failed to obtain user data:", data.message);
-                      // alert("Failed to obtain user data: " + data.message);
-                  } else {
-                      // console.error("The format of the obtained user data is incorrect");
-                      // alert("The format of the obtained user data is incorrect");
-                  }
-              },
-              error: function(xhr, status, error) {
-                  // console.error("Failed to obtain user data request:", error);
-                  // alert("Failed to obtain user data request: " + error);
-              }
-          });
-      }
+      // // Get user data based on department ID
+      // function loadUsersByDepartment(departmentId) {
+      //     $.ajax({
+      //         url: '/Ajax/AssignedToData',
+      //         type: 'POST',
+      //         data: { departmentId: departmentId },
+      //         dataType: 'json',
+      //         success: function(data) {
+      //             if (data && Array.isArray(data)) {
+      //                 usersByDepartment[departmentId] = data;
+      //                 openModal("Select assignees", data, $("#assigned-to"));
+      //             } else if (data && data.success === false) {
+      //                 // console.error("Failed to obtain user data:", data.message);
+      //                 // alert("Failed to obtain user data: " + data.message);
+      //             } else {
+      //                 // console.error("The format of the obtained user data is incorrect");
+      //                 // alert("The format of the obtained user data is incorrect");
+      //             }
+      //         },
+      //         error: function(xhr, status, error) {
+      //             // console.error("Failed to obtain user data request:", error);
+      //             // alert("Failed to obtain user data request: " + error);
+      //         }
+      //     });
+      // }
       
-      // Open modal
-      function openModal(title, data, targetInput) {
-          currentInputField = targetInput;
+      // // Open modal
+      // function openModal(title, data, targetInput) {
+      //     currentInputField = targetInput;
           
-          // Title
-          $("#inc-cre-modal-title").text(title);
+      //     // Title
+      //     $("#inc-cre-modal-title").text(title);
           
-          // Clear and fill the table
-          var tableBody = $("#inc-cre-modal-table-body");
-          tableBody.empty();
+      //     // Clear and fill the table
+      //     var tableBody = $("#inc-cre-modal-table-body");
+      //     tableBody.empty();
           
-          $.each(data, function(index, item) {
-              var id = item.id || item.user_id || index;
-              var name = item.name || item.fullname || '';
-              var description = item.description || item.title || '';
+      //     $.each(data, function(index, item) {
+      //         var id = item.id || item.user_id || index;
+      //         var name = item.name || item.fullname || '';
+      //         var description = item.description || item.title || '';
               
-              tableBody.append(
-                  '<tr data-id="' + id + '" data-name="' + name + '">' +
-                  '<td>' + name + '</td>' +
-                  '<td>' + description + '</td>' +
-                  '</tr>'
-              );
-          });
+      //         tableBody.append(
+      //             '<tr data-id="' + id + '" data-name="' + name + '">' +
+      //             '<td>' + name + '</td>' +
+      //             '<td>' + description + '</td>' +
+      //             '</tr>'
+      //         );
+      //     });
           
-          // Show modal box
-          $("#inc-cre-modal").fadeIn(200);
-      }
+      //     // Show modal box
+      //     $("#inc-cre-modal").fadeIn(200);
+      // }
       
-      // Close modal box
-      function closeModal() {
-          $("#inc-cre-modal").fadeOut(200);
-          currentInputField = null;
-      }
+      // // Close modal box
+      // function closeModal() {
+      //     $("#inc-cre-modal").fadeOut(200);
+      //     currentInputField = null;
+      // }
       
-      // Click the Assignment Group search button
-      $("#assignment-group-search").on('click', function() {
-          if (departmentList && departmentList.length > 0) {
-              openModal("Select assignment group", departmentList, $("#assignment-group"));
-          } else {
-              loadDepartments(); // If the data has not been loaded, reload it
-              setTimeout(function() {
-                  if (departmentList && departmentList.length > 0) {
-                      openModal("Select assignment group", departmentList, $("#assignment-group"));
-                  } else {
-                      // alert("Unable to load department data, please refresh the page and try again");
-                  }
-              }, 500);
-          }
-      });
+      // // Click the Assignment Group search button
+      // $("#assignment-group-search").on('click', function() {
+      //     if (departmentList && departmentList.length > 0) {
+      //         openModal("Select assignment group", departmentList, $("#assignment-group"));
+      //     } else {
+      //         loadDepartments(); // If the data has not been loaded, reload it
+      //         setTimeout(function() {
+      //             if (departmentList && departmentList.length > 0) {
+      //                 openModal("Select assignment group", departmentList, $("#assignment-group"));
+      //             } else {
+      //                 // alert("Unable to load department data, please refresh the page and try again");
+      //             }
+      //         }, 500);
+      //     }
+      // });
       
-      // Click the Assigned To search button
-      $("#assigned-to-search").on('click', function() {
-          if (!selectedDepartmentId) {
-              // alert("Please select the allocation group first");
-              return;
-          }
+      // // Click the Assigned To search button
+      // $("#assigned-to-search").on('click', function() {
+      //     if (!selectedDepartmentId) {
+      //         // alert("Please select the allocation group first");
+      //         return;
+      //     }
           
-          // Check if there is already cached user data
-          if (usersByDepartment[selectedDepartmentId]) {
-              openModal("Select assignees", usersByDepartment[selectedDepartmentId], $("#assigned-to"));
-          } else {
-              loadUsersByDepartment(selectedDepartmentId);
-          }
-      });
+      //     // Check if there is already cached user data
+      //     if (usersByDepartment[selectedDepartmentId]) {
+      //         openModal("Select assignees", usersByDepartment[selectedDepartmentId], $("#assigned-to"));
+      //     } else {
+      //         loadUsersByDepartment(selectedDepartmentId);
+      //     }
+      // });
       
-      // Click the modal box close button
-      $(".inc-cre-modal-close").click(function() {
-          closeModal();
-      });
+      // // Click the modal box close button
+      // $(".inc-cre-modal-close").click(function() {
+      //     closeModal();
+      // });
       
-      // Click outside the modal to close it
-      $(document).on('click', '.inc-cre-modal', function(e) {
-          if ($(e.target).hasClass('inc-cre-modal')) {
-              closeModal();
-          }
-      });
+      // // Click outside the modal to close it
+      // $(document).on('click', '.inc-cre-modal', function(e) {
+      //     if ($(e.target).hasClass('inc-cre-modal')) {
+      //         closeModal();
+      //     }
+      // });
       
-      // Select table row
-      $(document).on('click', '.inc-cre-modal-table tbody tr', function() {
-          var selectedName = $(this).data('name');
-          var selectedId = $(this).data('id');
+      // // Select table row
+      // $(document).on('click', '.inc-cre-modal-table tbody tr', function() {
+      //     var selectedName = $(this).data('name');
+      //     var selectedId = $(this).data('id');
           
-          if (currentInputField) {
-              currentInputField.val(selectedName);
+      //     if (currentInputField) {
+      //         currentInputField.val(selectedName);
               
-              // If you select a department, enable Assigned to
-              if (currentInputField.attr('id') === 'assignment-group') {
-                  selectedDepartmentId = selectedId;
-                  $("#assignment-group-id").val(selectedId); // Save the ID to a hidden input box
-                  $("#assigned-to-search").prop('disabled', false);
-                      $("#assigned-to").val(''); // Clear previously selected users
-                  $("#assigned-to-id").val(''); // Clear the previously selected user ID
-              } else if (currentInputField.attr('id') === 'assigned-to') {
-                  // If user is selected, save the user ID
-                  $("#assigned-to-id").val(selectedId);
-              }
-          }
+      //         // If you select a department, enable Assigned to
+      //         if (currentInputField.attr('id') === 'assignment-group') {
+      //             selectedDepartmentId = selectedId;
+      //             $("#assignment-group-id").val(selectedId); // Save the ID to a hidden input box
+      //             $("#assigned-to-search").prop('disabled', false);
+      //                 $("#assigned-to").val(''); // Clear previously selected users
+      //             $("#assigned-to-id").val(''); // Clear the previously selected user ID
+      //         } else if (currentInputField.attr('id') === 'assigned-to') {
+      //             // If user is selected, save the user ID
+      //             $("#assigned-to-id").val(selectedId);
+      //         }
+      //     }
           
-          closeModal();
-      });
+      //     closeModal();
+      // });
       
-      // Search functionality in a modal
-      $("#inc-cre-search-input").on('keyup', function() {
-          var value = $(this).val().toLowerCase();
-          $(".inc-cre-modal-table tbody tr").filter(function() {
-              $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
-          });
-      });
+      // // Search functionality in a modal
+      // $("#inc-cre-search-input").on('keyup', function() {
+      //     var value = $(this).val().toLowerCase();
+      //     $(".inc-cre-modal-table tbody tr").filter(function() {
+      //         $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+      //     });
+      // });
       
-      // Load department data
-      loadDepartments();
+      // // Load department data
+      // loadDepartments();
       
-      // Notes Some functions
-      // Update activity count
-      function updateActivityCount() {
-          var count = $(".inc-cre-activity-item").length;
-          $("#activity-count").text(count);
-      }
+      // // Notes Some functions
+      // // Update activity count
+      // function updateActivityCount() {
+      //     var count = $(".inc-cre-activity-item").length;
+      //     $("#activity-count").text(count);
+      // }
       
-      // Initialize update activity count
-      updateActivityCount();
+      // // Initialize update activity count
+      // updateActivityCount();
       
-      // Post work notes
-      $(".inc-cre-btn-post").click(function() {
-          var workNotes = $("#work-notes").val().trim();
-          var isCustomerVisible = $("#customer-visible").is(":checked");
+      // // Post work notes
+      // $(".inc-cre-btn-post").click(function() {
+      //     var workNotes = $("#work-notes").val().trim();
+      //     var isCustomerVisible = $("#customer-visible").is(":checked");
           
-          if (workNotes) {
-              // Get current time
-              var now = new Date();
-              var dateString = now.getFullYear() + '-' + 
-                              ('0' + (now.getMonth() + 1)).slice(-2) + '-' + 
-                              ('0' + now.getDate()).slice(-2) + ' ' + 
-                              ('0' + now.getHours()).slice(-2) + ':' + 
-                              ('0' + now.getMinutes()).slice(-2) + ':' + 
-                              ('0' + now.getSeconds()).slice(-2);
+      //     if (workNotes) {
+      //         // Get current time
+      //         var now = new Date();
+      //         var dateString = now.getFullYear() + '-' + 
+      //                         ('0' + (now.getMonth() + 1)).slice(-2) + '-' + 
+      //                         ('0' + now.getDate()).slice(-2) + ' ' + 
+      //                         ('0' + now.getHours()).slice(-2) + ':' + 
+      //                         ('0' + now.getMinutes()).slice(-2) + ':' + 
+      //                         ('0' + now.getSeconds()).slice(-2);
 
-                  // Create new activity item
-              var newActivity = $('<div class="inc-cre-activity-item">' +
-                  '<div class="inc-cre-user-avatar">' +
-                      '<img src="https://www.diydoutu.com/touxiang/20201222-1.jpg" alt="Current User">' +
-                  '</div>' +
-                  '<div class="inc-cre-activity-content">' +
-                      '<div class="inc-cre-activity-header">' +
-                          '<span class="inc-cre-user-name">' + $("#assigned-to").val() || 'Current User' + '</span>' +
-                          '<span class="inc-cre-activity-time">Work notes • ' + dateString + '</span>' +
-                      '</div>' +
-                      '<div class="inc-cre-activity-details">' +
-                          '<div class="inc-cre-work-note-content">' + workNotes.replace(/\n/g, '<br>') + '</div>' +
-                      '</div>' +
-                  '</div>' +
-              '</div>');
+      //             // Create new activity item
+      //         var newActivity = $('<div class="inc-cre-activity-item">' +
+      //             '<div class="inc-cre-user-avatar">' +
+      //                 '<img src="https://www.diydoutu.com/touxiang/20201222-1.jpg" alt="Current User">' +
+      //             '</div>' +
+      //             '<div class="inc-cre-activity-content">' +
+      //                 '<div class="inc-cre-activity-header">' +
+      //                     '<span class="inc-cre-user-name">' + $("#assigned-to").val() || 'Current User' + '</span>' +
+      //                     '<span class="inc-cre-activity-time">Work notes • ' + dateString + '</span>' +
+      //                 '</div>' +
+      //                 '<div class="inc-cre-activity-details">' +
+      //                     '<div class="inc-cre-work-note-content">' + workNotes.replace(/\n/g, '<br>') + '</div>' +
+      //                 '</div>' +
+      //             '</div>' +
+      //         '</div>');
               
-              // Add to the top of the active container
-              $(".inc-cre-activity-container").prepend(newActivity);
+      //         // Add to the top of the active container
+      //         $(".inc-cre-activity-container").prepend(newActivity);
               
-              // Clear text box
-              $("#work-notes").val('');
+      //         // Clear text box
+      //         $("#work-notes").val('');
               
-              // Update activity count
-              updateActivityCount();
-          } else {
-              // alert("Please enter the work notes content");
+      //         // Update activity count
+      //         updateActivityCount();
+      //     } else {
+      //         // alert("Please enter the work notes content");
+      //     }
+      // });
+
+      $(document).ready(function() {
+          // Store all subcategories data
+          var allSubcategories = @Html.Raw(Json.Serialize(Model.Subcategory_List));
+          
+          // Function to update subcategories
+          function updateSubcategories(categoryId) {
+              var subcategorySelect = $('#subcategory');
+              
+              // Clear subcategory dropdown
+              subcategorySelect.empty();
+              
+              if (categoryId) {
+                  // Filter subcategories based on selected category
+                  var filteredSubcategories = allSubcategories.filter(function(sub) {
+                      return sub.category === categoryId;
+                  });
+                  
+                  // Add filtered subcategories to dropdown
+                  filteredSubcategories.forEach(function(sub) {
+                      subcategorySelect.append($('<option>', {
+                          value: sub.id,
+                          text: sub.subcategory
+                      }));
+                  });
+              }
           }
+
+          // When category selection changes
+          $('#category').change(function() {
+              var selectedCategoryId = parseInt($(this).val());
+              updateSubcategories(selectedCategoryId);
+          });
+
+          // Initialize with first category's subcategories
+          var firstCategoryId = parseInt($('#category').val());
+          updateSubcategories(firstCategoryId);
       });
     });
 </script>

@@ -19,7 +19,7 @@ namespace ITSM.Controllers
         private readonly Department_api _depApi;
         private readonly Role_api _roleApi;
         private readonly Category_api _categoryApi;
-        private readonly Sucategory_api _sucategoryApi;
+        private readonly Subcategory_api _subcategoryApi;
         private readonly Incident_Category_api _incidentcategoryApi;
 
         public CategoryController(IHttpContextAccessor httpContextAccessor, UserService userService)
@@ -34,7 +34,7 @@ namespace ITSM.Controllers
             _depApi = new Department_api(httpContextAccessor);
             _roleApi = new Role_api(httpContextAccessor);
             _categoryApi = new Category_api(httpContextAccessor);
-            _sucategoryApi = new Sucategory_api(httpContextAccessor);
+            _subcategoryApi = new Subcategory_api(httpContextAccessor);
             _incidentcategoryApi = new Incident_Category_api(httpContextAccessor);
             _userService = userService;
         }
@@ -87,14 +87,12 @@ namespace ITSM.Controllers
                 return View(model);
             }
 
-            // Create New Category
             Category new_category = new Category()
             {
                 title = category.title,
                 description = category.description
             };
 
-            // API requests
             bool result = await _categoryApi.CreateCategory_API(new_category);
 
             if (result)
@@ -207,7 +205,7 @@ namespace ITSM.Controllers
             var sameData = allIncidentCategory.Where(x => x.name.ToLower() == incCategory.name.ToLower()).ToList();
             if(sameData.Count > 0)
             {
-                ViewBag.Error = "This name already exist.";
+                ViewBag.Error = "This category name already exist.";
                 return View(model);
             }
 
@@ -282,24 +280,179 @@ namespace ITSM.Controllers
             }
         }
 
-        public async Task<IActionResult> Sucategory_List()
+        public async Task<IActionResult> Subcategory_List()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
 
-            var categoryTask = _categoryApi.GetAllCategory_API();
-            await Task.WhenAll(categoryTask);
+            var subcategoryTask = _subcategoryApi.GetAllSubcategory_API();
+            var departmentTask = _depApi.GetAllDepartment_API();
+            var inccategoryTask = _incidentcategoryApi.GetAllIncidentcategory_API();
+            await Task.WhenAll(subcategoryTask, departmentTask, inccategoryTask);
 
-            var allCategory = categoryTask.Result;
+            var allSubcategory = subcategoryTask.Result;
+            var allDepartment = departmentTask.Result;
+            var allIncCategory = inccategoryTask.Result;
 
-            var categoryList = allCategory.OrderByDescending(y => y.id).ToList();
+            var subcategoryList = allSubcategory.OrderByDescending(y => y.id).ToList();
+
+            foreach(var i in subcategoryList)
+            {
+                i.Department = allDepartment.FirstOrDefault(x => x.id == i.department_id);
+                i.Incidentcategory = allIncCategory.FirstOrDefault(x => x.id == i.category);
+            }
 
             var model = new AllModelVM
             {
                 user = currentUser,
-                CategoryList = categoryList
+                Subcategory_List = subcategoryList
             };
 
             return View(model);
+        }
+
+        public async Task<IActionResult> Subcategory_Create()
+        {
+            var currentUser = await _userService.GetCurrentUserAsync();
+
+            var departmentTask = _depApi.GetAllDepartment_API();
+            var inccategoryTask = _incidentcategoryApi.GetAllIncidentcategory_API();
+            await Task.WhenAll(departmentTask, inccategoryTask);
+
+            var allDepartment = departmentTask.Result;
+            var allIncCategory = inccategoryTask.Result;
+
+            var model = new AllModelVM
+            {
+                user = currentUser,
+                DepartmentList = allDepartment,
+                Incident_Category_List = allIncCategory
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Subcategory_Create(Subcategory sub)
+        {
+            var currentUser = await _userService.GetCurrentUserAsync();
+
+            var departmentTask = _depApi.GetAllDepartment_API();
+            var inccategoryTask = _incidentcategoryApi.GetAllIncidentcategory_API();
+            await Task.WhenAll(departmentTask, inccategoryTask);
+
+            var allDepartment = departmentTask.Result;
+            var allIncCategory = inccategoryTask.Result;
+
+            var model = new AllModelVM
+            {
+                user = currentUser,
+                DepartmentList = allDepartment,
+                Incident_Category_List = allIncCategory
+            };
+
+            if (sub.subcategory == null)
+            {
+                ViewBag.Error = "Please fill in all required fields";
+                return View(model);
+            }
+
+            var allSubcategory = await _subcategoryApi.GetAllSubcategory_API();
+            var sameData = allSubcategory.Where(x => x.subcategory.ToLower() == sub.subcategory.ToLower() && x.category != sub.category).ToList();
+            if (sameData.Count > 0)
+            {
+                ViewBag.Error = "This subcategory name already exist.";
+                return View(model);
+            }
+
+            Subcategory new_subcategory = new Subcategory()
+            {
+                subcategory = sub.subcategory,
+                category = sub.category,
+                department_id = sub.department_id
+            };
+
+            bool result = await _subcategoryApi.CreateSubcategory_API(new_subcategory);
+
+            if (result)
+                return RedirectToAction("Subcategory_List", "Category");
+            else
+            {
+                ViewBag.Error = "Create Subcategory Error";
+                return View(model);
+            }
+        }
+
+        public async Task<IActionResult> Subcategory_Info(int id)
+        {
+            var currentUser = await _userService.GetCurrentUserAsync();
+
+            var subcategory = await _subcategoryApi.FindByIDSubcategory_API(id);
+            var departmentTask = _depApi.GetAllDepartment_API();
+            var inccategoryTask = _incidentcategoryApi.GetAllIncidentcategory_API();
+            await Task.WhenAll(departmentTask, inccategoryTask);
+
+            var allDepartment = departmentTask.Result;
+            var allIncCategory = inccategoryTask.Result;
+
+            var model = new AllModelVM
+            {
+                user = currentUser,
+                Sub_Category = subcategory,
+                DepartmentList = allDepartment,
+                Incident_Category_List = allIncCategory
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Subcategory_Info(Subcategory sub)
+        {
+            var currentUser = await _userService.GetCurrentUserAsync();
+
+            var subcategoryTask = await _subcategoryApi.FindByIDSubcategory_API(sub.id);
+            var departmentTask = _depApi.GetAllDepartment_API();
+            var inccategoryTask = _incidentcategoryApi.GetAllIncidentcategory_API();
+            await Task.WhenAll(departmentTask, inccategoryTask);
+
+            var allDepartment = departmentTask.Result;
+            var allIncCategory = inccategoryTask.Result;
+
+            var model = new AllModelVM
+            {
+                user = currentUser,
+                Sub_Category = subcategoryTask,
+                DepartmentList = allDepartment,
+                Incident_Category_List = allIncCategory
+            };
+
+            if (sub.subcategory == null)
+            {
+                ViewBag.Error = "Please fill in all required fields";
+                return View(model);
+            }
+
+            var allSubcategory = await _subcategoryApi.GetAllSubcategory_API();
+            var sameData = allSubcategory.Where(x => x.subcategory.ToLower() == sub.subcategory.ToLower() && x.id != sub.id && x.category != sub.category).ToList();
+            if (sameData.Count > 0)
+            {
+                ViewBag.Error = "This subcategory name already exist.";
+                return View(model);
+            }
+
+            subcategoryTask.subcategory = sub.subcategory;
+            subcategoryTask.category = sub.category;
+            subcategoryTask.department_id = sub.department_id;
+
+            bool result = await _subcategoryApi.UpdateSubcategory_API(subcategoryTask);
+
+            if (result)
+                return RedirectToAction("Subcategory_List", "Category");
+            else
+            {
+                ViewBag.Error = "Update Subcategory Error";
+                return View(model);
+            }
         }
     }
 }

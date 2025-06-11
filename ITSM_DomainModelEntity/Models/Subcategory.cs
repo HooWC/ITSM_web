@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace ITSM_DomainModelEntity.Models
 {
-    public class Sucategory
+    public class Subcategory
     {
         [Key]
         public int id { get; set; } 
 
-        public string? sucategory { get; set; }
+        public string? subcategory { get; set; }
 
         [ForeignKey("Incidentcategory")]
         public int category { get; set; }

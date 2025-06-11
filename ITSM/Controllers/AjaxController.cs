@@ -30,6 +30,8 @@ namespace ITSM.Controllers
         private readonly CMDB_api _cmdbApi;
         private readonly Knowledge_api _kbApi;
         private readonly Myversion_api _myversionApi;
+        private readonly Subcategory_api _subcategoryApi;
+        private readonly Incident_Category_api _incidentcategoryApi;
 
         public AjaxController(IHttpContextAccessor httpContextAccessor)
         {
@@ -48,6 +50,8 @@ namespace ITSM.Controllers
             _cmdbApi = new CMDB_api(httpContextAccessor);
             _kbApi = new Knowledge_api(httpContextAccessor);
             _myversionApi = new Myversion_api(httpContextAccessor);
+            _subcategoryApi = new Subcategory_api(httpContextAccessor);
+            _incidentcategoryApi = new Incident_Category_api(httpContextAccessor);
         }
 
         private bool IsUserLoggedIn(out User currentUser)
@@ -3017,6 +3021,120 @@ namespace ITSM.Controllers
                     if (VersionToDelete != null)
                     {
                         bool result = await _myversionApi.DeleteMyversion_API(id);
+                        if (result)
+                            successCount++;
+                    }
+                }
+
+                if (successCount > 0)
+                {
+                    return Json(new
+                    {
+                        success = true,
+                        message = $"Successfully deleted {successCount} item(s)"
+                    });
+                }
+                else
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Failed to delete items. Items may not exist or you don't have permission"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = $"Error: {ex.Message}" });
+            }
+        }
+
+        /// <summary>
+        /// Category/Subcategory_List
+        public async Task<IActionResult> SearchSubcategory(string searchTerm, string filterBy = "sucategory")
+        {
+            if (string.IsNullOrEmpty(searchTerm))
+                return Json(new List<Category>());
+
+            if (!IsUserLoggedIn(out var currentUser))
+                return Json(new { success = false, message = "Not logged in" });
+
+            var sucategoryTask = _subcategoryApi.GetAllSubcategory_API();
+            var departmentTask = _departmentApi.GetAllDepartment_API();
+            var inccategoryTask = _incidentcategoryApi.GetAllIncidentcategory_API();
+            await Task.WhenAll(sucategoryTask, departmentTask, inccategoryTask);
+
+            var allSucategory = sucategoryTask.Result;
+            var allDepartment = departmentTask.Result;
+            var allIncCategory = inccategoryTask.Result;
+
+            var userSucategory = new List<Subcategory>();
+            userSucategory = allSucategory.OrderByDescending(x => x.id).ToList();
+
+            List<Subcategory> filteredSucategorys;
+
+            if (searchTerm == "re_entrynovalue")
+            {
+                filteredSucategorys = userSucategory;
+            }
+            else
+            {
+                switch (filterBy.ToLower())
+                {
+
+                    case "category":
+                        var filterIncCategorys = allIncCategory.Where(x => x.name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+                        filteredSucategorys = (from i in userSucategory
+                                               join d in filterIncCategorys on i.category equals d.id
+                                               select i).ToList();
+                        break;
+                    case "department":
+                        var filterDepartments = allDepartment.Where(x => x.name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+                        filteredSucategorys = (from i in userSucategory
+                                               join d in filterDepartments on i.department_id equals d.id
+                                               select i).ToList();
+                        break;
+                    case "subcategory":
+                    default:
+                        filteredSucategorys = userSucategory
+                            .Where(t => t.subcategory != null && t.subcategory.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                        break;
+                }
+            }
+
+            var result = filteredSucategorys.Select(t => new {
+               t.subcategory,
+               inc_category = allIncCategory.FirstOrDefault(x => x.id == t.category),
+               department_name = allDepartment.FirstOrDefault(x => x.id == t.department_id)
+            });
+
+            return Json(result);
+        }
+
+        /// <summary>
+        /// Category/Subategory_List
+        [HttpPost]
+        public async Task<IActionResult> DeleteSubcategory([FromBody] List<int> ids)
+        {
+            if (ids == null || !ids.Any())
+                return Json(new { success = false, message = "No items selected for deletion" });
+
+            if (!IsUserLoggedIn(out var currentUser))
+                return Json(new { success = false, message = "Not logged in" });
+
+            try
+            {
+                int successCount = 0;
+
+                foreach (var id in ids)
+                {
+                    var allSUcategorys = await _subcategoryApi.GetAllSubcategory_API();
+                    var SucategoryToDelete = allSUcategorys.FirstOrDefault(x => x.id == id);
+
+                    if (SucategoryToDelete != null)
+                    {
+                        bool result = await _subcategoryApi.DeleteSubcategory_API(id);
                         if (result)
                             successCount++;
                     }
