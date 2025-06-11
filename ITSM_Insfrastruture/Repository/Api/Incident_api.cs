@@ -105,6 +105,8 @@ namespace ITSM_Insfrastruture.Repository.Api
                 );
 
                 var response = await _client.PutAsync($"{_sudIncUrl}{incident.id}", jsonStr);
+                //var responseStr = await response.Content.ReadAsStringAsync();
+                //Console.WriteLine($"RESPONSE UPDATE: {responseStr}");
 
                 return response.IsSuccessStatusCode;
             }

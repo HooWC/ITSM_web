@@ -91,7 +91,7 @@
                     <tr class="incident-item" data-id="@i.id">
                         <td><input type="checkbox" class="item-checkbox"></td>
                         <td class="inc-tab-incident-number" data-label="Number">
-                            <a href="~/User/User_Info?id=@i.id">@i.emp_id</a>
+                            <a href="~/User/User_Approve_Info?id=@i.id">@i.emp_id</a>
                         </td>
                         <td data-label="Fullname">@i.fullname</td>
                         <td data-label="Gender" class="phone_user_hide_design">@i.gender</td>
@@ -118,11 +118,13 @@
 <script src="~/js/List/Approve_User_List.js"></script>
 <script>
       $(function () {
-        var $target = $('#Approve_menu_u');
+        var $target = $('#User_menu');
         if (!$target.hasClass('active') || !$target.hasClass('open')) {
             $('.menu-item').removeClass('active open');
             $target.addClass('active open');
         }
+
+        $('#User_menu_approve').addClass("active");
     });
 </script>
 

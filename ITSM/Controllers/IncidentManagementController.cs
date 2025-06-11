@@ -50,18 +50,25 @@ namespace ITSM.Controllers
             var dep = _depApi.GetAllDepartment_API();
             var user = _userApi.GetAllUser_API();
 
-            await Task.WhenAll(inc, dep, user);
+            var inc_categoryTask = _inccategoryApi.GetAllIncidentcategory_API();
+            var sucategoryTask = _subcategoryApi.GetAllSubcategory_API();
+
+            await Task.WhenAll(inc, dep, user, inc_categoryTask, sucategoryTask);
 
             var allInc = inc.Result;
             var incList = allInc.OrderByDescending(y => y.id).ToList();
 
             var allDepartments = dep.Result;
             var allUsers = user.Result;
+            var allIncCategory = inc_categoryTask.Result;
+            var allSucategory = sucategoryTask.Result;
 
             foreach (var incident in incList)
             {
                 incident.AssignmentGroup = allDepartments.FirstOrDefault(d => d.id == incident.assignment_group);
                 incident.AssignedTo = allUsers.FirstOrDefault(u => u.id == incident.assigned_to);
+                incident.IncidentcategoryData = allIncCategory.FirstOrDefault(x => x.id == incident.category);
+                incident.SubcategoryData = allSucategory.FirstOrDefault(x => x.id == incident.subcategory);
             }
 
             var model = new AllModelVM
@@ -77,26 +84,29 @@ namespace ITSM.Controllers
         {
             var currentUser = await _userService.GetCurrentUserAsync();
 
-            // Making concurrent API requests
             var inc = _incApi.GetAllIncident_API();
             var dep = _depApi.GetAllDepartment_API();
             var user = _userApi.GetAllUser_API();
 
-            // Wait for all tasks to complete
-            await Task.WhenAll(inc, dep, user);
+            var inc_categoryTask = _inccategoryApi.GetAllIncidentcategory_API();
+            var sucategoryTask = _subcategoryApi.GetAllSubcategory_API();
 
-            // get incident list data
+            await Task.WhenAll(inc, dep, user, inc_categoryTask, sucategoryTask);
+
             var allInc = inc.Result;
             var incList = allInc.Where(x => x.sender == currentUser.id).OrderByDescending(y => y.id).ToList();
 
-            // get user and department data
             var allDepartments = dep.Result;
             var allUsers = user.Result;
+            var allIncCategory = inc_categoryTask.Result;
+            var allSucategory = sucategoryTask.Result;
 
             foreach (var incident in incList)
             {
                 incident.AssignmentGroup = allDepartments.FirstOrDefault(d => d.id == incident.assignment_group);
                 incident.AssignedTo = allUsers.FirstOrDefault(u => u.id == incident.assigned_to);
+                incident.IncidentcategoryData = allIncCategory.FirstOrDefault(x => x.id == incident.category);
+                incident.SubcategoryData = allSucategory.FirstOrDefault(x => x.id == incident.subcategory);
             }
 
             var model = new AllModelVM
@@ -135,12 +145,22 @@ namespace ITSM.Controllers
         {
             var currentUser = await _userService.GetCurrentUserAsync();
 
+            var inc_categoryTask = _inccategoryApi.GetAllIncidentcategory_API();
+            var sucategoryTask = _subcategoryApi.GetAllSubcategory_API();
+
+            await Task.WhenAll(inc_categoryTask, sucategoryTask);
+
+            var allIncCategory = inc_categoryTask.Result;
+            var allSucategory = sucategoryTask.Result;
+
             var model = new AllModelVM
             {
-                user = currentUser
+                user = currentUser,
+                Incident_Category_List = allIncCategory,
+                Subcategory_List = allSucategory
             };
 
-            if (!string.IsNullOrEmpty(inc.short_description))
+            if (!string.IsNullOrEmpty(inc.describe))
             {
                 var allIncident = await _incApi.GetAllIncident_API();
 
@@ -183,19 +203,16 @@ namespace ITSM.Controllers
                 var new_inc = new Incident()
                 {
                     inc_number = newId,
-                    short_description = inc.short_description,
                     describe = inc.describe,
                     sender = currentUser.id,
-                    impact = inc.impact,
                     urgency = inc.urgency,
-                    priority = inc.priority,
                     state = inc.state,
                     category = inc.category,
                     subcategory = inc.subcategory,
-                    assignment_group = inc.assignment_group,
-                    assigned_to = inc.assigned_to == 0 ? null : inc.assigned_to,
                     updated_by = currentUser.id
                 };
+
+                new_inc.assignment_group = allSucategory.FirstOrDefault(x => x.id == inc.subcategory).department_id;
 
                 bool result = await _incApi.CreateIncident_API(new_inc);
 
@@ -240,17 +257,24 @@ namespace ITSM.Controllers
             var userTask = _userApi.GetAllUser_API();
             var incphotosTask = _incphotosApi.GetAllIncidentPhotos_API();
 
-            await Task.WhenAll(departmentTask, userTask, incphotosTask);
+            var inc_categoryTask = _inccategoryApi.GetAllIncidentcategory_API();
+            var sucategoryTask = _subcategoryApi.GetAllSubcategory_API();
+
+            await Task.WhenAll(departmentTask, userTask, incphotosTask, inc_categoryTask, sucategoryTask);
 
             var allDepartment = departmentTask.Result;
             var allUser = userTask.Result;
             var allInc_Photos = incphotosTask.Result;
+            var allIncCategory = inc_categoryTask.Result;
+            var allSucategory = sucategoryTask.Result;
 
             var incData = await _incApi.FindByIDIncident_API(id);
 
             incData.AssignmentGroup = allDepartment.Where(x => x.id == incData.assignment_group).FirstOrDefault();
             incData.AssignedTo = incData.assigned_to == null ? null : allUser.FirstOrDefault(x => x.id == incData.assigned_to);
-
+            incData.IncidentcategoryData = allIncCategory.FirstOrDefault(x => x.id == incData.category);
+            incData.SubcategoryData = allSucategory.FirstOrDefault(x => x.id == incData.subcategory);
+            
             var allRelatedPhotos = allInc_Photos.Where(x => x.incident_id == incData.id).ToList();
 
             if (allRelatedPhotos.Count == 0)
@@ -261,7 +285,9 @@ namespace ITSM.Controllers
                 user = currentUser,
                 incident = incData,
                 roleBack = role,
-                Incident_Photos_List = allRelatedPhotos
+                Incident_Photos_List = allRelatedPhotos,
+                Incident_Category_List = allIncCategory,
+                Subcategory_List = allSucategory
             };
 
             return View(model);
@@ -274,25 +300,42 @@ namespace ITSM.Controllers
 
             var departmentTask = _depApi.GetAllDepartment_API();
             var userTask = _userApi.GetAllUser_API();
+            var incphotosTask = _incphotosApi.GetAllIncidentPhotos_API();
 
-            await Task.WhenAll(departmentTask, userTask);
+            var inc_categoryTask = _inccategoryApi.GetAllIncidentcategory_API();
+            var sucategoryTask = _subcategoryApi.GetAllSubcategory_API();
+
+            await Task.WhenAll(departmentTask, userTask, incphotosTask, inc_categoryTask, sucategoryTask);
 
             var allDepartment = departmentTask.Result;
             var allUser = userTask.Result;
+            var allInc_Photos = incphotosTask.Result;
+            var allIncCategory = inc_categoryTask.Result;
+            var allSucategory = sucategoryTask.Result;
 
             var incData = await _incApi.FindByIDIncident_API(inc.id);
 
             incData.AssignmentGroup = allDepartment.FirstOrDefault(x => x.id == incData.assignment_group);
             incData.AssignedTo = incData.assigned_to == null ? null : allUser.FirstOrDefault(x => x.id == incData.assigned_to);
+            incData.IncidentcategoryData = allIncCategory.FirstOrDefault(x => x.id == incData.category);
+            incData.SubcategoryData = allSucategory.FirstOrDefault(x => x.id == incData.subcategory);
+
+            var allRelatedPhotos = allInc_Photos.Where(x => x.incident_id == incData.id).ToList();
+
+            if (allRelatedPhotos.Count == 0)
+                allRelatedPhotos = null;
 
             var model = new AllModelVM()
             {
                 user = currentUser,
                 incident = incData,
-                roleBack = roleBack
+                roleBack = roleBack,
+                Incident_Photos_List = allRelatedPhotos,
+                Incident_Category_List = allIncCategory,
+                Subcategory_List = allSucategory
             };
 
-            if (inc.short_description != null)
+            if (inc.describe != null)
             {
                 List<byte[]> fileBytesList = new List<byte[]>();
 
@@ -319,15 +362,15 @@ namespace ITSM.Controllers
 
                 if (incData != null)
                 {
-                    incData.short_description = inc.short_description;
                     incData.describe = inc.describe;
-                    incData.impact = inc.impact;
                     incData.urgency = inc.urgency;
-                    incData.priority = inc.priority;
                     incData.state = inc.state;
                     incData.category = inc.category;
                     incData.subcategory = inc.subcategory;
                     incData.updated_by = currentUser.id;
+
+                    incData.assignment_group = allSucategory.FirstOrDefault(x => x.id == inc.subcategory).department_id;
+                    incData.assigned_to = null;
 
                     if (fileBytesList != null && fileBytesList.Count > 0)
                     {

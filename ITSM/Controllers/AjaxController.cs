@@ -327,8 +327,17 @@ namespace ITSM.Controllers
             else
                 userIncs = allIncs.OrderByDescending(y => y.id).ToList();
 
-            var allDepartments = await _departmentApi.GetAllDepartment_API();
-            var allUsers = await _userApi.GetAllUser_API();
+            var departmentTask = _departmentApi.GetAllDepartment_API();
+            var userTask = _userApi.GetAllUser_API();
+            var inc_categoryTask = _incidentcategoryApi.GetAllIncidentcategory_API();
+            var sucategoryTask = _subcategoryApi.GetAllSubcategory_API();
+
+            await Task.WhenAll(departmentTask, userTask, inc_categoryTask, sucategoryTask);
+
+            var allDepartments = departmentTask.Result;
+            var allUsers = userTask.Result;
+            var allIncCategory = inc_categoryTask.Result;
+            var allSucategory = sucategoryTask.Result;
 
             List<Incident> filteredIncs;
 
@@ -340,15 +349,16 @@ namespace ITSM.Controllers
             {
                 switch (filterBy.ToLower())
                 {
-                    case "short_description":
+                    case "urgency":
                         filteredIncs = userIncs
-                            .Where(t => t.short_description != null && t.short_description.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                            .Where(t => t.urgency != null && t.urgency.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
                             .ToList();
                         break;
-                    case "priority":
-                        filteredIncs = userIncs
-                            .Where(t => t.priority != null && t.priority.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                            .ToList();
+                    case "sucategory":
+                        var filterSubcategorys = allSucategory.Where(x => x.subcategory.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+                        filteredIncs = (from i in userIncs
+                                        join s in filterSubcategorys on i.subcategory equals s.id
+                                        select i).ToList();
                         break;
                     case "state":
                         filteredIncs = userIncs
@@ -356,9 +366,10 @@ namespace ITSM.Controllers
                             .ToList();
                         break;
                     case "category":
-                        filteredIncs = userIncs
-                            .Where(t => t.category != null && t.category.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                            .ToList();
+                        var filterIncCategorys = allIncCategory.Where(x => x.name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+                        filteredIncs = (from i in userIncs
+                                        join c in filterIncCategorys on i.category equals c.id
+                                        select i).ToList();
                         break;
                     case "assignment_group":
                         var filterDepartments = allDepartments.Where(x => x.name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
@@ -391,15 +402,14 @@ namespace ITSM.Controllers
                 }
             }
 
-
                 var result = filteredIncs.Select(t => new
                 {
                     t.id,
                     t.inc_number,
-                    t.short_description,
-                    t.priority,
+                    t.urgency,
                     t.state,
-                    t.category,
+                    category = allIncCategory.FirstOrDefault(x => x.id == t.category),
+                    subcategory = allSucategory.FirstOrDefault(x => x.id == t.subcategory),
                     assignment_group = allDepartments.FirstOrDefault(d => d.id == t.assignment_group)?.name ?? "",
                     assigned_to = allUsers.FirstOrDefault(u => u.id == t.assigned_to)?.fullname ?? "",
                     create_date = t.create_date.ToString("yyyy-MM-dd HH:mm:ss"),
@@ -430,8 +440,17 @@ namespace ITSM.Controllers
             else
                 userIncs = allIncs.OrderByDescending(y => y.id).ToList();
 
-            var allDepartments = await _departmentApi.GetAllDepartment_API();
-            var allUsers = await _userApi.GetAllUser_API();
+            var departmentTask = _departmentApi.GetAllDepartment_API();
+            var userTask = _userApi.GetAllUser_API();
+            var inc_categoryTask = _incidentcategoryApi.GetAllIncidentcategory_API();
+            var sucategoryTask = _subcategoryApi.GetAllSubcategory_API();
+
+            await Task.WhenAll(departmentTask, userTask, inc_categoryTask, sucategoryTask);
+
+            var allDepartments = departmentTask.Result;
+            var allUsers = userTask.Result;
+            var allIncCategory = inc_categoryTask.Result;
+            var allSucategory = sucategoryTask.Result;
 
             List<Incident> filteredIncs;
 
@@ -461,10 +480,10 @@ namespace ITSM.Controllers
             var result = filteredIncs.Select(t => new {
                 t.id,
                 t.inc_number,
-                t.short_description,
-                t.priority,
+                t.urgency,
                 t.state,
-                t.category,
+                category = allIncCategory.FirstOrDefault(x => x.id == t.category),
+                subcategory = allSucategory.FirstOrDefault(x => x.id == t.subcategory),
                 assignment_group = allDepartments.FirstOrDefault(d => d.id == t.assignment_group)?.name ?? "",
                 assigned_to = allUsers.FirstOrDefault(u => u.id == t.assigned_to)?.fullname ?? "",
                 create_date = t.create_date.ToString("yyyy-MM-dd HH:mm:ss"),
@@ -496,8 +515,17 @@ namespace ITSM.Controllers
             else
                 userIncs = allIncs.OrderByDescending(y => y.id).ToList();
 
-            var allDepartments = await _departmentApi.GetAllDepartment_API();
-            var allUsers = await _userApi.GetAllUser_API();
+            var departmentTask = _departmentApi.GetAllDepartment_API();
+            var userTask = _userApi.GetAllUser_API();
+            var inc_categoryTask = _incidentcategoryApi.GetAllIncidentcategory_API();
+            var sucategoryTask = _subcategoryApi.GetAllSubcategory_API();
+
+            await Task.WhenAll(departmentTask, userTask, inc_categoryTask, sucategoryTask);
+
+            var allDepartments = departmentTask.Result;
+            var allUsers = userTask.Result;
+            var allIncCategory = inc_categoryTask.Result;
+            var allSucategory = sucategoryTask.Result;
 
             List<Incident> sortedIncidents;
             if (sortOrder.ToLower() == "desc")
@@ -508,10 +536,10 @@ namespace ITSM.Controllers
             var result = sortedIncidents.Select(t => new {
                 t.id,
                 t.inc_number,
-                t.short_description,
-                t.priority,
+                t.urgency,
                 t.state,
-                t.category,
+                category = allIncCategory.FirstOrDefault(x => x.id == t.category),
+                subcategory = allSucategory.FirstOrDefault(x => x.id == t.subcategory),
                 assignment_group = allDepartments.FirstOrDefault(d => d.id == t.assignment_group)?.name ?? "",
                 assigned_to = allUsers.FirstOrDefault(u => u.id == t.assigned_to)?.fullname ?? "",
                 create_date = t.create_date.ToString("yyyy-MM-dd HH:mm:ss"),
@@ -698,7 +726,6 @@ namespace ITSM.Controllers
         [HttpPost]
         public async Task<JsonResult> ResolveIncident(Incident inc, string resolveType, string resolveNotes)
         {
-            // current user info
             if (!IsUserLoggedIn(out var currentUser))
                 return Json(new { success = false, message = "Not logged in" });
 
@@ -707,18 +734,13 @@ namespace ITSM.Controllers
 
             try
             {
-                // Get original incident data
                 var incData = await _incApi.FindByIDIncident_API(inc.id);
 
                 if (incData == null)
                     return Json(new { success = false, message = "Incident not found" });
 
-                // Update all incident fields from the form
-                incData.short_description = inc.short_description;
                 incData.describe = inc.describe;
-                incData.impact = inc.impact;
                 incData.urgency = inc.urgency;
-                incData.priority = inc.priority;
                 incData.category = inc.category;
                 incData.subcategory = inc.subcategory;
                 incData.assignment_group = inc.assignment_group;
@@ -810,11 +832,8 @@ namespace ITSM.Controllers
                     return Json(new { success = false, message = "No event found" });
 
                 // Update all event fields in the form
-                incData.short_description = inc.short_description;
                 incData.describe = inc.describe;
-                incData.impact = inc.impact;
                 incData.urgency = inc.urgency;
-                incData.priority = inc.priority;
                 incData.category = inc.category;
                 incData.subcategory = inc.subcategory;
                 incData.assignment_group = inc.assignment_group;
@@ -859,11 +878,8 @@ namespace ITSM.Controllers
                     return Json(new { success = false, message = "Only closed events can be reopened" });
 
                 // Update all event fields in the form
-                incData.short_description = inc.short_description;
                 incData.describe = inc.describe;
-                incData.impact = inc.impact;
                 incData.urgency = inc.urgency;
-                incData.priority = inc.priority;
                 incData.category = inc.category;
                 incData.subcategory = inc.subcategory;
                 incData.assignment_group = inc.assignment_group;

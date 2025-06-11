@@ -120,11 +120,11 @@
     }
 
     #modalImage {
-        max-width: 100%;
-        max-height: 90vh;
-        object-fit: contain;
-        margin: auto;
-        display: block;
+    max-width: 100%;
+    max-height: 90vh;
+    object-fit: contain;
+    margin: auto;
+    display: block;
     }
 
     .inc-file-cre-form-padding {
@@ -226,9 +226,8 @@
                     </div>
 
                     <div class="inc-cre-form-group">
-                        <label for="category" class="inc-cre-form-label">
-                            Category
-                            <button type="button" class="inc-cre-btn-help" class="inc-cre-btn-help" onclick="window.open('/Info/CaSub_Info', '_blank')">
+                        <label for="category" class="inc-cre-form-label">Category
+                            <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/CaSub_Info', '_blank')">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <circle cx="12" cy="12" r="10"></circle>
                                     <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
@@ -236,19 +235,16 @@
                                 </svg>
                             </button>
                         </label>
-                        <select id="category" name="category" class="inc-cre-form-control">
-                            <option value="Hardware" selected="@(Model.incident.category == "Hardware")">Hardware</option>
-                            <option value="Software" selected="@(Model.incident.category == "Software")">Software</option>
-                            <option value="Network" selected="@(Model.incident.category == "Network")">Network</option>
-                            <option value="Email" selected="@(Model.incident.category == "Email")">Email</option>
-                            <option value="Database" selected="@(Model.incident.category == "Database")">Database</option>
-                            <option value="Others" selected="@(Model.incident.category == "Others")">Others</option>
+                        <select id="category" name="category" class="inc-cre-form-control" onchange="categoryChanged()">
+                            @foreach (var category in Model.Incident_Category_List)
+                            {
+                                <option value="@category.id" selected="@(category.id == Model.incident.category)">@category.name</option>
+                            }
                         </select>
                     </div>
 
                     <div class="inc-cre-form-group">
-                        <label for="subcategory" class="inc-cre-form-label">
-                            Subcategory
+                        <label for="subcategory" class="inc-cre-form-label">Subcategory
                             <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/CaSub_Info', '_blank')">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <circle cx="12" cy="12" r="10"></circle>
@@ -258,7 +254,10 @@
                             </button>
                         </label>
                         <select id="subcategory" name="subcategory" class="inc-cre-form-control">
-                            <option selected>-- None --</option>
+                            @foreach (var sub in Model.Subcategory_List.Where(s => s.category == Model.incident.category))
+                            {
+                                <option value="@sub.id" selected="@(sub.id == Model.incident.subcategory)">@sub.subcategory</option>
+                            }
                         </select>
                     </div>
 
@@ -423,7 +422,7 @@
                 </div>
             </div>
 
-            <div class="inc-cre-form-group inc-cre-short-description-group">
+            @* <div class="inc-cre-form-group inc-cre-short-description-group">
                 <label for="short-description" class="inc-cre-form-label inc-cre-required">
                     Short description
                     <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/Short_Description_Info', '_blank')">
@@ -444,10 +443,10 @@
                         <input type="text" autocomplete="off" maxlength="100" id="short-description" name="short_description" class="inc-cre-form-control" value="@Model.incident.short_description" readonly required>
                     }
                 </div>
-            </div>
+            </div> *@
 
             <div class="inc-cre-form-group inc-cre-full-width">
-                <label for="description" class="inc-cre-form-label">Description</label>
+                <label for="description" class="inc-cre-form-label inc-cre-required">Description</label>
                 @if (Model.incident.state != "Resolved" && Model.incident.state != "Closed")
                 {
                     <textarea id="description" autocomplete="off" name="describe" class="inc-cre-form-control inc-cre-description-textarea" rows="5">@Model.incident.describe</textarea>
@@ -1411,7 +1410,69 @@
               $('#imageModal').hide();
           }
       });
+
+      $(document).ready(function() {
+          // Store all subcategories data
+          var allSubcategories = @Html.Raw(Json.Serialize(Model.Subcategory_List));
+          var currentSubcategoryId = @Model.incident.subcategory;
+          
+          // Function to update subcategories
+          function updateSubcategories(categoryId) {
+              var subcategorySelect = $('#subcategory');
+              
+              // Clear subcategory dropdown
+              subcategorySelect.empty();
+              
+              if (categoryId) {
+                  // Filter subcategories based on selected category
+                  var filteredSubcategories = allSubcategories.filter(function(sub) {
+                      return sub.category === categoryId;
+                  });
+                  
+                  // Add filtered subcategories to dropdown
+                  filteredSubcategories.forEach(function(sub) {
+                      subcategorySelect.append($('<option>', {
+                          value: sub.id,
+                          text: sub.subcategory,
+                          selected: sub.id === currentSubcategoryId
+                      }));
+                  });
+              }
+          }
+
+          // When category selection changes
+          $('#category').change(function() {
+              var selectedCategoryId = parseInt($(this).val());
+              updateSubcategories(selectedCategoryId);
+          });
+
+          // Initialize with current category's subcategories
+          var currentCategoryId = parseInt($('#category').val());
+          updateSubcategories(currentCategoryId);
+      });
     });
+</script>
+
+<script>
+const subcategories = @Html.Raw(Json.Serialize(Model.Subcategory_List));
+
+function categoryChanged() {
+    const categoryId = parseInt(document.getElementById('category').value);
+    const subcategorySelect = document.getElementById('subcategory');
+    
+    // 清空当前选项
+    subcategorySelect.innerHTML = '';
+    
+    // 添加新选项
+    subcategories
+        .filter(sub => sub.category === categoryId)
+        .forEach(sub => {
+            const option = document.createElement('option');
+            option.value = sub.id;
+            option.text = sub.subcategory;
+            subcategorySelect.appendChild(option);
+        });
+}
 </script>
 
 

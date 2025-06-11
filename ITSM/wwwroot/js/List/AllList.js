@@ -485,29 +485,15 @@ function updateIncidentTable(data) {
         return;
     }
 
-    $.each(data, function (index, inc) {
-        let priorityClass = "inc-tab-priority ";
-        if (inc.priority === "1 - Critical") {
-            priorityClass += "priority-1";
-        } else if (inc.priority === "2 - High") {
-            priorityClass += "priority-2";
-        } else if (inc.priority === "3 - Moderate") {
-            priorityClass += "priority-3";
-        } else if (inc.priority === "4 - Low") {
-            priorityClass += "priority-4";
-        } else if (inc.priority === "5 - Planning") {
-            priorityClass += "priority-5";
-        }
-
         var row = `
                     <tr class="incident-item" data-id="${inc.id}">
                         <td class="inc-tab-incident-number" data-label="Number">
                             <a href="/IncidentManagement/Inc_Info_Form?id=${inc.id}">${inc.inc_number}</a>
                         </td>
-                        <td data-label="short description" class="phone_incident_hide_design">${inc.short_description}</td>
-                        <td data-label="priority"><span class="${priorityClass}">${inc.priority}</span></td>
+                        <td data-label="urgency" class="phone_incident_hide_design">${inc.urgency$}</td>
                         <td data-label="state">${inc.state}</td>
                         <td data-label="category" class="phone_incident_hide_design">${inc.category}</td>
+                        <td data-label="subcategory" class="phone_incident_hide_design">${inc.subcategory}</td>
                         <td data-label="assignment group" class="phone_incident_hide_design">${inc.assignment_group}</td>
                         <td data-label="assigned to" class="phone_incident_hide_design">${inc.assigned_to}</td>
                         <td data-label="create date" class="phone_incident_hide_design">${inc.create_date}</td>

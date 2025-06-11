@@ -122,33 +122,7 @@
                         <td class="inc-tab-incident-number" data-label="Number">
                             <a href="~/IncidentManagement/Inc_Info_Form?id=@i.id&role=Resolved">@i.inc_number</a>
                         </td>
-                        <td data-label="short description" class="phone_incident_hide_design">@i.short_description</td>
-                        <td data-label="priority">
-                            @{
-                                string priorityClass = "inc-tab-priority ";
-                                if (i.priority == "1 - Critical")
-                                {
-                                    priorityClass += "priority-1";
-                                }
-                                else if (i.priority == "2 - High")
-                                {
-                                    priorityClass += "priority-2";
-                                }
-                                else if (i.priority == "3 - Moderate")
-                                {
-                                    priorityClass += "priority-3";
-                                }
-                                else if (i.priority == "4 - Low")
-                                {
-                                    priorityClass += "priority-4";
-                                }
-                                else if (i.priority == "5 - Planning")
-                                {
-                                    priorityClass += "priority-5";
-                                }
-                            }
-                            <span class="@priorityClass">@i.priority</span>
-                        </td>
+                    
                         <td data-label="state">@i.state</td>
                         <td data-label="category" class="phone_incident_hide_design">@i.category</td>
                         <td data-label="assignment group" class="phone_incident_hide_design">@(i.AssignmentGroup?.name)</td>

@@ -69,7 +69,7 @@ namespace ITSM.Controllers
             var model = new AllModelVM()
             {
                 user = currentUser,
-                UserList = allUser.Where(x => x.id != currentUser.id).OrderByDescending(y => y.id).ToList()
+                UserList = allUser.OrderByDescending(y => y.id).ToList()
             };
 
             return View(model);
@@ -175,6 +175,19 @@ namespace ITSM.Controllers
                 {
                     ViewBag.Error = "This business phone is already in use.";
                     return View(model);
+                }
+
+                if (user.r_manager)
+                {
+                    bool use = allUser
+                        .Any(x => x.department_id == user.department_id &&
+                                  x.r_manager == true);
+
+                    if (use)
+                    {
+                        ViewBag.Error = "This department manager role already using.";
+                        return View(model);
+                    }
                 }
 
                 var newuser = new User()
@@ -368,6 +381,22 @@ namespace ITSM.Controllers
                     return View(model);
                 }
 
+                if (user.r_manager)
+                {
+                    bool use = allUser
+                        .Any(x => x.department_id == user.department_id &&
+                                  x.r_manager == true);
+
+                    if (use)
+                    {
+                        ViewBag.Error = "This department manager role already using.";
+                        return View(model);
+                    }
+                }
+
+                if (user.r_manager)
+                    info_user.approve = true;
+
                 info_user.emp_id = user.emp_id;
                 info_user.email = user.email;
                 info_user.gender = user.gender;
@@ -476,6 +505,38 @@ namespace ITSM.Controllers
             return View(model);
         }
 
+        public async Task<IActionResult> User_Approve_Info(int id)
+        {
+            var currentUser = await _userService.GetCurrentUserAsync();
+
+            var departmentTask = _departmentApi.GetAllDepartment_API();
+            var roleTask = _roleApi.GetAllRole_API();
+            var userTask = _userApi.GetAllUser_API();
+            await Task.WhenAll(departmentTask, roleTask, userTask);
+
+            var allDepartment = departmentTask.Result;
+            var allRole = roleTask.Result;
+            var allUser = userTask.Result;
+
+            var info_user = await _userApi.FindByIDUser_API(id);
+            info_user.Department = allDepartment.Where(x => x.id == currentUser.department_id).FirstOrDefault();
+            info_user.Role = allRole.Where(x => x.id == currentUser.role_id).FirstOrDefault();
+
+            if (info_user.Manager != null)
+                info_user.M_User = allUser.FirstOrDefault(x => x.id == info_user.Manager);
+            else
+                info_user.M_User = null;
+
+            var model = new AllModelVM()
+            {
+                user = currentUser,
+                RoleList = allRole,
+                DepartmentList = allDepartment,
+                info_user = info_user
+            };
+
+            return View(model);
+        }
 
         private string GetMimeTypeFromFileSignature(byte[] fileBytes)
         {

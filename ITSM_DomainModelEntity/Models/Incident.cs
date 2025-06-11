@@ -19,10 +19,6 @@ namespace ITSM_DomainModelEntity.Models
 
         public DateTime create_date { get; set; }
 
-        [Required]
-        [StringLength(255)]
-        public string? short_description { get; set; }
-
         public string? describe { get; set; }
 
         [ForeignKey("Sender")]
@@ -30,27 +26,17 @@ namespace ITSM_DomainModelEntity.Models
 
         [Required]
         [StringLength(50)]
-        public string? impact { get; set; }
-
-        [Required]
-        [StringLength(50)]
         public string? urgency { get; set; }
-
-        [Required]
-        [StringLength(50)]
-        public string? priority { get; set; }
 
         [Required]
         [StringLength(50)]
         public string? state { get; set; }
 
-        [Required]
-        [StringLength(100)]
-        public string? category { get; set; }
+        [ForeignKey("IncidentcategoryData")]
+        public int category { get; set; }
 
-        [Required]
-        [StringLength(100)]
-        public string? subcategory { get; set; }
+        [ForeignKey("SubcategoryData")]
+        public int subcategory { get; set; }
 
         [ForeignKey("AssignmentGroup")]
         public int assignment_group { get; set; }
@@ -81,5 +67,7 @@ namespace ITSM_DomainModelEntity.Models
         public virtual User? UpdatedBy { get; set; }
         public virtual User? ResolvedBy { get; set; }
         public virtual Department? AssignmentGroup { get; set; }
+        public virtual Incidentcategory? IncidentcategoryData { get; set; }
+        public virtual Subcategory? SubcategoryData { get; set; }
     }
 }
