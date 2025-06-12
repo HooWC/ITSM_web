@@ -324,6 +324,8 @@ namespace ITSM.Controllers
                 userIncs = allIncs.Where(x => x.assignment_group == currentUser.department_id).OrderByDescending(y => y.id).ToList();
             else if (searchWord == "user")
                 userIncs = allIncs.Where(x => x.sender == currentUser.id).OrderByDescending(y => y.id).ToList();
+            else if (searchWord == "assign_work")
+                userIncs = allIncs.Where(x => x.assignment_group == currentUser.department_id && x.assigned_to == null).OrderByDescending(y => y.id).ToList();
             else
                 userIncs = allIncs.OrderByDescending(y => y.id).ToList();
 
@@ -512,6 +514,8 @@ namespace ITSM.Controllers
                 userIncs = allIncs.Where(x => x.assignment_group == currentUser.department_id).ToList();
             else if (sortWord == "user")
                 userIncs = allIncs.Where(x => x.sender == currentUser.id).OrderByDescending(y => y.id).ToList();
+            else if (sortWord == "assign_work")
+                userIncs = allIncs.Where(x => x.assignment_group == currentUser.department_id && x.assigned_to == null).OrderByDescending(y => y.id).ToList();
             else
                 userIncs = allIncs.OrderByDescending(y => y.id).ToList();
 
@@ -557,7 +561,6 @@ namespace ITSM.Controllers
             if (ids == null || !ids.Any())
                 return Json(new { success = false, message = "No items selected for deletion" });
 
-            // Get current user information
             if (!IsUserLoggedIn(out var currentUser))
                 return Json(new { success = false, message = "Not logged in" });
 
@@ -565,16 +568,13 @@ namespace ITSM.Controllers
             {
                 int successCount = 0;
 
-                // Traverse all selected IDs and delete them one by one
                 foreach (var id in ids)
                 {
-                    // Confirm that the Incident project exists and belongs to the current user
                     var allIncs = await _incApi.GetAllIncident_API();
                     var incToDelete = allIncs.FirstOrDefault(x => x.id == id);
 
                     if (incToDelete != null)
                     {
-                        // Call API to delete Incident
                         bool result = await _incApi.DeleteIncident_API(id);
                         if (result)
                             successCount++;
@@ -617,11 +617,9 @@ namespace ITSM.Controllers
 
             try
             {
-                // Get all notes to generate new note numbers
                 var allNotes = await _noteApi.GetAllNote_API();
                 string noteNumber = "NOT0001";
 
-                // If a note exists, generate a new number based on the maximum number
                 if (allNotes.Any())
                 {
                     var maxNoteNumber = allNotes
@@ -639,7 +637,6 @@ namespace ITSM.Controllers
                     }
                 }
 
-                // Create a new note
                 var newNote = new ITSM_DomainModelEntity.Models.Note
                 {
                     note_number = noteNumber,
@@ -648,7 +645,6 @@ namespace ITSM.Controllers
                     message = message
                 };
 
-                // Call API to create a note
                 bool result = await _noteApi.CreateNote_API(newNote);
                 
                 if (result)
@@ -693,7 +689,6 @@ namespace ITSM.Controllers
                     .OrderByDescending(n => n.create_date)
                     .ToList();
 
-                // Get all relevant user information
                 var userIds = incidentNotes.Select(n => n.user_id).Distinct().ToList();
                 var allUsers = await _userApi.GetAllUser_API();
                 var relatedUsers = allUsers.Where(u => userIds.Contains(u.id)).ToList();
@@ -780,7 +775,6 @@ namespace ITSM.Controllers
 
             try
             {
-                // Get incident information
                 var incident = await _incApi.FindByIDIncident_API(incidentId);
 
                 if (incident == null)
@@ -789,13 +783,11 @@ namespace ITSM.Controllers
                 if (incident.state != "Resolved")
                     return Json(new { success = false, message = "Incident is not resolved yet" });
 
-                // Get resolver information
                 var resolvedBy = new ITSM_DomainModelEntity.Models.User();
                 if (incident.resolved_by.HasValue)
                     resolvedBy = await _userApi.FindByIDUser_API(incident.resolved_by.Value);
                 var resolvedByName = resolvedBy != null ? resolvedBy.fullname : "Unknown";
 
-                // Organize return data
                 var resolutionData = new
                 {
                     incident.id,
@@ -825,13 +817,11 @@ namespace ITSM.Controllers
 
             try
             {
-                // Get the original event data
                 var incData = await _incApi.FindByIDIncident_API(inc.id);
 
                 if (incData == null)
                     return Json(new { success = false, message = "No event found" });
 
-                // Update all event fields in the form
                 incData.describe = inc.describe;
                 incData.urgency = inc.urgency;
                 incData.category = inc.category;
@@ -839,7 +829,6 @@ namespace ITSM.Controllers
                 incData.assignment_group = inc.assignment_group;
                 incData.assigned_to = inc.assigned_to == 0 ? null : inc.assigned_to;
 
-                // Set closing information
                 incData.close_date = DateTime.Now;
                 incData.state = "Closed";
                 incData.updated_by = currentUser.id;
@@ -867,17 +856,14 @@ namespace ITSM.Controllers
 
             try
             {
-                // Get the original event data
                 var incData = await _incApi.FindByIDIncident_API(inc.id);
 
                 if (incData == null)
                     return Json(new { success = false, message = "No event found" });
 
-                // Make sure the event is currently closed
                 if (incData.state != "Closed")
                     return Json(new { success = false, message = "Only closed events can be reopened" });
 
-                // Update all event fields in the form
                 incData.describe = inc.describe;
                 incData.urgency = inc.urgency;
                 incData.category = inc.category;
@@ -885,7 +871,6 @@ namespace ITSM.Controllers
                 incData.assignment_group = inc.assignment_group;
                 incData.assigned_to = inc.assigned_to == 0 ? null : inc.assigned_to;
 
-                //Change status to Pending
                 incData.state = "Pending";
                 incData.updated_by = currentUser.id;
 
@@ -1018,7 +1003,6 @@ namespace ITSM.Controllers
             if (ids == null || !ids.Any())
                 return Json(new { success = false, message = "No items selected for deletion" });
 
-            // Get current user information
             if (!IsUserLoggedIn(out var currentUser))
                 return Json(new { success = false, message = "Not logged in" });
 
@@ -1026,10 +1010,8 @@ namespace ITSM.Controllers
             {
                 int successCount = 0;
 
-                // Traverse all selected IDs and delete them one by one
                 foreach (var id in ids)
                 {
-                    // Confirm that the Incident project exists and belongs to the current user
                     var allFeeds = await _feedApi.GetAllFeedback_API();
                     var incToDelete = new Feedback();
                     if (word == "user")
@@ -1039,7 +1021,6 @@ namespace ITSM.Controllers
 
                     if (incToDelete != null)
                     {
-                        // Call API to delete Incident
                         bool result = await _feedApi.DeleteFeedback_API(id);
                         if (result)
                             successCount++;
@@ -1124,7 +1105,6 @@ namespace ITSM.Controllers
             if (ids == null || !ids.Any())
                 return Json(new { success = false, message = "No items selected for deletion" });
 
-            // Get current user information
             if (!IsUserLoggedIn(out var currentUser))
                 return Json(new { success = false, message = "Not logged in" });
 
@@ -1132,16 +1112,13 @@ namespace ITSM.Controllers
             {
                 int successCount = 0;
 
-                // Traverse all selected IDs and delete them one by one
                 foreach (var id in ids)
                 {
-                    // Confirm that the Incident project exists and belongs to the current user
                     var allCategorys = await _categoryApi.GetAllCategory_API();
                     var CategoryToDelete = allCategorys.FirstOrDefault(x => x.id == id);
 
                     if (CategoryToDelete != null)
                     {
-                        // Call API to delete Incident
                         bool result = await _categoryApi.DeleteCategory_API(id);
                         if (result)
                             successCount++;

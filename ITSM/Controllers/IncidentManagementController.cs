@@ -563,6 +563,45 @@ namespace ITSM.Controllers
             return View(model);
         }
 
+        public async Task<IActionResult> Manager_Assign_Work()
+        {
+            var currentUser = await _userService.GetCurrentUserAsync();
+
+            var inc = _incApi.GetAllIncident_API();
+            var dep = _depApi.GetAllDepartment_API();
+            var user = _userApi.GetAllUser_API();
+
+            var inc_categoryTask = _inccategoryApi.GetAllIncidentcategory_API();
+            var sucategoryTask = _subcategoryApi.GetAllSubcategory_API();
+
+            await Task.WhenAll(inc, dep, user, inc_categoryTask, sucategoryTask);
+
+            var allInc = inc.Result;
+            var incList = allInc.Where(x => x.assignment_group == currentUser.department_id && x.assigned_to == null).OrderByDescending(y => y.id).ToList();
+
+            var allDepartments = dep.Result;
+            var allUsers = user.Result;
+
+            var allIncCategory = inc_categoryTask.Result;
+            var allSucategory = sucategoryTask.Result;
+
+            foreach (var incident in incList)
+            {
+                incident.AssignmentGroup = allDepartments.FirstOrDefault(d => d.id == incident.assignment_group);
+                incident.AssignedTo = allUsers.FirstOrDefault(u => u.id == incident.assigned_to);
+                incident.IncidentcategoryData = allIncCategory.FirstOrDefault(x => x.id == incident.category);
+                incident.SubcategoryData = allSucategory.FirstOrDefault(x => x.id == incident.subcategory);
+            }
+
+            var model = new AllModelVM()
+            {
+                user = currentUser,
+                IncidentList = incList
+            };
+
+            return View(model);
+        }
+
         private string GetMimeTypeFromFileSignature(byte[] fileBytes)
         {
             if (fileBytes.Length < 4) return "application/octet-stream";

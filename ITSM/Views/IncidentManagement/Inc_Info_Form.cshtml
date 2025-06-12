@@ -261,28 +261,29 @@
                         </select>
                     </div>
 
-                    @* <div class="inc-cre-form-group">
+                    <div class="inc-cre-form-group">
                         <label for="assignment-group" class="inc-cre-form-label inc-cre-required">
                             Assignment group
-                            <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/Assigned_Info', '_blank')">
+                            @* <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/Assigned_Info', '_blank')">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <circle cx="12" cy="12" r="10"></circle>
                                     <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
                                     <line x1="12" y1="17" x2="12.01" y2="17"></line>
                                 </svg>
-                            </button>
+                            </button> *@
                         </label>
                         <div class="inc-cre-input-with-icon">
                             <input type="text" id="assignment-group" autocomplete="off" class="inc-cre-form-control" readonly value="@(Model.incident.AssignmentGroup?.name ?? "")">
+                            @* <input type="text" id="assignment-group" autocomplete="off" class="inc-cre-form-control" readonly value="@(Model.incident.AssignmentGroup?.name ?? "")">
                             <input type="hidden" id="assignment-group-id" name="assignment_group" value="@Model.incident.assignment_group">
                             <button type="button" class="inc-cre-icon-search" id="assignment-group-search">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <circle cx="11" cy="11" r="8"></circle>
                                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                                 </svg>
-                            </button>
+                            </button> *@
                         </div>
-                    </div> *@
+                    </div>
                 </div>
 
                 <div class="inc-cre-form-column">
@@ -358,7 +359,7 @@
                         </select>
                     </div>
 
-                    @* <div class="inc-cre-form-group">
+                   @*  <div class="inc-cre-form-group">
                         <label for="priority" class="inc-cre-form-label">
                             Priority
                             <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/Incident_Priority_Info', '_blank')">
@@ -380,29 +381,6 @@
                         </div>
                     </div> *@
 
-                    @* <div class="inc-cre-form-group">
-                        <label for="assigned-to" class="inc-cre-form-label">
-                            Assigned to
-                            <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/Assigned_Info', '_blank')">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                                </svg>
-                            </button>
-                        </label>
-                        <div class="inc-cre-input-with-icon">
-                            <input type="text" id="assigned-to" class="inc-cre-form-control" readonly value="@(Model.incident.AssignedTo?.fullname ?? "")">
-                            <input type="hidden" id="assigned-to-id" name="assigned_to" value="@Model.incident.assigned_to">
-                            <button type="button" class="inc-cre-icon-search" id="assigned-to-search" @(Model.incident.assignment_group > 0 ? "" : "disabled")>
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="11" cy="11" r="8"></circle>
-                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                                </svg>
-                            </button>
-                        </div>
-                    </div> *@
-
                     <div class="inc-cre-form-group">
                         <div class="inc-cre-form-group">
                             <label for="file" class="inc-cre-form-label">
@@ -416,6 +394,29 @@
                                 </button>
                             </label>
                             <input type="file" name="files" id="file" multiple class="inc-cre-form-control inc-file-cre-form-padding">
+                        </div>
+                    </div>
+
+                    <div class="inc-cre-form-group">
+                        <label for="assigned-to" class="inc-cre-form-label">
+                            Assigned to
+                            @* <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/Assigned_Info', '_blank')">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                </svg>
+                            </button> *@
+                        </label>
+                        <div class="inc-cre-input-with-icon">
+                            <input type="text" id="assigned-to" class="inc-cre-form-control" readonly value="@(Model.incident.AssignedTo?.fullname ?? "")">
+                            @* <input type="hidden" id="assigned-to-id" name="assigned_to" value="@Model.incident.assigned_to">
+                            <button type="button" class="inc-cre-icon-search" id="assigned-to-search" @(Model.incident.assignment_group > 0 ? "" : "disabled")>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                </svg>
+                            </button> *@
                         </div>
                     </div>
 

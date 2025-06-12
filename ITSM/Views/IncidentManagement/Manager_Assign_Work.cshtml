@@ -1,0 +1,152 @@
+﻿@using ITSM_DomainModelEntity.ViewModels
+@model AllModelVM
+@{
+    ViewData["Title"] = "Manager_Assign_Work";
+    Layout = "_Layout";
+}
+
+<style>
+    .inc-tab-incidents-table th.number-column {
+        width: 9%;
+    }
+
+    .inc-tab-incidents-table th.i_sucategory-column {
+        width: 13%;
+    }
+
+    .inc-tab-incidents-table th.i_create-date-column {
+        width: 13%;
+    }
+
+    .inc-tab-incidents-table th.i_update-date-column {
+        width: 13%;
+    }
+
+    .inc-tab-incidents-table th.i_urgency-column {
+        width: 13%;
+    }
+
+    .inc-tab-incidents-table th.i_state-column {
+        width: 11%;
+    }
+
+    .inc-tab-incidents-table th.i_category-column {
+        width: 13%;
+    }
+
+    .inc-tab-incidents-table th.i_assignment-group-column {
+        width: 15%;
+    }
+</style>
+
+<div class="inc-tab-container">
+    <header>
+        <div class="inc-tab-header-left">
+            <button class="inc-tab-icon-button">
+                <i class="fas fa-list"></i>
+            </button>
+            <h2 class="all-title-header-front">Assign Work</h2>
+            <div class="inc-tab-dropdown">
+                <button class="inc-tab-dropdown-toggle" id="filterDropdown">Number <i class="fas fa-chevron-down"></i></button>
+                <div class="inc-tab-dropdown-menu" id="filterMenu" style="display:none;">
+                    <a href="#" class="inc-tab-dropdown-item" data-filter="number">Number</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-filter="urgency">Urgency</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-filter="state">State</a>
+                    <a href="#" class="inc-tab-dropdown-item phone_incident_hide_design" data-filter="category">Category</a>
+                    <a href="#" class="inc-tab-dropdown-item phone_incident_hide_design" data-filter="sucategory">Sucategory</a>
+                    <a href="#" class="inc-tab-dropdown-item phone_incident_hide_design" data-filter="assignment_group">Assignment group</a>
+                    <a href="#" class="inc-tab-dropdown-item phone_incident_hide_design" data-filter="opened">Opened</a>
+                    <a href="#" class="inc-tab-dropdown-item phone_incident_hide_design" data-filter="updated">updated</a>
+                </div>
+            </div>
+            <div class="inc-tab-search-container">
+                <input type="text" placeholder="Search" class="inc-tab-search-input" id="searchInput">
+            </div>
+        </div>
+        <div class="inc-tab-header-right">
+            <button class="inc-tab-icon-button" id="refreshButton">
+                <i class="fas fa-sync-alt"></i>
+            </button>
+            <button class="inc-cre-btn inc-cre-btn-icon" onclick="window.open('/Info/All_List_Info', '_blank')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+            </button>
+            @* <button class="inc-tab-new-button item-delete-btn show-error-box-btn" id="deleteButton" disabled>Delete</button> *@
+            @* <button class="inc-tab-new-button" onclick="window.location.href='/IncidentManagement/Create_Form';">New</button> *@
+
+        </div>
+    </header>
+
+    @* <div class="inc-tab-table-options">
+        <div class="inc-tab-checkbox-container">
+            <input type="checkbox" id="select-all">
+        </div>
+        <span class="inc-tab-all-text">All</span>
+    </div> *@
+
+    <div class="inc-tab-table-container">
+        <table class="inc-tab-incidents-table">
+            <thead>
+                <tr>
+                    @* <th class="inc-tab-checkbox-column"></th> *@
+                    <th class="inc-tab-sortable number-column" id="sortByNumber">Number <i class="fas fa-arrow-up" id="sortIcon"></i></th>
+                    <th class="i_urgency-column">Urgency</th>
+                    <th class="i_state-column">State</th>
+                    <th class="i_category-column phone_incident_hide_design">Category</th>
+                    <th class="i_sucategory-column phone_incident_hide_design">Sucategory</th>
+                    <th class="i_assignment-group-column  phone_incident_hide_design">Assignment group</th>
+                    <th class="i_create-date-column phone_incident_hide_design">Opened</th>
+                    <th class="i_update-date-column phone_incident_hide_design">Updated</th>
+                </tr>
+            </thead>
+            <tbody id="incTableBody">
+
+                @foreach (var i in Model.IncidentList)
+                {
+                    <tr class="incident-item" data-id="@i.id">
+                        @* <td><input type="checkbox" class="item-checkbox"></td> *@
+                        <td class="inc-tab-incident-number" data-label="Number">
+                            <a href="~/IncidentManagement/Inc_Info_Form?id=@i.id&role=Admin">@i.inc_number</a>
+                        </td>
+                        <td data-label="urgency" class="phone_incident_hide_design">@i.urgency</td>
+                        <td data-label="state">@i.state</td>
+                        <td data-label="inc_category" class="phone_incident_hide_design">@(i.IncidentcategoryData?.name)</td>
+                        <td data-label="subcategory" class="phone_incident_hide_design">@(i.SubcategoryData?.subcategory)</td>
+                        <td data-label="assignment group" class="phone_incident_hide_design">@(i.AssignmentGroup?.name)</td>
+                        <td data-label="create date" class="phone_incident_hide_design">@i.create_date.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                        <td data-label="update date" class="phone_incident_hide_design">@i.updated.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+
+    <div class="inc-tab-pagination">
+        <button class="inc-tab-pagination-button" id="firstPageBtn" disabled><i class="fas fa-angle-double-left"></i></button>
+        <button class="inc-tab-pagination-button" id="prevPageBtn" disabled><i class="fas fa-angle-left"></i></button>
+        <span class="inc-tab-pagination-info" id="paginationInfo">-</span>
+        <button class="inc-tab-pagination-button" id="nextPageBtn"><i class="fas fa-angle-right"></i></button>
+        <button class="inc-tab-pagination-button" id="lastPageBtn"><i class="fas fa-angle-double-right"></i></button>
+    </div>
+</div>
+
+<span style="display:none" id="forAjaxGetFunctionName_search">SearchAssignWork</span>
+<span style="display:none" id="forAjaxGetFunctionName_sort">SortAssignWork</span>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="~/js/List/AllList.js"></script>
+<script>
+      $(function () {
+        var $target = $('#Incidents_menu');
+        if (!$target.hasClass('active') || !$target.hasClass('open')) {
+            $('.menu-item').removeClass('active open');
+            $target.addClass('active open');
+        }
+
+        $('#Incidents_menu_assign_work').addClass("active");
+    });
+</script>
