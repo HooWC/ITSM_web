@@ -210,7 +210,6 @@ namespace ITSM.Controllers
             if (ids == null || !ids.Any())
                 return Json(new { success = false, message = "No items selected for deletion" });
 
-            // Get current user information
             if (!IsUserLoggedIn(out var currentUser))
                 return Json(new { success = false, message = "Not logged in" });
 
@@ -218,16 +217,13 @@ namespace ITSM.Controllers
             {
                 int successCount = 0;
 
-                // Traverse all selected IDs and delete them one by one
                 foreach (var id in ids)
                 {
-                    // Confirm that the Todo project exists and belongs to the current user
                     var allTodos = await _todoApi.GetAllTodo_API();
                     var todoToDelete = allTodos.FirstOrDefault(t => t.id == id && t.user_id == currentUser.id);
                     
                     if (todoToDelete != null)
                     {
-                        // Call API to delete Todo
                         bool result = await _todoApi.DeleteTodo_API(id);
                         if (result)
                             successCount++;
@@ -410,8 +406,8 @@ namespace ITSM.Controllers
                     t.inc_number,
                     t.urgency,
                     t.state,
-                    category = allIncCategory.FirstOrDefault(x => x.id == t.category),
-                    subcategory = allSucategory.FirstOrDefault(x => x.id == t.subcategory),
+                    category = allIncCategory.FirstOrDefault(x => x.id == t.category)?.name,
+                    subcategory = allSucategory.FirstOrDefault(x => x.id == t.subcategory)?.subcategory,
                     assignment_group = allDepartments.FirstOrDefault(d => d.id == t.assignment_group)?.name ?? "",
                     assigned_to = allUsers.FirstOrDefault(u => u.id == t.assigned_to)?.fullname ?? "",
                     create_date = t.create_date.ToString("yyyy-MM-dd HH:mm:ss"),
@@ -484,8 +480,8 @@ namespace ITSM.Controllers
                 t.inc_number,
                 t.urgency,
                 t.state,
-                category = allIncCategory.FirstOrDefault(x => x.id == t.category),
-                subcategory = allSucategory.FirstOrDefault(x => x.id == t.subcategory),
+                category = allIncCategory.FirstOrDefault(x => x.id == t.category)?.name,
+                subcategory = allSucategory.FirstOrDefault(x => x.id == t.subcategory)?.subcategory,
                 assignment_group = allDepartments.FirstOrDefault(d => d.id == t.assignment_group)?.name ?? "",
                 assigned_to = allUsers.FirstOrDefault(u => u.id == t.assigned_to)?.fullname ?? "",
                 create_date = t.create_date.ToString("yyyy-MM-dd HH:mm:ss"),
@@ -542,8 +538,8 @@ namespace ITSM.Controllers
                 t.inc_number,
                 t.urgency,
                 t.state,
-                category = allIncCategory.FirstOrDefault(x => x.id == t.category),
-                subcategory = allSucategory.FirstOrDefault(x => x.id == t.subcategory),
+                category = allIncCategory.FirstOrDefault(x => x.id == t.category)?.name,
+                subcategory = allSucategory.FirstOrDefault(x => x.id == t.subcategory)?.subcategory,
                 assignment_group = allDepartments.FirstOrDefault(d => d.id == t.assignment_group)?.name ?? "",
                 assigned_to = allUsers.FirstOrDefault(u => u.id == t.assigned_to)?.fullname ?? "",
                 create_date = t.create_date.ToString("yyyy-MM-dd HH:mm:ss"),
@@ -3098,8 +3094,8 @@ namespace ITSM.Controllers
 
             var result = filteredSucategorys.Select(t => new {
                t.subcategory,
-               inc_category = allIncCategory.FirstOrDefault(x => x.id == t.category),
-               department_name = allDepartment.FirstOrDefault(x => x.id == t.department_id)
+               inc_category = allIncCategory.FirstOrDefault(x => x.id == t.category)?.name,
+               department_name = allDepartment.FirstOrDefault(x => x.id == t.department_id)?.name
             });
 
             return Json(result);

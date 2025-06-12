@@ -602,6 +602,49 @@ namespace ITSM.Controllers
             return View(model);
         }
 
+        public async Task<IActionResult> Manager_Assign_Work_Info(int id)
+        {
+            var currentUser = await _userService.GetCurrentUserAsync();
+
+            var departmentTask = _depApi.GetAllDepartment_API();
+            var userTask = _userApi.GetAllUser_API();
+            var incphotosTask = _incphotosApi.GetAllIncidentPhotos_API();
+
+            var inc_categoryTask = _inccategoryApi.GetAllIncidentcategory_API();
+            var sucategoryTask = _subcategoryApi.GetAllSubcategory_API();
+
+            await Task.WhenAll(departmentTask, userTask, incphotosTask, inc_categoryTask, sucategoryTask);
+
+            var allDepartment = departmentTask.Result;
+            var allUser = userTask.Result;
+            var allInc_Photos = incphotosTask.Result;
+            var allIncCategory = inc_categoryTask.Result;
+            var allSucategory = sucategoryTask.Result;
+
+            var incData = await _incApi.FindByIDIncident_API(id);
+
+            incData.AssignmentGroup = allDepartment.Where(x => x.id == incData.assignment_group).FirstOrDefault();
+            incData.AssignedTo = incData.assigned_to == null ? null : allUser.FirstOrDefault(x => x.id == incData.assigned_to);
+            incData.IncidentcategoryData = allIncCategory.FirstOrDefault(x => x.id == incData.category);
+            incData.SubcategoryData = allSucategory.FirstOrDefault(x => x.id == incData.subcategory);
+
+            var allRelatedPhotos = allInc_Photos.Where(x => x.incident_id == incData.id).ToList();
+
+            if (allRelatedPhotos.Count == 0)
+                allRelatedPhotos = null;
+
+            var model = new AllModelVM()
+            {
+                user = currentUser,
+                incident = incData,
+                Incident_Photos_List = allRelatedPhotos,
+                Incident_Category_List = allIncCategory,
+                Subcategory_List = allSucategory
+            };
+
+            return View(model);
+        }
+
         private string GetMimeTypeFromFileSignature(byte[] fileBytes)
         {
             if (fileBytes.Length < 4) return "application/octet-stream";

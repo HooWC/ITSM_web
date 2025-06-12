@@ -87,7 +87,7 @@
 
 .inc-cre-image-item {
     position: relative;
-    border-radius: 8px;
+    border-radius: 2px;
     overflow: hidden;
     aspect-ratio: 16/9;
     display: block;

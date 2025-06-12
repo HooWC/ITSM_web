@@ -376,8 +376,8 @@ function updateCategoryTable(data) {
                         <td class="inc-tab-incident-number" data-label="Title">
                             <a href="/Category/Sucategory_Info?id=${sucategory.id}">${sucategory.sucategory}</a>
                         </td>
-                        <td data-label="inccategory_name">${inc_category}</td>
-                        <td data-label="dep_name">${department_name}</td>
+                        <td data-label="inccategory_name">${sucategory.inc_category}</td>
+                        <td data-label="dep_name">${sucategory.department_name}</td>
                     </tr>
                 `;
         tableBody.append(row);

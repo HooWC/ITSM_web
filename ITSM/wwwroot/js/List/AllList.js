@@ -426,13 +426,36 @@ function updateIncidentTable(data) {
         return;
     }
 
-    $.each(data, function (index, inc) {
-        var row = `
+    if (searchFunctionName.includes("SearchAssignWork"))
+    {
+        $.each(data, function (index, inc) {
+            var row = `
+                    <tr class="incident-item" data-id="${inc.id}">
+                        <td class="inc-tab-incident-number" data-label="Number">
+                            <a href="/IncidentManagement/Manager_Assign_Work_Info?id=${inc.id}">${inc.inc_number}</a>
+                        </td>
+                        <td data-label="urgency" class="phone_incident_hide_design">${inc.urgency}</td>
+                        <td data-label="state">${inc.state}</td>
+                        <td data-label="category" class="phone_incident_hide_design">${inc.category}</td>
+                        <td data-label="subcategory" class="phone_incident_hide_design">${inc.subcategory}</td>
+                        <td data-label="assignment group" class="phone_incident_hide_design">${inc.assignment_group}</td>
+                        <td data-label="create date" class="phone_incident_hide_design">${inc.create_date}</td>
+                        <td data-label="update date" class="phone_incident_hide_design">${inc.update_date}</td>
+                    </tr>
+                `;
+            tableBody.append(row);
+            phone_function();
+        });
+    }
+    else
+    {
+        $.each(data, function (index, inc) {
+            var row = `
                     <tr class="incident-item" data-id="${inc.id}">
                         <td class="inc-tab-incident-number" data-label="Number">
                             <a href="/IncidentManagement/Inc_Info_Form?id=${inc.id}">${inc.inc_number}</a>
                         </td>
-                        <td data-label="urgency" class="phone_incident_hide_design">${inc.urgency$}</td>
+                        <td data-label="urgency" class="phone_incident_hide_design">${inc.urgency}</td>
                         <td data-label="state">${inc.state}</td>
                         <td data-label="category" class="phone_incident_hide_design">${inc.category}</td>
                         <td data-label="subcategory" class="phone_incident_hide_design">${inc.subcategory}</td>
@@ -442,9 +465,10 @@ function updateIncidentTable(data) {
                         <td data-label="update date" class="phone_incident_hide_design">${inc.update_date}</td>
                     </tr>
                 `;
-        tableBody.append(row);
-        phone_function();
-    });
+            tableBody.append(row);
+            phone_function();
+        });
+    }
 
     initPagination();
 
