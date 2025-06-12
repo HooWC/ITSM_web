@@ -78,7 +78,7 @@
         });
     }
 
-    // 初始化subcategory下拉列表
+    // Initialize the subcategory drop-down list
     function initializeSubcategories() {
         var allSubcategories = subcategoriesList;
         var currentSubcategoryId = incidentSubcategory;
@@ -411,7 +411,8 @@
         });
     }
 
-    $("#close-button, #close-button-footer").click(function () {
+    $("#close-button").click(function () {
+        console.log("c1");
         if (isResolved || isClosed) {
             return;
         }

@@ -281,7 +281,7 @@
                     </div>
 
                     <div class="inc-cre-form-group">
-                        <label for="assignment-group" class="inc-cre-form-label inc-cre-required">
+                        <label for="assignment-group" class="inc-cre-form-label">
                             Assignment group
                         </label>
                         <div class="inc-cre-input-with-icon">
@@ -290,7 +290,7 @@
                     </div>
 
                     <div class="inc-cre-form-group">
-                        <label for="assigned-to" class="inc-cre-form-label">
+                        <label for="assigned-to" class="inc-cre-form-label inc-cre-required">
                             Assigned to
                             <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/Assigned_Info', '_blank')">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -316,7 +316,7 @@
             </div>
 
             <div class="inc-cre-form-group inc-cre-full-width">
-                <label for="description" class="inc-cre-form-label inc-cre-required">Description</label>
+                <label for="description" class="inc-cre-form-label">Description</label>
                 <textarea id="description" autocomplete="off" name="describe" class="inc-cre-form-control inc-cre-description-textarea" rows="5" readonly>@Model.incident.describe</textarea>
             </div>
         </form>
@@ -506,25 +506,7 @@
             $target.addClass('active open');
         }
 
-      let roleBack = $('#roleBack').val();
-      if(roleBack.includes("Admin")){
-          $('#Incidents_menu_all').addClass("active");
-      }
-      else if(roleBack.includes("Resolved")){
-          $('#Incidents_menu_assigned_resolve').addClass("active");
-      }
-      else if(roleBack.includes("ToMe")){
-          $('#Incidents_menu_assigned').addClass("active");
-      }
-      else if(roleBack.includes("ToGroup")){
-          $('#Incidents_menu_assigned_to_team').addClass("active");
-      }
-      else if(roleBack.includes("Closed")){
-          $('#Incidents_menu_assigned_closed').addClass("active");
-      }
-      else{
-          $('#Incidents_menu_all_user').addClass("active");
-      }
+            $('#Incidents_menu_assign_work').addClass("active");
     });
 </script>
 <script src="~/js/Incident/Inc_Info.js"></script>

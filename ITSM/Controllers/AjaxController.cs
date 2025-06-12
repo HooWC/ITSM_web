@@ -321,7 +321,7 @@ namespace ITSM.Controllers
             else if (searchWord == "user")
                 userIncs = allIncs.Where(x => x.sender == currentUser.id).OrderByDescending(y => y.id).ToList();
             else if (searchWord == "assign_work")
-                userIncs = allIncs.Where(x => x.assignment_group == currentUser.department_id && x.assigned_to == null).OrderByDescending(y => y.id).ToList();
+                userIncs = allIncs.Where(x => x.assignment_group == currentUser.department_id && x.assigned_to == null && x.state != "Closed").OrderByDescending(y => y.id).ToList();
             else
                 userIncs = allIncs.OrderByDescending(y => y.id).ToList();
 
@@ -511,7 +511,7 @@ namespace ITSM.Controllers
             else if (sortWord == "user")
                 userIncs = allIncs.Where(x => x.sender == currentUser.id).OrderByDescending(y => y.id).ToList();
             else if (sortWord == "assign_work")
-                userIncs = allIncs.Where(x => x.assignment_group == currentUser.department_id && x.assigned_to == null).OrderByDescending(y => y.id).ToList();
+                userIncs = allIncs.Where(x => x.assignment_group == currentUser.department_id && x.assigned_to == null && x.state != "Closed").OrderByDescending(y => y.id).ToList();
             else
                 userIncs = allIncs.OrderByDescending(y => y.id).ToList();
 
@@ -817,13 +817,6 @@ namespace ITSM.Controllers
 
                 if (incData == null)
                     return Json(new { success = false, message = "No event found" });
-
-                incData.describe = inc.describe;
-                incData.urgency = inc.urgency;
-                incData.category = inc.category;
-                incData.subcategory = inc.subcategory;
-                incData.assignment_group = inc.assignment_group;
-                incData.assigned_to = inc.assigned_to == 0 ? null : inc.assigned_to;
 
                 incData.close_date = DateTime.Now;
                 incData.state = "Closed";

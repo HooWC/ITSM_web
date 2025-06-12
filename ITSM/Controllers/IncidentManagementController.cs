@@ -427,19 +427,15 @@ namespace ITSM.Controllers
         {
             var currentUser = await _userService.GetCurrentUserAsync();
 
-            // Making concurrent API requests
             var inc = _incApi.GetAllIncident_API();
             var dep = _depApi.GetAllDepartment_API();
             var user = _userApi.GetAllUser_API();
 
-            // Wait for all tasks to complete
             await Task.WhenAll(inc, dep, user);
 
-            // get incident list data
             var allInc = inc.Result;
             var incList = allInc.Where(x => x.assigned_to == currentUser.id).OrderByDescending(y => y.id).ToList();
 
-            // get user and department data
             var allDepartments = dep.Result;
             var allUsers = user.Result;
 
@@ -462,19 +458,15 @@ namespace ITSM.Controllers
         {
             var currentUser = await _userService.GetCurrentUserAsync();
 
-            // Making concurrent API requests
             var inc = _incApi.GetAllIncident_API();
             var dep = _depApi.GetAllDepartment_API();
             var user = _userApi.GetAllUser_API();
 
-            // Wait for all tasks to complete
             await Task.WhenAll(inc, dep, user);
 
-            // get incident list data
             var allInc = inc.Result;
             var incList = allInc.Where(x => x.assignment_group == currentUser.department_id).OrderByDescending(y => y.id).ToList();
 
-            // get user and department data
             var allDepartments = dep.Result;
             var allUsers = user.Result;
 
@@ -497,19 +489,15 @@ namespace ITSM.Controllers
         {
             var currentUser = await _userService.GetCurrentUserAsync();
 
-            // Making concurrent API requests
             var inc = _incApi.GetAllIncident_API();
             var dep = _depApi.GetAllDepartment_API();
             var user = _userApi.GetAllUser_API();
 
-            // Wait for all tasks to complete
             await Task.WhenAll(inc, dep, user);
 
-            // get incident list data
             var allInc = inc.Result;
             var incList = allInc.Where(x => x.assigned_to == currentUser.id || x.updated_by == currentUser.id && x.state == "Resolved").OrderByDescending(y => y.id).ToList();
 
-            // get user and department data
             var allDepartments = dep.Result;
             var allUsers = user.Result;
 
@@ -532,19 +520,15 @@ namespace ITSM.Controllers
         {
             var currentUser = await _userService.GetCurrentUserAsync();
 
-            // Making concurrent API requests
             var inc = _incApi.GetAllIncident_API();
             var dep = _depApi.GetAllDepartment_API();
             var user = _userApi.GetAllUser_API();
 
-            // Wait for all tasks to complete
             await Task.WhenAll(inc, dep, user);
 
-            // get incident list data
             var allInc = inc.Result;
             var incList = allInc.Where(x => (x.assigned_to == currentUser.id || x.updated_by == currentUser.id) && x.state == "Closed").OrderByDescending(y => y.id).ToList();
 
-            // get user and department data
             var allDepartments = dep.Result;
             var allUsers = user.Result;
 
@@ -577,7 +561,7 @@ namespace ITSM.Controllers
             await Task.WhenAll(inc, dep, user, inc_categoryTask, sucategoryTask);
 
             var allInc = inc.Result;
-            var incList = allInc.Where(x => x.assignment_group == currentUser.department_id && x.assigned_to == null).OrderByDescending(y => y.id).ToList();
+            var incList = allInc.Where(x => x.assignment_group == currentUser.department_id && x.assigned_to == null && x.state != "Closed").OrderByDescending(y => y.id).ToList();
 
             var allDepartments = dep.Result;
             var allUsers = user.Result;
@@ -602,7 +586,7 @@ namespace ITSM.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> Manager_Assign_Work_Info(int id)
+        public async Task<AllModelVM> get_Manager_Assign_Work_Info(int id)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
 
@@ -642,7 +626,50 @@ namespace ITSM.Controllers
                 Subcategory_List = allSucategory
             };
 
+            return model;
+        }
+
+        public async Task<IActionResult> Manager_Assign_Work_Info(int id)
+        {
+            var model = await get_Manager_Assign_Work_Info(id);
+
             return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Manager_Assign_Work_Info(Incident inc)
+        {
+            var model = await get_Manager_Assign_Work_Info(inc.id);
+
+            var incData = await _incApi.FindByIDIncident_API(inc.id);
+
+            if (inc.describe != null)
+            {
+                if (incData != null)
+                {
+                    incData.assigned_to = inc.assigned_to;
+
+                    bool result = await _incApi.UpdateIncident_API(incData);
+
+                    if (result)
+                        return RedirectToAction("Manager_Assign_Work", "IncidentManagement");
+                    else
+                    {
+                        ViewBag.Error = "Update event failed";
+                        return View(model);
+                    }
+                }
+                else
+                {
+                    ViewBag.Error = "Update Incident Error";
+                    return View(model);
+                }
+            }
+            else
+            {
+                ViewBag.Error = "Please fill in all required fields";
+                return View(model);
+            }
         }
 
         private string GetMimeTypeFromFileSignature(byte[] fileBytes)
@@ -689,7 +716,7 @@ namespace ITSM.Controllers
                 fileBytes[2] == 0x01 && fileBytes[3] == 0x00)
                 return "image/x-icon";
 
-            // HEIF (需要更多字节检查)
+            // HEIF
             if (fileBytes.Length >= 12 &&
                 ((fileBytes[4] == 0x66 && fileBytes[5] == 0x74 &&
                   fileBytes[6] == 0x79 && fileBytes[7] == 0x70 &&
@@ -709,7 +736,7 @@ namespace ITSM.Controllers
                 fileBytes[10] == 0x69 && fileBytes[11] == 0x66)
                 return "image/avif";
 
-            // 默认
+            // Basic
             return "application/octet-stream";
         }
 
