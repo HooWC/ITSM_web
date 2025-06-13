@@ -449,11 +449,13 @@ function updateIncidentTable(data) {
     }
     else
     {
+        var typeName = $('#typeName').val();
+
         $.each(data, function (index, inc) {
             var row = `
                     <tr class="incident-item" data-id="${inc.id}">
                         <td class="inc-tab-incident-number" data-label="Number">
-                            <a href="/IncidentManagement/Inc_Info_Form?id=${inc.id}">${inc.inc_number}</a>
+                            <a href="/IncidentManagement/Inc_Info_Form?id=${inc.id}&&type=${typeName}">${inc.inc_number}</a>
                         </td>
                         <td data-label="urgency" class="phone_incident_hide_design">${inc.urgency}</td>
                         <td data-label="state">${inc.state}</td>

@@ -60,7 +60,6 @@ data-bs-theme="dark">
 
     <!-- Helpers -->
     <script src="~/assets/vendor/js/helpers.js"></script>
-
 </head>
 
 <body>
@@ -301,6 +300,19 @@ data-bs-theme="dark">
                             <li class="menu-item" id="Incidents_menu_assigned_resolve">
                                 <a href="~/IncidentManagement/Resolved_Assigned_To_Me" class="menu-link">
                                     <div class="text-truncate" data-i18n="Notifications">Resolved by me</div>
+                                </a>
+                            </li>
+                            <li class="menu-item" id="Incidents_menu_assigned_closed">
+                                <a href="~/IncidentManagement/Closed_Assigned_To_Me" class="menu-link">
+                                    <div class="text-truncate" data-i18n="Notifications">Closed by me</div>
+                                </a>
+                            </li>
+                            <li class="menu-item" id="Incidents_menu_assigned_message">
+                                <a href="~/IncidentManagement/Closed_Assigned_To_Me" class="menu-link">
+                                    <div class="text-truncate" data-i18n="Notifications">
+                                        Message
+                                        <span class="message_backgroup_color_number">1</span>
+                                    </div>
                                 </a>
                             </li>
 
@@ -723,10 +735,10 @@ data-bs-theme="dark">
     </div>
 
 
-    @* <div class="buy-now">
+    <div class="buy-now">
         <a href="#"
-           class="btn btn-danger btn-buy-now">Testing Version</a>
-    </div> *@
+           class="btn btn-danger btn-buy-now">3</a>
+    </div>
 
     <!-- Core JS -->
     <script src="~/assets/vendor/libs/jquery/jquery.js"></script>

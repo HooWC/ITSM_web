@@ -10,8 +10,8 @@
         width: 8%;
     }
 
-    .inc-tab-incidents-table th.i_short-column {
-        width: 16%;
+    .inc-tab-incidents-table th.i_sucategory-column {
+        width: 11%;
     }
 
     .inc-tab-incidents-table th.i_create-date-column {
@@ -22,8 +22,8 @@
         width: 12%;
     }
 
-    .inc-tab-incidents-table th.i_priority-column {
-        width: 10%;
+    .inc-tab-incidents-table th.i_urgency-column {
+        width: 12%;
     }
 
     .inc-tab-incidents-table th.i_state-column {
@@ -31,11 +31,11 @@
     }
 
     .inc-tab-incidents-table th.i_category-column {
-        width: 9%;
+        width: 11%;
     }
 
     .inc-tab-incidents-table th.i_assignment-group-column {
-        width: 12%;
+        width: 13%;
     }
 
     .inc-tab-incidents-table th.i_assigned-to-column {
@@ -54,10 +54,10 @@
                 <button class="inc-tab-dropdown-toggle" id="filterDropdown">Number <i class="fas fa-chevron-down"></i></button>
                 <div class="inc-tab-dropdown-menu" id="filterMenu" style="display:none;">
                     <a href="#" class="inc-tab-dropdown-item" data-filter="number">Number</a>
-                    <a href="#" class="inc-tab-dropdown-item phone_incident_hide_design" data-filter="short_description">Short description</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="priority">Priority</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-filter="urgency">Urgency</a>
                     <a href="#" class="inc-tab-dropdown-item" data-filter="state">State</a>
                     <a href="#" class="inc-tab-dropdown-item phone_incident_hide_design" data-filter="category">Category</a>
+                    <a href="#" class="inc-tab-dropdown-item phone_incident_hide_design" data-filter="sucategory">Sucategory</a>
                     <a href="#" class="inc-tab-dropdown-item phone_incident_hide_design" data-filter="assignment_group">Assignment group</a>
                     <a href="#" class="inc-tab-dropdown-item phone_incident_hide_design" data-filter="assigned_to">Assigned to</a>
                     <a href="#" class="inc-tab-dropdown-item phone_incident_hide_design" data-filter="opened">Opened</a>
@@ -97,17 +97,19 @@
         <span class="inc-tab-all-text">All</span>
     </div> *@
 
+    <input type="text" name="typeName" id="typeName" class="inc-cre-form-control" value="Closed" style="display:none;" readonly>
+
     <div class="inc-tab-table-container">
         <table class="inc-tab-incidents-table">
             <thead>
                 <tr>
                     @* <th class="inc-tab-checkbox-column"></th> *@
                     <th class="inc-tab-sortable number-column" id="sortByNumber">Number <i class="fas fa-arrow-up" id="sortIcon"></i></th>
-                    <th class="i_short-column phone_incident_hide_design">Short description</th>
-                    <th class="i_priority-column">Priority</th>
+                    <th class="i_urgency-column">Urgency</th>
                     <th class="i_state-column">State</th>
                     <th class="i_category-column phone_incident_hide_design">Category</th>
-                    <th class="i_assignment-group-column phone_incident_hide_design">Assignment group</th>
+                    <th class="i_sucategory-column phone_incident_hide_design">Sucategory</th>
+                    <th class="i_assignment-group-column  phone_incident_hide_design">Assignment group</th>
                     <th class="i_assigned-to-column phone_incident_hide_design">Assigned to</th>
                     <th class="i_create-date-column phone_incident_hide_design">Opened</th>
                     <th class="i_update-date-column phone_incident_hide_design">Updated</th>
@@ -120,11 +122,12 @@
                     <tr class="incident-item" data-id="@i.id">
                         @* <td><input type="checkbox" class="item-checkbox"></td> *@
                         <td class="inc-tab-incident-number" data-label="Number">
-                            <a href="~/IncidentManagement/Inc_Info_Form?id=@i.id&role=Closed">@i.inc_number</a>
+                            <a href="~/IncidentManagement/Inc_Info_Form?id=@i.id&type=Closed">@i.inc_number</a>
                         </td>
-                 
+                        <td data-label="urgency" class="phone_incident_hide_design">@i.urgency</td>
                         <td data-label="state">@i.state</td>
-                        <td data-label="category" class="phone_incident_hide_design">@i.category</td>
+                        <td data-label="inc_category" class="phone_incident_hide_design">@(i.IncidentcategoryData?.name)</td>
+                        <td data-label="subcategory" class="phone_incident_hide_design">@(i.SubcategoryData?.subcategory)</td>
                         <td data-label="assignment group" class="phone_incident_hide_design">@(i.AssignmentGroup?.name)</td>
                         <td data-label="assigned to" class="phone_incident_hide_design">@(i.AssignedTo?.fullname)</td>
                         <td data-label="create date" class="phone_incident_hide_design">@i.create_date.ToString("yyyy-MM-dd HH:mm:ss")</td>

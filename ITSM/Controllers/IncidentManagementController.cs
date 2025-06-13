@@ -60,9 +60,13 @@ namespace ITSM.Controllers
             if (type == "User_All")
                 incList = allInc.Where(x => x.sender == currentUser.id).OrderByDescending(y => y.id).ToList();
             else if (type == "Assigned_To_Me")
-                incList = allInc.Where(x => x.assigned_to == currentUser.id).OrderByDescending(y => y.id).ToList();
+                incList = allInc.Where(x => x.assigned_to == currentUser.id && x.state != "Resolved" && x.state != "Closed").OrderByDescending(y => y.id).ToList();
             else if (type == "All")
                 incList = allInc.OrderByDescending(y => y.id).ToList();
+            else if(type == "Resolved_Assigned_To_Me")
+                incList = allInc.Where(x => (x.assigned_to == currentUser.id || x.updated_by == currentUser.id) && x.state == "Resolved").OrderByDescending(y => y.id).ToList();
+            else if(type == "Closed_Assigned_To_Me")
+                incList = allInc.Where(x => (x.assigned_to == currentUser.id || x.updated_by == currentUser.id) && x.state == "Closed").OrderByDescending(y => y.id).ToList();
 
             var allDepartments = dep.Result;
             var allUsers = user.Result;
@@ -348,6 +352,7 @@ namespace ITSM.Controllers
                     incData.describe = inc.describe;
                     incData.state = inc.state;
                     incData.updated_by = currentUser.id;
+                    incData.assigned_to = inc.assigned_to;
 
                     if (fileBytesList != null && fileBytesList.Count > 0)
                     {
@@ -440,62 +445,14 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Resolved_Assigned_To_Me()
         {
-            var currentUser = await _userService.GetCurrentUserAsync();
-
-            var inc = _incApi.GetAllIncident_API();
-            var dep = _depApi.GetAllDepartment_API();
-            var user = _userApi.GetAllUser_API();
-
-            await Task.WhenAll(inc, dep, user);
-
-            var allInc = inc.Result;
-            var incList = allInc.Where(x => x.assigned_to == currentUser.id || x.updated_by == currentUser.id && x.state == "Resolved").OrderByDescending(y => y.id).ToList();
-
-            var allDepartments = dep.Result;
-            var allUsers = user.Result;
-
-            foreach (var incident in incList)
-            {
-                incident.AssignmentGroup = allDepartments.FirstOrDefault(d => d.id == incident.assignment_group);
-                incident.AssignedTo = allUsers.FirstOrDefault(u => u.id == incident.assigned_to);
-            }
-
-            var model = new AllModelVM()
-            {
-                user = currentUser,
-                IncidentList = incList
-            };
+            var model = await get_Inc_Data("Resolved_Assigned_To_Me");
 
             return View(model);
         }
 
         public async Task<IActionResult> Closed_Assigned_To_Me()
         {
-            var currentUser = await _userService.GetCurrentUserAsync();
-
-            var inc = _incApi.GetAllIncident_API();
-            var dep = _depApi.GetAllDepartment_API();
-            var user = _userApi.GetAllUser_API();
-
-            await Task.WhenAll(inc, dep, user);
-
-            var allInc = inc.Result;
-            var incList = allInc.Where(x => (x.assigned_to == currentUser.id || x.updated_by == currentUser.id) && x.state == "Closed").OrderByDescending(y => y.id).ToList();
-
-            var allDepartments = dep.Result;
-            var allUsers = user.Result;
-
-            foreach (var incident in incList)
-            {
-                incident.AssignmentGroup = allDepartments.FirstOrDefault(d => d.id == incident.assignment_group);
-                incident.AssignedTo = allUsers.FirstOrDefault(u => u.id == incident.assigned_to);
-            }
-
-            var model = new AllModelVM()
-            {
-                user = currentUser,
-                IncidentList = incList
-            };
+            var model = await get_Inc_Data("Closed_Assigned_To_Me");
 
             return View(model);
         }
@@ -514,7 +471,7 @@ namespace ITSM.Controllers
             await Task.WhenAll(inc, dep, user, inc_categoryTask, sucategoryTask);
 
             var allInc = inc.Result;
-            var incList = allInc.Where(x => x.assignment_group == currentUser.department_id && x.assigned_to == null && x.state != "Closed").OrderByDescending(y => y.id).ToList();
+            var incList = allInc.Where(x => x.assignment_group == currentUser.department_id && x.assigned_to == null && x.state != "Closed" && x.state != "Resolved").OrderByDescending(y => y.id).ToList();
 
             var allDepartments = dep.Result;
             var allUsers = user.Result;

@@ -211,7 +211,11 @@ select.inc-cre-form-control {
     background-position: right 12px center;
     background-size: 16px;
     padding-right: 36px;
-    margin-bottom:5px;
+    /*margin-bottom:5px;*/
+}
+
+#resolve-type {
+    margin-bottom: 5px;
 }
 
 .inc-cre-form-control:focus {

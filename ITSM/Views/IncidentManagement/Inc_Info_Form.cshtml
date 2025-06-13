@@ -171,7 +171,7 @@
                 }
                 <button class="inc-cre-btn inc-cre-btn-submit" onclick="document.getElementById('incidentForm').submit();">Save</button>
             }
-            else if (Model.incident.state == "Closed")
+            else if (Model.incident.state == "Closed" && (Model.user?.Role?.role?.ToLower() == "admin" || Model.incident.assigned_to == Model.user.id))
             {
                 <button class="inc-cre-btn inc-cre-btn-closed" id="reopen-button">Reopened</button>
             }
@@ -380,28 +380,57 @@
                         </div>
                     </div>
 
-                    <div class="inc-cre-form-group">
-                        <label for="assigned-to" class="inc-cre-form-label">
-                            Assigned to
-                            @* <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/Assigned_Info', '_blank')">
+                    @if (Model.user.r_manager)
+                    {
+                        <div class="inc-cre-form-group">
+                            <label for="assigned-to" class="inc-cre-form-label inc-cre-required">
+                                Assigned to
+                                <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/Assigned_Info', '_blank')">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                    </svg>
+                                </button>
+                            </label>
+                            <div class="inc-cre-input-with-icon">
+                                <input type="text" id="assigned-to" class="inc-cre-form-control" readonly value="@(Model.incident.AssignedTo?.fullname ?? "")">
+                                <input type="hidden" id="assigned-to-id" name="assigned_to" value="@Model.incident.assigned_to">
+                                <button type="button" class="inc-cre-icon-search" id="assigned-to-search" @(Model.incident.assignment_group > 0 ? "" : "disabled")>
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="11" cy="11" r="8"></circle>
+                                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="inc-cre-form-group">
+                            <label for="assigned-to" class="inc-cre-form-label">
+                                Assigned to
+                                @* <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/Assigned_Info', '_blank')">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <circle cx="12" cy="12" r="10"></circle>
                                     <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
                                     <line x1="12" y1="17" x2="12.01" y2="17"></line>
                                 </svg>
                             </button> *@
-                        </label>
-                        <div class="inc-cre-input-with-icon">
-                            <input type="text" id="assigned-to" class="inc-cre-form-control" readonly value="@(Model.incident.AssignedTo?.fullname ?? "")">
-                            @* <input type="hidden" id="assigned-to-id" name="assigned_to" value="@Model.incident.assigned_to">
+                            </label>
+                            <div class="inc-cre-input-with-icon">
+                                <input type="text" id="assigned_to" class="inc-cre-form-control" readonly value="@(Model.incident.AssignedTo?.fullname ?? "")">
+                                <input type="hidden" name="assigned_to" id="assigned-to-id" class="inc-cre-form-control" value="@(Model.incident.AssignedTo?.id.ToString() ?? "")">
+                                @* <input type="hidden" id="assigned-to-id" name="assigned_to" value="@Model.incident.assigned_to">
                             <button type="button" class="inc-cre-icon-search" id="assigned-to-search" @(Model.incident.assignment_group > 0 ? "" : "disabled")>
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <circle cx="11" cy="11" r="8"></circle>
                                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                                 </svg>
                             </button> *@
+                            </div>
                         </div>
-                    </div>
+                    }
 
                 </div>
             </div>

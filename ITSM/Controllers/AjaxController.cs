@@ -312,11 +312,11 @@ namespace ITSM.Controllers
             var allIncs = await _incApi.GetAllIncident_API();
             var userIncs = new List<Incident>();
             if (searchWord == "resolve")
-                userIncs = allIncs.Where(x => x.assigned_to == currentUser.id || x.updated_by == currentUser.id && x.state == "Resolved").OrderByDescending(y => y.id).ToList();
+                userIncs = allIncs.Where(x => (x.assigned_to == currentUser.id || x.updated_by == currentUser.id) && x.state == "Resolved").OrderByDescending(y => y.id).ToList();
             else if (searchWord == "closed")
                 userIncs = allIncs.Where(x => (x.assigned_to == currentUser.id || x.updated_by == currentUser.id) && x.state == "Closed").OrderByDescending(y => y.id).ToList();
             else if (searchWord == "tome")
-                userIncs = allIncs.Where(x => x.assigned_to == currentUser.id).OrderByDescending(y => y.id).ToList();
+                userIncs = allIncs.Where(x => x.assigned_to == currentUser.id && x.state != "Resolved" && x.state != "Closed").OrderByDescending(y => y.id).ToList();
             else if (searchWord == "toteam")
                 userIncs = allIncs.Where(x => x.assignment_group == currentUser.department_id).OrderByDescending(y => y.id).ToList();
             else if (searchWord == "user")
@@ -429,7 +429,7 @@ namespace ITSM.Controllers
 
             var userIncs = new List<Incident>();
             if (filterword == "tome")
-                userIncs = allIncs.Where(x => x.assigned_to == currentUser.id).OrderByDescending(y => y.id).ToList();
+                userIncs = allIncs.Where(x => x.assigned_to == currentUser.id && x.state != "Resolved" && x.state != "Closed").OrderByDescending(y => y.id).ToList();
             else if (filterword == "toteam")
                 userIncs = allIncs.Where(x => x.assignment_group == currentUser.department_id).OrderByDescending(y => y.id).ToList();
             else if (filterword == "closed")
@@ -502,11 +502,11 @@ namespace ITSM.Controllers
             var allIncs = await _incApi.GetAllIncident_API();
             var userIncs = new List<Incident>();
             if (sortWord == "resolve")
-                userIncs = allIncs.Where(x => x.assigned_to == currentUser.id || x.updated_by == currentUser.id && x.state == "Resolved").OrderByDescending(y => y.id).ToList();
+                userIncs = allIncs.Where(x => (x.assigned_to == currentUser.id || x.updated_by == currentUser.id) && x.state == "Resolved").OrderByDescending(y => y.id).ToList();
             else if (sortWord == "closed")
                 userIncs = allIncs.Where(x => (x.assigned_to == currentUser.id || x.updated_by == currentUser.id) && x.state == "Closed").OrderByDescending(y => y.id).ToList();
             else if (sortWord == "tome")
-                userIncs = allIncs.Where(x => x.assigned_to == currentUser.id).ToList();
+                userIncs = allIncs.Where(x => x.assigned_to == currentUser.id && x.state != "Resolved" && x.state != "Closed").ToList();
             else if (sortWord == "toteam")
                 userIncs = allIncs.Where(x => x.assignment_group == currentUser.department_id).ToList();
             else if (sortWord == "user")

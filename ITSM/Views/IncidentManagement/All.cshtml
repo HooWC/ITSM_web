@@ -103,6 +103,8 @@
         <span class="inc-tab-all-text">All</span>
     </div> *@
 
+    <input type="text" name="typeName" id="typeName" class="inc-cre-form-control" value="Admin" style="display:none;" readonly>
+
     <div class="inc-tab-table-container">
         <table class="inc-tab-incidents-table">
             <thead>
@@ -157,7 +159,6 @@
 <span style="display:none" id="forAjaxGetFunctionName_filter">Filter_Item_Admin</span>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="~/js/List/AllList.js"></script>
 <script>
       $(function () {
         var $target = $('#Incidents_menu');
@@ -169,3 +170,4 @@
         $('#Incidents_menu_all').addClass("active");
     });
 </script>
+<script src="~/js/List/AllList.js"></script>
