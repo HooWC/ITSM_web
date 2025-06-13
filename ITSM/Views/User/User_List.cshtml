@@ -7,52 +7,52 @@
 
 <style>
     .inc-tab-incidents-table th.number-column {
-        width: 8%;
+    width: 8%;
     }
 
     .inc-tab-incidents-table th.u_fullname {
-        width: 17%;
+    width: 17%;
     }
 
     .inc-tab-incidents-table th.u_approve {
-        width: 8%;
+    width: 8%;
     }
 
     .inc-tab-incidents-table th.u_gender {
-        width: 6%;
+    width: 6%;
     }
 
     .inc-tab-incidents-table th.u_department {
-        width: 15%;
+    width: 15%;
     }
 
     .inc-tab-incidents-table th.u_manager_name {
-        width: 15%;
+    width: 15%;
     }
 
     .inc-tab-incidents-table th.u_mobilephone {
-        width: 10%;
+    width: 10%;
     }
 
     .inc-tab-incidents-table th.u_role {
-        width: 6%;
+    width: 6%;
     }
 
     .inc-tab-incidents-table th.u_role_manager {
-        width: 8%;
+    width: 8%;
     }
 
     .inc-tab-incidents-table th.u_active {
-        width: 7%;
+    width: 7%;
     }
 
     .item-active-btn{
-        background: #0f6135;
-        transition:all .2s ease-in-out;
+    background: #0f6135;
+    transition:all .2s ease-in-out;
     }
 
     .item-active-btn:hover{
-            background: #0b522c;
+    background: #0b522c;
     }
 </style>
 
@@ -135,7 +135,14 @@
                 @foreach (var i in Model.UserList)
                 {
                     <tr class="incident-item" data-id="@i.id">
-                        <td><input type="checkbox" class="item-checkbox"></td>
+                        @if(i.id != Model.user?.id)
+                        {
+                            <td><input type="checkbox" class="item-checkbox"></td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
                         <td class="inc-tab-incident-number" data-label="Number">
                             <a href="~/User/User_Info?id=@i.id">@i.emp_id</a>
                         </td>
@@ -145,7 +152,7 @@
                         <td data-label="Mobile_Phone" class="phone_user_hide_design">@i.mobile_phone</td>
                         <td data-label="R_Role" class="phone_user_hide_design">@((i.Role != null) ? i.Role.role : "N/A")</td>
                         <td data-label="r_manager" class="phone_user_hide_design">@(i.r_manager ? "Yes" : "No")</td>
-                        <td data-label="m_user" class="phone_user_hide_design">@((i.M_User != null && i.M_User.fullname != null) ? i.M_User.fullname : "Null")</td>
+                        <td data-label="m_user" class="phone_user_hide_design">@((i.M_User != null && i.M_User.fullname != null) ? i.M_User.fullname : "")</td>
                         <td data-label="approve" class="phone_user_hide_design">@(i.approve ? "Yes" : "No")</td>
                         <td data-label="Active">@(i.active ? "Active" : "Blocked")</td>
                     </tr>
@@ -165,9 +172,10 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="~/js/List/User_List.js"></script>
 <script>
-      $(function () {
+    var userID = "@Model.user.id";
+
+    $(function () {
         var $target = $('#User_menu');
         if (!$target.hasClass('active') || !$target.hasClass('open')) {
             $('.menu-item').removeClass('active open');
@@ -177,5 +185,5 @@
         $('#User_menu_all').addClass("active");
     });
 </script>
-
+<script src="~/js/List/User_List.js"></script>
 

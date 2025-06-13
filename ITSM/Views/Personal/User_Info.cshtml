@@ -213,47 +213,15 @@
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="department_id" class="inc-cre-form-label">Department</label>
-                        <select id="department_id" name="department_id" class="inc-cre-form-control">
-                            @{
-                                var selectDepartment = Model.user.department_id;
-                            }
-                            @foreach (var item in Model.DepartmentList)
-                            {
-                                <option value="@item.id" selected="@(item.id == selectDepartment)">@item.name</option>
-                            }
-                        </select>
+                        <input type="email" name="department_id" id="department_id" class="inc-cre-form-control" value="@Model.user.Department?.name" autocomplete="off" readonly>
                     </div>
                 </div>
 
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="role_id" class="inc-cre-form-label">Role</label>
-                        <select id="role_id" name="role_id" class="inc-cre-form-control">
-                            @{
-                                var selectRole = Model.user.role_id;
-                            }
-                            @foreach (var item in Model.RoleList)
-                            {
-                                <option value="@item.id" selected="@(item.id == selectRole)">@item.role</option>
-                            }
-                        </select>
+                        <input type="email" name="role_id" id="role_id" class="inc-cre-form-control" value="@Model.user.Role?.role" autocomplete="off" readonly>
                     </div>
-                </div>
-            </div>
-
-            <div class="inc-cre-form-group inc-cre-short-description-group">
-                <label for="role_code" class="inc-cre-form-label">
-                    Role Code (If you change the new Role)
-                    <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/Role_Code_Info', '_blank')">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                        </svg>
-                    </button>
-                </label>
-                <div class="inc-cre-input-with-actions">
-                    <input type="text" name="role_code" id="role_code" autocomplete="off" class="inc-cre-form-control">
                 </div>
             </div>
 
@@ -298,14 +266,7 @@
             </div>
 
             <div class="inc-cre-form-grid">
-                <!-- <div class="inc-cre-form-column">
-                    <div class="inc-cre-form-group">
-                        <label for="username" class="inc-cre-form-label inc-cre-required">Username</label>
-                        <input type="text" name="username" minlength="6" autocomplete="off" id="username" class="inc-cre-form-control" required>
-                    </div>
-                </div> -->
-
-                <div class="inc-cre-form-column">
+                <div class="inc-cre-form-column inc-cre-full-width">
                     <div class="inc-cre-form-group">
                         <label for="file" class="inc-cre-form-label">
                             Photo (Maximun size: 20mb)
@@ -322,7 +283,7 @@
                 </div>
             </div>
 
-            <div class="inc-cre-form-grid">
+            @* <div class="inc-cre-form-grid">
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="password" class="inc-cre-form-label">
@@ -354,7 +315,7 @@
                         <input type="password" name="new_password" id="new_password" autocomplete="off" class="inc-cre-form-control" required>
                     </div>
                 </div>
-            </div>
+            </div> *@
 
             <div class="inc-cre-form-grid">
                 <div class="inc-cre-form-column">

@@ -266,7 +266,7 @@ namespace ITSM.Controllers
         /// <summary>
         /// Get user data based on department ID
         [HttpPost]
-        public async Task<IActionResult> AssignedToData(int departmentId)
+        public async Task<IActionResult> AssignedToData(int departmentId, int caller_id)
         {
             if (!IsUserLoggedIn(out var currentUser))
                 return Json(new { success = false, message = "Not logged in" });
@@ -286,7 +286,8 @@ namespace ITSM.Controllers
                         user.Role = allRole.FirstOrDefault(r => r.id == user.role_id);
                         return user;
                     })
-                    .Where(user => user.department_id == departmentId && user.Role.role.ToLower() != "user")
+                    .Where(user => user.department_id == departmentId && user.id != caller_id
+                    && user.approve && user.active)
                     .ToList();
 
                 return Json(result);
@@ -721,7 +722,7 @@ namespace ITSM.Controllers
                 return Json(new { success = false, message = "Not logged in" });
 
             if (string.IsNullOrEmpty(resolveType) || string.IsNullOrEmpty(resolveNotes))
-                return Json(new { success = false, message = "Resolution type and notes are required" });
+                return Json(new { success = false, message = "Resolution type and resolution notes are required." });
 
             try
             {
@@ -852,13 +853,6 @@ namespace ITSM.Controllers
 
                 if (incData.state != "Closed")
                     return Json(new { success = false, message = "Only closed events can be reopened" });
-
-                incData.describe = inc.describe;
-                incData.urgency = inc.urgency;
-                incData.category = inc.category;
-                incData.subcategory = inc.subcategory;
-                incData.assignment_group = inc.assignment_group;
-                incData.assigned_to = inc.assigned_to == 0 ? null : inc.assigned_to;
 
                 incData.state = "Pending";
                 incData.updated_by = currentUser.id;
@@ -1568,7 +1562,7 @@ namespace ITSM.Controllers
                 return Json(new { success = false, message = "Not logged in" });
 
             var allUsers = await _userApi.GetAllUser_API();
-            var userList = allUsers.Where(x => x.id != currentUser.id).OrderByDescending(y => y.id).ToList();
+            var userList = allUsers.OrderByDescending(y => y.id).ToList();
 
             var allDepartments = await _departmentApi.GetAllDepartment_API();
             var allRoles = await _roleApi.GetAllRole_API();
@@ -1644,7 +1638,7 @@ namespace ITSM.Controllers
                 r_manager = t.r_manager ? "Yes" : "No",
                 approve = t.approve ? "Yes" : "No",
                 m_user_fullname = t.Manager == null
-                    ? "Null"
+                    ? ""
                     : allUsers.FirstOrDefault(x => x.id == t.Manager)?.fullname ?? "Null",
                 active = t.active == true ? "Active" : "Blocked"
             });
@@ -1660,7 +1654,7 @@ namespace ITSM.Controllers
                 return Json(new { success = false, message = "Not logged in" });
 
             var allUsers = await _userApi.GetAllUser_API();
-            var userList = allUsers.Where(x => x.id != currentUser.id).OrderByDescending(y => y.id).ToList();
+            var userList = allUsers.OrderByDescending(y => y.id).ToList();
 
             var allDepartments = await _departmentApi.GetAllDepartment_API();
             var allRoles = await _roleApi.GetAllRole_API();
@@ -1692,7 +1686,7 @@ namespace ITSM.Controllers
                 r_manager = t.r_manager ? "Yes" : "No",
                 approve = t.approve ? "Yes" : "No",
                 m_user_fullname = t.Manager == null
-                    ? "Null"
+                    ? ""
                     : allUsers.FirstOrDefault(x => x.id == t.Manager)?.fullname ?? "Null",
                 active = t.active == true ? "Active" : "Blocked"
             });
@@ -1708,7 +1702,7 @@ namespace ITSM.Controllers
                 return Json(new { success = false, message = "Not logged in" });
 
             var allUsers = await _userApi.GetAllUser_API();
-            var userList = allUsers.Where(x => x.id != currentUser.id).OrderByDescending(y => y.id).ToList();
+            var userList = allUsers.OrderByDescending(y => y.id).ToList();
 
             var allDepartments = await _departmentApi.GetAllDepartment_API();
             var allRoles = await _roleApi.GetAllRole_API();
@@ -1731,7 +1725,7 @@ namespace ITSM.Controllers
                 r_manager = t.r_manager ? "Yes" : "No",
                 approve = t.approve ? "Yes" : "No",
                 m_user_fullname = t.Manager == null
-                    ? "Null"
+                    ? ""
                     : allUsers.FirstOrDefault(x => x.id == t.Manager)?.fullname ?? "Null",
                 active = t.active == true ? "Active" : "Blocked"
             });
@@ -1782,7 +1776,7 @@ namespace ITSM.Controllers
                 r_manager = t.r_manager ? "Yes" : "No",
                 approve = t.approve ? "Yes" : "No",
                 m_user_fullname = t.Manager == null
-                    ? "Null"
+                    ? ""
                     : allUsers.FirstOrDefault(x => x.id == t.Manager)?.fullname ?? "Null",
                 active = t.active == true ? "Active" : "Blocked"
             });
@@ -1833,7 +1827,7 @@ namespace ITSM.Controllers
                 r_manager = t.r_manager ? "Yes" : "No",
                 approve = t.approve ? "Yes" : "No",
                 m_user_fullname = t.Manager == null
-                    ? "Null"
+                    ? ""
                     : allUsers.FirstOrDefault(x => x.id == t.Manager)?.fullname ?? "Null",
                 active = t.active == true ? "Active" : "Blocked"
             });
@@ -1857,11 +1851,13 @@ namespace ITSM.Controllers
             foreach (var id in ids)
             {
                 var userApprove = allUsers.FirstOrDefault(t => t.id == id);
+                var userManager = allUsers.FirstOrDefault(t => t.department_id == userApprove.department_id && t.r_manager == true);
 
                 if (userApprove != null)
                 {
                     // Approve User
                     userApprove.approve = true;
+                    userApprove.Manager = userManager.id;
                     await _userApi.UpdateUser_API(userApprove);
                 }
             }

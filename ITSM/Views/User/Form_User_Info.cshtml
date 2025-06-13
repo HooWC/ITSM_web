@@ -1,7 +1,7 @@
 ﻿@using ITSM_DomainModelEntity.ViewModels
 @model AllModelVM
 @{
-    ViewData["Title"] = "User_Info";
+    ViewData["Title"] = "Form_User_Info";
     Layout = "_Layout";
 }
 
@@ -125,22 +125,6 @@
                 <div class="inc-cre-subtitle">@Model.info_user.emp_id</div>
             </div>
         </div>
-        <div class="inc-cre-header-right">
-            <button class="inc-cre-btn inc-cre-btn-icon" onclick="location.href='/User/User_Approve_List'">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="4" y1="6" x2="20" y2="6"></line>
-                    <line x1="4" y1="12" x2="20" y2="12"></line>
-                    <line x1="4" y1="18" x2="20" y2="18"></line>
-                </svg>
-            </button>
-            <button class="inc-cre-btn inc-cre-btn-icon" onclick="window.open('/Info/Form_Info', '_blank')">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                </svg>
-            </button>
-        </div>
     </header>
 
     <main class="inc-cre-form-wrapper">
@@ -188,8 +172,8 @@
 
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
-                        <label for="role_id" class="inc-cre-form-label">Role</label>
-                        <input type="text" name="role_id" id="role_id" class="inc-cre-form-control" value="@Model.info_user.Role.role" readonly>
+                        <label for="race" class="inc-cre-form-label">Race</label>
+                        <input type="text" name="race" id="race" class="inc-cre-form-control" value="@Model.info_user.race" readonly>
                     </div>
                 </div>
             </div>
@@ -204,22 +188,6 @@
 
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
-                        <label for="race" class="inc-cre-form-label">Race</label>
-                        <input type="text" name="race" id="race" class="inc-cre-form-control" value="@Model.info_user.race" readonly>
-                    </div>
-                </div>
-            </div>
-
-            <div class="inc-cre-form-grid">
-                <div class="inc-cre-form-column">
-                    <div class="inc-cre-form-group">
-                        <label for="business_phone" class="inc-cre-form-label">Business Phone</label>
-                        <input type="text" name="business_phone" id="business_phone" autocomplete="off" class="inc-cre-form-control" value="@Model.info_user.business_phone" readonly>
-                    </div>
-                </div>
-
-                <div class="inc-cre-form-column">
-                    <div class="inc-cre-form-group">
                         <label for="mobile_phone" class="inc-cre-form-label">Mobile Phone</label>
                         <input type="text" name="mobile_phone" id="mobile_phone" autocomplete="off" class="inc-cre-form-control" value="@Model.info_user.mobile_phone" readonly>
                     </div>
@@ -229,15 +197,8 @@
             <div class="inc-cre-form-grid">
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
-                        <label for="cd" class="inc-cre-form-label">Create Date</label>
-                        <input type="text" name="cd" id="cd" autocomplete="off" class="inc-cre-form-control" value="@Model.info_user.create_date.ToString("yyyy-MM-dd HH:mm:ss")" readonly>
-                    </div>
-                </div>
-
-                <div class="inc-cre-form-column">
-                    <div class="inc-cre-form-group">
-                        <label for="ud" class="inc-cre-form-label">Update Date</label>
-                        <input type="text" name="ud" id="ud" autocomplete="off" class="inc-cre-form-control" value="@Model.info_user.update_date?.ToString("yyyy-MM-dd HH:mm:ss")" readonly>
+                        <label for="business_phone" class="inc-cre-form-label">Business Phone</label>
+                        <input type="text" name="business_phone" id="business_phone" autocomplete="off" class="inc-cre-form-control" value="@Model.info_user.business_phone" readonly>
                     </div>
                 </div>
             </div>

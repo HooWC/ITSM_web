@@ -134,7 +134,7 @@ namespace ITSM_Insfrastruture.Repository.Api
                 var response = await _client.PostAsync(_registerUrl, jsonStr);
 
                 var responseStr = await response.Content.ReadAsStringAsync();
-                Console.WriteLine($"RESPONSE UPDATE: {responseStr}");
+                //Console.WriteLine($"RESPONSE UPDATE: {responseStr}");
 
                 return response.IsSuccessStatusCode;
             }

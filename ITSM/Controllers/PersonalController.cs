@@ -169,10 +169,8 @@ namespace ITSM.Controllers
                 return View(model);
             }
 
-            // Making concurrent API requests
             var todoTask = _todoApi.GetAllTodo_API();
 
-            // get todo new id
             var allTodo = todoTask.Result;
             
             string newId = "";
@@ -188,7 +186,6 @@ namespace ITSM.Controllers
             else
                 newId = "TOD1";
 
-            // Create New Todo
             Todo new_todo = new Todo()
             {
                 user_id = currentUser.id,
@@ -199,7 +196,6 @@ namespace ITSM.Controllers
                 active = active_word == "Doing" ? false : true
             };
 
-            // API requests
             bool result = await _todoApi.CreateTodo_API(new_todo);
  
             if (result)
@@ -215,7 +211,6 @@ namespace ITSM.Controllers
         {
             var currentUser = await _userService.GetCurrentUserAsync();
 
-            // Get Todo
             var todo = await _todoApi.FindByIDTodo_API(id);
 
             var model = new AllModelVM
@@ -232,7 +227,6 @@ namespace ITSM.Controllers
         {
             var currentUser = await _userService.GetCurrentUserAsync();
 
-            // Get Todo
             var edit_todo = await _todoApi.FindByIDTodo_API(todo.id);
 
             var model = new AllModelVM
@@ -249,7 +243,6 @@ namespace ITSM.Controllers
 
             if(edit_todo != null)
             {
-                // Update Todo Data
                 edit_todo.active = active_word == "Doing" ? false : true;
                 edit_todo.title = todo.title;
 
@@ -292,7 +285,7 @@ namespace ITSM.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> User_Info(IFormFile file, User user, string role_code, string new_password)
+        public async Task<IActionResult> User_Info(IFormFile file, User user)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
 
@@ -340,41 +333,41 @@ namespace ITSM.Controllers
                     }
                 }
 
-                if (user.password != null && new_password != null)
-                {
-                    if (user.password == new_password)
-                    {
-                        ViewBag.Error = "The old and new passwords cannot be the same. Please try again.";
-                        return View(model);
-                    }
-                    else if (new_password.Length <= 6)
-                    {
-                        ViewBag.Error = "The mew password must be at least 6 word. Please try again.";
-                        return View(model);
-                    }
-                    else
-                    {
-                        try
-                        {
-                            bool loginResult = await _authApi.LoginAsync(user.emp_id, user.password);
+                //if (user.password != null && new_password != null)
+                //{
+                //    if (user.password == new_password)
+                //    {
+                //        ViewBag.Error = "The old and new passwords cannot be the same. Please try again.";
+                //        return View(model);
+                //    }
+                //    else if (new_password.Length <= 6)
+                //    {
+                //        ViewBag.Error = "The mew password must be at least 6 word. Please try again.";
+                //        return View(model);
+                //    }
+                //    else
+                //    {
+                //        try
+                //        {
+                //            bool loginResult = await _authApi.LoginAsync(user.emp_id, user.password);
 
-                            if (loginResult)
-                                info_user.password = new_password;
-                            else
-                            {
-                                ViewBag.Error = "Wrong employee id or password. Try again.";
-                                return View(model);
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine($"Ex Message: {ex.Message}");
-                            Console.WriteLine($"Ex StackTrace: {ex.StackTrace}");
-                            ViewBag.Error = "An error occurred during login, please try again later";
-                            return View(model);
-                        }
-                    }
-                }
+                //            if (loginResult)
+                //                info_user.password = new_password;
+                //            else
+                //            {
+                //                ViewBag.Error = "Wrong employee id or password. Try again.";
+                //                return View(model);
+                //            }
+                //        }
+                //        catch (Exception ex)
+                //        {
+                //            Console.WriteLine($"Ex Message: {ex.Message}");
+                //            Console.WriteLine($"Ex StackTrace: {ex.StackTrace}");
+                //            ViewBag.Error = "An error occurred during login, please try again later";
+                //            return View(model);
+                //        }
+                //    }
+                //}
 
                 bool emailEmpid = allUser.Any(u => u.emp_id.ToLower() == user.emp_id.ToLower() && u.id != user.id);
                 bool emailExists = allUser.Any(u => u.email == user.email && u.id != user.id);
@@ -406,11 +399,18 @@ namespace ITSM.Controllers
                     return View(model);
                 }
 
+                //if (info_user.department_id != user.department_id)
+                //{
+                //    var userManager = allUser.FirstOrDefault(t => t.department_id == user.department_id && t.r_manager == true);
+                //    if (userManager != null)
+                //        info_user.Manager = userManager.id;
+                //    else info_user.Manager = null;
+                //}
+
                 info_user.emp_id = user.emp_id;
                 info_user.email = user.email;
                 info_user.gender = user.gender;
                 info_user.fullname = user.fullname;
-                info_user.department_id = user.department_id;
                 info_user.title = user.title;
                 info_user.race = user.race;
                 info_user.business_phone = user.business_phone;
@@ -423,36 +423,6 @@ namespace ITSM.Controllers
                     info_user.prefix = "Ms.";
                 else
                     info_user.prefix = "-";
-
-                // role
-                if (user.role_id != info_user.role_id)
-                {
-                    // Role Code
-                    string expectedRoleCode;
-                    switch (user.role_id)
-                    {
-                        case 1: // Admin
-                            expectedRoleCode = Info.AdminCode;
-                            break;
-                        case 2: // ITIL
-                            expectedRoleCode = Info.ITILCode;
-                            break;
-                        case 3: // User
-                            expectedRoleCode = Info.UserCode;
-                            break;
-                        default:
-                            ViewBag.Error = "Role Error";
-                            return View(model);
-                    }
-
-                    if (role_code != expectedRoleCode)
-                    {
-                        ViewBag.Error = "Role Code Error";
-                        return View(model);
-                    }
-
-                    info_user.role_id = user.role_id;
-                }
 
                 if (fileBytes != null)
                 {
@@ -525,7 +495,7 @@ namespace ITSM.Controllers
                 fileBytes[2] == 0x01 && fileBytes[3] == 0x00)
                 return "image/x-icon";
 
-            // HEIF (需要更多字节检查)
+            // HEIF
             if (fileBytes.Length >= 12 &&
                 ((fileBytes[4] == 0x66 && fileBytes[5] == 0x74 &&
                   fileBytes[6] == 0x79 && fileBytes[7] == 0x70 &&
@@ -545,7 +515,7 @@ namespace ITSM.Controllers
                 fileBytes[10] == 0x69 && fileBytes[11] == 0x66)
                 return "image/avif";
 
-            // 默认
+            // Basic
             return "application/octet-stream";
         }
     }

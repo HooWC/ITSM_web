@@ -328,18 +328,32 @@
                     </div>
                 </div>
 
-                <div class="inc-cre-form-column">
-                    <div class="inc-cre-form-group">
-                        <label for="active" class="inc-cre-form-label">Active</label>
-                        <select id="active" name="active" class="inc-cre-form-control">
-                            @{
-                                var selectActive = Model.info_user.active;
-                            }
-                            <option value="true" selected="@(selectActive ? "selected" : null)">Active</option>
-                            <option value="false" selected="@(selectActive == false ? "selected" : null)">Blocked</option>
-                        </select>
+                @if (Model.info_user.id != Model.user?.id)
+                {
+                    <div class="inc-cre-form-column">
+                        <div class="inc-cre-form-group">
+                            <label for="active" class="inc-cre-form-label">Active</label>
+                            <select id="active" name="active" class="inc-cre-form-control">
+                                @{
+                                    var selectActive = Model.info_user.active;
+                                }
+                                <option value="true" selected="@(selectActive ? "selected" : null)">Active</option>
+                                <option value="false" selected="@(selectActive == false ? "selected" : null)">Blocked</option>
+                            </select>
+                        </div>
                     </div>
-                </div>
+                }
+                else
+                {
+                    <div class="inc-cre-form-column">
+                        <div class="inc-cre-form-group">
+                            <label for="active" class="inc-cre-form-label">Active</label>
+                            <input type="text" autocomplete="off" class="inc-cre-form-control" value="@(Model.info_user.active ? "Active" : "Blocked")" required>
+                            <input type="text" name="active" id="active" style="display:none;" autocomplete="off" class="inc-cre-form-control" value="@(Model.info_user.active ? "true" : "false")" readonly>
+                        </div>
+                    </div>
+                }
+                
             </div>
 
             <div class="inc-cre-form-grid">

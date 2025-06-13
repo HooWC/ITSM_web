@@ -422,9 +422,15 @@ function updateUserTable(data) {
     }
 
     $.each(data, function (index, u) {
+
+        var show_checkbox = `<td></td>`;
+        if (userID != u.id) {
+            show_checkbox = `<td><input type="checkbox" class="item - checkbox"></td>`;
+        }
+
         var row = `
                     <tr class="incident-item" data-id="${u.id}">
-                        <td><input type="checkbox" class="item-checkbox"></td>
+                        ${show_checkbox}
                         <td class="inc-tab-incident-number" data-label="Number">
                             <a href="/User/User_Info?id=${u.id}">${u.emp_id}</a>
                         </td>

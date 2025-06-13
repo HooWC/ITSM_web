@@ -293,30 +293,32 @@ data-bs-theme="dark">
                                     <div class="text-truncate" data-i18n="Account">Create New</div>
                                 </a>
                             </li>
+                            <li class="menu-item" id="Incidents_menu_assigned">
+                                <a href="~/IncidentManagement/Assigned_To_Me" class="menu-link">
+                                    <div class="text-truncate" data-i18n="Notifications">Assigned to me</div>
+                                </a>
+                            </li>
+                            <li class="menu-item" id="Incidents_menu_assigned_resolve">
+                                <a href="~/IncidentManagement/Resolved_Assigned_To_Me" class="menu-link">
+                                    <div class="text-truncate" data-i18n="Notifications">Resolved by me</div>
+                                </a>
+                            </li>
 
-                            @if (@Model.user.Role.role.ToLower() == "admin")
+                            @* @if (@Model.user.Role.role.ToLower() == "admin")
                             {
-                                <li class="menu-item" id="Incidents_menu_assigned">
-                                    <a href="~/IncidentManagement/Assigned_To_Me" class="menu-link">
-                                        <div class="text-truncate" data-i18n="Notifications">Assigned to me</div>
-                                    </a>
-                                </li>
+                                
                                 <li class="menu-item" id="Incidents_menu_assigned_to_team">
                                     <a href="~/IncidentManagement/Assigned_To_Group" class="menu-link">
                                         <div class="text-truncate" data-i18n="Notifications">Assigned to us</div>
                                     </a>
                                 </li>
-                                <li class="menu-item" id="Incidents_menu_assigned_resolve">
-                                    <a href="~/IncidentManagement/Resolved_Assigned_To_Me" class="menu-link">
-                                        <div class="text-truncate" data-i18n="Notifications">Resolved by me</div>
-                                    </a>
-                                </li>
+                                
                                 <li class="menu-item" id="Incidents_menu_assigned_closed">
                                     <a href="~/IncidentManagement/Closed_Assigned_To_Me" class="menu-link">
                                         <div class="text-truncate" data-i18n="Notifications">Closed by me</div>
                                     </a>
                                 </li>
-                            }
+                            } *@
                         </ul>
                     </li>
 

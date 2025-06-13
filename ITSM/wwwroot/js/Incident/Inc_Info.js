@@ -2,6 +2,8 @@
     var isResolved = incidentState === "Resolved";
     var isClosed = incidentState === "Closed";
 
+    var caller_id = $("#caller_id").val();
+
     // Binding category change event
     $('#category').on('change', function() {
         const categoryId = parseInt(this.value);
@@ -64,7 +66,10 @@
         $.ajax({
             url: '/Ajax/AssignedToData',
             type: 'POST',
-            data: { departmentId: departmentId },
+            data: {
+                departmentId: departmentId,
+                caller_id: caller_id
+            },
             dataType: 'json',
             success: function(data) {
                 if (data && Array.isArray(data)) {
@@ -225,7 +230,6 @@
 
     updateActivityCount();
 
-    // 处理工作笔记相关功能
     $("#post-note-btn").click(function() {
         if (isResolved) {
             return;
@@ -359,7 +363,7 @@
                 if (response.success) {
                     window.location.href = '/IncidentManagement/All';
                 } else {
-                    // alert("Failed to resolve incident: " + response.message);
+                    alert("Failed to resolve incident: " + response.message);
                 }
             },
             error: function (xhr, status, error) {

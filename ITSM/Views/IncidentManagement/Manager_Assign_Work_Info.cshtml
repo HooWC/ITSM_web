@@ -210,8 +210,14 @@
                     <div class="inc-cre-form-group">
                         <label for="caller" class="inc-cre-form-label">Caller</label>
                         <div class="inc-cre-input-with-icon">
-                            <input type="text" name="sender" id="caller" class="inc-cre-form-control" autocomplete="off" value="@Model.user.fullname" readonly required>
+                            <div class="inc-cre-form-control"
+                                 style="display: inline-block; width: 100%; padding: 6px 12px; border-radius: 4px; text-decoration: none;">
+                                <a href="~/User/Form_User_Info?id=@Model.incident.Sender?.id" target="_blank">
+                                    @(Model.incident.Sender?.fullname ?? "")
+                                </a>
+                            </div>
                         </div>
+                        <input type="text" name="caller_id" id="caller_id" class="inc-cre-form-control" value="@Model.incident.Sender?.id" style="display:none;" readonly>
                     </div>
 
                     <div class="inc-cre-form-group">

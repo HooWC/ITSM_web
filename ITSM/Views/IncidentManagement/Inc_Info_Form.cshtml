@@ -162,11 +162,10 @@
                     <line x1="12" y1="17" x2="12.01" y2="17"></line>
                 </svg>
             </button>
-
             @if (Model.incident.state != "Resolved" && Model.incident.state != "Closed")
             {
                 <button class="inc-cre-btn inc-cre-btn-closed" id="close-button">Closed</button>
-                if (Model.user.Role.role.ToLower() != "user")
+                if (Model.user?.id == Model.incident.assigned_to)
                 {
                     <button class="inc-cre-btn inc-cre-btn-resolve" id="resolve-button">Resolve</button>
                 }
@@ -221,7 +220,12 @@
                     <div class="inc-cre-form-group">
                         <label for="caller" class="inc-cre-form-label">Caller</label>
                         <div class="inc-cre-input-with-icon">
-                            <input type="text" name="sender" id="caller" class="inc-cre-form-control" autocomplete="off" value="@Model.user.fullname" readonly required>
+                            <div class="inc-cre-form-control"
+                            style="display: inline-block; width: 100%; padding: 6px 12px; border-radius: 4px; text-decoration: none;">
+                                <a href="~/User/Form_User_Info?id=@Model.incident.Sender?.id" target="_blank">
+                                    @(Model.incident.Sender?.fullname ?? "")
+                                </a>
+                            </div>
                         </div>
                     </div>
 
@@ -235,12 +239,13 @@
                                 </svg>
                             </button>
                         </label>
-                        <select id="category" name="category" class="inc-cre-form-control">
+                        <input type="text" id="category" name="category" autocomplete="off" class="inc-cre-form-control" readonly value="@(Model.incident.IncidentcategoryData?.name ?? "")" />
+                        @* <select id="category" name="category" class="inc-cre-form-control">
                             @foreach (var category in Model.Incident_Category_List)
                             {
                                 <option value="@category.id" selected="@(category.id == Model.incident.category)">@category.name</option>
                             }
-                        </select>
+                        </select> *@
                     </div>
 
                     <div class="inc-cre-form-group">
@@ -253,12 +258,13 @@
                                 </svg>
                             </button>
                         </label>
-                        <select id="subcategory" name="subcategory" class="inc-cre-form-control">
+                        <input type="text" id="subcategory" name="subcategory" autocomplete="off" class="inc-cre-form-control" readonly value="@(Model.incident.SubcategoryData?.subcategory ?? "")" />
+                        @* <select id="subcategory" name="subcategory" class="inc-cre-form-control">
                             @foreach (var sub in Model.Subcategory_List.Where(s => s.category == Model.incident.category))
                             {
                                 <option value="@sub.id" selected="@(sub.id == Model.incident.subcategory)">@sub.subcategory</option>
                             }
-                        </select>
+                        </select> *@
                     </div>
 
                 </div>
@@ -275,29 +281,25 @@
                                 </svg>
                             </button>
                         </label>
-                        <select id="state" name="state" class="inc-cre-form-control">
-                            @if (Model.incident.state == "Resolved")
-                            {
-                                <option value="Resolved" selected="@(Model.incident.state == "Resolved")">Resolved</option>
-                            }
-                            else if (Model.incident.state == "Closed")
-                            {
-                                <option value="Closed" selected="@(Model.incident.state == "Closed")">Closed</option>
-                            }
-                            else
-                            {
-                                @if(Model.user.Role.role.ToLower() != "user")
+                        @if (Model.incident.state == "Resolved" || Model.incident.state == "Closed")
+                        {
+                            <input type="text" id="state" name="state" autocomplete="off" class="inc-cre-form-control" readonly value="@(Model.incident.state ?? "")" />
+                        }
+                        else if (Model.user?.id != Model.incident.assigned_to)
+                        {
+                            <input type="text" id="state" name="state" autocomplete="off" class="inc-cre-form-control" readonly value="@(Model.incident.state ?? "")" />
+                        }
+                        else
+                        {
+                            <select id="state" name="state" class="inc-cre-form-control">
+                                @if (Model.user?.id == Model.incident.assigned_to)
                                 {
                                     <option value="Pending" selected="@(Model.incident.state == "Pending")">Pending</option>
                                     <option value="In Progress" selected="@(Model.incident.state == "In Progress")">In Progress</option>
                                     <option value="On-Hold" selected="@(Model.incident.state == "On-Hold")">On-Hold</option>
                                 }
-                                else
-                                {
-                                    <option value="@Model.incident.state" selected="selected">@Model.incident.state</option>
-                                }
-                            }
-                        </select>
+                            </select>
+                        }
                     </div>
 
                     @* <div class="inc-cre-form-group">
@@ -329,14 +331,10 @@
                                 </svg>
                             </button>
                         </label>
-                        <select id="urgency" name="urgency" class="inc-cre-form-control">
-                            <option value="1 - High" selected="@(Model.incident.urgency == "1 - High")">1 - High</option>
-                            <option value="2 - Medium" selected="@(Model.incident.urgency == "2 - Medium")">2 - Medium</option>
-                            <option value="3 - Low" selected="@(Model.incident.urgency == "3 - Low")">3 - Low</option>
-                        </select>
+                        <input type="text" id="urgency" name="urgency" autocomplete="off" class="inc-cre-form-control" readonly value="@(Model.incident.urgency ?? "")">
                     </div>
 
-                   @*  <div class="inc-cre-form-group">
+                    @*  <div class="inc-cre-form-group">
                         <label for="priority" class="inc-cre-form-label">
                             Priority
                             <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/Incident_Priority_Info', '_blank')">
@@ -359,7 +357,7 @@
                     </div> *@
 
                     <div class="inc-cre-form-group">
-                        <label for="assignment-group" class="inc-cre-form-label inc-cre-required">
+                        <label for="assignment-group" class="inc-cre-form-label">
                             Assignment group
                             @* <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/Assigned_Info', '_blank')">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -431,28 +429,32 @@
                 </div>
             </div> *@
 
+            @if (Model.incident.state != "Resolved" && Model.incident.state != "Closed")
+            {
+                <div class="inc-cre-form-group inc-cre-full-width">
+                    <label for="file" class="inc-cre-form-label">
+                        Pictures (Maximum size per file: 50MB)
+                        <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/Photo_Info', '_blank')">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                            </svg>
+                        </button>
+                    </label>
+                    <input type="file" name="files" id="file" multiple class="inc-cre-form-control inc-file-cre-form-padding">
+                </div>
+            }
+            
             <div class="inc-cre-form-group inc-cre-full-width">
-                <label for="file" class="inc-cre-form-label">
-                    Pictures (Maximum size per file: 50MB)
-                    <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/Photo_Info', '_blank')">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                        </svg>
-                    </button>
-                </label>
-                <input type="file" name="files" id="file" multiple class="inc-cre-form-control inc-file-cre-form-padding">
-            </div>
-
-            <div class="inc-cre-form-group inc-cre-full-width">
-                <label for="description" class="inc-cre-form-label inc-cre-required">Description</label>
-                @if (Model.incident.state != "Resolved" && Model.incident.state != "Closed")
+                @if (Model.incident.state != "Resolved" && Model.incident.state != "Closed" && Model.incident.Sender?.id == Model.user?.id)
                 {
+                    <label for="description" class="inc-cre-form-label inc-cre-required">Description</label>
                     <textarea id="description" autocomplete="off" name="describe" class="inc-cre-form-control inc-cre-description-textarea" rows="5">@Model.incident.describe</textarea>
                 }
                 else
                 {
+                    <label for="description" class="inc-cre-form-label">Description</label>
                     <textarea id="description" autocomplete="off" name="describe" class="inc-cre-form-control inc-cre-description-textarea" rows="5" readonly>@Model.incident.describe</textarea>
                 }
             </div>
@@ -581,7 +583,7 @@
         </div>
     </div>
 
-    @if (Model.incident.state == "Resolved" || Model.incident.state == "Closed" || Model.user.Role.role.ToLower() != "user")
+    @if (Model.incident.state == "Resolved" || Model.incident.state == "Closed" || Model.user?.id == Model.incident.assigned_to)
     {
         <div class="inc-cre-tab-section">
             <div class="inc-cre-tabs">
@@ -646,7 +648,7 @@
         </div>
     }
 
-    @if (Model.incident.state != "Resolved" && Model.incident.state != "Closed")
+    @* @if (Model.incident.state != "Resolved" && Model.incident.state != "Closed")
     {
         <footer class="inc-cre-form-footer">
             <div class="inc-cre-footer-buttons">
@@ -658,7 +660,7 @@
                 <button type="button" class="inc-cre-btn inc-cre-btn-submit-footer" onclick="document.getElementById('incidentForm').submit();">Save</button>
             </div>
         </footer>
-    }
+    } *@
 </div>
 
 <div id="inc-cre-modal" class="inc-cre-modal">
