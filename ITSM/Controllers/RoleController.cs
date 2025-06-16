@@ -38,6 +38,7 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Role_List()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var roleTask = _roleApi.GetAllRole_API();
             await Task.WhenAll(roleTask);
@@ -47,7 +48,8 @@ namespace ITSM.Controllers
             var model = new AllModelVM
             {
                 user = currentUser,
-                RoleList = allRole
+                RoleList = allRole,
+                noteMessageCount = noteMessageCount
             };
 
             return View(model);
@@ -56,10 +58,12 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Role_Create()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var model = new AllModelVM
             {
-                user = currentUser
+                user = currentUser,
+                noteMessageCount = noteMessageCount
             };
 
             return View(model);
@@ -69,10 +73,12 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Role_Create(Role roleName)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var model = new AllModelVM
             {
-                user = currentUser
+                user = currentUser,
+                noteMessageCount = noteMessageCount
             };
 
             if (roleName.role == null)
@@ -90,13 +96,11 @@ namespace ITSM.Controllers
                 return View(model);
             }
 
-            // Create New Role
             Role new_role = new Role()
             {
                 role = roleName.role
             };
 
-            // API requests
             bool result = await _roleApi.CreateRole_API(new_role);
 
             if (result)
@@ -111,14 +115,15 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Role_Info(int id)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
-            // Get Role
             var role = await _roleApi.FindByIDRole_API(id);
 
             var model = new AllModelVM
             {
                 user = currentUser,
-                role = role
+                role = role,
+                noteMessageCount = noteMessageCount
             };
 
             return View(model);
@@ -128,14 +133,15 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Role_Info(Role roleInfo)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
-            // Making concurrent API requests
             var roleTask = await _roleApi.FindByIDRole_API(roleInfo.id);
 
             var model = new AllModelVM
             {
                 user = currentUser,
-                role = roleTask
+                role = roleTask,
+                noteMessageCount = noteMessageCount
             };
 
             if (roleTask.role == null)
@@ -153,10 +159,8 @@ namespace ITSM.Controllers
                 return View(model);
             }
 
-            // Update New ROle
             roleTask.role = roleInfo.role;
 
-            // API requests
             bool result = await _roleApi.UpdateRole_API(roleTask);
 
             if (result)

@@ -40,38 +40,37 @@ namespace ITSM.Controllers
             _userService = userService;
         }
 
-        public async Task<IActionResult> Show_Session()
+        public async Task<AllModelVM> get_data()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var model = new AllModelVM()
             {
-                user = currentUser
+                user = currentUser,
+                noteMessageCount = noteMessageCount
             };
+
+            return model;
+        }
+
+        public async Task<IActionResult> Show_Session()
+        {
+            var model = await get_data();
 
             return View(model);
         }
 
         public async Task<IActionResult> About_ITSM()
         {
-            var currentUser = await _userService.GetCurrentUserAsync();
-
-            var model = new AllModelVM()
-            {
-                user = currentUser
-            };
+            var model = await get_data();
 
             return View(model);
         }
 
         public async Task<IActionResult> FAQ()
         {
-            var currentUser = await _userService.GetCurrentUserAsync();
-
-            var model = new AllModelVM()
-            {
-                user = currentUser
-            };
+            var model = await get_data();
 
             return View(model);
         }

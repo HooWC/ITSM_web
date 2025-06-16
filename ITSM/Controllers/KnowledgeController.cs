@@ -45,6 +45,7 @@ namespace ITSM.Controllers
         public async Task<IActionResult> KB_Home()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var CategoryTask = _categoryApi.GetAllCategory_API();
             var UserTask = _userApi.GetAllUser_API();
@@ -66,8 +67,8 @@ namespace ITSM.Controllers
             {
                 user = currentUser,
                 KnowledgeList = allKB.OrderByDescending(X => X.id).ToList(),
-                CategoryList = allCategory
-                
+                CategoryList = allCategory,
+                noteMessageCount = noteMessageCount
             };
 
             return View(model);
@@ -76,6 +77,7 @@ namespace ITSM.Controllers
         public async Task<IActionResult> KB_List()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var CategoryTask = _categoryApi.GetAllCategory_API();
             var UserTask = _userApi.GetAllUser_API();
@@ -96,7 +98,8 @@ namespace ITSM.Controllers
             var model = new AllModelVM
             {
                 user = currentUser,
-                KnowledgeList = allKB.OrderByDescending(X => X.id).ToList()
+                KnowledgeList = allKB.OrderByDescending(X => X.id).ToList(),
+                noteMessageCount = noteMessageCount
             };
 
             return View(model);
@@ -105,6 +108,7 @@ namespace ITSM.Controllers
         public async Task<IActionResult> KB_List_User()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var CategoryTask = _categoryApi.GetAllCategory_API();
             var UserTask = _userApi.GetAllUser_API();
@@ -127,7 +131,8 @@ namespace ITSM.Controllers
             var model = new AllModelVM
             {
                 user = currentUser,
-                KnowledgeList = KB_info_list.OrderByDescending(X => X.id).ToList()
+                KnowledgeList = KB_info_list.OrderByDescending(X => X.id).ToList(),
+                noteMessageCount = noteMessageCount
             };
 
             return View(model);
@@ -136,6 +141,7 @@ namespace ITSM.Controllers
         public async Task<IActionResult> KB_Info(int id, string type, string role)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var userTask = _userApi.GetAllUser_API();
             var categoryTask = _categoryApi.GetAllCategory_API();
@@ -153,7 +159,8 @@ namespace ITSM.Controllers
                 user = currentUser,
                 CategoryList = allCategorys,
                 knowledge = kb_info,
-                roleBack = role
+                roleBack = role,
+                noteMessageCount = noteMessageCount
             };
 
             if(type == "word") return View(model);
@@ -164,6 +171,7 @@ namespace ITSM.Controllers
         public async Task<IActionResult> KB_Info(IFormFile file, string type, Knowledge kb, string roleBack)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var userTask = _userApi.GetAllUser_API();
             var categoryTask = _categoryApi.GetAllCategory_API();
@@ -181,7 +189,8 @@ namespace ITSM.Controllers
                 user = currentUser,
                 CategoryList = allCategorys,
                 knowledge = kb_info,
-                roleBack = roleBack
+                roleBack = roleBack,
+                noteMessageCount = noteMessageCount
             };
 
             if (kb.title != null &&
@@ -262,9 +271,12 @@ namespace ITSM.Controllers
         public async Task<IActionResult> KB_Import_Info()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
+
             var model = new AllModelVM()
             {
-                user = currentUser
+                user = currentUser,
+                noteMessageCount = noteMessageCount
             };
             return View(model);
         }
@@ -272,6 +284,7 @@ namespace ITSM.Controllers
         public async Task<IActionResult> KB_Search(int categorytitle, string kb_search_word, string showall)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var CategoryTask = _categoryApi.GetAllCategory_API();
             var UserTask = _userApi.GetAllUser_API();
@@ -311,7 +324,8 @@ namespace ITSM.Controllers
                 user = currentUser,
                 KnowledgeList = kbs,
                 category = category_info != null ? category_info : null,
-                kb_search_word = kb_search_word
+                kb_search_word = kb_search_word,
+                noteMessageCount = noteMessageCount
             };
 
             return View(model);
@@ -320,6 +334,7 @@ namespace ITSM.Controllers
         public async Task<IActionResult> KB_Read(int kbid, string kbsearchword, string showall)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var CategoryTask = _categoryApi.GetAllCategory_API();
             var UserTask = _userApi.GetAllUser_API();
@@ -347,7 +362,8 @@ namespace ITSM.Controllers
                 category = category_info,
                 kb_search_word = kbsearchword != null ? kbsearchword : null,
                 kb_search_all = showall != null ? showall : null,
-                KnowledgeList = allKB.Where(x => x.category_id == kb_info.category_id && x.id != kb_info.id).Take(5).OrderByDescending(x => x.id).ToList()
+                KnowledgeList = allKB.Where(x => x.category_id == kb_info.category_id && x.id != kb_info.id).Take(5).OrderByDescending(x => x.id).ToList(),
+                noteMessageCount = noteMessageCount
             };
 
             return View(model);
@@ -356,6 +372,7 @@ namespace ITSM.Controllers
         public async Task<IActionResult> KB_Create()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var CategoryTask = _categoryApi.GetAllCategory_API();
             await Task.WhenAll(CategoryTask);
@@ -365,7 +382,8 @@ namespace ITSM.Controllers
             var model = new AllModelVM()
             {
                 user = currentUser,
-                CategoryList = allCategory
+                CategoryList = allCategory,
+                noteMessageCount = noteMessageCount
             };
 
             return View(model);
@@ -375,6 +393,7 @@ namespace ITSM.Controllers
         public async Task<IActionResult> KB_Create(Knowledge kb)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var CategoryTask = _categoryApi.GetAllCategory_API();
             var KBTask = _kbApi.GetAllKnowledge_API();
@@ -386,7 +405,8 @@ namespace ITSM.Controllers
             var model = new AllModelVM()
             {
                 user = currentUser,
-                CategoryList = allCategory
+                CategoryList = allCategory,
+                noteMessageCount = noteMessageCount
             };
 
             if (
@@ -440,6 +460,7 @@ namespace ITSM.Controllers
         public async Task<IActionResult> KB_Import()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var CategoryTask = _categoryApi.GetAllCategory_API();
             await Task.WhenAll(CategoryTask);
@@ -449,7 +470,8 @@ namespace ITSM.Controllers
             var model = new AllModelVM()
             {
                 user = currentUser,
-                CategoryList = allCategory
+                CategoryList = allCategory,
+                noteMessageCount = noteMessageCount
             };
 
             return View(model);
@@ -459,6 +481,7 @@ namespace ITSM.Controllers
         public async Task<IActionResult> KB_Import(IFormFile file, Knowledge kb)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var CategoryTask = _categoryApi.GetAllCategory_API();
             var KBTask = _kbApi.GetAllKnowledge_API();
@@ -470,7 +493,8 @@ namespace ITSM.Controllers
             var model = new AllModelVM()
             {
                 user = currentUser,
-                CategoryList = allCategory
+                CategoryList = allCategory,
+                noteMessageCount = noteMessageCount
             };
 
             if (kb.title != null &&

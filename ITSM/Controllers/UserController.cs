@@ -46,6 +46,7 @@ namespace ITSM.Controllers
         public async Task<IActionResult> User_List()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var userTask = _userApi.GetAllUser_API();
             var depTask = _depApi.GetAllDepartment_API();
@@ -69,7 +70,8 @@ namespace ITSM.Controllers
             var model = new AllModelVM()
             {
                 user = currentUser,
-                UserList = allUser.OrderByDescending(y => y.id).ToList()
+                UserList = allUser.OrderByDescending(y => y.id).ToList(),
+                noteMessageCount = noteMessageCount
             };
 
             return View(model);
@@ -78,6 +80,7 @@ namespace ITSM.Controllers
         public async Task<IActionResult> UserCreate()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var departmentTask = _departmentApi.GetAllDepartment_API();
             var roleTask = _roleApi.GetAllRole_API();
@@ -90,7 +93,8 @@ namespace ITSM.Controllers
             {
                 user = currentUser,
                 RoleList = allRole.OrderByDescending(x => x.id).ToList(),
-                DepartmentList = allDepartment
+                DepartmentList = allDepartment,
+                noteMessageCount = noteMessageCount
             };
 
             return View(model);
@@ -100,6 +104,7 @@ namespace ITSM.Controllers
         public async Task<IActionResult> UserCreate(IFormFile file, User user)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var departmentTask = _departmentApi.GetAllDepartment_API();
             var roleTask = _roleApi.GetAllRole_API();
@@ -114,7 +119,8 @@ namespace ITSM.Controllers
             {
                 user = currentUser,
                 RoleList = allRole.OrderByDescending(x => x.id).ToList(),
-                DepartmentList = allDepartment
+                DepartmentList = allDepartment,
+                noteMessageCount = noteMessageCount
             };
 
             if (!string.IsNullOrEmpty(user.emp_id) &&
@@ -265,6 +271,7 @@ namespace ITSM.Controllers
         public async Task<IActionResult> User_Info(int id)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var departmentTask = _departmentApi.GetAllDepartment_API();
             var roleTask = _roleApi.GetAllRole_API();
@@ -289,7 +296,8 @@ namespace ITSM.Controllers
                 user = currentUser,
                 RoleList = allRole,
                 DepartmentList = allDepartment,
-                info_user = info_user
+                info_user = info_user,
+                noteMessageCount = noteMessageCount
             };
 
             return View(model);
@@ -300,6 +308,7 @@ namespace ITSM.Controllers
         public async Task<IActionResult> User_Info(User user, string new_password)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var departmentTask = _departmentApi.GetAllDepartment_API();
             var roleTask = _roleApi.GetAllRole_API();
@@ -319,7 +328,8 @@ namespace ITSM.Controllers
                 user = currentUser,
                 RoleList = allRole,
                 DepartmentList = allDepartment,
-                info_user = info_user
+                info_user = info_user,
+                noteMessageCount = noteMessageCount
             };
 
             if (!string.IsNullOrEmpty(user.emp_id) &&
@@ -597,6 +607,7 @@ namespace ITSM.Controllers
         public async Task<IActionResult> User_Approve_List()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var userTask = _userApi.GetAllUser_API();
             var depTask = _depApi.GetAllDepartment_API();
@@ -628,7 +639,8 @@ namespace ITSM.Controllers
             var model = new AllModelVM()
             {
                 user = currentUser,
-                UserList = myApproveUser
+                UserList = myApproveUser,
+                noteMessageCount = noteMessageCount
             };
 
             return View(model);
@@ -637,6 +649,7 @@ namespace ITSM.Controllers
         public async Task<AllModelVM> get_User_Info(int id)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var departmentTask = _departmentApi.GetAllDepartment_API();
             var roleTask = _roleApi.GetAllRole_API();
@@ -661,7 +674,8 @@ namespace ITSM.Controllers
                 user = currentUser,
                 RoleList = allRole,
                 DepartmentList = allDepartment,
-                info_user = info_user
+                info_user = info_user,
+                noteMessageCount = noteMessageCount
             };
 
             return model;
@@ -674,8 +688,6 @@ namespace ITSM.Controllers
             return View(model);
         }
 
-        
-        
         public async Task<IActionResult> Form_User_Info(int id)
         {
             var model = await get_User_Info(id);
@@ -727,7 +739,7 @@ namespace ITSM.Controllers
                 fileBytes[2] == 0x01 && fileBytes[3] == 0x00)
                 return "image/x-icon";
 
-            // HEIF (需要更多字节检查)
+            // HEIF
             if (fileBytes.Length >= 12 &&
                 ((fileBytes[4] == 0x66 && fileBytes[5] == 0x74 &&
                   fileBytes[6] == 0x79 && fileBytes[7] == 0x70 &&
@@ -747,7 +759,7 @@ namespace ITSM.Controllers
                 fileBytes[10] == 0x69 && fileBytes[11] == 0x66)
                 return "image/avif";
 
-            // 默认
+            // Basic
             return "application/octet-stream";
         }
     

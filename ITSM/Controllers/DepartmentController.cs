@@ -38,6 +38,7 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Department_List()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var depTask = _depApi.GetAllDepartment_API();
             await Task.WhenAll(depTask);
@@ -49,7 +50,8 @@ namespace ITSM.Controllers
             var model = new AllModelVM
             {
                 user = currentUser,
-                DepartmentList = departmentList
+                DepartmentList = departmentList,
+                noteMessageCount = noteMessageCount
             };
 
             return View(model);
@@ -58,10 +60,12 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Department_Create()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var model = new AllModelVM
             {
-                user = currentUser
+                user = currentUser,
+                noteMessageCount = noteMessageCount
             };
 
             return View(model);
@@ -71,10 +75,12 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Department_Create(Department dep)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var model = new AllModelVM
             {
-                user = currentUser
+                user = currentUser,
+                noteMessageCount = noteMessageCount
             };
 
             if (dep.name == null)
@@ -83,14 +89,12 @@ namespace ITSM.Controllers
                 return View(model);
             }
 
-            // Create New Department
             Department new_department = new Department()
             {
                 name = dep.name,
                 description = dep.description
             };
 
-            // API requests
             bool result = await _depApi.CreateDepartment_API(new_department);
 
             if (result)
@@ -105,14 +109,15 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Department_Info(int id)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
-            // Get Department
             var department = await _depApi.FindByIDDepartment_API(id);
 
             var model = new AllModelVM
             {
                 user = currentUser,
-                department = department
+                department = department,
+                noteMessageCount = noteMessageCount
             };
 
             return View(model);
@@ -122,14 +127,15 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Department_Info(Department dep)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
-            // Making concurrent API requests
             var departmentTask = await _depApi.FindByIDDepartment_API(dep.id);
 
             var model = new AllModelVM
             {
                 user = currentUser,
-                department = departmentTask
+                department = departmentTask,
+                noteMessageCount = noteMessageCount
             };
 
             if (departmentTask.name == null)
@@ -138,11 +144,9 @@ namespace ITSM.Controllers
                 return View(departmentTask);
             }
 
-            // Update New Category
             departmentTask.name = dep.name;
             departmentTask.description = dep.description;
 
-            // API requests
             bool result = await _depApi.UpdateDepartment_API(departmentTask);
 
             if (result)

@@ -39,6 +39,7 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Ann_List()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var AnnounTask = _announApi.GetAllAnnouncement_API();
             var UserTask = _userApi.GetAllUser_API();
@@ -53,7 +54,8 @@ namespace ITSM.Controllers
             var model = new AllModelVM
             {
                 user = currentUser,
-                AnnouncementList = allAnnoun.OrderByDescending(X => X.id).ToList()
+                AnnouncementList = allAnnoun.OrderByDescending(X => X.id).ToList(),
+                noteMessageCount = noteMessageCount
             };
 
             return View(model);
@@ -62,6 +64,7 @@ namespace ITSM.Controllers
         public async Task<IActionResult> View_Ann_List()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var AnnounTask = _announApi.GetAllAnnouncement_API();
             var UserTask = _userApi.GetAllUser_API();
@@ -76,7 +79,8 @@ namespace ITSM.Controllers
             var model = new AllModelVM
             {
                 user = currentUser,
-                AnnouncementList = allAnnoun.OrderByDescending(X => X.id).ToList()
+                AnnouncementList = allAnnoun.OrderByDescending(X => X.id).ToList(),
+                noteMessageCount = noteMessageCount
             };
 
             return View(model);
@@ -85,6 +89,7 @@ namespace ITSM.Controllers
         public async Task<IActionResult> View_Ann_Info(int id)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var userTask = _userApi.GetAllUser_API();
             await Task.WhenAll(userTask);
@@ -98,7 +103,8 @@ namespace ITSM.Controllers
             var model = new AllModelVM()
             {
                 user = currentUser,
-                announcement = ann_info
+                announcement = ann_info,
+                noteMessageCount = noteMessageCount
             };
 
             return View(model);
@@ -107,10 +113,12 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Ann_Create()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var model = new AllModelVM()
             {
-                user = currentUser
+                user = currentUser,
+                noteMessageCount = noteMessageCount
             };
 
             return View(model);
@@ -120,10 +128,12 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Ann_Create(Announcement ann)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var model = new AllModelVM()
             {
-                user = currentUser
+                user = currentUser,
+                noteMessageCount = noteMessageCount
             };
 
             if (ann.message != null && ann.ann_title != null)
@@ -155,7 +165,6 @@ namespace ITSM.Controllers
                     message = ann.message
                 };
 
-                // create new Announcement data
                 bool result = await _announApi.CreateAnnouncement_API(new_ann);
 
                 if (result)
@@ -176,6 +185,7 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Ann_Info(int id, string type)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var userTask = _userApi.GetAllUser_API();
             await Task.WhenAll(userTask);
@@ -189,7 +199,8 @@ namespace ITSM.Controllers
             var model = new AllModelVM()
             {
                 user = currentUser,
-                announcement = ann_info
+                announcement = ann_info,
+                noteMessageCount = noteMessageCount
             };
 
             if (type == "info") return View(model);
@@ -200,6 +211,7 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Ann_Info(IFormFile file, string type, Announcement ann)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var userTask = _userApi.GetAllUser_API();
             await Task.WhenAll(userTask);
@@ -213,7 +225,8 @@ namespace ITSM.Controllers
             var model = new AllModelVM()
             {
                 user = currentUser,
-                announcement = ann_info
+                announcement = ann_info,
+                noteMessageCount = noteMessageCount
             };
 
             if (ann.ann_title != null)
@@ -281,10 +294,12 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Ann_Import()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var model = new AllModelVM()
             {
-                user = currentUser
+                user = currentUser,
+                noteMessageCount = noteMessageCount
             };
 
             return View(model);
@@ -294,10 +309,12 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Ann_Import(IFormFile file, Announcement ann)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var model = new AllModelVM()
             {
-                user = currentUser
+                user = currentUser,
+                noteMessageCount = noteMessageCount
             };
 
             if (ann.ann_title != null && file != null)
@@ -372,9 +389,12 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Ann_Import_Info()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
+
             var model = new AllModelVM()
             {
-                user = currentUser
+                user = currentUser,
+                noteMessageCount = noteMessageCount
             };
             return View(model);
         }

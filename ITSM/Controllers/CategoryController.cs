@@ -42,6 +42,7 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Category_List()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var categoryTask = _categoryApi.GetAllCategory_API();
             await Task.WhenAll(categoryTask);
@@ -53,7 +54,8 @@ namespace ITSM.Controllers
             var model =  new AllModelVM
             {
                 user = currentUser,
-                CategoryList = categoryList
+                CategoryList = categoryList,
+                noteMessageCount = noteMessageCount
             };
 
             return View(model);
@@ -62,10 +64,12 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Category_Create()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var model = new AllModelVM
             {
-                user = currentUser
+                user = currentUser,
+                noteMessageCount = noteMessageCount
             };
 
             return View(model);
@@ -75,10 +79,12 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Category_Create(Category category)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var model = new AllModelVM
             {
-                user = currentUser
+                user = currentUser,
+                noteMessageCount = noteMessageCount
             };
 
             if (category.title == null)
@@ -107,14 +113,15 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Category_Info(int id)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
-            // Get Category
             var category = await _categoryApi.FindByIDCategory_API(id);
 
             var model = new AllModelVM
             {
                 user = currentUser,
-                category = category
+                category = category,
+                noteMessageCount = noteMessageCount
             };
 
             return View(model);
@@ -124,14 +131,15 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Category_Info(Category c)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
-            // Making concurrent API requests
             var categoryTask = await _categoryApi.FindByIDCategory_API(c.id);
 
             var model = new AllModelVM
             {
                 user = currentUser,
-                category = categoryTask
+                category = categoryTask,
+                noteMessageCount = noteMessageCount
             };
 
             if (categoryTask.title == null)
@@ -140,11 +148,9 @@ namespace ITSM.Controllers
                 return View(model);
             }
 
-            // Update New Category
             categoryTask.title = c.title;
             categoryTask.description = c.description;
 
-            // API requests
             bool result = await _categoryApi.UpdateCategory_API(categoryTask);
 
             if (result)
@@ -159,6 +165,7 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Inc_Category_List()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var allIncidentCategory = await _incidentcategoryApi.GetAllIncidentcategory_API();
 
@@ -167,7 +174,8 @@ namespace ITSM.Controllers
             var model = new AllModelVM
             {
                 user = currentUser,
-                Incident_Category_List = inccategoryList
+                Incident_Category_List = inccategoryList,
+                noteMessageCount = noteMessageCount
             };
 
             return View(model);
@@ -176,10 +184,12 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Inc_Category_Create()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var model = new AllModelVM
             {
-                user = currentUser
+                user = currentUser,
+                noteMessageCount = noteMessageCount
             };
 
             return View(model);
@@ -189,10 +199,12 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Inc_Category_Create(Incidentcategory incCategory)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var model = new AllModelVM
             {
-                user = currentUser
+                user = currentUser,
+                noteMessageCount = noteMessageCount
             };
 
             if (incCategory.name == null)
@@ -228,13 +240,15 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Inc_Category_Info(int id)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var inccategory = await _incidentcategoryApi.FindByIDIncidentcategory_API(id);
 
             var model = new AllModelVM
             {
                 user = currentUser,
-                Incident_Category = inccategory
+                Incident_Category = inccategory,
+                noteMessageCount = noteMessageCount
             };
 
             return View(model);
@@ -244,13 +258,15 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Inc_Category_Info(Incidentcategory incCategory)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var inccategoryTask = await _incidentcategoryApi.FindByIDIncidentcategory_API(incCategory.id);
 
             var model = new AllModelVM
             {
                 user = currentUser,
-                Incident_Category = inccategoryTask
+                Incident_Category = inccategoryTask,
+                noteMessageCount = noteMessageCount
             };
 
             if (incCategory.name == null)
@@ -283,6 +299,7 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Subcategory_List()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var subcategoryTask = _subcategoryApi.GetAllSubcategory_API();
             var departmentTask = _depApi.GetAllDepartment_API();
@@ -304,7 +321,8 @@ namespace ITSM.Controllers
             var model = new AllModelVM
             {
                 user = currentUser,
-                Subcategory_List = subcategoryList
+                Subcategory_List = subcategoryList,
+                noteMessageCount = noteMessageCount
             };
 
             return View(model);
@@ -313,6 +331,7 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Subcategory_Create()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var departmentTask = _depApi.GetAllDepartment_API();
             var inccategoryTask = _incidentcategoryApi.GetAllIncidentcategory_API();
@@ -325,7 +344,8 @@ namespace ITSM.Controllers
             {
                 user = currentUser,
                 DepartmentList = allDepartment,
-                Incident_Category_List = allIncCategory
+                Incident_Category_List = allIncCategory,
+                noteMessageCount = noteMessageCount
             };
 
             return View(model);
@@ -335,6 +355,7 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Subcategory_Create(Subcategory sub)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var departmentTask = _depApi.GetAllDepartment_API();
             var inccategoryTask = _incidentcategoryApi.GetAllIncidentcategory_API();
@@ -347,7 +368,8 @@ namespace ITSM.Controllers
             {
                 user = currentUser,
                 DepartmentList = allDepartment,
-                Incident_Category_List = allIncCategory
+                Incident_Category_List = allIncCategory,
+                noteMessageCount = noteMessageCount
             };
 
             if (sub.subcategory == null)
@@ -385,6 +407,7 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Subcategory_Info(int id)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var subcategory = await _subcategoryApi.FindByIDSubcategory_API(id);
             var departmentTask = _depApi.GetAllDepartment_API();
@@ -399,7 +422,8 @@ namespace ITSM.Controllers
                 user = currentUser,
                 Sub_Category = subcategory,
                 DepartmentList = allDepartment,
-                Incident_Category_List = allIncCategory
+                Incident_Category_List = allIncCategory,
+                noteMessageCount = noteMessageCount
             };
 
             return View(model);
@@ -409,6 +433,7 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Subcategory_Info(Subcategory sub)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var subcategoryTask = await _subcategoryApi.FindByIDSubcategory_API(sub.id);
             var departmentTask = _depApi.GetAllDepartment_API();
@@ -423,7 +448,8 @@ namespace ITSM.Controllers
                 user = currentUser,
                 Sub_Category = subcategoryTask,
                 DepartmentList = allDepartment,
-                Incident_Category_List = allIncCategory
+                Incident_Category_List = allIncCategory,
+                noteMessageCount = noteMessageCount
             };
 
             if (sub.subcategory == null)

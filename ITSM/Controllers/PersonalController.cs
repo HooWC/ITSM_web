@@ -46,8 +46,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Home()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
-            // Making concurrent API requests
             var todoTask = _todoApi.GetAllTodo_API();
             var incidentTask = _incApi.GetAllIncident_API();
             var userTask = _userApi.GetAllUser_API();
@@ -57,10 +57,8 @@ namespace ITSM.Controllers
             var departmentTask = _depApi.GetAllDepartment_API();
             var roleTask = _roleApi.GetAllRole_API();
 
-            // Wait for all tasks to complete
             await Task.WhenAll(todoTask, incidentTask, userTask, reqTask, knowledgeTask, feedbackTask, departmentTask, roleTask);
 
-            // Linq get api data
             var allTodo = todoTask.Result;
             var todo = allTodo.Where(x => x.user_id == currentUser.id).ToList();
             var todo_c_count = todo.Count(x => x.active);
@@ -95,7 +93,6 @@ namespace ITSM.Controllers
             var allRole = roleTask.Result;
             var getRoleName = allRole.Where(x => x.id == currentUser.role_id).FirstOrDefault()?.role;
 
-            // return to view data
             var model = new AllModelVM()
             {
                 user = currentUser,
@@ -115,6 +112,7 @@ namespace ITSM.Controllers
                 RoleName = getRoleName,
                 Team = sameDepartment,
                 IncidentsHistory = incident_list,
+                noteMessageCount = noteMessageCount
             };
 
             return View(model);
@@ -123,19 +121,18 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Todo_List()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
-            // Making concurrent API requests
             var todoTask = _todoApi.GetAllTodo_API();
 
-            // get todo list data
             var allTodo = todoTask.Result;
             var todo = allTodo.Where(x => x.user_id == currentUser.id).OrderByDescending(y => y.id).ToList();
 
-            // return to view data
             var model = new AllModelVM
             {
                 user = currentUser,
                 TodoList = todo,
+                noteMessageCount = noteMessageCount
             };
 
             return View(model);
@@ -144,10 +141,12 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Todo_Create()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var model = new AllModelVM
             {
-                user = currentUser
+                user = currentUser,
+                noteMessageCount = noteMessageCount
             };
 
             return View(model);
@@ -157,10 +156,12 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Todo_Create(Todo todo, string active_word)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var model = new AllModelVM
             {
-                user = currentUser
+                user = currentUser,
+                noteMessageCount = noteMessageCount
             };
 
             if (todo.title == null)
@@ -210,13 +211,15 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Todo_Edit(int id)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var todo = await _todoApi.FindByIDTodo_API(id);
 
             var model = new AllModelVM
             {
                 user = currentUser,
-                todo = todo
+                todo = todo,
+                noteMessageCount = noteMessageCount
             };
 
             return View(model);
@@ -226,13 +229,15 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Todo_Edit(Todo todo, string active_word)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var edit_todo = await _todoApi.FindByIDTodo_API(todo.id);
 
             var model = new AllModelVM
             {
                 user = currentUser,
-                todo = edit_todo
+                todo = edit_todo,
+                noteMessageCount = noteMessageCount
             };
 
             if (todo.title == null)
@@ -263,6 +268,7 @@ namespace ITSM.Controllers
         public async Task<IActionResult> User_Info()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var departmentTask = _departmentApi.GetAllDepartment_API();
             var roleTask = _roleApi.GetAllRole_API();
@@ -278,7 +284,8 @@ namespace ITSM.Controllers
             {
                 user = currentUser,
                 RoleList = allRole,
-                DepartmentList = allDepartment
+                DepartmentList = allDepartment,
+                noteMessageCount = noteMessageCount
             };
 
             return View(model);
@@ -288,6 +295,7 @@ namespace ITSM.Controllers
         public async Task<IActionResult> User_Info(IFormFile file, User user)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var departmentTask = _departmentApi.GetAllDepartment_API();
             var roleTask = _roleApi.GetAllRole_API();
@@ -307,7 +315,8 @@ namespace ITSM.Controllers
             {
                 user = currentUser,
                 RoleList = allRole,
-                DepartmentList = allDepartment
+                DepartmentList = allDepartment,
+                noteMessageCount = noteMessageCount
             };
 
             if (!string.IsNullOrEmpty(user.emp_id) &&

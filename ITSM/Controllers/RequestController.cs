@@ -42,9 +42,10 @@ namespace ITSM.Controllers
             _departmentApi = new Department_api(httpContextAccessor);
         }
 
-        public async Task<IActionResult> All()
+        public async Task<AllModelVM> get_req_data(string type)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var productTask = _productApi.GetAllProduct_API();
             var userTask = _userApi.GetAllUser_API();
@@ -57,53 +58,41 @@ namespace ITSM.Controllers
             var allDepartment = departmentTask.Result;
             var allRequest = requestTask.Result;
 
-            var Reqs = allRequest.OrderByDescending(x => x.id).ToList();
-            foreach(var i in Reqs)
-            {
-                i.Product = allProduct.FirstOrDefault(x => x.id == i.pro_id);
-                i.Sender = allUser.FirstOrDefault(x => x.id == i.sender);
-                i.AssignmentGroup = allDepartment.FirstOrDefault(x => x.id == i.assignment_group);
-                i.UpdatedBy = allUser.FirstOrDefault(x => x.id == i.updated_by);
-            }
+            var Reqs = new List<Request>();
+            if(type.Contains("All"))
+                Reqs = allRequest.OrderByDescending(x => x.id).ToList();
+            else if(type.Contains("User_All"))
+                Reqs = allRequest.Where(x => x.sender == currentUser.id).OrderByDescending(x => x.id).ToList();
+            else if(type.Contains("Assigned_To_Us"))
+                Reqs = allRequest.Where(x => x.assignment_group == currentUser.department_id).OrderByDescending(x => x.id).ToList();
+
+            foreach (var i in Reqs)
+                {
+                    i.Product = allProduct.FirstOrDefault(x => x.id == i.pro_id);
+                    i.Sender = allUser.FirstOrDefault(x => x.id == i.sender);
+                    i.AssignmentGroup = allDepartment.FirstOrDefault(x => x.id == i.assignment_group);
+                    i.UpdatedBy = allUser.FirstOrDefault(x => x.id == i.updated_by);
+                }
 
             var model = new AllModelVM()
             {
                 user = currentUser,
                 RequestList = Reqs,
             };
+
+            return model;
+        }
+
+        public async Task<IActionResult> All()
+        {
+            var model = await get_req_data("User_All");
 
             return View(model);
         }
 
         public async Task<IActionResult> User_All()
         {
-            var currentUser = await _userService.GetCurrentUserAsync();
-
-            var productTask = _productApi.GetAllProduct_API();
-            var userTask = _userApi.GetAllUser_API();
-            var departmentTask = _departmentApi.GetAllDepartment_API();
-            var requestTask = _reqApi.GetAllRequest_API();
-            await Task.WhenAll(productTask, userTask, departmentTask, requestTask);
-
-            var allProduct = productTask.Result;
-            var allUser = userTask.Result;
-            var allDepartment = departmentTask.Result;
-            var allRequest = requestTask.Result;
-
-            var Reqs = allRequest.Where(x => x.sender == currentUser.id).OrderByDescending(x => x.id).ToList();
-            foreach (var i in Reqs)
-            {
-                i.Product = allProduct.FirstOrDefault(x => x.id == i.pro_id);
-                i.Sender = allUser.FirstOrDefault(x => x.id == i.sender);
-                i.AssignmentGroup = allDepartment.FirstOrDefault(x => x.id == i.assignment_group);
-                i.UpdatedBy = allUser.FirstOrDefault(x => x.id == i.updated_by);
-            }
-
-            var model = new AllModelVM()
-            {
-                user = currentUser,
-                RequestList = Reqs,
-            };
+            var model = await get_req_data("User_All");
 
             return View(model);
         }
@@ -111,6 +100,7 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Service_Catalog()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var depTask = _depApi.GetAllDepartment_API();
             var categoryTask = _categoryApi.GetAllCategory_API();
@@ -131,7 +121,8 @@ namespace ITSM.Controllers
             {
                 user = currentUser,
                 ProductList = allProduct,
-                CategoryList = allCategory
+                CategoryList = allCategory,
+                noteMessageCount = noteMessageCount
             };
 
             return View(model);
@@ -140,6 +131,7 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Create_Form(int id)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var depTask = _depApi.GetAllDepartment_API();
             var categoryTask = _categoryApi.GetAllCategory_API();
@@ -155,7 +147,8 @@ namespace ITSM.Controllers
             var model = new AllModelVM()
             {
                 user = currentUser,
-                product = info_pro
+                product = info_pro,
+                noteMessageCount = noteMessageCount
             };
 
             return View(model);
@@ -165,6 +158,7 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Create_Form(int pro_id, Request req)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var depTask = _depApi.GetAllDepartment_API();
             var categoryTask = _categoryApi.GetAllCategory_API();
@@ -187,7 +181,8 @@ namespace ITSM.Controllers
             var model = new AllModelVM()
             {
                 user = currentUser,
-                product = info_pro
+                product = info_pro,
+                noteMessageCount = noteMessageCount
             };
 
             if (info_pro.product_type == "Product")
@@ -253,33 +248,7 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Assigned_To_Us()
         {
-            var currentUser = await _userService.GetCurrentUserAsync();
-
-            var productTask = _productApi.GetAllProduct_API();
-            var userTask = _userApi.GetAllUser_API();
-            var departmentTask = _departmentApi.GetAllDepartment_API();
-            var requestTask = _reqApi.GetAllRequest_API();
-            await Task.WhenAll(productTask, userTask, departmentTask, requestTask);
-
-            var allProduct = productTask.Result;
-            var allUser = userTask.Result;
-            var allDepartment = departmentTask.Result;
-            var allRequest = requestTask.Result;
-
-            var Reqs = allRequest.Where(x => x.assignment_group == currentUser.department_id).OrderByDescending(x => x.id).ToList();
-            foreach (var i in Reqs)
-            {
-                i.Product = allProduct.FirstOrDefault(x => x.id == i.pro_id);
-                i.Sender = allUser.FirstOrDefault(x => x.id == i.sender);
-                i.AssignmentGroup = allDepartment.FirstOrDefault(x => x.id == i.assignment_group);
-                i.UpdatedBy = allUser.FirstOrDefault(x => x.id == i.updated_by);
-            }
-
-            var model = new AllModelVM()
-            {
-                user = currentUser,
-                RequestList = Reqs,
-            };
+            var model = await get_req_data("User_All");
 
             return View(model);
         }
@@ -287,6 +256,7 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Req_Info(int id, string role)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var productTask = _productApi.GetAllProduct_API();
             var userTask = _userApi.GetAllUser_API();
@@ -311,7 +281,8 @@ namespace ITSM.Controllers
             {
                 user = currentUser,
                 request = Req,
-                roleBack = role
+                roleBack = role,
+                noteMessageCount = noteMessageCount
             };
 
             return View(model);
@@ -321,6 +292,7 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Req_Info(Request req, string roleBack)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
 
             var productTask = _productApi.GetAllProduct_API();
             var userTask = _userApi.GetAllUser_API();
@@ -345,7 +317,8 @@ namespace ITSM.Controllers
             {
                 user = currentUser,
                 request = Req,
-                roleBack = roleBack
+                roleBack = roleBack,
+                noteMessageCount = noteMessageCount
             };
 
             if (req.short_description == null)
