@@ -48,6 +48,7 @@ public class HomeController : Controller
     public async Task<IActionResult> Index()
     {
         var currentUser = await _userService.GetCurrentUserAsync();
+        var noteMessageCount = await _userService.GetNoteAsync();
 
         var incTask = _incApi.GetAllIncident_API();
         var requestTask = _reqApi.GetAllRequest_API();
@@ -282,7 +283,8 @@ public class HomeController : Controller
             yearly_req_completed_percent = completedRequestsPercent,
             yearly_req_other_count = otherStateRequests,
             yearly_req_other_percent = otherStateRequestsPercent,
-            MonthlyRequestStats = monthlyRequestStats
+            MonthlyRequestStats = monthlyRequestStats,
+            noteMessageCount = noteMessageCount
         };
 
         if (currentUser.Role.role.ToLower() == "user")

@@ -474,7 +474,7 @@
                     <input type="file" name="files" id="file" multiple class="inc-cre-form-control inc-file-cre-form-padding">
                 </div>
             }
-            
+
             <div class="inc-cre-form-group inc-cre-full-width">
                 @if (Model.incident.state != "Resolved" && Model.incident.state != "Closed" && Model.incident.Sender?.id == Model.user?.id)
                 {
@@ -512,7 +512,7 @@
                                 {
                                     <div class="inc-cre-image-item" onclick="showImage('@(i.photo != null ? $"data:{i.photo_type};base64,{Convert.ToBase64String(i.photo)}" : "")')">
                                         <img src="@(i.photo != null ? $"data:{i.photo_type};base64,{Convert.ToBase64String(i.photo)}" : "")"
-                                             alt="incident photo">
+                                        alt="incident photo">
                                         <div class="inc-cre-image-overlay">
                                             <span class="inc-cre-image-zoom">
                                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -537,26 +537,26 @@
 
                         <script>
                             function showImage(src) {
-                                var modal = document.getElementById('imageModal');
-                                var modalImg = document.getElementById('modalImage');
-                                modal.style.display = "block";
-                                modalImg.src = src;
+                            var modal = document.getElementById('imageModal');
+                            var modalImg = document.getElementById('modalImage');
+                            modal.style.display = "block";
+                            modalImg.src = src;
                             }
 
                             document.querySelector('.image-close-btn').onclick = function() {
-                                document.getElementById('imageModal').style.display = "none";
+                            document.getElementById('imageModal').style.display = "none";
                             }
 
                             document.getElementById('imageModal').onclick = function(e) {
-                                if (e.target === this || e.target.id === 'modalImage') {
-                                    this.style.display = "none";
-                                }
+                            if (e.target === this || e.target.id === 'modalImage') {
+                            this.style.display = "none";
+                            }
                             }
 
                             document.addEventListener('keydown', function(e) {
-                                if (e.key === 'Escape') {
-                                    document.getElementById('imageModal').style.display = "none";
-                                }
+                            if (e.key === 'Escape') {
+                            document.getElementById('imageModal').style.display = "none";
+                            }
                             });
                         </script>
                     </div>
@@ -564,7 +564,7 @@
             </div>
         </div>
     }
-    
+
     <div class="inc-cre-related-search-container">
         <button class="inc-cre-btn inc-cre-btn-related-search">
             Notes & Resolve
@@ -579,26 +579,36 @@
         <div class="inc-cre-tab-content">
             <div id="notes-tab" class="inc-cre-tab-pane active">
                 <div class="inc-cre-notes-container">
-                    <div class="inc-cre-notes-header">
-                        <div class="inc-cre-watch-list">
-                            <span>Work notes list</span>
-                            <button type="button" class="inc-cre-btn-help" style="margin-left:5px;" onclick="window.open('/Info/Work_Notes_Info', '_blank')">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
 
-                    <div class="inc-cre-work-notes-area">
-                        <textarea id="work-notes" class="inc-cre-notes-textarea" placeholder="Enter chat history..."></textarea>
-                        <div class="inc-cre-notes-actions">
-                            <label class="inc-cre-checkbox-container"></label>
-                            <button type="button" class="inc-cre-btn inc-cre-btn-post" id="post-note-btn">Post</button>
+                    @if (
+                            (Model.user?.department_id == Model.incident.assignment_group && Model.user?.r_manager == true) ||
+                            (Model.user.Role?.role.ToLower() == "admin" && Model.user?.r_manager == true) ||
+                            (Model.user.Role?.role.ToLower() == "admin") ||
+                            (Model.user?.id == Model.incident.sender) ||
+                            (Model.user?.id == Model.incident.assigned_to)
+                        )
+                    {
+                        <div class="inc-cre-notes-header">
+                            <div class="inc-cre-watch-list">
+                                <span>Work notes list</span>
+                                <button type="button" class="inc-cre-btn-help" style="margin-left:5px;" onclick="window.open('/Info/Work_Notes_Info', '_blank')">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
-                    </div>
+
+                        <div class="inc-cre-work-notes-area">
+                            <textarea id="work-notes" class="inc-cre-notes-textarea" placeholder="Enter chat history..."></textarea>
+                            <div class="inc-cre-notes-actions">
+                                <label class="inc-cre-checkbox-container"></label>
+                                <button type="button" class="inc-cre-btn inc-cre-btn-post" id="post-note-btn">Post</button>
+                            </div>
+                        </div>
+                    }
 
                     <div class="inc-cre-activities-section">
                         <h3 class="inc-cre-section-title">Activities: <span id="activity-count">0</span></h3>
@@ -768,6 +778,9 @@
       }
       else if(roleBack.includes("Closed")){
           $('#Incidents_menu_assigned_closed').addClass("active");
+      }
+      else if(roleBack.includes("Message")){
+          $('#Incidents_menu_assigned_message').addClass("active");
       }
       else{
           $('#Incidents_menu_all_user').addClass("active");

@@ -28,8 +28,14 @@ namespace ITSM_DomainModelEntity.Models
         [Required]
         public string? message { get; set; }
 
+        public bool note_read {  get; set; }
+
+        [ForeignKey("ReceiverUser")]
+        public int? receiver_id { get; set; }
+
         // Navigation properties
         public virtual Incident? Incident { get; set; }
         public virtual User? User { get; set; }
+        public virtual User? ReceiverUser { get; set; }
     }
 }

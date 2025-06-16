@@ -263,7 +263,13 @@ data-bs-theme="dark">
                     <li class="menu-item" id="Incidents_menu">
                         <a href="javascript:void(0);" class="menu-link menu-toggle">
                             <i class="menu-icon tf-icons fa-solid fa-screwdriver-wrench"></i>
-                            <div class="text-truncate" data-i18n="Account Settings">Incidents</div>
+                            <div class="text-truncate" data-i18n="Account Settings">
+                                Incidents
+                                @if (Model.noteMessageCount != null && Model.noteMessageCount > 0)
+                                {
+                                    <span class="message_backgroup_color_number">@Model.noteMessageCount</span>
+                                }
+                            </div>
                         </a>
                         <ul class="menu-sub">
                             @if (Model.user.Role.role.ToLower() == "admin")
@@ -308,23 +314,26 @@ data-bs-theme="dark">
                                 </a>
                             </li>
                             <li class="menu-item" id="Incidents_menu_assigned_message">
-                                <a href="~/IncidentManagement/Closed_Assigned_To_Me" class="menu-link">
+                                <a href="~/IncidentManagement/Inc_Message" class="menu-link">
                                     <div class="text-truncate" data-i18n="Notifications">
                                         Message
-                                        <span class="message_backgroup_color_number">1</span>
+                                        @if (Model.noteMessageCount != null && Model.noteMessageCount > 0)
+                                        {
+                                            <span class="message_backgroup_color_number" style="padding:0 4.5px;">@Model.noteMessageCount</span>
+                                        }
                                     </div>
                                 </a>
                             </li>
 
                             @* @if (@Model.user.Role.role.ToLower() == "admin")
                             {
-                                
+
                                 <li class="menu-item" id="Incidents_menu_assigned_to_team">
                                     <a href="~/IncidentManagement/Assigned_To_Group" class="menu-link">
                                         <div class="text-truncate" data-i18n="Notifications">Assigned to us</div>
                                     </a>
                                 </li>
-                                
+
                                 <li class="menu-item" id="Incidents_menu_assigned_closed">
                                     <a href="~/IncidentManagement/Closed_Assigned_To_Me" class="menu-link">
                                         <div class="text-truncate" data-i18n="Notifications">Closed by me</div>
@@ -689,10 +698,10 @@ data-bs-theme="dark">
                                 </ul>
                             </li>
                         }
-                        
+
                     }
 
-                <!-- Forms -->
+                    <!-- Forms -->
                 </ul>
             </aside>
             <!-- / Menu -->
@@ -701,7 +710,7 @@ data-bs-theme="dark">
             <div class="layout-page">
                 <!--old: container-xxl navbar-detached navbar-->
                 <nav class="nav_avatar_part layout-navbar navbar-expand-xl align-items-center bg-navbar-theme"
-                     id="layout-navbar">
+                id="layout-navbar">
                     <div class="layout-menu-toggle navbar-nav align-items-xl-center me-4 me-xl-0 d-xl-none">
                         <a class="nav-item nav-link px-0 me-xl-6" href="javascript:void(0)">
                             <i class="icon-base bx bx-menu icon-md"></i>
@@ -713,8 +722,8 @@ data-bs-theme="dark">
                             <!-- User -->
                             <li class="nav-item navbar-dropdown dropdown-user dropdown open-button">
                                 <a class="nav-link dropdown-toggle hide-arrow p-0"
-                                   href="javascript:void(0);"
-                                   data-bs-toggle="dropdown">
+                                href="javascript:void(0);"
+                                data-bs-toggle="dropdown">
                                     <div class="avatar avatar-online">
                                         <img src="@(Model.user.photo != null ? $"data:{Model.user.photo_type};base64," +  Convert.ToBase64String(Model.user.photo) :
                             Url.Content("~/img/avatar/user_avatar.jpg"))" alt="avatar" class="w-px-40 rounded-circle" />
@@ -734,11 +743,13 @@ data-bs-theme="dark">
         <div class="layout-overlay layout-menu-toggle"></div>
     </div>
 
-
-    <div class="buy-now">
-        <a href="#"
-           class="btn btn-danger btn-buy-now">3</a>
-    </div>
+    @* @if (Model.noteMessageCount != null && Model.noteMessageCount > 0)
+    {
+        <div class="buy-now">
+            <a href="~/IncidentManagement/Inc_Message"
+               class="btn btn-danger btn-buy-now">@Model.noteMessageCount Message</a>
+        </div>
+    } *@
 
     <!-- Core JS -->
     <script src="~/assets/vendor/libs/jquery/jquery.js"></script>

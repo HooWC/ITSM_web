@@ -39,6 +39,12 @@ namespace ITSM_DomainModelEntity.ViewModels
         public int RequestCount { get; set; }
     }
 
+    public class IncMessage
+    {
+        public Incident? inc_info { get; set; }
+        public int NoteMessageCount { get; set; }
+    }
+
     public class AllModelVM
     {
         public User? user { get; set; }
@@ -146,6 +152,10 @@ namespace ITSM_DomainModelEntity.ViewModels
         public List<Incidentcategory> Incident_Category_List { get; set; }
 
         public Incidentcategory? Incident_Category { get; set; }
+
+        public int? noteMessageCount { get; set; }
+
+        public List<IncMessage> incMessages { get; set; }
 
         public AllModelVM()
         {

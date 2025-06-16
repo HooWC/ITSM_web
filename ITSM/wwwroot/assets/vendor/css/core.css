@@ -24786,6 +24786,7 @@ li:not(:first-child) .dropdown-item, .dropdown-menu .dropdown-item:not(:first-ch
 
     .buy-now .btn-buy-now:hover {
         box-shadow: none;
+        text-decoration:none;
     }
 
 /* Common

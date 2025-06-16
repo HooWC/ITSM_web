@@ -10,12 +10,14 @@ namespace ITSM.Controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly User_api _userApi;
         private readonly Role_api _roleApi;
+        private readonly Note_api _noteApi;
 
         public UserService(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
             _userApi = new User_api(httpContextAccessor);
             _roleApi = new Role_api(httpContextAccessor);
+            _noteApi = new Note_api(httpContextAccessor);
         }
 
         public async Task<User> GetCurrentUserAsync()
@@ -28,6 +30,17 @@ namespace ITSM.Controllers
 
             currentUser.Role = allRole.FirstOrDefault(x => x.id == currentUser.role_id);
             return currentUser;
+        }
+
+        public async Task<int?> GetNoteAsync()
+        {
+            var currentUser = await GetCurrentUserAsync();
+
+            var AllNotes = await _noteApi.GetAllNote_API();
+
+            var note_message_count = AllNotes.Where(x => x.receiver_id == currentUser.id && x.note_read == false).Count();
+
+            return note_message_count;
         }
     }
 }

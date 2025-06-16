@@ -614,32 +614,63 @@ namespace ITSM.Controllers
 
             try
             {
-                var allNotes = await _noteApi.GetAllNote_API();
-                string noteNumber = "NOT0001";
+                var noteTask = _noteApi.GetAllNote_API();
+                var userTask = _userApi.GetAllUser_API();
 
-                if (allNotes.Any())
+                await Task.WhenAll(noteTask, userTask);
+
+                var allNotes = noteTask.Result;
+                var allUsers = userTask.Result;
+
+                string newId = "";
+                if (allNotes.Count > 0)
                 {
-                    var maxNoteNumber = allNotes
-                    .Where(n => n.note_number != null && n.note_number.StartsWith("NOT"))
-                    .Select(n => n.note_number)
-                    .DefaultIfEmpty("NOT0000")
-                    .Max();
+                    var NoteLast = allNotes.Last();
+                    string n_id_up = NoteLast.note_number;
+                    string prefix = new string(n_id_up.TakeWhile(char.IsLetter).ToArray());
+                    string numberPart = new string(n_id_up.SkipWhile(char.IsLetter).ToArray());
+                    int number = int.Parse(numberPart);
+                    newId = prefix + (number + 1);
+                }
+                else
+                    newId = "NOT1";
 
-                    if (maxNoteNumber != null && maxNoteNumber.Length >= 7)
+                var inc_info = await _incApi.FindByIDIncident_API(incidentId);
+                int? receiverId = 0;
+
+                if(currentUser.id == inc_info?.sender)
+                {
+                    // 如果是用户的话？Admin收到
+                    if (inc_info?.assigned_to != null)
+                        receiverId = inc_info.assigned_to;
+                    else
                     {
-                        if (int.TryParse(maxNoteNumber.Substring(3), out int numberPart))
+                        // 如果Manager还没有分配任务给员工，assign to is null , 那就提供部门的Manager的id
+                        var inc_department_manager = allUsers.FirstOrDefault(x => x.r_manager && x.department_id == inc_info?.assignment_group);
+                        if (inc_department_manager != null)
                         {
-                            noteNumber = $"NOT{(numberPart + 1).ToString("D4")}";
+                            receiverId = inc_department_manager.id;
+                        }
+                        else
+                        {
+                            // 如果没有 Manager 呢？就放 null？
+                            receiverId = null;
                         }
                     }
+                }
+                else
+                {
+                    receiverId = inc_info?.sender;
                 }
 
                 var newNote = new ITSM_DomainModelEntity.Models.Note
                 {
-                    note_number = noteNumber,
+                    note_number = newId,
                     incident_id = incidentId,
                     user_id = currentUser.id,
-                    message = message
+                    message = message,
+                    note_read = false,
+                    receiver_id = receiverId
                 };
 
                 bool result = await _noteApi.CreateNote_API(newNote);
@@ -652,7 +683,7 @@ namespace ITSM.Controllers
                         message = "Note added successfully",
                         note = new
                         {
-                            note_number = noteNumber,
+                            note_number = newId,
                             user_name = currentUser.fullname,
                             user_avatar = currentUser.photo,
                             create_date = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
