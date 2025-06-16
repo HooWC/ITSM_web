@@ -1019,6 +1019,9 @@ select.inc-cre-form-control {
 .inc-cre-activity-container {
     max-height: 500px;
     overflow-y: auto;
+    /* For WebKit browsers */
+    scrollbar-width: thin; /* Firefox */
+    padding:10px;
 }
 
 .inc-cre-activity-item {
@@ -1193,3 +1196,11 @@ select.inc-cre-form-control {
         transform: translateY(-2px);
         box-shadow: 0 3px 10px rgba(0,0,0,0.1);
     }*/
+
+.note_username_a{
+
+}
+
+.note_username_a:hover{
+    text-decoration:none;
+}

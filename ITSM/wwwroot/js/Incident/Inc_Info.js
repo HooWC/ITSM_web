@@ -262,7 +262,7 @@
                             '</div>' +
                             '<div class="inc-cre-activity-content">' +
                             '<div class="inc-cre-activity-header">' +
-                            '<span class="inc-cre-user-name">' + response.note.user_name + '</span>' +
+                            '<span class="inc-cre-user-name"><a href="/User/Form_User_Info" target="_blank">' + response.note.user_name + '</a></span>' +
                             '<span class="inc-cre-activity-time">Work notes • ' + dateString + '</span>' +
                             '</div>' +
                             '<div class="inc-cre-activity-details">' +
@@ -309,7 +309,7 @@
                             '</div>' +
                             '<div class="inc-cre-activity-content">' +
                             '<div class="inc-cre-activity-header">' +
-                            '<span class="inc-cre-user-name">' + note.user_name + '</span>' +
+                            '<span class="inc-cre-user-name"><a class="note_username_a" href="/User/Form_User_Info?id=' + note.user_id +'" target="_blank">' + note.user_name + '</a></span>' +
                             '<span class="inc-cre-activity-time">Work notes • ' + note.create_date + '</span>' +
                             '</div>' +
                             '<div class="inc-cre-activity-details">' +

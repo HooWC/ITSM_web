@@ -647,7 +647,7 @@ namespace ITSM.Controllers
                     {
                         // 如果Manager还没有分配任务给员工，assign to is null , 那就提供部门的Manager的id
                         var inc_department_manager = allUsers.FirstOrDefault(x => x.r_manager && x.department_id == inc_info?.assignment_group);
-                        if (inc_department_manager != null)
+                        if (inc_department_manager != null && currentUser.id != inc_department_manager.id)
                         {
                             receiverId = inc_department_manager.id;
                         }
