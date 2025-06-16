@@ -18,7 +18,6 @@ document.querySelector(".ser-cat-list").addEventListener("click", function () {
     document.querySelector(".ser-cat-products-area-wrapper").classList.add("ser-cat-tableView");
 });
 
-// 综合筛选函数
 function filterProducts() {
     const searchText = document.querySelector(".ser-cat-search-bar").value.toLowerCase().trim();
     const categorySelect = document.querySelector(".ser-cat-category-filter");
@@ -27,7 +26,7 @@ function filterProducts() {
     const categoryValue = categorySelect.value;
     const statusValue = statusSelect.value;
     
-    console.log("筛选条件:", {
+    console.log("Filter criteria:", {
         searchText: searchText,
         categoryValue: categoryValue,
         statusValue: statusValue
@@ -40,7 +39,7 @@ function filterProducts() {
         const categoryId = row.getAttribute("data-category-id");
         const status = row.getAttribute("data-status");
         
-        console.log("产品属性:", {
+        console.log("Product attributes:", {
             productName: productName,
             categoryId: categoryId,
             status: status
@@ -50,22 +49,22 @@ function filterProducts() {
         let categoryMatch = true;
         let statusMatch = true;
 
-        // 搜索匹配
+        // Search for matches
         if (searchText !== "") {
             searchMatch = productName.includes(searchText);
         }
 
-        // 分类匹配
+        // Classification matching
         if (categoryValue !== "all") {
             categoryMatch = categoryId === categoryValue;
         }
 
-        // 状态匹配
+        // status match
         if (statusValue !== "all") {
             statusMatch = status === statusValue;
         }
 
-        // 综合所有筛选条件
+        // Combine all filter conditions
         if (searchMatch && categoryMatch && statusMatch) {
             row.style.display = "";
         } else {
@@ -74,18 +73,18 @@ function filterProducts() {
     });
 }
 
-// 搜索功能
+// Search function
 document.querySelector(".ser-cat-search-bar").addEventListener("input", function () {
     filterProducts();
 });
 
-// 筛选功能
+// Filter function
 document.querySelector(".ser-cat-filter-button.ser-cat-apply").addEventListener("click", function () {
     filterProducts();
     document.querySelector(".ser-cat-filter-menu").classList.remove("ser-cat-active");
 });
 
-// 重置筛选
+// Reset filter
 document.querySelector(".ser-cat-filter-button.ser-cat-reset").addEventListener("click", function () {
     document.querySelector(".ser-cat-category-filter").value = "all";
     document.querySelector(".ser-cat-status-filter").value = "all";

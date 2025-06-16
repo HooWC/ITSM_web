@@ -3,21 +3,17 @@ var itemsPerPage = 15;
 var IncidentItems = $('.incident-item').length;
 var IncidentPages = Math.ceil(IncidentItems / itemsPerPage);
 
-// Set default filter field and status
 var currentFilter = 'title';
 var currentStatus = 'all';
 
-// Initialize pagination
 initPagination();
 
-// Close all dropdown menus when clicking outside
 $(document).click(function (e) {
     if (!$(e.target).closest('.inc-tab-dropdown').length) {
         $('.inc-tab-dropdown-menu').hide();
     }
 });
 
-// Toggle filter dropdown menu
 $('#filterDropdown').click(function (e) {
     e.stopPropagation();
     $('#filterMenu').toggle();

@@ -768,6 +768,7 @@ namespace ITSM.Controllers
                 incData.subcategory = inc.subcategory;
                 incData.assignment_group = inc.assignment_group;
                 incData.assigned_to = inc.assigned_to == 0 ? null : inc.assigned_to;
+                
                 // resolved data
                 incData.resolution = resolveNotes;
                 incData.resolved_by = currentUser.id;
@@ -2067,7 +2068,6 @@ namespace ITSM.Controllers
                         break;
                 }
             }
-
 
             var result = filteredReqs.Select(t => new
             {
