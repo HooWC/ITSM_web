@@ -7,104 +7,104 @@
 
 <style>
     .inc-cre-product-image-container {
-        margin-bottom: 1.25rem;
-        border-radius: 0.375rem;
-        overflow: hidden;
-        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
-        max-width: 100%;
-        height: auto;
+    margin-bottom: 1.25rem;
+    border-radius: 0.375rem;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+    max-width: 100%;
+    height: auto;
     }
 
     .inc-cre-product-image-wrapper {
-        position: relative;
-        width: 100%;
-        height: 0;
-        padding-bottom: 25%;
-        overflow: hidden;
-        background-color: #121212;
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 25%;
+    overflow: hidden;
+    background-color: #121212;
     }
 
     .inc-cre-product-image {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-        transition: transform 0.5s ease;
-        background-color: #121212;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.5s ease;
+    background-color: #121212;
     }
 
     .inc-cre-product-image-overlay {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 50%, transparent 100%);
-        padding: 0.75rem 1.25rem;
-        color: white;
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 50%, transparent 100%);
+    padding: 0.75rem 1.25rem;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     }
 
     .inc-cre-product-title {
-        margin: 0 0 0.25rem 0;
-        font-weight: 600;
-        font-size: 1rem;
+    margin: 0 0 0.25rem 0;
+    font-weight: 600;
+    font-size: 1rem;
     }
 
     .inc-cre-product-description {
-        margin: 0;
-        opacity: 0.9;
-        font-size: 0.75rem;
+    margin: 0;
+    opacity: 0.9;
+    font-size: 0.75rem;
     }
 
     .inc-cre-product-image-wrapper:hover .inc-cre-product-image {
-        transform: scale(1.03);
+    transform: scale(1.03);
     }
 
     .inc-cre-product-image-wrapper.square {
-        padding-bottom: 25%;
+    padding-bottom: 25%;
     }
 
     .inc-cre-product-image.landscape {
-        object-position: center;
+    object-position: center;
     }
 
     .inc-cre-product-image.portrait {
-        object-position: center;
+    object-position: center;
     }
 
     @@media (max-width: 768px) {
-        .inc-cre-product-image-wrapper {
-            padding-bottom: 35%;
-        }
+    .inc-cre-product-image-wrapper {
+    padding-bottom: 35%;
+    }
 
-            .inc-cre-product-image-wrapper.square {
-                padding-bottom: 35%;
-            }
+    .inc-cre-product-image-wrapper.square {
+    padding-bottom: 35%;
+    }
     }
 
     .kb-title-input {
-        width: 100%;
-        padding: 0.75rem;
-        border: 1px solid #ced4da;
-        border-radius: 0.375rem;
-        font-size: 1.1rem;
-        font-weight: 500;
-        margin-bottom: 1rem;
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: 0.375rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
     }
 
     .kb-description-input {
-        width: 100%;
-        padding: 0.75rem;
-        border: 1px solid #ced4da;
-        border-radius: 0.375rem;
-        font-size: 1rem;
-        margin-bottom: 1.5rem;
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: 0.375rem;
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
     }
 
     .kb-editor-container {
-        margin-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
     }
 </style>
 
@@ -112,7 +112,11 @@
     <header class="inc-cre-header">
         <div class="inc-cre-header-left">
             <button class="inc-cre-menu-button">
-                <i class="fa-solid fa-plus"></i>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                     stroke-linejoin="round">
+                    <path d="M4 21v-4.586a1 1 0 0 1 .293-.707l11-11a1 1 0 0 1 1.414 0l2.586 2.586a1 1 0 0 1 0 1.414l-11 11A1 1 0 0 1 8.586 21H4z"></path>
+                </svg>
             </button>
             <div class="inc-cre-title-group">
                 <div class="inc-cre-title">Knowledge Information</div>
@@ -121,10 +125,10 @@
         </div>
         <div class="inc-cre-header-right">
             <button class="inc-cre-btn inc-cre-btn-icon" onclick="location.href='/Knowledge/KB_List'">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                     stroke-linejoin="round">
-                    <path d="M4 21v-4.586a1 1 0 0 1 .293-.707l11-11a1 1 0 0 1 1.414 0l2.586 2.586a1 1 0 0 1 0 1.414l-11 11A1 1 0 0 1 8.586 21H4z"></path>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="4" y1="6" x2="20" y2="6"></line>
+                    <line x1="4" y1="12" x2="20" y2="12"></line>
+                    <line x1="4" y1="18" x2="20" y2="18"></line>
                 </svg>
             </button>
             <button class="inc-cre-btn inc-cre-btn-icon" onclick="window.open('/Info/Form_Info', '_blank')">
@@ -197,7 +201,13 @@
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="author" class="inc-cre-form-label">Author</label>
-                        <input type="text" id="author" class="inc-cre-form-control" value="@Model.knowledge.Author.fullname" readonly>
+                        <div class="inc-cre-input-with-icon">
+                            <div class="inc-cre-form-control inc-cre-user-link">
+                                <a href="~/User/Form_User_Info?id=@Model.knowledge?.Author?.id" target="_blank">
+                                    @(@Model.knowledge?.Author?.fullname ?? "")
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -234,20 +244,41 @@
             <div class="inc-cre-form-group inc-cre-short-description-group">
                 <label for="name" class="inc-cre-form-label inc-cre-required">Title</label>
                 <div class="inc-cre-input-with-actions">
-                    <input type="text" id="name" autocomplete="off" class="inc-cre-form-control" value="@Model.knowledge.title" name="title" required>
+                    @if(Model.user?.id == Model.knowledge?.Author?.id)
+                    {
+                        <input type="text" id="name" autocomplete="off" class="inc-cre-form-control" value="@Model.knowledge.title" name="title" required>
+                    }
+                    else
+                    {
+                        <input type="text" id="name" autocomplete="off" class="inc-cre-form-control" value="@Model.knowledge.title" name="title" readonly>
+                    }
                 </div>
             </div>
 
             <div class="inc-cre-form-group inc-cre-short-description-group">
                 <label for="short_description" class="inc-cre-form-label inc-cre-required">Short description</label>
                 <div class="inc-cre-input-with-actions">
-                    <input type="text" autocomplete="off" id="short-description" name="short_description" value="@Model.knowledge.short_description" class="inc-cre-form-control" required>
+                    @if (Model.user?.id == Model.knowledge?.Author?.id)
+                    {
+                        <input type="text" autocomplete="off" id="short-description" name="short_description" value="@Model.knowledge.short_description" class="inc-cre-form-control" required>
+                    }
+                    else
+                    {
+                        <input type="text" autocomplete="off" id="short-description" name="short_description" value="@Model.knowledge.short_description" class="inc-cre-form-control" readonly>
+                    }
                 </div>
             </div>
 
             <div class="inc-cre-form-group kb-editor-container">
                 <label for="editor" class="inc-cre-form-label inc-cre-required">Article content</label>
-                <textarea id="editor" autocomplete="off" name="article">@Html.Raw(Model.knowledge.article)</textarea>
+                @if (Model.user?.id == Model.knowledge?.Author?.id)
+                {
+                    <textarea id="editor" autocomplete="off" name="article">@Html.Raw(Model.knowledge.article)</textarea>
+                }
+                else
+                {
+                    <textarea id="editor" autocomplete="off" name="article" readonly>@Html.Raw(Model.knowledge.article)</textarea>
+                }
             </div>
         </form>
     </main>
@@ -256,52 +287,57 @@
 <script src="https://cdn.tiny.cloud/1/msh9n12ypmjq6b1f8axq4qb930bqm3h2kardtzuczvhc8yl5/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
-            $(function () {
-                var $target = $('#Knowledge_menu');
+    $(function () {
+        var $target = $('#Knowledge_menu');
 
-                if (!$target.hasClass('active') || !$target.hasClass('open')) {
-                    $('.menu-item').removeClass('active open');
-                    $target.addClass('active open');
-                }
-
-                var role = $('#roleBack').val();
-
-                if (role === 'admin') {
-                    $('#Knowledge_menu_all').addClass('active');
-                } else if (role === 'user') {
-                    $('#Knowledge_menu_all_user').addClass('active');
-                }
-            });
-
-    tinymce.init({
-      selector: '#editor',
-      height: 500,
-      menubar: true,
-      plugins: [
-        'advlist autolink lists link image charmap print preview anchor',
-        'searchreplace visualblocks code fullscreen',
-        'insertdatetime media table paste code help wordcount'
-      ],
-      toolbar: 'undo redo | formatselect | bold italic backcolor | \
-                alignleft aligncenter alignright alignjustify | \
-                bullist numlist outdent indent | removeformat | help',
-      skin: 'oxide-dark',
-      content_css: 'dark',
-      content_style: `
-        body {
-          background-color: #1e1e1e;
-          color: #f8f8f8;
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        if (!$target.hasClass('active') || !$target.hasClass('open')) {
+            $('.menu-item').removeClass('active open');
+            $target.addClass('active open');
         }
-        p, li, h1, h2, h3, h4, h5, h6 { color: #f8f8f8; }
-        a { color: #3391ff; }
-        table { border-color: #494949; }
-        table td { border-color: #494949; }
-        .mce-content-body:not([dir=rtl])[data-mce-placeholder]:not(.mce-visualblocks)::before {
-          color: #999;
+
+        var role = $('#roleBack').val();
+
+        if (role === 'admin') {
+            $('#Knowledge_menu_all').addClass('active');
+        } else if (role === 'user') {
+            $('#Knowledge_menu_all_user').addClass('active');
         }
-      `
+
+        const isAuthor = @(Model.user?.id == Model.knowledge?.Author?.id ? "true" : "false");
+
+        tinymce.init({
+          selector: '#editor',
+          height: 500,
+          menubar: true,
+          readonly: !isAuthor,
+          plugins: [
+            'advlist autolink lists link image charmap print preview anchor',
+            'searchreplace visualblocks code fullscreen',
+            'insertdatetime media table paste code help wordcount'
+          ],
+          toolbar: 'undo redo | formatselect | bold italic backcolor | \
+                    alignleft aligncenter alignright alignjustify | \
+                    bullist numlist outdent indent | removeformat | help',
+          skin: 'oxide-dark',
+          content_css: 'dark',
+          content_style: `
+            body {
+              background-color: #1e1e1e;
+              color: #f8f8f8;
+              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            }
+            p, li, h1, h2, h3, h4, h5, h6 { color: #f8f8f8; }
+            a { color: #3391ff; }
+            table { border-color: #494949; }
+            table td { border-color: #494949; }
+            .mce-content-body:not([dir=rtl])[data-mce-placeholder]:not(.mce-visualblocks)::before {
+              color: #999;
+            }
+          `
+        });
     });
+
+     
 </script>
 
 

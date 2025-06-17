@@ -7,336 +7,336 @@
 
 <style>
     .inc-cre-product-image-container {
-        margin-bottom: 1.25rem;
-        border-radius: 0.375rem;
-        overflow: hidden;
-        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
-        max-width: 100%;
-        height: auto;
+    margin-bottom: 1.25rem;
+    border-radius: 0.375rem;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+    max-width: 100%;
+    height: auto;
     }
 
     .inc-cre-product-image-wrapper {
-        position: relative;
-        width: 100%;
-        height: 0;
-        padding-bottom: 25%;
-        overflow: hidden;
-        background-color: #121212;
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 25%;
+    overflow: hidden;
+    background-color: #121212;
     }
 
     .inc-cre-product-image {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-        transition: transform 0.5s ease;
-        background-color: #121212;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.5s ease;
+    background-color: #121212;
     }
 
     .inc-cre-product-image-overlay {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 50%, transparent 100%);
-        padding: 0.75rem 1.25rem;
-        color: white;
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 50%, transparent 100%);
+    padding: 0.75rem 1.25rem;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     }
 
     .inc-cre-product-title {
-        margin: 0 0 0.25rem 0;
-        font-weight: 600;
-        font-size: 1rem;
+    margin: 0 0 0.25rem 0;
+    font-weight: 600;
+    font-size: 1rem;
     }
 
     .inc-cre-product-description {
-        margin: 0;
-        opacity: 0.9;
-        font-size: 0.75rem;
+    margin: 0;
+    opacity: 0.9;
+    font-size: 0.75rem;
     }
 
     .inc-cre-product-image-wrapper:hover .inc-cre-product-image {
-        transform: scale(1.03);
+    transform: scale(1.03);
     }
 
     .inc-cre-product-image-wrapper.square {
-        padding-bottom: 25%;
+    padding-bottom: 25%;
     }
 
     .inc-cre-product-image.landscape {
-        object-position: center;
+    object-position: center;
     }
 
     .inc-cre-product-image.portrait {
-        object-position: center;
+    object-position: center;
     }
 
     @@media (max-width: 768px) {
-        .inc-cre-product-image-wrapper {
-            padding-bottom: 35%;
-        }
+    .inc-cre-product-image-wrapper {
+    padding-bottom: 35%;
+    }
 
-            .inc-cre-product-image-wrapper.square {
-                padding-bottom: 35%;
-            }
+    .inc-cre-product-image-wrapper.square {
+    padding-bottom: 35%;
+    }
     }
 
     /* 文件下载容器样式 */
     .file-download-container {
-        border: 2px solid #333333;
-        border-radius: 12px;
-        padding: 28px;
-        margin-bottom: 24px;
-        background: linear-gradient(135deg, #1a1a1a 0%, #242424 100%);
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 
-                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        position: relative;
-        overflow: hidden;
+    border: 2px solid #333333;
+    border-radius: 12px;
+    padding: 28px;
+    margin-bottom: 24px;
+    background: linear-gradient(135deg, #1a1a1a 0%, #242424 100%);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
     }
-    
+
     .file-download-container::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 1px;
-        background: linear-gradient(90deg, transparent, #3a86ff, transparent);
-        opacity: 0.6;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #3a86ff, transparent);
+    opacity: 0.6;
     }
-    
+
     .file-download-container:hover {
-        border-color: #3a86ff;
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 
-                    0 0 0 1px rgba(58, 134, 255, 0.3),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-        transform: translateY(-2px);
+    border-color: #3a86ff;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 
+    0 0 0 1px rgba(58, 134, 255, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
     }
-    
+
     .file-download-header {
-        display: flex;
-        align-items: center;
-        margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    margin-bottom: 0;
     }
-    
+
     .file-icon {
-        font-size: 44px;
-        margin-right: 18px;
-        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-        transition: transform 0.3s ease;
+    font-size: 44px;
+    margin-right: 18px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    transition: transform 0.3s ease;
     }
-    
+
     .file-download-container:hover .file-icon {
-        transform: scale(1.05);
+    transform: scale(1.05);
     }
-    
+
     .file-icon.pdf {
-        color: #ff4757;
+    color: #ff4757;
     }
-    
+
     .file-icon.word {
-        color: #5dade2;
+    color: #5dade2;
     }
-    
+
     .file-icon.excel {
-        color: #58d68d;
+    color: #58d68d;
     }
-    
+
     .file-icon.ppt {
-        color: #f39c12;
+    color: #f39c12;
     }
-    
+
     .file-icon.default {
-        color: #95a5a6;
+    color: #95a5a6;
     }
-    
+
     .file-info-wrapper {
-        flex-grow: 1;
+    flex-grow: 1;
     }
-    
+
     .file-name {
-        font-size: 1.15rem;
-        font-weight: 600;
-        margin-bottom: 6px;
-        color: #ffffff;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 320px;
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #ffffff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 320px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
     }
-    
+
     .file-details {
-        color: #b0b0b0;
-        font-size: 0.9rem;
-        font-weight: 400;
+    color: #b0b0b0;
+    font-size: 0.9rem;
+    font-weight: 400;
     }
-    
+
     .download-button {
-        background: linear-gradient(135deg, #3a86ff 0%, #2563eb 100%);
-        color: white;
-        border: none;
-        border-radius: 8px;
-        padding: 12px 20px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        box-shadow: 0 4px 12px rgba(58, 134, 255, 0.3);
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        font-size: 0.85rem;
+    background: linear-gradient(135deg, #3a86ff 0%, #2563eb 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 4px 12px rgba(58, 134, 255, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.85rem;
     }
-    
+
     .download-button:hover {
-        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-        box-shadow: 0 6px 16px rgba(58, 134, 255, 0.4);
-        transform: translateY(-1px);
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    box-shadow: 0 6px 16px rgba(58, 134, 255, 0.4);
+    transform: translateY(-1px);
     }
-    
+
     .download-button:active {
-        transform: translateY(0);
-        box-shadow: 0 2px 8px rgba(58, 134, 255, 0.3);
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(58, 134, 255, 0.3);
     }
-    
+
     .no-file-message {
-        text-align: center;
-        color: #888888;
-        padding: 20px;
-        background: linear-gradient(135deg, #1a1a1a 0%, #242424 100%);
-        border-radius: 8px;
+    text-align: center;
+    color: #888888;
+    padding: 20px;
+    background: linear-gradient(135deg, #1a1a1a 0%, #242424 100%);
+    border-radius: 8px;
     }
-    
+
     .no-file-message i {
-        display: block;
-        margin-bottom: 12px;
-        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    display: block;
+    margin-bottom: 12px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
     }
-    
+
     .no-file-message p {
-        margin: 0;
-        font-weight: 500;
-        color: #aaaaaa;
+    margin: 0;
+    font-weight: 500;
+    color: #aaaaaa;
     }
 
     .file-upload-container {
-        border: 2px dashed #444444;
-        border-radius: 12px;
-        padding: 35px;
-        text-align: center;
-        margin-bottom: 24px;
-        background: linear-gradient(135deg, #1a1a1a 0%, #242424 100%);
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 
-                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        position: relative;
-        overflow: hidden;
+    border: 2px dashed #444444;
+    border-radius: 12px;
+    padding: 35px;
+    text-align: center;
+    margin-bottom: 24px;
+    background: linear-gradient(135deg, #1a1a1a 0%, #242424 100%);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
     }
-    
+
     .file-upload-container::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 1px;
-        background: linear-gradient(90deg, transparent, #3a86ff, transparent);
-        opacity: 0.4;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #3a86ff, transparent);
+    opacity: 0.4;
     }
 
     .file-upload-container:hover {
-        border-color: #3a86ff;
-        background: linear-gradient(135deg, #1f1f1f 0%, #2a2a2a 100%);
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 
-                    0 0 0 1px rgba(58, 134, 255, 0.3),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-        transform: translateY(-2px);
+    border-color: #3a86ff;
+    background: linear-gradient(135deg, #1f1f1f 0%, #2a2a2a 100%);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 
+    0 0 0 1px rgba(58, 134, 255, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
     }
 
     .file-upload-input {
-        display: none;
+    display: none;
     }
 
     .file-upload-label {
-        display: block;
-        font-size: 1.2rem;
-        font-weight: 600;
-        margin-bottom: 18px;
-        color: #ffffff;
-        cursor: pointer;
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-        transition: color 0.3s ease;
+    display: block;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 18px;
+    color: #ffffff;
+    cursor: pointer;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    transition: color 0.3s ease;
     }
-    
+
     .file-upload-container:hover .file-upload-label {
-        color: #3a86ff;
+    color: #3a86ff;
     }
 
     .upload-icon {
-        font-size: 52px;
-        color: #3a86ff;
-        margin-bottom: 18px;
-        display: block;
-        filter: drop-shadow(0 4px 8px rgba(58, 134, 255, 0.3));
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 52px;
+    color: #3a86ff;
+    margin-bottom: 18px;
+    display: block;
+    filter: drop-shadow(0 4px 8px rgba(58, 134, 255, 0.3));
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    
+
     .file-upload-container:hover .upload-icon {
-        color: #5a9aff;
-        transform: scale(1.1) translateY(-2px);
-        filter: drop-shadow(0 6px 12px rgba(58, 134, 255, 0.4));
+    color: #5a9aff;
+    transform: scale(1.1) translateY(-2px);
+    filter: drop-shadow(0 6px 12px rgba(58, 134, 255, 0.4));
     }
 
     .file-upload-btn {
-        background: linear-gradient(135deg, #3a86ff 0%, #2563eb 100%);
-        color: white;
-        padding: 14px 28px;
-        border-radius: 8px;
-        cursor: pointer;
-        border: none;
-        font-weight: 600;
-        margin-top: 18px;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 4px 12px rgba(58, 134, 255, 0.3);
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        font-size: 0.9rem;
+    background: linear-gradient(135deg, #3a86ff 0%, #2563eb 100%);
+    color: white;
+    padding: 14px 28px;
+    border-radius: 8px;
+    cursor: pointer;
+    border: none;
+    font-weight: 600;
+    margin-top: 18px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 12px rgba(58, 134, 255, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.9rem;
     }
 
     .file-upload-btn:hover {
-        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-        box-shadow: 0 6px 16px rgba(58, 134, 255, 0.4);
-        transform: translateY(-2px);
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    box-shadow: 0 6px 16px rgba(58, 134, 255, 0.4);
+    transform: translateY(-2px);
     }
-    
+
     .file-upload-btn:active {
-        transform: translateY(0);
-        box-shadow: 0 2px 8px rgba(58, 134, 255, 0.3);
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(58, 134, 255, 0.3);
     }
 
     .file-info {
-        margin-top: 18px;
-        font-size: 0.95rem;
-        color: #b0b0b0;
-        font-weight: 500;
+    margin-top: 18px;
+    font-size: 0.95rem;
+    color: #b0b0b0;
+    font-weight: 500;
     }
 
     .selected-file {
-        margin-top: 18px;
-        padding: 12px 18px;
-        background: linear-gradient(135deg, #2a2a2a 0%, #333333 100%);
-        border: 1px solid #444444;
-        border-radius: 8px;
-        display: none;
-        color: #ffffff;
-        font-weight: 500;
-        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+    margin-top: 18px;
+    padding: 12px 18px;
+    background: linear-gradient(135deg, #2a2a2a 0%, #333333 100%);
+    border: 1px solid #444444;
+    border-radius: 8px;
+    display: none;
+    color: #ffffff;
+    font-weight: 500;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
     }
 </style>
 
@@ -344,7 +344,11 @@
     <header class="inc-cre-header">
         <div class="inc-cre-header-left">
             <button class="inc-cre-menu-button">
-                <i class="fa-solid fa-plus"></i>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                     stroke-linejoin="round">
+                    <path d="M4 21v-4.586a1 1 0 0 1 .293-.707l11-11a1 1 0 0 1 1.414 0l2.586 2.586a1 1 0 0 1 0 1.414l-11 11A1 1 0 0 1 8.586 21H4z"></path>
+                </svg>
             </button>
             <div class="inc-cre-title-group">
                 <div class="inc-cre-title">Knowledge Information</div>
@@ -353,10 +357,10 @@
         </div>
         <div class="inc-cre-header-right">
             <button class="inc-cre-btn inc-cre-btn-icon" onclick="location.href='/Knowledge/KB_List'">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                     stroke-linejoin="round">
-                    <path d="M4 21v-4.586a1 1 0 0 1 .293-.707l11-11a1 1 0 0 1 1.414 0l2.586 2.586a1 1 0 0 1 0 1.414l-11 11A1 1 0 0 1 8.586 21H4z"></path>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="4" y1="6" x2="20" y2="6"></line>
+                    <line x1="4" y1="12" x2="20" y2="12"></line>
+                    <line x1="4" y1="18" x2="20" y2="18"></line>
                 </svg>
             </button>
             <button class="inc-cre-btn inc-cre-btn-icon" onclick="window.open('/Info/Form_Info', '_blank')">
@@ -400,7 +404,7 @@
 
         <form id="incidentForm" class="inc-cre-incident-form" action="~/Knowledge/KB_Info?type=file" method="post" enctype="multipart/form-data">
             <input type="text" name="id" id="id" class="inc-cre-form-control" value="@Model.knowledge.id" style="display:none;" readonly>
-            <input type="text" name="roleBack" id="roleBack" class="inc-cre-form-control" value="@ViewBag.roleBack" style="display:none;" readonly>
+            <input type="text" name="roleBack" id="roleBack" class="inc-cre-form-control" value="@Model.roleBack" style="display:none;" readonly>
             <div class="inc-cre-form-grid">
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
@@ -429,7 +433,13 @@
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="author" class="inc-cre-form-label">Author</label>
-                        <input type="text" id="author" class="inc-cre-form-control" value="@Model.knowledge.Author.fullname" readonly>
+                        <div class="inc-cre-input-with-icon">
+                            <div class="inc-cre-form-control inc-cre-user-link">
+                                <a href="~/User/Form_User_Info?id=@Model.knowledge?.Author?.id" target="_blank">
+                                    @(@Model.knowledge?.Author?.fullname ?? "")
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -466,14 +476,28 @@
             <div class="inc-cre-form-group inc-cre-short-description-group">
                 <label for="name" class="inc-cre-form-label inc-cre-required">Title</label>
                 <div class="inc-cre-input-with-actions">
-                    <input type="text" id="name" autocomplete="off" class="inc-cre-form-control" value="@Model.knowledge.title" name="title" required>
+                    @if (Model.user?.id == Model.knowledge?.Author?.id)
+                    {
+                        <input type="text" id="name" autocomplete="off" class="inc-cre-form-control" value="@Model.knowledge.title" name="title" required>
+                    }
+                    else
+                    {
+                        <input type="text" id="name" autocomplete="off" class="inc-cre-form-control" value="@Model.knowledge.title" name="title" readonly>
+                    }
                 </div>
             </div>
 
             <div class="inc-cre-form-group inc-cre-short-description-group">
                 <label for="short_description" class="inc-cre-form-label inc-cre-required">Short description</label>
                 <div class="inc-cre-input-with-actions">
-                    <input type="text" id="short-description" autocomplete="off" name="short_description" value="@Model.knowledge.short_description" class="inc-cre-form-control" required>
+                    @if (Model.user?.id == Model.knowledge?.Author?.id)
+                    {
+                        <input type="text" id="short-description" autocomplete="off" name="short_description" value="@Model.knowledge.short_description" class="inc-cre-form-control" required>
+                    }
+                    else
+                    {
+                        <input type="text" id="short-description" autocomplete="off" name="short_description" value="@Model.knowledge.short_description" class="inc-cre-form-control" readonly>
+                    }
                 </div>
             </div>
 
@@ -484,7 +508,7 @@
                         @{
                             string iconClass = "default";
                             string fileType = "file";
-                            
+
                             if (!string.IsNullOrEmpty(Model.knowledge.kb_type))
                             {
                                 if (Model.knowledge.kb_type.Contains("pdf"))
@@ -509,7 +533,7 @@
                                 }
                             }
                         }
-                        
+
                         <div class="file-icon @iconClass">
                             @if (iconClass == "pdf")
                             {
@@ -532,12 +556,12 @@
                                 <i class="fa-solid fa-file"></i>
                             }
                         </div>
-                        
+
                         <div class="file-info-wrapper">
                             <div class="file-name">Knowledge Base File - @Model.knowledge.kb_number</div>
                             <div class="file-details">@fileType | @(Model.knowledge.kb_file.Length / 1024) KB</div>
                         </div>
-                        
+
                         <button type="button" class="download-button" onclick="downloadFile(@Model.knowledge.id)">
                             <i class="fa-solid fa-download"></i>
                             Download
@@ -555,15 +579,19 @@
                 </div>
             }
 
-            <div class="file-upload-container" id="phone-hide-upload-file">
-                <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
-                <label class="file-upload-label" id="for-mobile-aleart">The phone doesn't support Import; use a computer instead.</label>
-                <label for="file" class="file-upload-label phone-hide-upload-file">Drag and drop files here or click to browse</label>
-                <input type="file" id="file" name="file" class="file-upload-input phone-hide-upload-file" accept=".xlsx,.xls,.doc,.docx,.pdf,.txt,.csv,.ppt,.pptx,.zip,.rar">
-                <button type="button" id="browseBtn" class="file-upload-btn phone-hide-upload-file">Browse Files</button>
-                <div class="file-info phone-hide-upload-file">Supports Excel, Word, PDF, PowerPoint and various file formats</div>
-                <div id="selectedFile" class="selected-file phone-hide-upload-file"></div>
-            </div>
+            @if (Model.user?.id == Model.knowledge?.Author?.id)
+            {
+                <div class="file-upload-container" id="phone-hide-upload-file">
+                    <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
+                    <label class="file-upload-label" id="for-mobile-aleart">The phone doesn't support Import; use a computer instead.</label>
+                    <label for="file" class="file-upload-label phone-hide-upload-file">Drag and drop files here or click to browse</label>
+                    <input type="file" id="file" name="file" class="file-upload-input phone-hide-upload-file" accept=".xlsx,.xls,.doc,.docx,.pdf,.txt,.csv,.ppt,.pptx,.zip,.rar">
+                    <button type="button" id="browseBtn" class="file-upload-btn phone-hide-upload-file">Browse Files</button>
+                    <div class="file-info phone-hide-upload-file">Supports Excel, Word, PDF, PowerPoint and various file formats</div>
+                    <div id="selectedFile" class="selected-file phone-hide-upload-file"></div>
+                </div>
+            }
+            
         </form>
     </main>
 </div>

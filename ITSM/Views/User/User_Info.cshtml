@@ -313,8 +313,15 @@
                             @{
                                 var selectManagerRole = (Model.info_user.r_manager != null) ? Model.info_user.r_manager : false;
                             }
-                            <option value="true" selected="@(selectManagerRole ? "selected" : null)">Yes</option>
-                            <option value="false" selected="@(selectManagerRole == false ? "selected" : null)">No</option>
+                            @if (!Model.info_user.approve)
+                            {
+                                <option value="false" selected="@(selectManagerRole == false ? "selected" : null)">No</option>
+                            }
+                            else
+                            {
+                                <option value="true" selected="@(selectManagerRole ? "selected" : null)">Yes</option>
+                                <option value="false" selected="@(selectManagerRole == false ? "selected" : null)">No</option>
+                            }
                         </select>
                     </div>
                 </div>
@@ -328,7 +335,7 @@
                     </div>
                 </div>
 
-                @if (Model.info_user.id != Model.user?.id)
+                @if (Model.info_user.id != Model.user?.id && Model.info_user.approve != false)
                 {
                     <div class="inc-cre-form-column">
                         <div class="inc-cre-form-group">
@@ -348,7 +355,7 @@
                     <div class="inc-cre-form-column">
                         <div class="inc-cre-form-group">
                             <label for="active" class="inc-cre-form-label">Active</label>
-                            <input type="text" autocomplete="off" class="inc-cre-form-control" value="@(Model.info_user.active ? "Active" : "Blocked")" required>
+                            <input type="text" autocomplete="off" class="inc-cre-form-control" value="@(Model.info_user.active ? "Active" : "Blocked")" readonly>
                             <input type="text" name="active" id="active" style="display:none;" autocomplete="off" class="inc-cre-form-control" value="@(Model.info_user.active ? "true" : "false")" readonly>
                         </div>
                     </div>

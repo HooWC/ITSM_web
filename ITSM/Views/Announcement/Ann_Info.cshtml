@@ -112,19 +112,23 @@
     <header class="inc-cre-header">
         <div class="inc-cre-header-left">
             <button class="inc-cre-menu-button">
-                <i class="fa-solid fa-plus"></i>
-            </button>
-            <div class="inc-cre-title-group">
-                <div class="inc-cre-title">Announcement Information</div>
-                <div class="inc-cre-subtitle">@Model.announcement.at_number</div>
-            </div>
-        </div>
-        <div class="inc-cre-header-right">
-            <button class="inc-cre-btn inc-cre-btn-icon" onclick="location.href='/Announcement/Ann_List'">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
                      stroke="currentColor" stroke-width="2" stroke-linecap="round"
                      stroke-linejoin="round">
                     <path d="M4 21v-4.586a1 1 0 0 1 .293-.707l11-11a1 1 0 0 1 1.414 0l2.586 2.586a1 1 0 0 1 0 1.414l-11 11A1 1 0 0 1 8.586 21H4z"></path>
+                </svg>
+            </button>
+            <div class="inc-cre-title-group">
+                <div class="inc-cre-title">Announcement Information</div>
+                <div class="inc-cre-subtitle">@Model.announcement?.at_number</div>
+            </div>
+        </div>
+        <div class="inc-cre-header-right">
+            <button class="inc-cre-btn inc-cre-btn-icon" onclick="location.href='/Announcement/Ann_List'">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="4" y1="6" x2="20" y2="6"></line>
+                    <line x1="4" y1="12" x2="20" y2="12"></line>
+                    <line x1="4" y1="18" x2="20" y2="18"></line>
                 </svg>
             </button>
             <button class="inc-cre-btn inc-cre-btn-icon" onclick="window.open('/Info/Form_Info', '_blank')">
@@ -166,20 +170,27 @@
             </div>
         }
 
+
         <form id="incidentForm" class="inc-cre-incident-form" action="~/Announcement/Ann_Info?type=info" method="post">
-            <input type="text" name="id" id="id" class="inc-cre-form-control" value="@Model.announcement.id" style="display:none;" readonly>
+            <input type="text" name="id" id="id" class="inc-cre-form-control" value="@Model.announcement?.id" style="display:none;" readonly>
             <div class="inc-cre-form-grid">
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="number" class="inc-cre-form-label">Number</label>
-                        <input type="text" id="number" class="inc-cre-form-control" value="@Model.announcement.at_number" readonly>
+                        <input type="text" id="number" class="inc-cre-form-control" value="@Model.announcement?.at_number" readonly>
                     </div>
                 </div>
 
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="number" class="inc-cre-form-label">User Name</label>
-                        <input type="text" id="number" class="inc-cre-form-control" value="@Model.announcement.User.fullname" readonly>
+                        <div class="inc-cre-input-with-icon">
+                            <div class="inc-cre-form-control inc-cre-user-link">
+                                <a href="~/User/Form_User_Info?id=@Model.announcement?.User?.id" target="_blank">
+                                    @(@Model.announcement?.User?.fullname ?? "")
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -187,13 +198,13 @@
             <div class="inc-cre-form-group inc-cre-short-description-group">
                 <label for="ann_title" class="inc-cre-form-label inc-cre-required">Title</label>
                 <div class="inc-cre-input-with-actions">
-                    <input type="text" autocomplete="off" name="ann_title" id="ann_title" class="inc-cre-form-control" value="@Model.announcement.ann_title" required>
+                    <input type="text" autocomplete="off" name="ann_title" id="ann_title" class="inc-cre-form-control" value="@Model.announcement?.ann_title" required>
                 </div>
             </div>
 
             <div class="inc-cre-form-group kb-editor-container">
                 <label for="editor" class="inc-cre-form-label inc-cre-required">Article content</label>
-                <textarea id="editor" autocomplete="off" name="message" required>@Html.Raw(Model.announcement.message)</textarea>
+                <textarea id="editor" autocomplete="off" name="message" required>@Html.Raw(Model.announcement?.message)</textarea>
             </div>
         </form>
     </main>

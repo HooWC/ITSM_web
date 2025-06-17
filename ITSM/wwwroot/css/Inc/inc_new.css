@@ -1204,3 +1204,11 @@ select.inc-cre-form-control {
 .note_username_a:hover{
     text-decoration:none;
 }
+
+.inc-cre-user-link {
+    display: inline-block;
+    width: 100%;
+    padding: 6px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+}

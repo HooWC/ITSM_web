@@ -114,11 +114,11 @@
                         <td class="inc-tab-incident-number" data-label="Number">
                             @if (i.kb_type != null)
                             {
-                                <a href="~/Knowledge/KB_Info?id=@i.id&type=file&role=admin">@i.kb_number</a>
+                                <a href="~/Knowledge/KB_Import_Info?id=@i.id&role=admin">@i.kb_number</a>
                             }
                             else
                             {
-                                <a href="~/Knowledge/KB_Info?id=@i.id&type=word&role=admin">@i.kb_number</a>
+                                <a href="~/Knowledge/KB_Info?id=@i.id&role=admin">@i.kb_number</a>
                             }
                         </td>
                         <td data-label="a_fullname">@i.Author.fullname</td>

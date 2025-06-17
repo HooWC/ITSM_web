@@ -130,14 +130,6 @@
     .inc-file-cre-form-padding {
         padding: 4px 0px 0px 5px;
     }
-
-    .inc-cre-user-link {
-        display: inline-block;
-        width: 100%;
-        padding: 6px 12px;
-        border-radius: 4px;
-        text-decoration: none;
-    }
 </style>
 
 <div class="inc-cre-container">
@@ -152,7 +144,7 @@
             </button>
             <div class="inc-cre-title-group">
                 <div class="inc-cre-title">Incident Information</div>
-                <div class="inc-cre-subtitle">@Model.incident.inc_number</div>
+                <div class="inc-cre-subtitle">@Model.incident?.inc_number</div>
             </div>
         </div>
         <div class="inc-cre-header-right">

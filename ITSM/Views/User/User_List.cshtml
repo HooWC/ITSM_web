@@ -135,7 +135,7 @@
                 @foreach (var i in Model.UserList)
                 {
                     <tr class="incident-item" data-id="@i.id">
-                        @if(i.id != Model.user?.id)
+                        @if(i.id != Model.user?.id && i.approve)
                         {
                             <td><input type="checkbox" class="item-checkbox"></td>
                         }

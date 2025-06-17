@@ -424,7 +424,7 @@ function updateUserTable(data) {
     $.each(data, function (index, u) {
 
         var show_checkbox = `<td></td>`;
-        if (userID != u.id) {
+        if (userID != u.id && u.approve != "No") {
             show_checkbox = `<td><input type="checkbox" class="item - checkbox"></td>`;
         }
 

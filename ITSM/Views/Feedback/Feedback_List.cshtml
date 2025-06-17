@@ -91,10 +91,10 @@
                     <tr class="incident-item" data-id="@i.id">
                         <td><input type="checkbox" class="item-checkbox"></td>
                         <td class="inc-tab-incident-number" data-label="Number">
-                            <a href="~/Feedback/Feedback_Info?id=@i.id&role=Admin">@i.fb_number</a>
+                            <a href="~/Feedback/Feedback_Info?id=@i.id&role=User">@i.fb_number</a>
                         </td>
                         <td data-label="message">@i.message</td>
-                        <td data-label="fullname">@i.User.fullname</td>
+                        <td data-label="fullname">@i.User?.fullname</td>
                         <td data-label="create date" class="phone_feedback_hide_design">@i.create_date.ToString("yyyy-MM-dd HH:mm:ss")</td>
                         <td data-label="update date" class="phone_feedback_hide_design">@i.update_date.ToString("yyyy-MM-dd HH:mm:ss")</td>
                     </tr>

@@ -37,17 +37,17 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> All_Feedback_List()
         {
-            var feedList = await GetCommonFeedbackData();  
+            var feedList = await GetCommonFeedbackData("All_Feedback_List");  
             return View(feedList);  
         }
 
         public async Task<IActionResult> Feedback_List()
         {
-            var feedList = await GetCommonFeedbackData();  
+            var feedList = await GetCommonFeedbackData("Feedback_List");  
             return View(feedList);  
         }
 
-        private async Task<AllModelVM> GetCommonFeedbackData()
+        private async Task<AllModelVM> GetCommonFeedbackData(string type)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
             var noteMessageCount = await _userService.GetNoteAsync();
@@ -61,9 +61,11 @@ namespace ITSM.Controllers
             var allUsers = userTask.Result;
             var allRoles = roleTask.Result;
 
-            var feedList = currentUser.role_id == allRoles.Where(x => x.role.ToLower() == "user" || x.role.ToLower() == "itil").FirstOrDefault()?.id
-                ? allFeed.Where(x => x.user_id == currentUser.id).OrderByDescending(y => y.id).ToList()
-                : allFeed.OrderByDescending(y => y.id).ToList();
+            var feedList = new List<Feedback>();
+            if (type.Contains("All_Feedback_List"))
+                feedList = allFeed.OrderByDescending(x => x.id).ToList();
+            else if(type.Contains("Feedback_List"))
+                feedList = allFeed.Where(x => x.user_id == currentUser.id).OrderByDescending(x => x.id).ToList();
 
             foreach (var feedback in feedList)
                 feedback.User = allUsers.FirstOrDefault(x => x.id == feedback.user_id);

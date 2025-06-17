@@ -138,7 +138,7 @@ namespace ITSM.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> KB_Info(int id, string type, string role)
+        public async Task<AllModelVM> get_kb_data(int id, string role)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
             var noteMessageCount = await _userService.GetNoteAsync();
@@ -158,13 +158,19 @@ namespace ITSM.Controllers
             {
                 user = currentUser,
                 CategoryList = allCategorys,
-                knowledge = kb_info,
                 roleBack = role,
+                knowledge = kb_info,
                 noteMessageCount = noteMessageCount
             };
 
-            if(type == "word") return View(model);
-            else return View("KB_Import_Info", model);
+            return model;
+        }
+
+        public async Task<IActionResult> KB_Info(int id, string role)
+        {
+            var model = await get_kb_data(id, role);
+
+            return View(model);
         }
 
         [HttpPost]
@@ -268,16 +274,10 @@ namespace ITSM.Controllers
             }
         }
 
-        public async Task<IActionResult> KB_Import_Info()
+        public async Task<IActionResult> KB_Import_Info(int id, string role)
         {
-            var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
+            var model = await get_kb_data(id, role);
 
-            var model = new AllModelVM()
-            {
-                user = currentUser,
-                noteMessageCount = noteMessageCount
-            };
             return View(model);
         }
 
