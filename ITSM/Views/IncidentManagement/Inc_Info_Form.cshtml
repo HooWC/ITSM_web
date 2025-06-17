@@ -401,7 +401,7 @@
                             <div class="inc-cre-input-with-icon">
                                 @* <input type="text" id="assigned-to" class="inc-cre-form-control" readonly value="@(Model.incident.AssignedTo?.fullname ?? "")"> *@
                                 <div class="inc-cre-form-control inc-cre-user-link">
-                                    <a href="~/User/Form_User_Info?id=@Model.incident.AssignedTo?.id" target="_blank">
+                                    <a id="assigned-to" href="~/User/Form_User_Info?id=@Model.incident.AssignedTo?.id" target="_blank">
                                         @(Model.incident.AssignedTo?.fullname ?? "")
                                     </a>
                                 </div>

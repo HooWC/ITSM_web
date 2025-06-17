@@ -55,7 +55,7 @@ namespace ITSM.Controllers
                         sessionValue = ITSM_Insfrastruture.Repository.Token.SessionExtensions.GetString(
                             _httpContextAccessor.HttpContext.Session, "UserToken") ?? "null";
                     }
-                    Console.WriteLine($"The token is invalid or does not exist，Session value: {sessionValue}");
+                    //Console.WriteLine($"The token is invalid or does not exist，Session value: {sessionValue}");
                 }
             }
             catch (Exception ex)
@@ -96,7 +96,7 @@ namespace ITSM.Controllers
                 RoleList = allRole,
                 DepartmentList = allDepartment
             };
-
+            
             if (string.IsNullOrEmpty(emp_id) ||  string.IsNullOrEmpty(password))
             {
                 ViewBag.ErrorMessage = "Please fill in all required fields";

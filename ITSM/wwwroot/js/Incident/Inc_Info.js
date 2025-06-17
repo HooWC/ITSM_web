@@ -196,16 +196,17 @@
         var selectedId = $(this).data('id');
 
         if (currentInputField) {
-            currentInputField.val(selectedName);
-
             if (currentInputField.attr('id') === 'assignment-group') {
                 selectedDepartmentId = selectedId;
                 $("#assignment-group-id").val(selectedId);
                 $("#assigned-to-search").prop('disabled', false);
-                $("#assigned-to").val('');
+                currentInputField.val(selectedName);
+                $("#assigned-to").html('');
                 $("#assigned-to-id").val('');
             } else if (currentInputField.attr('id') === 'assigned-to') {
                 $("#assigned-to-id").val(selectedId);
+                currentInputField.html(selectedName);
+                currentInputField.attr('href', '/User/Form_User_Info?id=' + selectedId);
             }
         }
 

@@ -138,7 +138,7 @@ namespace ITSM_Insfrastruture.Repository.Token
                 Console.WriteLine($"Error getting token from cookie: {ex.Message}");
             }
             
-            Console.WriteLine("No valid token found");
+            //Console.WriteLine("No valid token found");
             return null;
         }
 
