@@ -7,39 +7,39 @@
 
 <style>
     .inc-tab-incidents-table th.number-column {
-        width: 8%;
+    width: 8%;
     }
 
     .inc-tab-incidents-table th.i_sucategory-column {
-        width: 11%;
+    width: 11%;
     }
 
     .inc-tab-incidents-table th.i_create-date-column {
-        width: 12%;
+    width: 12%;
     }
 
     .inc-tab-incidents-table th.i_update-date-column {
-        width: 12%;
+    width: 12%;
     }
 
     .inc-tab-incidents-table th.i_urgency-column {
-        width: 12%;
+    width: 12%;
     }
 
     .inc-tab-incidents-table th.i_state-column {
-        width: 9%;
+    width: 9%;
     }
 
     .inc-tab-incidents-table th.i_category-column {
-        width: 11%;
+    width: 11%;
     }
 
     .inc-tab-incidents-table th.i_assignment-group-column {
-        width: 13%;
+    width: 13%;
     }
 
     .inc-tab-incidents-table th.i_assigned-to-column {
-        width: 12%;
+    width: 12%;
     }
 </style>
 
@@ -85,7 +85,6 @@
                     <a href="#" class="inc-tab-dropdown-item" data-status="all">All</a>
                     <a href="#" class="inc-tab-dropdown-item" data-status="pending">Pending</a>
                     <a href="#" class="inc-tab-dropdown-item" data-status="inprogress">In Progress</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-status="onhold">On-Hold</a>
                     <a href="#" class="inc-tab-dropdown-item" data-status="resolved">Resolved</a>
                     <a href="#" class="inc-tab-dropdown-item" data-status="closed">Closed</a>
                 </div>
@@ -131,7 +130,22 @@
                             <a href="~/IncidentManagement/Inc_Info_Form?id=@i.id&type=User">@i.inc_number</a>
                         </td>
                         <td data-label="urgency" class="phone_incident_hide_design">@i.urgency</td>
-                        <td data-label="state">@i.state</td>
+                        @if (i.state == "Closed")
+                        {
+                            <td data-label="state" style="color:darkred">@i.state</td>
+                        }
+                        else if (i.state == "Resolved")
+                        {
+                            <td data-label="state" style="color:chocolate">@i.state</td>
+                        }
+                        else if (i.state == "In Progress")
+                        {
+                            <td data-label="state" style="color:dodgerblue">@i.state</td>
+                        }
+                        else
+                        {
+                            <td data-label="state">@i.state</td>
+                        }
                         <td data-label="inc_category" class="phone_incident_hide_design">@(i.IncidentcategoryData?.name)</td>
                         <td data-label="subcategory" class="phone_incident_hide_design">@(i.SubcategoryData?.subcategory)</td>
                         <td data-label="assignment group" class="phone_incident_hide_design">@(i.AssignmentGroup?.name)</td>

@@ -361,7 +361,7 @@
             data: formData,
             success: function (response) {
                 if (response.success) {
-                    window.location.href = '/IncidentManagement/All';
+                    reback_page();
                 } else {
                     alert("Failed to resolve incident: " + response.message);
                 }
@@ -429,7 +429,7 @@
             data: formData,
             success: function (response) {
                 if (response.success) {
-                    window.location.href = '/IncidentManagement/All';
+                    reback_page();
                 } else {
                     //alert("Close event failed: " + response.message);
                 }
@@ -449,7 +449,7 @@
             data: formData,
             success: function (response) {
                 if (response.success) {
-                    window.location.href = '/IncidentManagement/All';
+                    reback_page();
                 } else {
                     alert("Reopen event failed: " + response.message);
                 }
@@ -459,6 +459,31 @@
             }
         });
     });
+
+    function reback_page() {
+        let roleBack = $('#roleBack').val();
+        if (roleBack.includes("Admin")) {
+            window.location.href = '/IncidentManagement/All';
+        }
+        else if (roleBack.includes("Resolved")) {
+            window.location.href = '/IncidentManagement/Resolved_Assigned_To_Me';
+        }
+        else if (roleBack.includes("ToMe")) {
+            window.location.href = '/IncidentManagement/Assigned_To_Me';
+        }
+        else if (roleBack.includes("ToGroup")) {
+            window.location.href = '/IncidentManagement/Assigned_To_Group';
+        }
+        else if (roleBack.includes("Closed")) {
+            window.location.href = '/IncidentManagement/Closed_Assigned_To_Me';
+        }
+        else if (roleBack.includes("Message")) {
+            window.location.href = '/IncidentManagement/Inc_Message';
+        }
+        else {
+            window.location.href = '/IncidentManagement/User_All';
+        }
+    }
 
     // initialization Lightbox
     lightbox.option({

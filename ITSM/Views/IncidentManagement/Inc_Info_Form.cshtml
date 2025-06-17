@@ -7,128 +7,136 @@
 
 <style>
     * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
     }
 
     body {
-    font-family: 'Segoe UI', Arial, sans-serif;
-    background-color: var(--background-color);
-    color: var(--text-color);
-    line-height: 1.5;
-    margin: 0;
-    min-height: 100vh;
+        font-family: 'Segoe UI', Arial, sans-serif;
+        background-color: var(--background-color);
+        color: var(--text-color);
+        line-height: 1.5;
+        margin: 0;
+        min-height: 100vh;
     }
 
     .inc-cre-resolve-item {
-    background: linear-gradient(135deg, #2c3e50, #1a242f);
-    border-radius: 10px;
-    padding: 15px;
-    margin-bottom: 15px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-    position: relative;
-    color: #fff;
-    transition: all 0.3s ease;
+        background: linear-gradient(135deg, #2c3e50, #1a242f);
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 15px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        position: relative;
+        color: #fff;
+        transition: all 0.3s ease;
     }
 
     .inc-cre-resolve-item:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     }
 
     .inc-cre-resolve-content {
-    width: 100%;
+        width: 100%;
     }
 
     .inc-cre-resolve-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    padding-bottom: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding-bottom: 8px;
     }
 
     .inc-cre-resolve-type {
-    font-weight: bold;
-    color: #4caf50;
-    font-size: 16px;
+        font-weight: bold;
+        color: #4caf50;
+        font-size: 16px;
     }
 
     .inc-cre-resolve-time {
-    color: #bbb;
-    font-size: 13px;
+        color: #bbb;
+        font-size: 13px;
     }
 
     .inc-cre-resolve-user {
-    display: flex;
-    align-items: center;
-    margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        margin-bottom: 12px;
     }
 
     .inc-cre-resolve-user-avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    margin-right: 10px;
-    border: 2px solid rgba(255, 255, 255, 0.2);
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        margin-right: 10px;
+        border: 2px solid rgba(255, 255, 255, 0.2);
     }
 
     .inc-cre-resolve-details {
-    line-height: 1.6;
-    font-size: 14px;
-    color: #fff;
-    background-color: rgba(255, 255, 255, 0.05);
-    padding: 10px;
-    border-radius: 6px;
-    border-left: 3px solid #4caf50;
+        line-height: 1.6;
+        font-size: 14px;
+        color: #fff;
+        background-color: rgba(255, 255, 255, 0.05);
+        padding: 10px;
+        border-radius: 6px;
+        border-left: 3px solid #4caf50;
     }
 
     .resolved-mode .inc-cre-activity-container {
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        padding: 15px;
     }
 
     .resolved-mode .inc-cre-activities-section h3 {
-    font-size: 18px;
-    font-weight: 600;
-    margin-bottom: 16px;
-    color: #fff;
-    padding-bottom: 8px;
-    border-bottom: 2px solid #3a546e;
-    display: inline-block;
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 16px;
+        color: #fff;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #3a546e;
+        display: inline-block;
     }
 
     .resolved-mode .inc-cre-activity-item {
-    transition: all 0.3s ease;
+        transition: all 0.3s ease;
     }
 
     .resolved-mode .inc-cre-activity-item:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        transform: translateY(-2px);
+        box-shadow: 0 3px 10px rgba(0,0,0,0.1);
     }
 
     .inc-cre-btn-closed{
-    background-color: #6b0e0e;
-    transition:all .2s ease-in-out;
+        background-color: #6b0e0e;
+        transition:all .2s ease-in-out;
     }
 
     .inc-cre-btn-closed:hover{
-    background-color: #590d0d;
+        background-color: #590d0d;
     }
 
     #modalImage {
-    max-width: 100%;
-    max-height: 90vh;
-    object-fit: contain;
-    margin: auto;
-    display: block;
+        max-width: 100%;
+        max-height: 90vh;
+        object-fit: contain;
+        margin: auto;
+        display: block;
     }
 
     .inc-file-cre-form-padding {
-    padding: 4px 0px 0px 5px;
+        padding: 4px 0px 0px 5px;
+    }
+
+    .inc-cre-user-link {
+        display: inline-block;
+        width: 100%;
+        padding: 6px 12px;
+        border-radius: 4px;
+        text-decoration: none;
     }
 </style>
 
@@ -206,7 +214,6 @@
             </div>
         }
 
-
         <form id="incidentForm" class="inc-cre-incident-form" action="~/IncidentManagement/Inc_Info_Form" method="post" enctype="multipart/form-data">
             <input type="text" name="id" id="id" class="inc-cre-form-control" value="@Model.incident.id" style="display:none;" readonly>
             <input type="text" name="roleBack" id="roleBack" class="inc-cre-form-control" value="@Model.roleBack" style="display:none;" readonly>
@@ -220,8 +227,7 @@
                     <div class="inc-cre-form-group">
                         <label for="caller" class="inc-cre-form-label">Caller</label>
                         <div class="inc-cre-input-with-icon">
-                            <div class="inc-cre-form-control"
-                            style="display: inline-block; width: 100%; padding: 6px 12px; border-radius: 4px; text-decoration: none;">
+                            <div class="inc-cre-form-control inc-cre-user-link">
                                 <a href="~/User/Form_User_Info?id=@Model.incident.Sender?.id" target="_blank">
                                     @(Model.incident.Sender?.fullname ?? "")
                                 </a>
@@ -296,7 +302,6 @@
                                 {
                                     <option value="Pending" selected="@(Model.incident.state == "Pending")">Pending</option>
                                     <option value="In Progress" selected="@(Model.incident.state == "In Progress")">In Progress</option>
-                                    <option value="On-Hold" selected="@(Model.incident.state == "On-Hold")">On-Hold</option>
                                 }
                             </select>
                         }
@@ -394,7 +399,12 @@
                                 </button>
                             </label>
                             <div class="inc-cre-input-with-icon">
-                                <input type="text" id="assigned-to" class="inc-cre-form-control" readonly value="@(Model.incident.AssignedTo?.fullname ?? "")">
+                                @* <input type="text" id="assigned-to" class="inc-cre-form-control" readonly value="@(Model.incident.AssignedTo?.fullname ?? "")"> *@
+                                <div class="inc-cre-form-control inc-cre-user-link">
+                                    <a href="~/User/Form_User_Info?id=@Model.incident.AssignedTo?.id" target="_blank">
+                                        @(Model.incident.AssignedTo?.fullname ?? "")
+                                    </a>
+                                </div>
                                 <input type="hidden" id="assigned-to-id" name="assigned_to" value="@Model.incident.assigned_to">
                                 <button type="button" class="inc-cre-icon-search" id="assigned-to-search" @(Model.incident.assignment_group > 0 ? "" : "disabled")>
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -419,8 +429,13 @@
                             </button> *@
                             </label>
                             <div class="inc-cre-input-with-icon">
-                                <input type="text" id="assigned_to" class="inc-cre-form-control" readonly value="@(Model.incident.AssignedTo?.fullname ?? "")">
+                                @* <input type="text" id="assigned_to" class="inc-cre-form-control" readonly value="@(Model.incident.AssignedTo?.fullname ?? "")"> *@
                                 <input type="hidden" name="assigned_to" id="assigned-to-id" class="inc-cre-form-control" value="@(Model.incident.AssignedTo?.id.ToString() ?? "")">
+                                <div class="inc-cre-form-control inc-cre-user-link">
+                                    <a href="~/User/Form_User_Info?id=@Model.incident.AssignedTo?.id" target="_blank">
+                                        @(Model.incident.AssignedTo?.fullname ?? "")
+                                    </a>
+                                </div>
                                 @* <input type="hidden" id="assigned-to-id" name="assigned_to" value="@Model.incident.assigned_to">
                             <button type="button" class="inc-cre-icon-search" id="assigned-to-search" @(Model.incident.assignment_group > 0 ? "" : "disabled")>
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -581,11 +596,11 @@
                 <div class="inc-cre-notes-container">
 
                     @if (
-                            (Model.user?.department_id == Model.incident.assignment_group && Model.user?.r_manager == true) ||
-                            (Model.user.Role?.role.ToLower() == "admin" && Model.user?.r_manager == true) ||
-                            (Model.user.Role?.role.ToLower() == "admin") ||
-                            (Model.user?.id == Model.incident.sender) ||
-                            (Model.user?.id == Model.incident.assigned_to)
+                            Model.incident.assigned_to != null &&
+                            (
+                                Model.user?.id == Model.incident.sender ||
+                                Model.user?.id == Model.incident.assigned_to
+                            )
                         )
                     {
                         <div class="inc-cre-notes-header">

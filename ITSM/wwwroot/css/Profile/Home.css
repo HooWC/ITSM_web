@@ -611,7 +611,6 @@ img {
     font-weight: 700;
     letter-spacing: 0.8px;
     background-color: var(--theme-bg-color);
-    border-left: 4px solid #b36dfb;
 }
 
     .pro-file-msg-department svg {

@@ -7,68 +7,68 @@
 
 <style>
     .dropdown-menu{
-        background: #4b4c4d;
-        color:white;
+    background: #4b4c4d;
+    color:white;
     }
 
     .dropdown-item:hover{
-        text-decoration: none;
+    text-decoration: none;
     }
-    
+
     .pro-file-members {
-        width: 36px !important;
-        height: 36px !important;
-        border-radius: 50%;
-        object-fit: cover;
-        margin-right: 12px;
-        flex-shrink: 0;
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 12px;
+    flex-shrink: 0;
     }
-    
+
     .pro-file-member-item {
-        display: flex;
-        align-items: center;
-        margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
     }
-    
+
     @@media screen and (max-width: 768px) {
-        .col-md-4 {
-            width: 50%;
-        }
-        
-        .mobile-full-width {
-            width: 100% !important;
-        }
-        
-        .pro-file-members {
-            width: 36px !important;
-            height: 36px !important;
-        }
-
-        .pro-file-user-profile-area {
-            width: 100% !important;
-            min-width: unset !important;
-            margin: 0 auto !important;
-            max-width: 500px !important;
-        }
-
-        .pro-file-container {
-            justify-content: center !important;
-        }
+    .col-md-4 {
+    width: 50%;
     }
-    
-    @@media screen and (max-width: 480px) {
-        .col-md-4 {
-            width: 100%;
-        }
-        
-        .pro-file-members {
-            width: 36px !important;
-            height: 36px !important;
-        }
 
-        .pro-file-user-profile-area {
-            padding: 0 15px !important;
-        }
+    .mobile-full-width {
+    width: 100% !important;
+    }
+
+    .pro-file-members {
+    width: 36px !important;
+    height: 36px !important;
+    }
+
+    .pro-file-user-profile-area {
+    width: 100% !important;
+    min-width: unset !important;
+    margin: 0 auto !important;
+    max-width: 500px !important;
+    }
+
+    .pro-file-container {
+    justify-content: center !important;
+    }
+    }
+
+    @@media screen and (max-width: 480px) {
+    .col-md-4 {
+    width: 100%;
+    }
+
+    .pro-file-members {
+    width: 36px !important;
+    height: 36px !important;
+    }
+
+    .pro-file-user-profile-area {
+    padding: 0 15px !important;
+    }
     }
 </style>
 
@@ -224,7 +224,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Row:  Feedback / Knowledge -->
                     <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 mb-0">
                         <div class="card">
@@ -237,11 +237,11 @@
                                     </div>
                                     <div class="dropdown">
                                         <button class="btn p-0"
-                                                type="button"
-                                                id="cardOpt1"
-                                                data-bs-toggle="dropdown"
-                                                aria-haspopup="true"
-                                                aria-expanded="false">
+                                        type="button"
+                                        id="cardOpt1"
+                                        data-bs-toggle="dropdown"
+                                        aria-haspopup="true"
+                                        aria-expanded="false">
                                             <i class="icon-base bx bx-dots-vertical-rounded text-body-secondary"></i>
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="cardOpt1">
@@ -282,8 +282,8 @@
                             </div>
                         </div>
                     </div>
-                    
-                    
+
+
 
                 </div>
             </div>
@@ -297,12 +297,20 @@
                 <img src="@(Model.User.photo != null ?
                         $"data:{Model.User.photo_type};base64,{Convert.ToBase64String(Model.User.photo)}" :
                         Url.Content("~/img/avatar/user_avatar.jpg"))"
-                        alt="avatar"
-                        class="pro-file-user-photo" />
+                alt="avatar"
+                class="pro-file-user-photo" />
                 <div class="pro-file-user-name">@Model.User.fullname</div>
                 <div class="pro-file-user-mail">@Model.User.email</div>
                 <div class="pro-file-user-role">@Model.RoleName</div>
-                <div class="pro-file-user-title">@Model.DepartmentName</div>
+                @if (Model.user.r_manager)
+                {
+                    <div class="pro-file-user-title">@Model.DepartmentName / Manager</div>
+                }
+                else
+                {
+                    <div class="pro-file-user-title">@Model.DepartmentName</div>
+                }
+                
             </div>
             <div class="pro-file-user-notification">
                 <div class="pro-file-notify">
