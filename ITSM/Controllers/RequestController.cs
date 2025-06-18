@@ -113,7 +113,6 @@ namespace ITSM.Controllers
 
             foreach(var i in allProduct)
             {
-                i.Category = allCategory.FirstOrDefault(x => x.id == i.category_id);
                 i.ResponsibleDepartment = allDep.FirstOrDefault(x => x.id == i.responsible);
             }
 
@@ -141,7 +140,6 @@ namespace ITSM.Controllers
             var allCategory = categoryTask.Result;
 
             var info_pro = await _productApi.FindByIDProduct_API(id);
-            info_pro.Category = allCategory.Where(x => x.id ==  info_pro.category_id).FirstOrDefault();
             info_pro.ResponsibleDepartment = allDep.Where(x => x.id == info_pro.responsible).FirstOrDefault();
 
             var model = new AllModelVM()
@@ -175,7 +173,6 @@ namespace ITSM.Controllers
 
             var info_pro = await _productApi.FindByIDProduct_API(pro_id);
 
-            info_pro.Category = allCategory.Where(x => x.id == info_pro.category_id).FirstOrDefault();
             info_pro.ResponsibleDepartment = allDep.Where(x => x.id == info_pro.responsible).FirstOrDefault();
 
             var model = new AllModelVM()
@@ -185,20 +182,17 @@ namespace ITSM.Controllers
                 noteMessageCount = noteMessageCount
             };
 
-            if (info_pro.product_type == "Product")
+            if (req.quantity > info_pro.quantity || req.quantity <= 0)
             {
-                if(req.quantity > info_pro.quantity || req.quantity <= 0)
-                {
-                    ViewBag.Error = "Error Quantity";
-                    return View(model);
-                }
-
-                info_pro.quantity = info_pro.quantity - req.quantity;
-                if (info_pro.quantity <= 0)
-                    info_pro.active = false;
-
-                await _productApi.UpdateProduct_API(info_pro);
+                ViewBag.Error = "Error Quantity";
+                return View(model);
             }
+
+            info_pro.quantity = info_pro.quantity - req.quantity;
+            if (info_pro.quantity <= 0)
+                info_pro.active = false;
+
+            await _productApi.UpdateProduct_API(info_pro);
 
             if (req.short_description == null)
             {
@@ -274,7 +268,6 @@ namespace ITSM.Controllers
             Req.Sender = allUser.FirstOrDefault(x => x.id == Req.sender);
             Req.AssignmentGroup = allDepartment.FirstOrDefault(x => x.id == Req.assignment_group);
             Req.UpdatedBy = allUser.FirstOrDefault(x => x.id == Req.updated_by);
-            Req.Product.Category = allCategory.FirstOrDefault(x => x.id == Req.Product.category_id);
             Req.Product.ResponsibleDepartment = allDepartment.FirstOrDefault(x => x.id == Req.Product.responsible);
 
             var model = new AllModelVM()
@@ -310,7 +303,6 @@ namespace ITSM.Controllers
             Req.Sender = allUser.FirstOrDefault(x => x.id == Req.sender);
             Req.AssignmentGroup = allDepartment.FirstOrDefault(x => x.id == Req.assignment_group);
             Req.UpdatedBy = allUser.FirstOrDefault(x => x.id == Req.updated_by);
-            Req.Product.Category = allCategory.FirstOrDefault(x => x.id == Req.Product.category_id);
             Req.Product.ResponsibleDepartment = allDepartment.FirstOrDefault(x => x.id == Req.Product.responsible);
 
             var model = new AllModelVM()
@@ -331,22 +323,19 @@ namespace ITSM.Controllers
 
             int root = info_pro.quantity + Req.quantity;
 
-            if (info_pro.product_type == "Product")
+            if (req.quantity > root || req.quantity <= 0)
             {
-                if (req.quantity > root || req.quantity <= 0)
-                {
-                    ViewBag.Error = "Error Quantity";
-                    return View(model);
-                }
-
-                info_pro.quantity = root - req.quantity;
-                if (info_pro.quantity <= 0)
-                    info_pro.active = false;
-                else
-                    info_pro.active = true;
-
-                await _productApi.UpdateProduct_API(info_pro);
+                ViewBag.Error = "Error Quantity";
+                return View(model);
             }
+
+            info_pro.quantity = root - req.quantity;
+            if (info_pro.quantity <= 0)
+                info_pro.active = false;
+            else
+                info_pro.active = true;
+
+            await _productApi.UpdateProduct_API(info_pro);
 
             Req.short_description = req.short_description;
             Req.description = req.short_description;

@@ -179,18 +179,9 @@
                     }
                     else
                     {
-                        if (Model.product.product_type == "Product")
-                        {
-                            <img src="~/img/product/product_base.png"
-                                 alt="Selected Product"
-                                 class="inc-cre-product-image" />
-                        }
-                        else
-                        {
-                            <img src="~/img/product/service_base.png"
-                                 alt="Selected Product"
-                                 class="inc-cre-product-image" />
-                        }
+                        <img src="~/img/product/product_base.png"
+                             alt="Selected Product"
+                             class="inc-cre-product-image" />
                     }
 
                     <div class="inc-cre-product-image-overlay">
@@ -227,25 +218,12 @@
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="quantity" class="inc-cre-form-label">Quantity</label>
-                        @if (Model.product.product_type == "Product")
-                        {
-                            <input type="number" name="quantity" id="quantity" class="inc-cre-form-control" value="1" min="1" max="@Model.product.quantity" required>
-                        }
-                        else
-                        {
-                            <input type="text" name="quantity" id="quantity" class="inc-cre-form-control" value="1" readonly>
-                        }
+                        <input type="number" name="quantity" id="quantity" class="inc-cre-form-control" value="1" min="1" max="@Model.product.quantity" required>
                     </div>
                 </div>
             </div>
 
             <div class="inc-cre-form-grid">
-                <div class="inc-cre-form-column">
-                    <div class="inc-cre-form-group">
-                        <label for="channel" class="inc-cre-form-label">Category</label>
-                        <input type="text" class="inc-cre-form-control" value="@Model.product.Category.title" readonly>
-                    </div>
-                </div>
 
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">

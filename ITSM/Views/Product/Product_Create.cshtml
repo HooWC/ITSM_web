@@ -6,18 +6,18 @@
 
 <style>
     * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
     }
 
     body {
-    font-family: 'Segoe UI', Arial, sans-serif;
-    background-color: var(--background-color);
-    color: var(--text-color);
-    line-height: 1.5;
-    margin: 0;
-    min-height: 100vh;
+        font-family: 'Segoe UI', Arial, sans-serif;
+        background-color: var(--background-color);
+        color: var(--text-color);
+        line-height: 1.5;
+        margin: 0;
+        min-height: 100vh;
     }
 
     .inc-file-cre-form-padding{
@@ -44,7 +44,7 @@
             </div>
         </div>
         <div class="inc-cre-header-right">
-            <button class="inc-cre-btn inc-cre-btn-icon" onclick="location.href='/Feedback/Feedback_List'">
+            <button class="inc-cre-btn inc-cre-btn-icon" onclick="location.href='/Product/Product_List'">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="4" y1="6" x2="20" y2="6"></line>
                     <line x1="4" y1="12" x2="20" y2="12"></line>
@@ -59,7 +59,6 @@
                 </svg>
             </button>
             <button class="inc-cre-btn inc-cre-btn-submit" onclick="document.getElementById('incidentForm').submit();">Submit</button>
-
         </div>
     </header>
 
@@ -90,6 +89,7 @@
             </div>
         }
 
+
         <form id="incidentForm" class="inc-cre-incident-form" action="~/Product/Product_Create" method="post" enctype="multipart/form-data">
             <div class="inc-cre-form-grid">
                 <div class="inc-cre-form-column">
@@ -117,37 +117,6 @@
 
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
-                        <label for="file" class="inc-cre-form-label">
-                            Picture (Maximun size: 50mb)
-                            <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/Photo_Info', '_blank')">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                                </svg>
-                            </button>
-                        </label>
-                        <input type="file" name="file" id="file" class="inc-cre-form-control inc-file-cre-form-padding">
-                    </div>
-                </div>
-            </div>
-
-            <div class="inc-cre-form-grid">
-                <div class="inc-cre-form-column">
-                    <div class="inc-cre-form-group">
-                        <label for="category_id" class="inc-cre-form-label">Category</label>
-                        <select id="category_id" name="category_id" class="inc-cre-form-control">
-                            @foreach (var item in Model.CategoryList)
-                            {
-                                var isSelected = item == Model.CategoryList.First() ? "selected" : "";
-                                <option value="@item.id" isSelected>@item.title</option>
-                            }
-                        </select>
-                    </div>
-                </div>
-
-                <div class="inc-cre-form-column">
-                    <div class="inc-cre-form-group">
                         <label for="responsible" class="inc-cre-form-label">Responsible</label>
                         <select id="responsible" name="responsible" class="inc-cre-form-control">
                             @foreach (var item in Model.DepartmentList)
@@ -160,25 +129,18 @@
                 </div>
             </div>
 
-            <div class="inc-cre-form-grid">
-                <div class="inc-cre-form-column">
-                    <div class="inc-cre-form-group">
-                        <label for="product_type" class="inc-cre-form-label">
-                            Server Type
-                            <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/Server_Type_Info', '_blank')">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                                </svg>
-                            </button>
-                        </label>
-                        <select id="product_type" name="product_type" class="inc-cre-form-control">
-                            <option value="Product">Product</option>
-                            <option value="Service">Service</option>
-                        </select>
-                    </div>
-                </div>
+            <div class="inc-cre-form-group inc-cre-full-width">
+                <label for="file" class="inc-cre-form-label">
+                    Picture (Maximun size: 50mb)
+                    <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/Photo_Info', '_blank')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                    </button>
+                </label>
+                <input type="file" name="file" id="file" class="inc-cre-form-control inc-file-cre-form-padding">
             </div>
 
             <div class="inc-cre-form-group inc-cre-short-description-group">

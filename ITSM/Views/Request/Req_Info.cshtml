@@ -197,18 +197,9 @@
                     }
                     else
                     {
-                        if (Model.request.Product.product_type == "Product")
-                        {
-                            <img src="~/img/product/product_base.png"
-                            alt="Selected Product"
-                            class="inc-cre-product-image" />
-                        }
-                        else
-                        {
-                            <img src="~/img/product/service_base.png"
-                            alt="Selected Product"
-                            class="inc-cre-product-image" />
-                        }
+                        <img src="~/img/product/product_base.png"
+                             alt="Selected Product"
+                             class="inc-cre-product-image" />
                     }
 
                     <div class="inc-cre-product-image-overlay">
@@ -245,25 +236,12 @@
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="quantity" class="inc-cre-form-label">Quantity</label>
-                        @if (Model.request.Product.product_type == "Product")
-                        {
-                            <input type="number" name="quantity" id="quantity" class="inc-cre-form-control" value="@Model.request.quantity" min="1" max="@(Model.request.quantity + Model.request.Product.quantity)" @(Model.request.state == "Rejected" || Model.request.state == "Completed" ? "readonly" : "") required>
-                        }
-                        else
-                        {
-                            <input type="text" name="quantity" id="quantity" class="inc-cre-form-control" value="1" readonly>
-                        }
+                        <input type="number" name="quantity" id="quantity" class="inc-cre-form-control" value="@Model.request.quantity" min="1" max="@(Model.request.quantity + Model.request.Product.quantity)" @(Model.request.state == "Rejected" || Model.request.state == "Completed" ? "readonly" : "") required>
                     </div>
                 </div>
             </div>
 
             <div class="inc-cre-form-grid">
-                <div class="inc-cre-form-column">
-                    <div class="inc-cre-form-group">
-                        <label for="channel" class="inc-cre-form-label">Category</label>
-                        <input type="text" class="inc-cre-form-control" value="@Model.request.Product.Category.title" readonly>
-                    </div>
-                </div>
 
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">

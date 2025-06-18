@@ -19,9 +19,6 @@ namespace ITSM_DomainModelEntity.Models
         [StringLength(50)]
         public string? pro_number { get; set; }
 
-        [ForeignKey("Category")]
-        public int category_id { get; set; }
-
         [ForeignKey("ResponsibleDepartment")]
         public int responsible { get; set; }
 
@@ -41,10 +38,7 @@ namespace ITSM_DomainModelEntity.Models
 
         public string? photo_type {  get; set; }
 
-        public string? product_type {  get; set; }
-
         // Navigation properties
-        public virtual Category? Category { get; set; }
         public virtual Department? ResponsibleDepartment { get; set; }
     }
 }

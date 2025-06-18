@@ -1173,12 +1173,10 @@ namespace ITSM.Controllers
             if (!IsUserLoggedIn(out var currentUser))
                 return Json(new { success = false, message = "Not logged in" });
 
-            var categoryTask = _categoryApi.GetAllCategory_API();
             var departmentTask = _departmentApi.GetAllDepartment_API();
             var productTask = _productApi.GetAllProduct_API();
-            await Task.WhenAll(categoryTask, departmentTask, productTask);
+            await Task.WhenAll(departmentTask, productTask);
 
-            var allCategory = categoryTask.Result;
             var allDepartment = departmentTask.Result;
             var allProduct = productTask.Result;
 
@@ -1203,17 +1201,6 @@ namespace ITSM.Controllers
                     case "description":
                         filteredProduct = selectProduct
                             .Where(x => x.description != null && x.description.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                            .ToList();
-                        break;
-                    case "category":
-                        var filteredCategoryData = allCategory.Where(x => x.title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
-                        filteredProduct = (from i in selectProduct
-                                           join c in filteredCategoryData on i.category_id equals c.id
-                                           select i).ToList();
-                        break;
-                    case "product_type":
-                        filteredProduct = selectProduct
-                            .Where(x => x.product_type != null && x.product_type.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
                             .ToList();
                         break;
                     case "responsible":
@@ -1242,9 +1229,7 @@ namespace ITSM.Controllers
                 t.item_title,
                 t.description,
                 t.quantity,
-                t.product_type,
                 active = t.active ? "Active" : "Inactive",
-                category_name = allCategory.FirstOrDefault(c => c.id == t.category_id)?.title ?? "",
                 department_name = allDepartment.FirstOrDefault(d => d.id == t.responsible)?.name ?? ""
             });
 
@@ -1259,12 +1244,10 @@ namespace ITSM.Controllers
                 return Json(new { success = false, message = "Not logged in" });
 
             var productTask = _productApi.GetAllProduct_API();
-            var categoryTask = _categoryApi.GetAllCategory_API();
             var departmentTask = _departmentApi.GetAllDepartment_API();
-            await Task.WhenAll(productTask, categoryTask, departmentTask);
+            await Task.WhenAll(productTask, departmentTask);
 
             var allProduct = productTask.Result;
-            var allCategory = categoryTask.Result;
             var allDepartment = departmentTask.Result;
 
             var SelectProduct = new List<Product>();
@@ -1281,9 +1264,7 @@ namespace ITSM.Controllers
                 t.item_title,
                 t.description,
                 t.quantity,
-                t.product_type,
                 active = t.active ? "Active" : "Inactive",
-                category_name = allCategory.FirstOrDefault(c => c.id == t.category_id)?.title ?? "",
                 department_name = allDepartment.FirstOrDefault(d => d.id == t.responsible)?.name ?? ""
             });
 
@@ -1298,12 +1279,10 @@ namespace ITSM.Controllers
                 return Json(new { success = false, message = "Not logged in" });
 
             var productTask = _productApi.GetAllProduct_API();
-            var categoryTask = _categoryApi.GetAllCategory_API();
             var departmentTask = _departmentApi.GetAllDepartment_API();
-            await Task.WhenAll(productTask, categoryTask, departmentTask);
+            await Task.WhenAll(productTask, departmentTask);
 
             var allProduct = productTask.Result;
-            var allCategory = categoryTask.Result;
             var allDepartment = departmentTask.Result;
 
             var SelectProduct = new List<Product>();
@@ -1330,9 +1309,7 @@ namespace ITSM.Controllers
                 t.item_title,
                 t.description,
                 t.quantity,
-                t.product_type,
                 active = t.active ? "Active" : "Inactive",
-                category_name = allCategory.FirstOrDefault(c => c.id == t.category_id)?.title ?? "",
                 department_name = allDepartment.FirstOrDefault(d => d.id == t.responsible)?.name ?? ""
             });
 
@@ -2025,12 +2002,6 @@ namespace ITSM.Controllers
                                         join u in filterUsers on i.sender equals u.id
                                         select i).ToList();
                         break;
-                    case "product_type":
-                        var filterProducts_type = allProduct.Where(x => x.product_type.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
-                        filteredReqs = (from i in userReqs
-                                        join p in filterProducts_type on i.pro_id equals p.id
-                                        select i).ToList();
-                        break;
                     case "assignment_group":
                         var filterDepartments = allDepartment.Where(x => x.name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
                         filteredReqs = (from i in userReqs
@@ -2077,7 +2048,6 @@ namespace ITSM.Controllers
                 t.state,
                 product_id = allProduct.FirstOrDefault(d => d.id == t.pro_id)?.pro_number ?? "",
                 user_name = allUser.FirstOrDefault(u => u.id == t.sender)?.fullname ?? "",
-                product_type = allProduct.FirstOrDefault(x => x.id == t.pro_id)?.product_type ?? "",
                 assignment_group = allDepartment.FirstOrDefault(x => x.id == t.assignment_group).name,
                 update_by = allUser.FirstOrDefault(x => x.id == t.updated_by)?.fullname ?? "",
                 create_date = t.create_date.ToString("yyyy-MM-dd HH:mm:ss"),
@@ -2149,7 +2119,6 @@ namespace ITSM.Controllers
                 t.state,
                 product_id = allProduct.FirstOrDefault(d => d.id == t.pro_id)?.pro_number ?? "",
                 user_name = allUser.FirstOrDefault(u => u.id == t.sender)?.fullname ?? "",
-                product_type = allProduct.FirstOrDefault(x => x.id == t.pro_id)?.product_type ?? "",
                 assignment_group = allDepartment.FirstOrDefault(x => x.id == t.assignment_group).name,
                 update_by = allUser.FirstOrDefault(x => x.id == t.updated_by)?.fullname ?? "",
                 create_date = t.create_date.ToString("yyyy-MM-dd HH:mm:ss"),
@@ -2201,7 +2170,6 @@ namespace ITSM.Controllers
                 t.state,
                 product_id = allProduct.FirstOrDefault(d => d.id == t.pro_id)?.pro_number ?? "",
                 user_name = allUser.FirstOrDefault(u => u.id == t.sender)?.fullname ?? "",
-                product_type = allProduct.FirstOrDefault(x => x.id == t.pro_id)?.product_type ?? "",
                 assignment_group = allDepartment.FirstOrDefault(x => x.id == t.assignment_group).name,
                 update_by = allUser.FirstOrDefault(x => x.id == t.updated_by)?.fullname ?? "",
                 create_date = t.create_date.ToString("yyyy-MM-dd HH:mm:ss"),
@@ -2317,16 +2285,13 @@ namespace ITSM.Controllers
                 reqData.closed_date = DateTime.Now;
                 reqData.updated_by = currentUser.id;
 
-                if (productData.product_type == "Product")
+                var pro_count = productData.quantity + reqData.quantity;
+                if (pro_count > 0)
                 {
-                    var pro_count = productData.quantity + reqData.quantity;
-                    if(pro_count > 0)
-                    {
-                        productData.active = true;
-                        productData.quantity = pro_count;
+                    productData.active = true;
+                    productData.quantity = pro_count;
 
-                        await _productApi.UpdateProduct_API(productData);
-                    }
+                    await _productApi.UpdateProduct_API(productData);
                 }
 
                 bool result = await _reqApi.UpdateRequest_API(reqData); 
@@ -2365,18 +2330,15 @@ namespace ITSM.Controllers
                 reqData.closed_date = null;
                 reqData.updated_by = currentUser.id;
 
-                if (productData.product_type == "Product")
+                var pro_count = productData.quantity - reqData.quantity;
+                if (pro_count < 0)
+                    return Json(new { success = false, message = "Not enough product" });
+                else
                 {
-                    var pro_count = productData.quantity - reqData.quantity;
-                    if (pro_count < 0)
-                        return Json(new { success = false, message = "Not enough product" });
-                    else
-                    {
-                        if (pro_count <= 0)
-                            productData.active = false;
-                        productData.quantity = pro_count;
-                        await _productApi.UpdateProduct_API(productData);
-                    }
+                    if (pro_count <= 0)
+                        productData.active = false;
+                    productData.quantity = pro_count;
+                    await _productApi.UpdateProduct_API(productData);
                 }
 
                 bool result = await _reqApi.UpdateRequest_API(reqData);

@@ -15,11 +15,7 @@
     }
 
     .inc-tab-incidents-table th.r_user {
-        width: 11%;
-    }
-
-    .inc-tab-incidents-table th.r_product_type {
-        width: 9%;
+        width: 13%;
     }
 
     .inc-tab-incidents-table th.r_state {
@@ -31,19 +27,19 @@
     }
 
     .inc-tab-incidents-table th.r_quantity {
-        width: 9%;
+        width: 10%;
     }
 
     .inc-tab-incidents-table th.r_update_by {
-        width: 11%;
+        width: 13%;
     }
 
     .inc-tab-incidents-table th.r_create_date {
-        width: 11%;
+        width: 13%;
     }
 
     .inc-tab-incidents-table th.r_closed_date {
-        width: 11%;
+        width: 13%;
     }
 </style>
 
@@ -60,7 +56,6 @@
                     <a href="#" class="inc-tab-dropdown-item" data-filter="number">Request ID</a>
                     <a href="#" class="inc-tab-dropdown-item phone_request_hide_design" data-filter="product_id">Product ID</a>
                     <a href="#" class="inc-tab-dropdown-item phone_request_hide_design" data-filter="user">User</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="product_type">Product Type</a>
                     <a href="#" class="inc-tab-dropdown-item phone_request_hide_design" data-filter="assignment_group">Assignment Group</a>
                     <a href="#" class="inc-tab-dropdown-item" data-filter="quantity">Quantity</a>
                     <a href="#" class="inc-tab-dropdown-item phone_request_hide_design" data-filter="updated_by">Updated By</a>
@@ -115,7 +110,6 @@
                     <th class="inc-tab-sortable number-column" id="sortByNumber">Number <i class="fas fa-arrow-up" id="sortIcon"></i></th>
                     <th class="r_product_id phone_request_hide_design">Product Id</th>
                     <th class="r_user phone_request_hide_design">User</th>
-                    <th class="r_product_type">Product Type</th>
                     <th class="r_state">State</th>
                     <th class="r_assignment_group phone_request_hide_design">Assignment Group</th>
                     <th class="r_quantity">Quantity</th>
@@ -135,7 +129,6 @@
                         </td>
                         <td data-label="Product_Number" class="phone_request_hide_design">@i.Product.pro_number</td>
                         <td data-label="Full_Name" class="phone_request_hide_design">@i.Sender.fullname</td>
-                        <td data-label="Product_Type">@i.Product.product_type</td>
                         <td data-label="State">@i.state</td>
                         <td data-label="AssignmentGroup" class="phone_request_hide_design">@i.AssignmentGroup.name</td>
                         <td data-label="Quantity">@i.quantity</td>

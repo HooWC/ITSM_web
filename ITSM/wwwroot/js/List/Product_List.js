@@ -417,7 +417,7 @@ function updateProductTable(data) {
     tableBody.empty();
 
     if (data.length === 0) {
-        tableBody.append('<tr><td colspan="9" class="text-center">No matching Product found</td></tr>');
+        tableBody.append('<tr><td colspan="8" class="text-center">No matching Product found</td></tr>');
         IncidentItems = 0;
         IncidentPages = 0;
         updatePaginationInfo();
@@ -434,9 +434,7 @@ function updateProductTable(data) {
                         </td>
                         <td data-label="Item_title">${product.item_title}</td>
                         <td data-label="Description" class="phone_product_hide_design">${product.description}</td>
-                        <td data-label="C_Title" class="phone_product_hide_design">${product.category_name}</td>
                         <td data-label="R_Name" class="phone_product_hide_design">${product.department_name}</td>
-                        <td data-label="Product_Type">${product.product_type}</td>
                         <td data-label="Quantity">${product.quantity}</td>
                         <td data-label="Active" class="phone_product_hide_design">${product.active}</td>
                     </tr>

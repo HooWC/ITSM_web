@@ -36,8 +36,12 @@
         <div class="ser-cat-app-content-actions">
             <input class="ser-cat-search-bar" placeholder="Search..." type="text">
             <div class="ser-cat-app-content-actions-wrapper">
-                <div class="ser-cat-filter-button-wrapper">
-                    <button class="ser-cat-action-button ser-cat-filter ser-cat-jsFilter"><span>Filter</span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-filter"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" /></svg></button>
+                @* <div class="ser-cat-filter-button-wrapper">
+                    <button class="ser-cat-action-button ser-cat-filter ser-cat-jsFilter">
+                        <span>Filter</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-filter"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+                            </svg>
+                    </button>
                     <div class="ser-cat-filter-menu">
                         <label>Category</label>
                         <select class="ser-cat-category-filter">
@@ -62,7 +66,7 @@
                             </button>
                         </div>
                     </div>
-                </div>
+                </div> *@
                 <button class="ser-cat-action-button" id="refreshButton">
                     <i class="fas fa-sync-alt"></i>
                 </button>
@@ -82,12 +86,12 @@
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 512 512"><path fill="currentColor" d="M496.1 138.3L375.7 17.9c-7.9-7.9-20.6-7.9-28.5 0L226.9 138.3c-7.9 7.9-7.9 20.6 0 28.5 7.9 7.9 20.6 7.9 28.5 0l85.7-85.7v352.8c0 11.3 9.1 20.4 20.4 20.4 11.3 0 20.4-9.1 20.4-20.4V81.1l85.7 85.7c7.9 7.9 20.6 7.9 28.5 0 7.9-7.8 7.9-20.6 0-28.5zM287.1 347.2c-7.9-7.9-20.6-7.9-28.5 0l-85.7 85.7V80.1c0-11.3-9.1-20.4-20.4-20.4-11.3 0-20.4 9.1-20.4 20.4v352.8l-85.7-85.7c-7.9-7.9-20.6-7.9-28.5 0-7.9 7.9-7.9 20.6 0 28.5l120.4 120.4c7.9 7.9 20.6 7.9 28.5 0l120.4-120.4c7.8-7.9 7.8-20.7-.1-28.5z" /></svg>
                     </button> *@
                 </div>
-                <div class="ser-cat-product-cell ser-cat-category">
+                @* <div class="ser-cat-product-cell ser-cat-category">
                     Type
                 </div>
                 <div class="ser-cat-product-cell ser-cat-status-cell">
                     Category
-                </div>
+                </div> *@
                 <div class="ser-cat-product-cell ser-cat-sales">
                     Responsible
                 </div>
@@ -100,7 +104,7 @@
             </div>
             @foreach(var i in Model.ProductList)
             {
-                <a href="@(i.active ? Url.Content("~/Request/Create_Form?id=" + i.id) : "#")" class="ser-cat-products-row line_item_none" data-category-id="@i.Category.id" data-status="@(i.active ? "active" : "inactive")">
+                <a href="@(i.active ? Url.Content("~/Request/Create_Form?id=" + i.id) : "#")" class="ser-cat-products-row line_item_none" data-status="@(i.active ? "active" : "inactive")">
                     <button class="ser-cat-cell-more-button">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical"><circle cx="12" cy="12" r="1" /><circle cx="12" cy="5" r="1" /><circle cx="12" cy="19" r="1" /></svg>
                     </button>
@@ -114,22 +118,14 @@
                         }
                         else
                         {
-                            if (i.product_type == "Product")
-                            {
-                                <img src="~/img/product/product_base.png"
-                                     alt="product" />
-                            }
-                            else
-                            {
-                                <img src="~/img/product/service_base.png"
-                                     alt="product" />
-                            }
+                            <img src="~/img/product/product_base.png"
+                                 alt="product" />
                         }
 
                         <span>@i.item_title</span>
                     </div>
-                    <div class="ser-cat-product-cell ser-cat-price"><span class="ser-cat-cell-label">Type:</span>@i.product_type</div>
-                    <div class="ser-cat-product-cell ser-cat-category"><span class="ser-cat-cell-label">Category:</span>@i.Category.title</div>
+                    @* <div class="ser-cat-product-cell ser-cat-price"><span class="ser-cat-cell-label">Type:</span></div>
+                    <div class="ser-cat-product-cell ser-cat-category"><span class="ser-cat-cell-label">Category:</span></div> *@
                     <div class="ser-cat-product-cell ser-cat-sales"><span class="ser-cat-cell-label">Responsible:</span>@i.ResponsibleDepartment.name</div>
                     <div class="ser-cat-product-cell ser-cat-stock"><span class="ser-cat-cell-label">Stock:</span>@i.quantity</div>
                     <div class="ser-cat-product-cell ser-cat-status-cell">

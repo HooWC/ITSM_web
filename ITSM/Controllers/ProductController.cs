@@ -45,19 +45,17 @@ namespace ITSM.Controllers
             var noteMessageCount = await _userService.GetNoteAsync();
 
             var productTask = _productApi.GetAllProduct_API();
-            var categoryTask = _categoryApi.GetAllCategory_API();
             var departmentTask = _departmentApi.GetAllDepartment_API();
-            await Task.WhenAll(productTask, categoryTask, departmentTask);
+
+            await Task.WhenAll(productTask, departmentTask);
 
             var allProduct = productTask.Result;
-            var allCategory = categoryTask.Result;
             var allDepartment = departmentTask.Result;
 
             var productList = allProduct.OrderByDescending(y => y.id).ToList();
 
             foreach(var product in productList)
             {
-                product.Category = allCategory.FirstOrDefault(x => x.id == product.category_id);
                 product.ResponsibleDepartment = allDepartment.FirstOrDefault(x => x.id == product.responsible);
             }
 
@@ -78,6 +76,7 @@ namespace ITSM.Controllers
 
             var categoryTask = _categoryApi.GetAllCategory_API();
             var departmentTask = _departmentApi.GetAllDepartment_API();
+
             await Task.WhenAll(categoryTask, departmentTask);
 
             var allCategory = categoryTask.Result;
@@ -103,6 +102,7 @@ namespace ITSM.Controllers
             var categoryTask = _categoryApi.GetAllCategory_API();
             var departmentTask = _departmentApi.GetAllDepartment_API();
             var productTask = _productApi.GetAllProduct_API();
+
             await Task.WhenAll(categoryTask, departmentTask, productTask);
 
             var allCategory = categoryTask.Result;
@@ -117,7 +117,7 @@ namespace ITSM.Controllers
                 noteMessageCount = noteMessageCount
             };
 
-            if (product.item_title != null && product.description != null && product.quantity >= 0)
+            if (product.item_title != null && product.description != null && product.quantity > 0)
             {
                 byte[] fileBytes = null;
 
@@ -152,12 +152,10 @@ namespace ITSM.Controllers
                 Product new_product = new Product()
                 {
                     pro_number = newId,
-                    category_id = product.category_id,
                     item_title = product.item_title,
                     description = product.description,
                     quantity = product.quantity,
                     responsible = product.responsible,
-                    product_type = product.product_type,
                 };
 
                 if (fileBytes != null)
@@ -166,7 +164,6 @@ namespace ITSM.Controllers
                     new_product.photo_type = GetMimeTypeFromFileSignature(fileBytes);
                 }
 
-                // create new product data
                 bool result = await _productApi.CreateProduct_API(new_product);
 
                 if (result)
@@ -191,6 +188,7 @@ namespace ITSM.Controllers
 
             var categoryTask = _categoryApi.GetAllCategory_API();
             var departmentTask = _departmentApi.GetAllDepartment_API();
+
             await Task.WhenAll(categoryTask, departmentTask);
 
             var allCategory = categoryTask.Result;
@@ -198,7 +196,6 @@ namespace ITSM.Controllers
 
             var pro_info = await _productApi.FindByIDProduct_API(id);
             
-            pro_info.Category = allCategory.Where(x => x.id == pro_info.category_id).FirstOrDefault();
             pro_info.ResponsibleDepartment = allDepartment.Where(x => x.id == pro_info.responsible).FirstOrDefault();
 
             var model = new AllModelVM()
@@ -221,13 +218,13 @@ namespace ITSM.Controllers
 
             var categoryTask = _categoryApi.GetAllCategory_API();
             var departmentTask = _departmentApi.GetAllDepartment_API();
+
             await Task.WhenAll(categoryTask, departmentTask);
 
             var allCategory = categoryTask.Result;
             var allDepartment = departmentTask.Result;
 
             var pro_info = await _productApi.FindByIDProduct_API(product.id);
-            pro_info.Category = allCategory.Where(x => x.id == pro_info.category_id).FirstOrDefault();
             pro_info.ResponsibleDepartment = allDepartment.Where(x => x.id == pro_info.responsible).FirstOrDefault();
 
             var model = new AllModelVM()
@@ -261,10 +258,8 @@ namespace ITSM.Controllers
                 pro_info.item_title = product.item_title;
                 pro_info.description = product.description;
                 pro_info.quantity = product.quantity;
-                pro_info.category_id = product.category_id;
                 pro_info.responsible = product.responsible;
                 pro_info.active = product.active;
-                pro_info.product_type = product.product_type;
 
                 if (fileBytes != null)
                 {
@@ -333,7 +328,7 @@ namespace ITSM.Controllers
                 fileBytes[2] == 0x01 && fileBytes[3] == 0x00)
                 return "image/x-icon";
 
-            // HEIF (需要更多字节检查)
+            // HEIF
             if (fileBytes.Length >= 12 &&
                 ((fileBytes[4] == 0x66 && fileBytes[5] == 0x74 &&
                   fileBytes[6] == 0x79 && fileBytes[7] == 0x70 &&
@@ -353,7 +348,7 @@ namespace ITSM.Controllers
                 fileBytes[10] == 0x69 && fileBytes[11] == 0x66)
                 return "image/avif";
 
-            // 默认
+            // Basic
             return "application/octet-stream";
         }
     }
