@@ -638,6 +638,7 @@ namespace ITSM.Controllers
                 var inc_info = await _incApi.FindByIDIncident_API(incidentId);
                 int? receiverId = 0;
 
+                // 如果是 Assign Work 没有 assign to 的话？
                 if(currentUser.id == inc_info?.sender)
                 {
                     // 如果是用户的话？Admin收到
@@ -1964,6 +1965,8 @@ namespace ITSM.Controllers
                 userReqs = allReqs.OrderByDescending(x => x.id).ToList();
             else if (searchWord == "req_user")
                 userReqs = allReqs.Where(x => x.sender == currentUser.id).OrderByDescending(x => x.id).ToList();
+            else if (searchWord == "assign_work")
+                userReqs = allReqs.Where(x => x.assignment_group == currentUser.department_id && x?.assigned_to == null && x.state != "Rejected" && x.state != "Completed").OrderByDescending(x => x.id).ToList();
             else if (searchWord == "req_group")
                 userReqs = allReqs.Where(x => x.assignment_group == currentUser.department_id).OrderByDescending(x => x.id).ToList();
             else
@@ -2008,6 +2011,12 @@ namespace ITSM.Controllers
                                         join d in filterDepartments on i.assignment_group equals d.id
                                         select i).ToList();
                         break;
+                    case "assigned_to":
+                        var filterAssigned_To = allUser.Where(x => x.fullname.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+                        filteredReqs = (from i in userReqs
+                                        join d in filterAssigned_To on i.assigned_to equals d.id
+                                        select i).ToList();
+                        break;
                     case "quantity":
                         filteredReqs = userReqs
                             .Where(x => x.quantity.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
@@ -2049,6 +2058,7 @@ namespace ITSM.Controllers
                 product_id = allProduct.FirstOrDefault(d => d.id == t.pro_id)?.pro_number ?? "",
                 user_name = allUser.FirstOrDefault(u => u.id == t.sender)?.fullname ?? "",
                 assignment_group = allDepartment.FirstOrDefault(x => x.id == t.assignment_group).name,
+                assigned_to = allUser.FirstOrDefault(x => x.id == t.assigned_to).fullname,
                 update_by = allUser.FirstOrDefault(x => x.id == t.updated_by)?.fullname ?? "",
                 create_date = t.create_date.ToString("yyyy-MM-dd HH:mm:ss"),
                 closed_date = t.closed_date != null ? t.closed_date?.ToString("yyyy-MM-dd HH:mm:ss") : "-"
@@ -2120,6 +2130,7 @@ namespace ITSM.Controllers
                 product_id = allProduct.FirstOrDefault(d => d.id == t.pro_id)?.pro_number ?? "",
                 user_name = allUser.FirstOrDefault(u => u.id == t.sender)?.fullname ?? "",
                 assignment_group = allDepartment.FirstOrDefault(x => x.id == t.assignment_group).name,
+                assigned_to = allUser.FirstOrDefault(x => x.id == t.assigned_to).fullname,
                 update_by = allUser.FirstOrDefault(x => x.id == t.updated_by)?.fullname ?? "",
                 create_date = t.create_date.ToString("yyyy-MM-dd HH:mm:ss"),
                 closed_date = t.closed_date != null ? t.closed_date?.ToString("yyyy-MM-dd HH:mm:ss") : "-"
@@ -2143,6 +2154,8 @@ namespace ITSM.Controllers
                 userReqs = allReqs.Where(x => x.sender == currentUser.id).OrderByDescending(x => x.id).ToList();
             else if (sortWord == "req_sort_group")
                 userReqs = allReqs.Where(x => x.assignment_group == currentUser.department_id).OrderByDescending(x => x.id).ToList();
+            else if (sortWord == "assign_work")
+                userReqs = allReqs.Where(x => x.assignment_group == currentUser.department_id && x?.assigned_to == null && x.state != "Rejected" && x.state != "Completed").OrderByDescending(x => x.id).ToList();
             else
                 userReqs = allReqs.OrderByDescending(x => x.id).ToList();
 
@@ -2171,6 +2184,7 @@ namespace ITSM.Controllers
                 product_id = allProduct.FirstOrDefault(d => d.id == t.pro_id)?.pro_number ?? "",
                 user_name = allUser.FirstOrDefault(u => u.id == t.sender)?.fullname ?? "",
                 assignment_group = allDepartment.FirstOrDefault(x => x.id == t.assignment_group).name,
+                assigned_to = allUser.FirstOrDefault(x => x.id == t.assigned_to).fullname,
                 update_by = allUser.FirstOrDefault(x => x.id == t.updated_by)?.fullname ?? "",
                 create_date = t.create_date.ToString("yyyy-MM-dd HH:mm:ss"),
                 closed_date = t.closed_date != null ? t.closed_date?.ToString("yyyy-MM-dd HH:mm:ss") : "-"

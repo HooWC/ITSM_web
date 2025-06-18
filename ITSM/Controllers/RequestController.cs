@@ -65,19 +65,25 @@ namespace ITSM.Controllers
                 Reqs = allRequest.Where(x => x.sender == currentUser.id).OrderByDescending(x => x.id).ToList();
             else if(type.Contains("Assigned_To_Us"))
                 Reqs = allRequest.Where(x => x.assignment_group == currentUser.department_id).OrderByDescending(x => x.id).ToList();
+            else if (type.Contains("Manager_Assign_Work"))
+                Reqs = allRequest.Where(x => x.assignment_group == currentUser.department_id && x?.assigned_to == null && x.state != "Rejected" && x.state != "Completed").OrderByDescending(x => x.id).ToList();
+            else if (type == "Assigned_To_Me")
+                Reqs = allRequest.Where(x => x.assigned_to == currentUser.id && x.state != "Resolved" && x.state != "Closed").OrderByDescending(y => y.id).ToList();
 
             foreach (var i in Reqs)
-                {
-                    i.Product = allProduct.FirstOrDefault(x => x.id == i.pro_id);
-                    i.Sender = allUser.FirstOrDefault(x => x.id == i.sender);
-                    i.AssignmentGroup = allDepartment.FirstOrDefault(x => x.id == i.assignment_group);
-                    i.UpdatedBy = allUser.FirstOrDefault(x => x.id == i.updated_by);
-                }
+            {
+                i.Product = allProduct.FirstOrDefault(x => x.id == i.pro_id);
+                i.Sender = allUser.FirstOrDefault(x => x.id == i.sender);
+                i.AssignmentGroup = allDepartment.FirstOrDefault(x => x.id == i.assignment_group);
+                i.UpdatedBy = allUser.FirstOrDefault(x => x.id == i.updated_by);
+                i.AssignedTo = allUser.FirstOrDefault(x => x.id == i.assigned_to);
+            }
 
             var model = new AllModelVM()
             {
                 user = currentUser,
                 RequestList = Reqs,
+                noteMessageCount = noteMessageCount
             };
 
             return model;
@@ -182,6 +188,12 @@ namespace ITSM.Controllers
                 noteMessageCount = noteMessageCount
             };
 
+            if (req.description == null)
+            {
+                ViewBag.Error = "Please fill in all required fields";
+                return View(model);
+            }
+
             if (req.quantity > info_pro.quantity || req.quantity <= 0)
             {
                 ViewBag.Error = "Error Quantity";
@@ -193,12 +205,6 @@ namespace ITSM.Controllers
                 info_pro.active = false;
 
             await _productApi.UpdateProduct_API(info_pro);
-
-            if (req.short_description == null)
-            {
-                ViewBag.Error = "Please fill in all required fields";
-                return View(model);
-            }
 
             string newId = "";
             if (allReq.Count > 0)
@@ -219,8 +225,7 @@ namespace ITSM.Controllers
                 pro_id = pro_id,
                 sender = currentUser.id,
                 state = "Pedding",
-                short_description = req.short_description,
-                description = req.short_description,
+                description = req.description,
                 assignment_group = info_pro.responsible,
                 quantity = req.quantity,
                 updated_by = currentUser.id
@@ -247,7 +252,7 @@ namespace ITSM.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> Req_Info(int id, string role)
+        public async Task<IActionResult> Req_Info(int id, string type)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
             var noteMessageCount = await _userService.GetNoteAsync();
@@ -274,7 +279,7 @@ namespace ITSM.Controllers
             {
                 user = currentUser,
                 request = Req,
-                roleBack = role,
+                roleBack = type,
                 noteMessageCount = noteMessageCount
             };
 
@@ -313,7 +318,7 @@ namespace ITSM.Controllers
                 noteMessageCount = noteMessageCount
             };
 
-            if (req.short_description == null)
+            if (req.description == null)
             {
                 ViewBag.Error = "Please fill in all required fields";
                 return View(model);
@@ -336,9 +341,8 @@ namespace ITSM.Controllers
                 info_pro.active = true;
 
             await _productApi.UpdateProduct_API(info_pro);
-
-            Req.short_description = req.short_description;
-            Req.description = req.short_description;
+            
+            Req.description = req.description;
             Req.state = req.state;
             Req.updated_by = currentUser.id;
             Req.quantity = req.quantity;
@@ -359,6 +363,96 @@ namespace ITSM.Controllers
                 ViewBag.Error = "Update Request Error";
                 return View(model);
             }
+        }
+
+        public async Task<IActionResult> Manager_Assign_Work()
+        {
+            var model = await get_req_data("Manager_Assign_Work");
+
+            return View(model);
+        }
+
+        public async Task<AllModelVM> get_Manager_Assign_Work_Info(int id)
+        {
+            var currentUser = await _userService.GetCurrentUserAsync();
+            var noteMessageCount = await _userService.GetNoteAsync();
+
+            var productTask = _productApi.GetAllProduct_API();
+            var userTask = _userApi.GetAllUser_API();
+            var departmentTask = _departmentApi.GetAllDepartment_API();
+            var requestTask = _reqApi.GetAllRequest_API();
+            await Task.WhenAll(productTask, userTask, departmentTask, requestTask);
+
+            var allProduct = productTask.Result;
+            var allUser = userTask.Result;
+            var allDepartment = departmentTask.Result;
+            var allRequest = requestTask.Result;
+
+            var req_info = await _reqApi.FindByIDRequest_API(id);
+            req_info.Product = allProduct.FirstOrDefault(x => x.id == req_info.pro_id);
+            req_info.Sender = allUser.FirstOrDefault(x => x.id == req_info.sender);
+            req_info.AssignmentGroup = allDepartment.FirstOrDefault(x => x.id == req_info.assignment_group);
+            req_info.UpdatedBy = allUser.FirstOrDefault(x => x.id == req_info.updated_by);
+            req_info.AssignedTo = allUser.FirstOrDefault(x => x.id == req_info.assigned_to);
+
+            var model = new AllModelVM()
+            {
+                user = currentUser,
+                request = req_info,
+                noteMessageCount = noteMessageCount
+            };
+
+            return model;
+        }
+
+        public async Task<IActionResult> Manager_Assign_Work_Info(int id)
+        {
+            var model = await get_Manager_Assign_Work_Info(id);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Manager_Assign_Work_Info(Request req)
+        {
+            var model = await get_Manager_Assign_Work_Info(req.id);
+
+            var reqData = await _reqApi.FindByIDRequest_API(req.id);
+
+            if (req.description != null)
+            {
+                if (reqData != null)
+                {
+                    reqData.assigned_to = reqData.assigned_to;
+
+                    bool result = await _reqApi.UpdateRequest_API(reqData);
+
+                    if (result)
+                        return RedirectToAction("Manager_Assign_Work", "Request");
+                    else
+                    {
+                        ViewBag.Error = "Update event failed";
+                        return View(model);
+                    }
+                }
+                else
+                {
+                    ViewBag.Error = "Update Request Error";
+                    return View(model);
+                }
+            }
+            else
+            {
+                ViewBag.Error = "Please fill in all required fields";
+                return View(model);
+            }
+        }
+
+        public async Task<IActionResult> Assigned_To_Me()
+        {
+            var model = await get_req_data("Assigned_To_Me");
+
+            return View(model);
         }
     }
 }

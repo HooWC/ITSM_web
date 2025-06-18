@@ -1,17 +1,17 @@
 ﻿@using ITSM_DomainModelEntity.ViewModels
 @model AllModelVM
 @{
-    ViewData["Title"] = "All";
+    ViewData["Title"] = "Manager_Assign_Work";
     Layout = "_Layout";
 }
 
 <style>
     .inc-tab-incidents-table th.number-column {
-        width: 10%;
+        width: 12%;
     }
 
     .inc-tab-incidents-table th.r_user {
-        width: 16%;
+        width: 20%;
     }
 
     .inc-tab-incidents-table th.r_state {
@@ -19,19 +19,15 @@
     }
 
     .inc-tab-incidents-table th.r_assignment_group {
-        width: 16%;
+        width: 19%;
     }
 
     .inc-tab-incidents-table th.r_quantity {
-        width: 11%;
-    }
-
-    .inc-tab-incidents-table th.r_assigned_to {
-        width: 16%;
+        width: 14%;
     }
 
     .inc-tab-incidents-table th.r_create_date {
-        width: 16%;
+        width: 19%;
     }
 </style>
 
@@ -48,7 +44,6 @@
                     <a href="#" class="inc-tab-dropdown-item" data-filter="number">Request ID</a>
                     <a href="#" class="inc-tab-dropdown-item phone_request_hide_design" data-filter="user">User</a>
                     <a href="#" class="inc-tab-dropdown-item phone_request_hide_design" data-filter="assignment_group">Assignment Group</a>
-                    <a href="#" class="inc-tab-dropdown-item phone_request_hide_design" data-filter="assigned_to">Assigned to</a>
                     <a href="#" class="inc-tab-dropdown-item" data-filter="quantity">Quantity</a>
                     <a href="#" class="inc-tab-dropdown-item phone_request_hide_design" data-filter="create_date">Create Date</a>
                 </div>
@@ -68,18 +63,8 @@
                     <line x1="12" y1="17" x2="12.01" y2="17"></line>
                 </svg>
             </button>
-            <div class="inc-tab-dropdown">
-                <button class="inc-tab-dropdown-toggle" id="statusDropdown">All <i class="fas fa-chevron-down"></i></button>
-                <div class="inc-tab-dropdown-menu" id="statusMenu" style="display:none;">
-                    <a href="#" class="inc-tab-dropdown-item" data-status="all">All</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-status="pending">Pending</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-status="in_progress">In Progress</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-status="completed">Completed</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-status="rejected">Rejected</a>
-                </div>
-            </div>
             @* <button class="inc-tab-new-button item-delete-btn show-error-box-btn" id="deleteButton" disabled>Delete</button> *@
-            @* <button class="inc-tab-new-button" onclick="window.location.href='/Request/Service_Catalog';">New</button> *@
+           @*  <button class="inc-tab-new-button" onclick="window.location.href='/Request/Service_Catalog';">New</button> *@
 
         </div>
     </header>
@@ -91,8 +76,6 @@
         <span class="inc-tab-all-text">All</span>
     </div> *@
 
-    <input type="text" name="typeName" id="typeName" class="inc-cre-form-control" value="Admin" style="display:none;" readonly>
-
     <div class="inc-tab-table-container">
         <table class="inc-tab-incidents-table">
             <thead>
@@ -102,7 +85,6 @@
                     <th class="r_user phone_request_hide_design">User</th>
                     <th class="r_state">State</th>
                     <th class="r_assignment_group phone_request_hide_design">Assignment Group</th>
-                    <th class="r_assigned_to phone_request_hide_design">Assigned to</th>
                     <th class="r_quantity">Quantity</th>
                     <th class="r_create_date phone_request_hide_design">Create Date</th>
                 </tr>
@@ -114,14 +96,13 @@
                     <tr class="incident-item" data-id="@i.id">
                         @* <td><input type="checkbox" class="item-checkbox"></td> *@
                         <td class="inc-tab-incident-number" data-label="Number">
-                            <a href="~/Request/Req_Info?id=@i.id&type=Admin">@(i.req_id)</a>
+                            <a href="~/Request/Manager_Assign_Work_Info?id=@i.id">@i.req_id</a>
                         </td>
-                        <td data-label="Full_Name" class="phone_request_hide_design">@(i.Sender?.fullname)</td>
-                        <td data-label="State">@(i.state)</td>
-                        <td data-label="AssignmentGroup" class="phone_request_hide_design">@(i.AssignmentGroup?.name)</td>
-                        <td data-label="AssignedTo" class="phone_request_hide_design">@(i.AssignedTo?.fullname)</td>
-                        <td data-label="Quantity">@(i.quantity)</td>
-                        <td data-label="Create_Date" class="phone_request_hide_design">@(i.create_date.ToString("yyyy-MM-dd HH:mm:ss"))</td>
+                        <td data-label="Full_Name" class="phone_request_hide_design">@i.Sender.fullname</td>
+                        <td data-label="State">@i.state</td>
+                        <td data-label="AssignmentGroup" class="phone_request_hide_design">@i.AssignmentGroup.name</td>
+                        <td data-label="Quantity">@i.quantity</td>
+                        <td data-label="Create_Date" class="phone_request_hide_design">@i.create_date.ToString("yyyy-MM-dd HH:mm:ss")</td>
                     </tr>
                 }
 
@@ -138,9 +119,8 @@
     </div>
 </div>
 
-<span style="display:none" id="forAjaxGetFunctionName_search">SearchRequest</span>
-<span style="display:none" id="forAjaxGetFunctionName_sort">SortRequest</span>
-<span style="display:none" id="forAjaxGetFunctionName_filter">FilterRequest</span>
+<span style="display:none" id="forAjaxGetFunctionName_search">SearchReqAssignWork</span>
+<span style="display:none" id="forAjaxGetFunctionName_sort">SortReqAssignWork</span>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="~/js/List/Req_List.js"></script>
@@ -152,7 +132,7 @@
             $target.addClass('active open');
         }
 
-        $('#Requests_child_all').addClass("active");
+        $('#Requests_child_assign_work').addClass("active");
     });
 </script>
 

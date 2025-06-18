@@ -70,6 +70,8 @@ namespace ITSM.Controllers
                 incList = allInc.Where(x => (x.assigned_to == currentUser.id || x.updated_by == currentUser.id) && x.state == "Resolved").OrderByDescending(y => y.id).ToList();
             else if(type == "Closed_Assigned_To_Me")
                 incList = allInc.Where(x => (x.assigned_to == currentUser.id || x.updated_by == currentUser.id) && x.state == "Closed").OrderByDescending(y => y.id).ToList();
+            else if (type == "Manager_Assign_Work")
+                incList = allInc.Where(x => x.assignment_group == currentUser.department_id && x.assigned_to == null && x.state != "Closed" && x.state != "Resolved").OrderByDescending(y => y.id).ToList();
 
             var allDepartments = dep.Result;
             var allUsers = user.Result;
@@ -492,41 +494,7 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Manager_Assign_Work()
         {
-            var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
-
-            var inc = _incApi.GetAllIncident_API();
-            var dep = _depApi.GetAllDepartment_API();
-            var user = _userApi.GetAllUser_API();
-
-            var inc_categoryTask = _inccategoryApi.GetAllIncidentcategory_API();
-            var sucategoryTask = _subcategoryApi.GetAllSubcategory_API();
-
-            await Task.WhenAll(inc, dep, user, inc_categoryTask, sucategoryTask);
-
-            var allInc = inc.Result;
-            var incList = allInc.Where(x => x.assignment_group == currentUser.department_id && x.assigned_to == null && x.state != "Closed" && x.state != "Resolved").OrderByDescending(y => y.id).ToList();
-
-            var allDepartments = dep.Result;
-            var allUsers = user.Result;
-
-            var allIncCategory = inc_categoryTask.Result;
-            var allSucategory = sucategoryTask.Result;
-
-            foreach (var incident in incList)
-            {
-                incident.AssignmentGroup = allDepartments.FirstOrDefault(d => d.id == incident.assignment_group);
-                incident.AssignedTo = allUsers.FirstOrDefault(u => u.id == incident.assigned_to);
-                incident.IncidentcategoryData = allIncCategory.FirstOrDefault(x => x.id == incident.category);
-                incident.SubcategoryData = allSucategory.FirstOrDefault(x => x.id == incident.subcategory);
-            }
-
-            var model = new AllModelVM()
-            {
-                user = currentUser,
-                IncidentList = incList,
-                noteMessageCount = noteMessageCount
-            };
+            var model = await get_Inc_Data("Manager_Assign_Work");
 
             return View(model);
         }

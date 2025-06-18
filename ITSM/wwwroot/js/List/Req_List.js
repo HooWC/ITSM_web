@@ -167,6 +167,8 @@ function sortRequests() {
         word = "req_sort_user";
     else if (sortFunctionName.includes("S_Group"))
         word = "req_sort_group";
+    else if (sortFunctionName.includes("SortReqAssignWork"))
+        word = "assign_work";
     else
         word = "sort_basic";
 
@@ -359,6 +361,8 @@ function searchIncidents() {
         word = "req_user";
     else if (searchFunctionName.includes("S_Group"))
         word = "req_group";
+    else if (searchFunctionName.includes("SearchReqAssignWork"))
+        word = "assign_work";
     else
         word = "search_basic";
 
@@ -461,27 +465,46 @@ function updateRequestTable(data) {
         return;
     }
 
-    $.each(data, function (index, req) {
-
-        var row = `
+    if (searchFunctionName.includes("SearchAssignWork")) {
+        $.each(data, function (index, inc) {
+            var row = `
                     <tr class="incident-item" data-id="${req.id}">
                         <td class="inc-tab-incident-number" data-label="Number">
-                            <a href="/Request/Req_Info?id=${req.id}">${req.req_id}</a>
+                            <a href="/Request/Manager_Assign_Work_Info?id=${req.id}">${req.req_id}</a>
                         </td>
-                        <td data-label="Product_Number" class="phone_request_hide_design">${req.product_id}</td>
                         <td data-label="Full_Name" class="phone_request_hide_design">${req.user_name}</td>
-                        <td data-label="Product_Type">${req.product_type}</td>
                         <td data-label="State">${req.state}</td>
                         <td data-label="AssignmentGroup" class="phone_request_hide_design">${req.assignment_group}</td>
                         <td data-label="Quantity">${req.quantity}</td>
-                        <td data-label="Updated_By" class="phone_request_hide_design">${req.update_by}</td>
                         <td data-label="Create_Date" class="phone_request_hide_design">${req.create_date}</td>
-                        <td data-label="Closed_date" class="phone_request_hide_design">${req.closed_date}</td>
                     </tr>
                 `;
-        tableBody.append(row);
-        phone_function()
-    });
+            tableBody.append(row);
+            phone_function();
+        });
+    }
+    else
+    {
+        var typeName = $('#typeName').val();
+
+        $.each(data, function (index, req) {
+            var row = `
+                    <tr class="incident-item" data-id="${req.id}">
+                        <td class="inc-tab-incident-number" data-label="Number">
+                            <a href="/Request/Req_Info?id=${req.id}&&type=${typeName}">${req.req_id}</a>
+                        </td>
+                        <td data-label="Full_Name" class="phone_request_hide_design">${req.user_name}</td>
+                        <td data-label="State">${req.state}</td>
+                        <td data-label="AssignmentGroup" class="phone_request_hide_design">${req.assignment_group}</td>
+                        <td data-label="AssignedTo" class="phone_request_hide_design">${req.assigned_to}</td>
+                        <td data-label="Quantity">${req.quantity}</td>
+                        <td data-label="Create_Date" class="phone_request_hide_design">${req.create_date}</td>
+                    </tr>
+                `;
+            tableBody.append(row);
+            phone_function()
+        });
+    }
 
     // Reinitialize paging
     initPagination();

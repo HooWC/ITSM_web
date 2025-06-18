@@ -27,10 +27,6 @@ namespace ITSM_DomainModelEntity.Models
         [StringLength(50)]
         public string? state { get; set; }
 
-        [Required]
-        [StringLength(255)]
-        public string? short_description { get; set; }
-
         public string? description { get; set; }
 
         public DateTime create_date { get; set; }
@@ -47,10 +43,14 @@ namespace ITSM_DomainModelEntity.Models
 
         public int quantity { get; set; }
 
+        [ForeignKey("AssignedTo")]
+        public int? assigned_to {  get; set; }
+
         // Navigation properties
         public virtual Product? Product { get; set; }
         public virtual User? Sender { get; set; }
         public virtual Department? AssignmentGroup { get; set; }
         public virtual User? UpdatedBy { get; set; }
+        public virtual User? AssignedTo { get; set; }
     }
 }

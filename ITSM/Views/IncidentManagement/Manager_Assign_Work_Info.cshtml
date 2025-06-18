@@ -171,6 +171,8 @@
 
     <main class="inc-cre-form-wrapper">
 
+        <input type="text" name="caller_id" id="caller_id" class="inc-cre-form-control" value="@Model.incident.Sender?.id" style="display:none;" readonly>
+
         @if (!string.IsNullOrEmpty(ViewBag.Error as string))
         {
             <div id="error-notification" class="error-notification">
@@ -217,7 +219,6 @@
                                 </a>
                             </div>
                         </div>
-                        <input type="text" name="caller_id" id="caller_id" class="inc-cre-form-control" value="@Model.incident.Sender?.id" style="display:none;" readonly>
                     </div>
 
                     <div class="inc-cre-form-group">
@@ -307,7 +308,12 @@
                             </button>
                         </label>
                         <div class="inc-cre-input-with-icon">
-                            <input type="text" id="assigned-to" class="inc-cre-form-control" readonly value="@(Model.incident.AssignedTo?.fullname ?? "")">
+                            @* <input type="text" id="assigned-to" class="inc-cre-form-control" readonly value="@(Model.incident.AssignedTo?.fullname ?? "")"> *@
+                            <div class="inc-cre-form-control inc-cre-user-link">
+                                <a id="assigned-to" href="~/User/Form_User_Info?id=@Model.incident.AssignedTo?.id" target="_blank">
+                                    @(Model.incident.AssignedTo?.fullname ?? "")
+                                </a>
+                            </div>
                             <input type="hidden" id="assigned-to-id" name="assigned_to" value="@Model.incident.assigned_to">
                             <button type="button" class="inc-cre-icon-search" id="assigned-to-search" @(Model.incident.assignment_group > 0 ? "" : "disabled")>
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

@@ -359,6 +359,15 @@ data-bs-theme="dark">
                                 </li>
                             }
 
+                            @if (Model.user.r_manager)
+                            {
+                                <li class="menu-item" id="Requests_child_assign_work">
+                                    <a href="~/Request/Manager_Assign_Work" class="menu-link">
+                                        <div class="text-truncate" data-i18n="Connections">Assign Work</div>
+                                    </a>
+                                </li>
+                            }
+
                             <li class="menu-item" id="Requests_child_all_User">
                                 <a href="~/Request/User_All" class="menu-link">
                                     <div class="text-truncate" data-i18n="Connections">My Ticket</div>
@@ -374,15 +383,20 @@ data-bs-theme="dark">
                                     <div class="text-truncate" data-i18n="Connections">Application</div>
                                 </a>
                             </li>
+                            <li class="menu-item" id="Requests_child_assigned">
+                                <a href="~/Request/Assigned_To_Us" class="menu-link">
+                                    <div class="text-truncate" data-i18n="Notifications">Assigned to me</div>
+                                </a>
+                            </li>
 
-                            @if (Model.user.Role.role.ToLower() == "admin")
+                            @* @if (Model.user.Role.role.ToLower() == "admin")
                             {
                                 <li class="menu-item" id="Requests_child_assigned">
                                     <a href="~/Request/Assigned_To_Us" class="menu-link">
                                         <div class="text-truncate" data-i18n="Notifications">Assigned to us</div>
                                     </a>
                                 </li>
-                            }
+                            } *@
 
                         </ul>
                     </li>
