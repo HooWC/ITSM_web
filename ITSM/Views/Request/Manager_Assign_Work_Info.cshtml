@@ -172,7 +172,7 @@
             </div>
         }
 
-        <form id="incidentForm" class="inc-cre-incident-form" action="~/Request/Req_Info" method="post">
+        <form id="incidentForm" class="inc-cre-incident-form" action="~/Request/Manager_Assign_Work_Info" method="post">
             <input type="text" name="id" id="reqId" class="inc-cre-form-control" value="@Model.request.id" style="display:none;" readonly>
             <input type="text" name="roleBack" id="roleBack" class="inc-cre-form-control" value="@Model.roleBack" style="display:none;" readonly>
             <input type="text" name="pro_id" id="pro_id" class="inc-cre-form-control" value="@Model.request.pro_id" style="display:none;" readonly>
@@ -261,8 +261,6 @@
                         <input type="text" class="inc-cre-form-control" value="@Model.request.Product?.ResponsibleDepartment?.name" readonly>
                     </div>
                 </div>
-
-
             </div>
 
             <div class="inc-cre-form-grid">
@@ -386,98 +384,7 @@
           $target.addClass('active open');
       }
 
-      let roleBack = $('#roleBack').val();
-      if(roleBack.includes("Admin")){
-          $('#Requests_child_all').addClass("active");
-      }
-      else if(roleBack.includes("Group")){
-          $('#Requests_child_assigned').addClass("active");
-      }
-      else{
-          $('#Requests_child_all_User').addClass("active");
-      }
-
-      $("#Completed_req").click(function() {
-
-          let reqId = $('#reqId').val();
-
-          $.ajax({
-              url: '/Ajax/CompletedRequest',
-              type: 'POST',
-              data: {
-                  req_id: reqId
-              },
-              success: function(response) {
-                  if (response.success) {
-                      window.location.href = '/Request/User_All';
-                  } else {
-                      alert("Error: " + response.message);
-                  }
-              },
-              error: function(xhr, status, error) {
-                  // alert("Error: " + error);
-              }
-          });
-      });
-
-      $("#Rejected_req").click(function() {
-
-          let reqId = $('#reqId').val();
-
-          console.log("req_id= " + reqId);
-
-          $.ajax({
-              url: '/Ajax/RejectedRequest',
-              type: 'POST',
-              data: {
-                  req_id: reqId
-              },
-              success: function(response) {
-                  if (response.success) {
-                      if(response.roleBack != "user"){
-                          window.location.href = '/Request/All';
-                      }
-                      else{
-                          window.location.href = '/Request/User_All';
-                      }
-                  } else {
-                      alert("Error: " + response.message);
-                  }
-              },
-              error: function(xhr, status, error) {
-                  // alert(": " + error);
-              }
-          });
-      });
-
-      $("#reopen-button").click(function() {
-
-          let reqId = $('#reqId').val();
-
-          $.ajax({
-              url: '/Ajax/ReopenRequest',
-              type: 'POST',
-              data: {
-                  req_id: reqId
-              },
-              success: function(response) {
-                  if (response.success) {
-                      if(response.roleBack != "user"){
-                          window.location.href = '/Request/All';
-                      }
-                      else{
-                          window.location.href = '/Request/User_All';
-                      }
-                  } else {
-                      alert("Error: " + response.message);
-                  }
-              },
-              error: function(xhr, status, error) {
-                  // alert(": " + error);
-              }
-          });
-      });
-
+      $('#Requests_child_assign_work').addClass("active");
     });
 </script>
 <script src="~/js/Request/Req_Info.js"></script>

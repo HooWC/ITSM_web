@@ -167,4 +167,85 @@
     }
 
     updateActivityCount();
+
+    $("#Completed_req").click(function () {
+
+        let reqId = $('#reqId').val();
+
+        $.ajax({
+            url: '/Ajax/CompletedRequest',
+            type: 'POST',
+            data: {
+                req_id: reqId
+            },
+            success: function (response) {
+                if (response.success) {
+                    window.location.href = '/Request/User_All';
+                } else {
+                    alert("Error: " + response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                // alert("Error: " + error);
+            }
+        });
+    });
+
+    $("#Rejected_req").click(function () {
+
+        let reqId = $('#reqId').val();
+
+        console.log("req_id= " + reqId);
+
+        $.ajax({
+            url: '/Ajax/RejectedRequest',
+            type: 'POST',
+            data: {
+                req_id: reqId
+            },
+            success: function (response) {
+                if (response.success) {
+                    if (response.roleBack != "user") {
+                        window.location.href = '/Request/All';
+                    }
+                    else {
+                        window.location.href = '/Request/User_All';
+                    }
+                } else {
+                    alert("Error: " + response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                // alert(": " + error);
+            }
+        });
+    });
+
+    $("#reopen-button").click(function () {
+
+        let reqId = $('#reqId').val();
+
+        $.ajax({
+            url: '/Ajax/ReopenRequest',
+            type: 'POST',
+            data: {
+                req_id: reqId
+            },
+            success: function (response) {
+                if (response.success) {
+                    if (response.roleBack != "user") {
+                        window.location.href = '/Request/All';
+                    }
+                    else {
+                        window.location.href = '/Request/User_All';
+                    }
+                } else {
+                    alert("Error: " + response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                // alert(": " + error);
+            }
+        });
+    });
 });

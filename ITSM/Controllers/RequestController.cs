@@ -395,6 +395,9 @@ namespace ITSM.Controllers
             req_info.UpdatedBy = allUser.FirstOrDefault(x => x.id == req_info.updated_by);
             req_info.AssignedTo = allUser.FirstOrDefault(x => x.id == req_info.assigned_to);
 
+            var info_pro = await _productApi.FindByIDProduct_API(req_info.pro_id);
+            req_info.Product.ResponsibleDepartment = allDepartment.FirstOrDefault(x => x.id == info_pro.responsible);
+
             var model = new AllModelVM()
             {
                 user = currentUser,
