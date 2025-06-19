@@ -59,13 +59,13 @@ namespace ITSM.Controllers
             var allRequest = requestTask.Result;
 
             var Reqs = new List<Request>();
-            if(type.Contains("All"))
+            if(type == "All")
                 Reqs = allRequest.OrderByDescending(x => x.id).ToList();
-            else if(type.Contains("User_All"))
+            else if(type == "User_All")
                 Reqs = allRequest.Where(x => x.sender == currentUser.id).OrderByDescending(x => x.id).ToList();
-            else if(type.Contains("Assigned_To_Us"))
+            else if(type == "Assigned_To_Us")
                 Reqs = allRequest.Where(x => x.assignment_group == currentUser.department_id).OrderByDescending(x => x.id).ToList();
-            else if (type.Contains("Manager_Assign_Work"))
+            else if (type == "Manager_Assign_Work")
                 Reqs = allRequest.Where(x => x.assignment_group == currentUser.department_id && x?.assigned_to == null && x.state != "Rejected" && x.state != "Completed").OrderByDescending(x => x.id).ToList();
             else if (type == "Assigned_To_Me")
                 Reqs = allRequest.Where(x => x.assigned_to == currentUser.id && x.state != "Resolved" && x.state != "Closed").OrderByDescending(y => y.id).ToList();
@@ -91,7 +91,7 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> All()
         {
-            var model = await get_req_data("User_All");
+            var model = await get_req_data("All");
 
             return View(model);
         }

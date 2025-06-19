@@ -39,12 +39,27 @@ namespace ITSM_DomainModelEntity.Models
         [ForeignKey("UpdatedBy")]
         public int? updated_by { get; set; }
 
-        public DateTime? closed_date { get; set; }
-
         public int quantity { get; set; }
 
         [ForeignKey("AssignedTo")]
         public int? assigned_to {  get; set; }
+
+        //==
+
+        public bool? req_type {  get; set; }
+        public string? erp_version { get; set; }
+        [ForeignKey("AssignedTo")]
+        public int? erp_category { get; set; }
+        [ForeignKey("AssignedTo")]
+        public int? erp_subcategory { get; set; }
+        [ForeignKey("AssignedTo")]
+        public int? erp_function { get; set; }
+        public string? erp_module { get; set; }
+        public string? erp_user_account { get; set; }
+        public bool? erp_report { get; set; }
+        public string? erp_resolution_type { get; set; }
+        public string? erp_resolution { get; set; } 
+        public DateTime? erp_resolved_data { get; set; }
 
         // Navigation properties
         public virtual Product? Product { get; set; }

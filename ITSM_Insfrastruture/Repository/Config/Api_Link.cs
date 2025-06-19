@@ -190,5 +190,50 @@ namespace ITSM_Insfrastruture.Repository.Config
 
         // ============================================================================
 
+        // === For Announcement Part ===
+        // get all & create Announcement  (need token)
+        public static readonly string ReqFunctionLink = $"{BaseUrl}/req_function";
+        // search by id & update && delete Announcement  (ID) (need token)
+        public static readonly string ReqFunctionSUDLink = $"{BaseUrl}/req_function/";
+        // === For Announcement Part ===
+
+        // ============================================================================
+
+        // === For Announcement Part ===
+        // get all & create Announcement  (need token)
+        public static readonly string ReqSubcategoryLink = $"{BaseUrl}/req_subcategory";
+        // search by id & update && delete Announcement  (ID) (need token)
+        public static readonly string ReqSubcategorySUDLink = $"{BaseUrl}/req_subcategory/";
+        // === For Announcement Part ===
+
+        // ============================================================================
+
+        // === For Announcement Part ===
+        // get all & create Announcement  (need token)
+        public static readonly string ReqCategoryLink = $"{BaseUrl}/req_category";
+        // search by id & update && delete Announcement  (ID) (need token)
+        public static readonly string ReqCategorySUDLink = $"{BaseUrl}/req_category/";
+        // === For Announcement Part ===
+
+        // ============================================================================
+
+        // === For Announcement Part ===
+        // get all & create Announcement  (need token)
+        public static readonly string ReqPhotoLink = $"{BaseUrl}/request_photos";
+        // search by id & update && delete Announcement  (ID) (need token)
+        public static readonly string ReqPhotoSUDLink = $"{BaseUrl}/request_photos/";
+        // === For Announcement Part ===
+
+        // ============================================================================
+
+        // === For Announcement Part ===
+        // get all & create Announcement  (need token)
+        public static readonly string ReqNotesLink = $"{BaseUrl}/req_notes";
+        // search by id & update && delete Announcement  (ID) (need token)
+        public static readonly string ReqNotesSUDLink = $"{BaseUrl}/req_notes/";
+        // === For Announcement Part ===
+
+        // ============================================================================
+
     }
 }

@@ -223,28 +223,23 @@
                     <div class="inc-cre-form-group">
                         <label for="state" class="inc-cre-form-label">Status</label>
                         <select id="state" name="state" class="inc-cre-form-control">
-                            @{
-                                var selectState = Model.request.state;
-                            }
-                            @if (selectState != "Completed" && selectState != "Rejected")
+                            @if (Model.request.state == "Completed" || Model.request.state == "Rejected")
                             {
-                                @if (Model.user?.Role?.role?.ToLower() != "user")
-                                {
-                                    <option value="Pending" selected="@(selectState == "Pending")">Pending</option>
-                                    <option value="In Progress" selected="@(selectState == "In Progress")">In Progress</option>
-                                }
-                                else
-                                {
-                                    <option value="@selectState" selected="selected">@selectState</option>
-                                }
+                                <input type="text" id="state" name="state" autocomplete="off" class="inc-cre-form-control" readonly value="@(Model.request.state ?? "")" />
                             }
-                            else if (selectState == "Completed")
+                            else if (Model.user?.id != Model.request.assigned_to)
                             {
-                                <option value="Completed" selected="@(selectState == "Completed")">Completed</option>
+                                <input type="text" id="state" name="state" autocomplete="off" class="inc-cre-form-control" readonly value="@(Model.request.state ?? "")" />
                             }
-                            else if (selectState == "Rejected")
+                            else
                             {
-                                <option value="Rejected" selected="@(selectState == "Rejected")">Rejected</option>
+                                <select id="state" name="state" class="inc-cre-form-control">
+                                    @if (Model.user?.id == Model.request.assigned_to)
+                                    {
+                                        <option value="Pending" selected="@(Model.request.state == "Pending")">Pending</option>
+                                        <option value="In Progress" selected="@(Model.request.state == "In Progress")">In Progress</option>
+                                    }
+                                </select>
                             }
                         </select>
                     </div>
