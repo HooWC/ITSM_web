@@ -134,7 +134,6 @@
                         <td data-label="Quantity">@i.quantity</td>
                         <td data-label="Updated_By" class="phone_request_hide_design">@i.UpdatedBy.fullname</td>
                         <td data-label="Create_Date" class="phone_request_hide_design">@i.create_date.ToString("yyyy-MM-dd HH:mm:ss")</td>
-                        <td data-label="Closed_date" class="phone_request_hide_design">@(i.closed_date != null ? i.closed_date?.ToString("yyyy-MM-dd HH:mm:ss") : "-")</td>
                     </tr>
                 }
 

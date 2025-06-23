@@ -11,8 +11,9 @@ namespace ITSM_Insfrastruture.Repository.Config
         // Base Api Link
         // localhost:5300   It Side
         // hongsenghq.ddns.net   
-        public static readonly string BaseUrl = "http://localhost:5300";
+        //public static readonly string BaseUrl = "http://localhost:5300";
         //public static readonly string BaseUrl = "http://hongsenghq.ddns.net:5300";
+        public static readonly string BaseUrl = "http://127.0.0.1:5300";
 
         // ============================================================================
 

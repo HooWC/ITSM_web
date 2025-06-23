@@ -1,7 +1,7 @@
 ﻿$(function () {
     $('#log-outBtn').on('click', function () {
         $.ajax({
-            url: '/Ajax/_Logout',
+            url: window.AppRoot + 'Ajax/_Logout',
             method: 'GET',
             success: function (response) {
                 if (response.success) {

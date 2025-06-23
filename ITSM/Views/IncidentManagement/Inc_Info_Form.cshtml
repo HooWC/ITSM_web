@@ -165,13 +165,13 @@
             @if (Model.incident.state != "Resolved" && Model.incident.state != "Closed")
             {
                 <button class="inc-cre-btn inc-cre-btn-closed" id="close-button">Closed</button>
-                if (Model.user?.id == Model.incident.assigned_to)
+                if (Model.user?.department_id == Model.incident.assignment_group && Model.user?.id != Model.incident?.sender)
                 {
                     <button class="inc-cre-btn inc-cre-btn-resolve" id="resolve-button">Resolve</button>
                 }
                 <button class="inc-cre-btn inc-cre-btn-submit" onclick="document.getElementById('incidentForm').submit();">Save</button>
             }
-            else if (Model.incident.state == "Closed" && (Model.user?.Role?.role?.ToLower() == "admin" || Model.incident.assigned_to == Model.user.id))
+            else if (Model.incident.state == "Closed" && (Model.user?.Role?.role?.ToLower() == "admin" || Model.incident.assignment_group == Model.user?.department_id))
             {
                 <button class="inc-cre-btn inc-cre-btn-closed" id="reopen-button">Reopened</button>
             }
@@ -285,14 +285,14 @@
                         {
                             <input type="text" id="state" name="state" autocomplete="off" class="inc-cre-form-control" readonly value="@(Model.incident.state ?? "")" />
                         }
-                        else if (Model.user?.id != Model.incident.assigned_to)
+                        else if (Model.user?.department_id != Model.incident.assignment_group)
                         {
                             <input type="text" id="state" name="state" autocomplete="off" class="inc-cre-form-control" readonly value="@(Model.incident.state ?? "")" />
                         }
                         else
                         {
                             <select id="state" name="state" class="inc-cre-form-control">
-                                @if (Model.user?.id == Model.incident.assigned_to)
+                                @if (Model.user?.department_id == Model.incident.assignment_group)
                                 {
                                     <option value="Pending" selected="@(Model.incident.state == "Pending")">Pending</option>
                                     <option value="In Progress" selected="@(Model.incident.state == "In Progress")">In Progress</option>
@@ -379,12 +379,12 @@
                         </div>
                     </div>
 
-                    @if (Model.user.r_manager && Model.incident?.assigned_to != null)
+                    @if (Model.incident.state != "Resolved" && Model.incident.state != "Closed")
                     {
-                        <div class="inc-cre-form-group">
-                            <label for="assigned-to" class="inc-cre-form-label inc-cre-required">
-                                Assigned to
-                                <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/Assigned_Info', '_blank')">
+                        <div class="inc-cre-form-group inc-cre-full-width">
+                            <label for="file" class="inc-cre-form-label">
+                                Pictures (Maximum size per file: 50MB)
+                                <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/Photo_Info', '_blank')">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <circle cx="12" cy="12" r="10"></circle>
                                         <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
@@ -392,97 +392,13 @@
                                     </svg>
                                 </button>
                             </label>
-                            <div class="inc-cre-input-with-icon">
-                                @* <input type="text" id="assigned-to" class="inc-cre-form-control" readonly value="@(Model.incident.AssignedTo?.fullname ?? "")"> *@
-                                <div class="inc-cre-form-control inc-cre-user-link">
-                                    <a id="assigned-to" href="~/User/Form_User_Info?id=@Model.incident.AssignedTo?.id" target="_blank">
-                                        @(Model.incident.AssignedTo?.fullname ?? "")
-                                    </a>
-                                </div>
-                                <input type="hidden" id="assigned-to-id" name="assigned_to" value="@Model.incident.assigned_to">
-                                <button type="button" class="inc-cre-icon-search" id="assigned-to-search" @(Model.incident.assignment_group > 0 ? "" : "disabled")>
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <circle cx="11" cy="11" r="8"></circle>
-                                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                                    </svg>
-                                </button>
-                            </div>
+                            <input type="file" name="files" id="file" multiple class="inc-cre-form-control inc-file-cre-form-padding">
                         </div>
                     }
-                    else
-                    {
-                        <div class="inc-cre-form-group">
-                            <label for="assigned-to" class="inc-cre-form-label">
-                                Assigned to
-                                @* <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/Assigned_Info', '_blank')">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                                </svg>
-                            </button> *@
-                            </label>
-                            <div class="inc-cre-input-with-icon">
-                                @* <input type="text" id="assigned_to" class="inc-cre-form-control" readonly value="@(Model.incident.AssignedTo?.fullname ?? "")"> *@
-                                <input type="hidden" name="assigned_to" id="assigned-to-id" class="inc-cre-form-control" value="@(Model.incident.AssignedTo?.id.ToString() ?? "")">
-                                <div class="inc-cre-form-control inc-cre-user-link">
-                                    <a href="~/User/Form_User_Info?id=@Model.incident.AssignedTo?.id" target="_blank">
-                                        @(Model.incident.AssignedTo?.fullname ?? "")
-                                    </a>
-                                </div>
-                                @* <input type="hidden" id="assigned-to-id" name="assigned_to" value="@Model.incident.assigned_to">
-                            <button type="button" class="inc-cre-icon-search" id="assigned-to-search" @(Model.incident.assignment_group > 0 ? "" : "disabled")>
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="11" cy="11" r="8"></circle>
-                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                                </svg>
-                            </button> *@
-                            </div>
-                        </div>
-                    }
-
                 </div>
             </div>
 
-            @* <div class="inc-cre-form-group inc-cre-short-description-group">
-                <label for="short-description" class="inc-cre-form-label inc-cre-required">
-                    Short description
-                    <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/Short_Description_Info', '_blank')">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                        </svg>
-                    </button>
-                </label>
-                <div class="inc-cre-input-with-actions">
-                    @if (Model.incident.state != "Resolved" && Model.incident.state != "Closed")
-                    {
-                        <input type="text" autocomplete="off" maxlength="100" id="short-description" name="short_description" class="inc-cre-form-control" value="@Model.incident.short_description" required>
-                    }
-                    else
-                    {
-                        <input type="text" autocomplete="off" maxlength="100" id="short-description" name="short_description" class="inc-cre-form-control" value="@Model.incident.short_description" readonly required>
-                    }
-                </div>
-            </div> *@
-
-            @if (Model.incident.state != "Resolved" && Model.incident.state != "Closed")
-            {
-                <div class="inc-cre-form-group inc-cre-full-width">
-                    <label for="file" class="inc-cre-form-label">
-                        Pictures (Maximum size per file: 50MB)
-                        <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/Photo_Info', '_blank')">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                                <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                            </svg>
-                        </button>
-                    </label>
-                    <input type="file" name="files" id="file" multiple class="inc-cre-form-control inc-file-cre-form-padding">
-                </div>
-            }
+            
 
             <div class="inc-cre-form-group inc-cre-full-width">
                 @if (Model.incident.state != "Resolved" && Model.incident.state != "Closed" && Model.incident.Sender?.id == Model.user?.id)
@@ -574,6 +490,7 @@
         </div>
     }
 
+
     <div class="inc-cre-related-search-container">
         <button class="inc-cre-btn inc-cre-btn-related-search">
             Notes & Resolve
@@ -589,13 +506,7 @@
             <div id="notes-tab" class="inc-cre-tab-pane active">
                 <div class="inc-cre-notes-container">
 
-                    @if (
-                            Model.incident.assigned_to != null &&
-                            (
-                                Model.user?.id == Model.incident.sender ||
-                                Model.user?.id == Model.incident.assigned_to
-                            )
-                        )
+                    @if ((Model.user?.id == Model.incident?.sender || Model.user?.department_id == Model.incident?.assignment_group) && Model.user?.approve == true)
                     {
                         <div class="inc-cre-notes-header">
                             <div class="inc-cre-watch-list">
@@ -631,7 +542,7 @@
         </div>
     </div>
 
-    @if (Model.incident.state == "Resolved" || Model.incident.state == "Closed" || Model.user?.id == Model.incident.assigned_to)
+    @if (Model.incident.state == "Resolved" || Model.incident.state == "Closed" || Model.user?.department_id == Model.incident.assignment_group)
     {
         <div class="inc-cre-tab-section">
             <div class="inc-cre-tabs">
@@ -796,6 +707,198 @@
     });
 </script>
 <script src="~/js/Incident/Inc_Info.js"></script>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // 建立SignalR连接
+            const connection = new signalR.HubConnectionBuilder()
+                .withUrl(window.AppRoot + "noteHub", {
+                    skipNegotiation: false,
+                    transport: signalR.HttpTransportType.LongPolling,  // 先使用 LongPolling
+                    timeout: 100000, // 100 秒超时
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest"
+                    }
+                })
+                .withAutomaticReconnect({
+                    nextRetryDelayInMilliseconds: retryContext => {
+                        if (retryContext.previousRetryCount === 0) {
+                            return 0;
+                        } else if (retryContext.previousRetryCount < 3) {
+                            return 2000;
+                        } else if (retryContext.previousRetryCount < 5) {
+                            return 5000;
+                        } else if (retryContext.previousRetryCount < 10) {
+                            return 10000;
+                        } else {
+                            return null;
+                        }
+                    }
+                })
+                .configureLogging(signalR.LogLevel.Information)
+                .build();
+
+            // 启动连接并加入组
+            async function startConnection() {
+                try {
+                    await connection.start();
+                    console.log("SignalR连接成功");
+                    await connection.invoke("JoinIncidentGroup", '@Model.incident.id');
+                    console.log("加入事件组成功");
+                } catch (err) {
+                    console.error("SignalR连接错误:", err);
+                    setTimeout(startConnection, 5000);
+                }
+            }
+
+            startConnection();
+
+            // 处理连接断开
+            connection.onclose(async () => {
+                console.log("SignalR连接断开，尝试重新连接...");
+                await startConnection();
+            });
+
+            // 处理接收到的笔记
+            connection.on("ReceiveNote", function (incidentId, note) {
+                console.log("收到新笔记:", note);
+                if (incidentId === '@Model.incident.id') {
+                    // 创建新的笔记HTML
+                    var noteHtml = $('<div class="inc-cre-activity-item">' +
+                                '<div class="inc-cre-user-avatar">' +
+                                '<img src="' + (note.user_avatar ? 'data:'+ note.user_photo_type +';base64,' + note.user_avatar : 'https://www.diydoutu.com/touxiang/20201222-1.jpg') + '" alt="' + note.user_name + '">' +
+                                '</div>' +
+                                '<div class="inc-cre-activity-content">' +
+                                '<div class="inc-cre-activity-header">' +
+                                '<span class="inc-cre-user-name"><a class="note_username_a" href="/User/Form_User_Info?id=' + note.user_id + '" target="_blank">' + note.user_name + '</a></span>' +
+                                '<span class="inc-cre-activity-time">Work notes • ' + note.create_date + '</span>' +
+                                '</div>' +
+                                '<div class="inc-cre-activity-details">' +
+                                '<div class="inc-cre-work-note-content">' + note.message.replace(/\n/g, '<br>') + '</div>' +
+                                '</div>' +
+                                '</div>' +
+                                '</div>');
+                    
+                    // 将新笔记添加到活动容器的顶部
+                    $(".inc-cre-activity-container").prepend(noteHtml);
+                    
+                    // 更新活动计数
+                    updateActivityCount();
+                }
+            });
+
+            // 发送笔记
+            $("#post-note-btn").click(async function () {
+                const message = $("#work-notes").val().trim();
+                if (!message) {
+                    alert("请输入笔记内容");
+                    return;
+                }
+
+                    $.ajax({
+                         url: window.AppRoot + 'Ajax/AddNote',
+                         type: 'POST',
+                         data: {
+                             incidentId: '@Model.incident.id',
+                             message: message
+                         },
+                         dataType: 'json',
+                         success: function(response) {
+
+                             if (response.success) {
+                                 $("#work-notes").val('');
+                             } else {
+                                 alert("添加笔记失败: " + response.message);
+                             }
+                         },
+                         error: function(xhr, status, error) {
+                             console.error("发送笔记时出错:", error);
+                             alert("发送笔记时出错，请重试");
+                         }
+                     });
+            });
+
+            // 加载现有笔记
+            async function loadNotes() {
+                    $.ajax({
+                        url: window.AppRoot + 'Ajax/GetNotesByIncident',
+                        type: 'GET',
+                        data: { incidentId: '@Model.incident.id' },
+                        dataType: 'json',
+                        success: function (response) {
+                            if (response.success) {
+                                const activityContainer = $(".inc-cre-activity-container");
+                                activityContainer.empty();
+
+                                var isResolvedOrClosed = incidentState === "Resolved" || incidentState === "Closed";
+                                if (isResolvedOrClosed && (!response.notes || response.notes.length === 0)) {
+                                    activityContainer.html('<div class="inc-cre-no-history" style="text-align: center; padding: 30px; color: #6c757d; font-style: italic;">No chat history available</div>');
+                                    return;
+                                }
+
+                                response.notes.forEach(function (note) {
+                                    var noteHtml = $(`
+                                        <div class="inc-cre-activity-item">
+                                            <div class="inc-cre-user-avatar">
+                                                <img src="${note.user_avatar ? 'data:' + note.user_photo_type + ';base64,' + note.user_avatar : 'https://www.diydoutu.com/touxiang/20201222-1.jpg'}" alt="${note.user_name}">
+                                            </div>
+                                            <div class="inc-cre-activity-content">
+                                                <div class="inc-cre-activity-header">
+                                                    <span class="inc-cre-user-name">
+                                                        <a class="note_username_a" href="${window.AppRoot}User/Form_User_Info?id=${note.user_id}" target="_blank">
+                                                            ${note.user_name}
+                                                        </a>
+                                                    </span>
+                                                    <span class="inc-cre-activity-time">Work notes • ${note.create_date}</span>
+                                                </div>
+                                                <div class="inc-cre-activity-details">
+                                                    <div class="inc-cre-work-note-content">
+                                                        ${note.message.replace(/\n/g, '<br>')}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `);
+
+                                    activityContainer.append(noteHtml);
+                                });
+
+                                updateActivityCount();
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("加载笔记时出错:", error);
+                        }
+                    });
+            }
+
+            // 更新活动计数
+            function updateActivityCount() {
+                const count = $(".inc-cre-activity-item").length;
+                $("#activity-count").text(count);
+            }
+
+            // 页面加载时加载笔记
+            loadNotes();
+
+            // 页面卸载时离开组
+            $(window).on('beforeunload', async function () {
+                if (connection.state === signalR.HubConnectionState.Connected) {
+                    await connection.invoke("LeaveIncidentGroup", '@Model.incident.id');
+                }
+            });
+
+            // 添加回车键发送功能
+            $("#work-notes").keypress(function (e) {
+                if (e.which === 13 && !e.shiftKey) {
+                    e.preventDefault();
+                    $("#post-note-btn").click();
+                }
+            });
+        });
+    </script>
+}
 
 
 

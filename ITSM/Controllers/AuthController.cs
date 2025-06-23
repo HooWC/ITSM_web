@@ -11,6 +11,7 @@ using ITSM_Insfrastruture.Repository.Config;
 using System.Text;
 using System.Security.Cryptography;
 using ITSM_DomainModelEntity.ViewModels;
+using System.Collections.Generic;
 
 namespace ITSM.Controllers
 {
@@ -46,39 +47,34 @@ namespace ITSM.Controllers
                     if (token != null)
                         return RedirectToAction("Index", "Home");
                 }
-                else
+
+                // 分别获取数据，不使用Task.WhenAll
+                var allDepartment = await _departmentApi.GetAll_With_No_Token_Department_API();
+                var allRole = await _roleApi.GetAll_With_No_Token_Role_API();
+
+                var model = new AllModelVM()
                 {
-                    // Check why the token is invalid
-                    var sessionValue = "Failed to read";
-                    if (_httpContextAccessor.HttpContext?.Session != null)
-                    {
-                        sessionValue = ITSM_Insfrastruture.Repository.Token.SessionExtensions.GetString(
-                            _httpContextAccessor.HttpContext.Session, "UserToken") ?? "null";
-                    }
-                    //Console.WriteLine($"The token is invalid or does not exist，Session value: {sessionValue}");
+                    RoleList = allRole ?? new List<Role>(),
+                    DepartmentList = allDepartment ?? new List<Department>()
+                };
+
+                // 如果获取数据失败，添加错误信息
+                if ((allDepartment == null || !allDepartment.Any()) && (allRole == null || !allRole.Any()))
+                {
+                    ViewBag.ErrorMessage = "Unable to load departments and roles. Please try again.";
                 }
+                
+                return View(model);
             }
             catch (Exception ex)
             {
-                // Log any exceptions
-                Console.WriteLine($"An error occurred while checking the token: {ex.Message}");
-                Console.WriteLine($"Exception stack: {ex.StackTrace}");
+                ViewBag.ErrorMessage = "An error occurred while loading data.";
+                return View(new AllModelVM 
+                { 
+                    RoleList = new List<Role>(),
+                    DepartmentList = new List<Department>()
+                });
             }
-
-            var RoleTask = _roleApi.GetAll_With_No_Token_Role_API();
-            var DepartmentTask = _departmentApi.GetAll_With_No_Token_Department_API();
-            await Task.WhenAll(RoleTask, DepartmentTask);
-
-            var allRole = RoleTask.Result;
-            var allDepartment = DepartmentTask.Result;
-
-            var model = new AllModelVM()
-            {
-                RoleList = allRole,
-                DepartmentList = allDepartment
-            };
-            
-            return View(model);
         }
 
         [HttpPost]

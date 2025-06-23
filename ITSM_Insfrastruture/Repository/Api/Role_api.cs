@@ -49,12 +49,18 @@ namespace ITSM_Insfrastruture.Repository.Api
         {
             try
             {
-                string jsonStr = await _client.GetStringAsync(_getallRoleUrl);
-                return JsonConvert.DeserializeObject<List<Role>>(jsonStr) ?? new List<Role>();
+                var response = await _client.GetAsync(_getallRoleUrl);
+                if (!response.IsSuccessStatusCode)
+                {
+                    return new List<Role>();
+                }
+
+                string jsonStr = await response.Content.ReadAsStringAsync();
+                var roles = JsonConvert.DeserializeObject<List<Role>>(jsonStr);
+                return roles ?? new List<Role>();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine($"EX GetAllRole_API: {ex.Message}");
                 return new List<Role>();
             }
         }

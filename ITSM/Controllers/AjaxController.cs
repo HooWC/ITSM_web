@@ -10,6 +10,8 @@ using System;
 using ITSM_DomainModelEntity.FunctionModels;
 using System.Data;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.SignalR;
+using ITSM_DomainModelEntity.Function;
 
 namespace ITSM.Controllers
 {
@@ -32,9 +34,11 @@ namespace ITSM.Controllers
         private readonly Myversion_api _myversionApi;
         private readonly Subcategory_api _subcategoryApi;
         private readonly Incident_Category_api _incidentcategoryApi;
+        private readonly IHubContext<NoteHub> _hubContext;
 
-        public AjaxController(IHttpContextAccessor httpContextAccessor)
+        public AjaxController(IHttpContextAccessor httpContextAccessor, IHubContext<NoteHub> hubContext)
         {
+            _hubContext = hubContext;
             _tokenService = new TokenService(httpContextAccessor);
             _todoApi = new Todo_api(httpContextAccessor);
             _departmentApi = new Department_api(httpContextAccessor);
@@ -410,7 +414,6 @@ namespace ITSM.Controllers
                     category = allIncCategory.FirstOrDefault(x => x.id == t.category)?.name,
                     subcategory = allSucategory.FirstOrDefault(x => x.id == t.subcategory)?.subcategory,
                     assignment_group = allDepartments.FirstOrDefault(d => d.id == t.assignment_group)?.name ?? "",
-                    assigned_to = allUsers.FirstOrDefault(u => u.id == t.assigned_to)?.fullname ?? "",
                     create_date = t.create_date.ToString("yyyy-MM-dd HH:mm:ss"),
                     update_date = t.updated.ToString("yyyy-MM-dd HH:mm:ss")
                 });
@@ -484,7 +487,6 @@ namespace ITSM.Controllers
                 category = allIncCategory.FirstOrDefault(x => x.id == t.category)?.name,
                 subcategory = allSucategory.FirstOrDefault(x => x.id == t.subcategory)?.subcategory,
                 assignment_group = allDepartments.FirstOrDefault(d => d.id == t.assignment_group)?.name ?? "",
-                assigned_to = allUsers.FirstOrDefault(u => u.id == t.assigned_to)?.fullname ?? "",
                 create_date = t.create_date.ToString("yyyy-MM-dd HH:mm:ss"),
                 update_date = t.updated.ToString("yyyy-MM-dd HH:mm:ss")
             });
@@ -542,7 +544,6 @@ namespace ITSM.Controllers
                 category = allIncCategory.FirstOrDefault(x => x.id == t.category)?.name,
                 subcategory = allSucategory.FirstOrDefault(x => x.id == t.subcategory)?.subcategory,
                 assignment_group = allDepartments.FirstOrDefault(d => d.id == t.assignment_group)?.name ?? "",
-                assigned_to = allUsers.FirstOrDefault(u => u.id == t.assigned_to)?.fullname ?? "",
                 create_date = t.create_date.ToString("yyyy-MM-dd HH:mm:ss"),
                 update_date = t.updated.ToString("yyyy-MM-dd HH:mm:ss")
             });
@@ -607,10 +608,10 @@ namespace ITSM.Controllers
         public async Task<IActionResult> AddNote(int incidentId, string message)
         {
             if (string.IsNullOrEmpty(message))
-                return Json(new { success = false, message = "Note content cannot be empty" });
+                return Json(new { success = false, message = "笔记内容不能为空" });
 
             if (!IsUserLoggedIn(out var currentUser))
-                return Json(new { success = false, message = "Not logged in" });
+                return Json(new { success = false, message = "未登录" });
 
             try
             {
@@ -637,31 +638,17 @@ namespace ITSM.Controllers
 
                 var inc_info = await _incApi.FindByIDIncident_API(incidentId);
                 int? receiverId = 0;
+                string? post = "";
 
-                // 如果是 Assign Work 没有 assign to 的话？
-                if(currentUser.id == inc_info?.sender)
+                if (currentUser.id == inc_info?.sender)
                 {
-                    // 如果是用户的话？Admin收到
-                    if (inc_info?.assigned_to != null)
-                        receiverId = inc_info.assigned_to;
-                    else
-                    {
-                        // 如果Manager还没有分配任务给员工，assign to is null , 那就提供部门的Manager的id
-                        var inc_department_manager = allUsers.FirstOrDefault(x => x.r_manager && x.department_id == inc_info?.assignment_group);
-                        if (inc_department_manager != null && currentUser.id != inc_department_manager.id)
-                        {
-                            receiverId = inc_department_manager.id;
-                        }
-                        else
-                        {
-                            // 如果没有 Manager 呢？就放 null？
-                            receiverId = null;
-                        }
-                    }
+                    receiverId = inc_info?.assignment_group;
+                    post = "department";
                 }
                 else
                 {
                     receiverId = inc_info?.sender;
+                    post = "user";
                 }
 
                 var newNote = new ITSM_DomainModelEntity.Models.Note
@@ -671,35 +658,40 @@ namespace ITSM.Controllers
                     user_id = currentUser.id,
                     message = message,
                     note_read = false,
-                    receiver_id = receiverId
+                    receiver_id = receiverId,
+                    post_type = post
                 };
 
                 bool result = await _noteApi.CreateNote_API(newNote);
                 
                 if (result)
                 {
-                    return Json(new
+                    var user = await _userApi.FindByIDUser_API(currentUser.id);
+
+                    var noteData = new
                     {
-                        success = true,
-                        message = "Note added successfully",
-                        note = new
-                        {
-                            note_number = newId,
-                            user_name = currentUser.fullname,
-                            user_avatar = currentUser.photo,
-                            create_date = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
-                            message = message
-                        }
-                    });
+                        note_number = newId,
+                        user_id = user.id,
+                        user_name = user.fullname,
+                        user_avatar = user.photo,
+                        user_photo_type = user.photo_type,
+                        create_date = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+                        message = message
+                    };
+
+                    // 通过SignalR发送实时通知
+                    await _hubContext.Clients.Group(incidentId.ToString()).SendAsync("ReceiveNote", incidentId.ToString(), noteData);
+
+                    return Json(new { success = true, message = "笔记添加成功", note = noteData });
                 }
                 else
                 {
-                    return Json(new { success = false, message = "Note addition failed" });
+                    return Json(new { success = false, message = "笔记添加失败" });
                 }
             }
             catch (Exception ex)
             {
-                return Json(new { success = false, message = $"Error: {ex.Message}" });
+                return Json(new { success = false, message = $"错误: {ex.Message}" });
             }
         }
 
@@ -708,7 +700,7 @@ namespace ITSM.Controllers
         public async Task<IActionResult> GetNotesByIncident(int incidentId)
         {
             if (!IsUserLoggedIn(out var currentUser))
-                return Json(new { success = false, message = "Not logged in" });
+                return Json(new { success = false, message = "未登录" });
 
             try
             {
@@ -729,19 +721,16 @@ namespace ITSM.Controllers
                     user_id = note.user_id,
                     user_name = relatedUsers.FirstOrDefault(u => u.id == note.user_id)?.fullname ?? "Unknown",
                     user_avatar = relatedUsers.FirstOrDefault(u => u.id == note.user_id)?.photo,
+                    user_photo_type = relatedUsers.FirstOrDefault(u => u.id == note.user_id)?.photo_type,
                     create_date = note.create_date.ToString("yyyy-MM-dd HH:mm:ss"),
                     message = note.message
                 });
 
-                return Json(new
-                {
-                    success = true,
-                    notes = result
-                });
+                return Json(new { success = true, notes = result });
             }
             catch (Exception ex)
             {
-                return Json(new { success = false, message = $"Error: {ex.Message}" });
+                return Json(new { success = false, message = $"错误: {ex.Message}" });
             }
         }
 
@@ -2033,13 +2022,6 @@ namespace ITSM.Controllers
                             .Where(t => t.create_date != null && t.create_date.ToString("yyyy-MM-dd HH:mm:ss").Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
                             .ToList();
                         break;
-                    case "closed_date":
-                        filteredReqs = userReqs
-                            .Where(t => t.closed_date != null &&
-                                        t.closed_date.Value.ToString("yyyy-MM-dd HH:mm:ss")
-                                        .Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                            .ToList();
-                        break;
                     case "number":
                     default:
                         filteredReqs = userReqs
@@ -2060,8 +2042,7 @@ namespace ITSM.Controllers
                 assignment_group = allDepartment.FirstOrDefault(x => x.id == t.assignment_group).name,
                 assigned_to = allUser.FirstOrDefault(x => x.id == t.assigned_to).fullname,
                 update_by = allUser.FirstOrDefault(x => x.id == t.updated_by)?.fullname ?? "",
-                create_date = t.create_date.ToString("yyyy-MM-dd HH:mm:ss"),
-                closed_date = t.closed_date != null ? t.closed_date?.ToString("yyyy-MM-dd HH:mm:ss") : "-"
+                create_date = t.create_date.ToString("yyyy-MM-dd HH:mm:ss")
             });
 
             return Json(result);
@@ -2132,8 +2113,7 @@ namespace ITSM.Controllers
                 assignment_group = allDepartment.FirstOrDefault(x => x.id == t.assignment_group).name,
                 assigned_to = allUser.FirstOrDefault(x => x.id == t.assigned_to).fullname,
                 update_by = allUser.FirstOrDefault(x => x.id == t.updated_by)?.fullname ?? "",
-                create_date = t.create_date.ToString("yyyy-MM-dd HH:mm:ss"),
-                closed_date = t.closed_date != null ? t.closed_date?.ToString("yyyy-MM-dd HH:mm:ss") : "-"
+                create_date = t.create_date.ToString("yyyy-MM-dd HH:mm:ss")
             });
 
             return Json(result);
@@ -2186,8 +2166,7 @@ namespace ITSM.Controllers
                 assignment_group = allDepartment.FirstOrDefault(x => x.id == t.assignment_group).name,
                 assigned_to = allUser.FirstOrDefault(x => x.id == t.assigned_to).fullname,
                 update_by = allUser.FirstOrDefault(x => x.id == t.updated_by)?.fullname ?? "",
-                create_date = t.create_date.ToString("yyyy-MM-dd HH:mm:ss"),
-                closed_date = t.closed_date != null ? t.closed_date?.ToString("yyyy-MM-dd HH:mm:ss") : "-"
+                create_date = t.create_date.ToString("yyyy-MM-dd HH:mm:ss")
             });
 
             return Json(result);
@@ -2260,7 +2239,6 @@ namespace ITSM.Controllers
                     return Json(new { success = false, message = "Request not found" });
 
                 reqData.state = "Completed";
-                reqData.closed_date = DateTime.Now;
                 reqData.updated_by = currentUser.id;
 
                 bool result = await _reqApi.UpdateRequest_API(reqData);
@@ -2296,7 +2274,6 @@ namespace ITSM.Controllers
                     return Json(new { success = false, message = "Request not found" });
 
                 reqData.state = "Rejected";
-                reqData.closed_date = DateTime.Now;
                 reqData.updated_by = currentUser.id;
 
                 var pro_count = productData.quantity + reqData.quantity;
@@ -2341,7 +2318,6 @@ namespace ITSM.Controllers
                     return Json(new { success = false, message = "Request not found" });
 
                 reqData.state = "Pending";
-                reqData.closed_date = null;
                 reqData.updated_by = currentUser.id;
 
                 var pro_count = productData.quantity - reqData.quantity;
@@ -2366,735 +2342,6 @@ namespace ITSM.Controllers
             {
                 return Json(new { success = false, message = ex.Message });
             }
-        }
-
-        /// <summary>
-        /// Announcement/Ann_List
-        public async Task<IActionResult> SearchAnnouncement(string searchTerm, string filterBy = "number")
-        {
-            if (string.IsNullOrEmpty(searchTerm))
-                return Json(new List<Feedback>());
-
-            if (!IsUserLoggedIn(out var currentUser))
-                return Json(new { success = false, message = "Not logged in" });
-
-            var allAnns = await _announApi.GetAllAnnouncement_API();
-            var allUsers = await _userApi.GetAllUser_API();
-            var userAnn = new List<Announcement>();
-            userAnn = allAnns.OrderByDescending(y => y.id).ToList();
-
-            List<Announcement> filteredAnns;
-
-            if (searchTerm == "re_entrynovalue")
-            {
-                filteredAnns = userAnn;
-            }
-            else
-            {
-                switch (filterBy.ToLower())
-                {
-                    case "title":
-                        filteredAnns = userAnn
-                            .Where(t => t.ann_title != null && t.ann_title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                            .ToList();
-                        break;
-                    case "create_by":
-                        var filterUsers = allUsers.Where(x => x.fullname.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
-                        filteredAnns = (from i in userAnn
-                                        join u in filterUsers on i.create_by equals u.id
-                                         select i).ToList();
-                        break;
-                    case "create_date":
-                        filteredAnns = userAnn
-                            .Where(t => t.create_date != null && t.create_date.ToString("yyyy-MM-dd HH:mm:ss").Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                            .ToList();
-                        break;
-                    case "update_date":
-                        filteredAnns = userAnn
-                            .Where(t => t.update_date != null && t.update_date.ToString("yyyy-MM-dd HH:mm:ss").Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                            .ToList();
-                        break;
-                    case "number":
-                    default:
-                        filteredAnns = userAnn
-                            .Where(t => t.at_number != null && t.at_number.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                            .ToList();
-                        break;
-                }
-            }
-
-            var result = filteredAnns.Select(t => new {
-                t.id,
-                t.at_number,
-                t.ann_title,
-                fullname = allUsers.FirstOrDefault(u => u.id == t.create_by)?.fullname ?? "",
-                create_date = t.create_date.ToString("yyyy-MM-dd HH:mm:ss"),
-                update_date = t.update_date.ToString("yyyy-MM-dd HH:mm:ss")
-            });
-
-            return Json(result);
-        }
-
-        /// <summary>
-        /// Announcement/Ann_List
-        public async Task<IActionResult> SortAnnouncement(string sortOrder = "asc")
-        {
-            if (!IsUserLoggedIn(out var currentUser))
-                return Json(new { success = false, message = "Not logged in" });
-
-            var allAnns = await _announApi.GetAllAnnouncement_API();
-            var allUsers = await _userApi.GetAllUser_API();
-            var userAnn = new List<Announcement>();
-            userAnn = allAnns.OrderByDescending(y => y.id).ToList();
-
-            List<Announcement> sortedAnns;
-            if (sortOrder.ToLower() == "desc")
-                sortedAnns = userAnn.OrderBy(x => x.id).ToList();
-            else
-                sortedAnns = userAnn.OrderByDescending(x => x.id).ToList();
-
-            var result = sortedAnns.Select(t => new {
-                t.id,
-                t.at_number,
-                t.ann_title,
-                fullname = allUsers.FirstOrDefault(u => u.id == t.create_by)?.fullname ?? "",
-                create_date = t.create_date.ToString("yyyy-MM-dd HH:mm:ss"),
-                update_date = t.update_date.ToString("yyyy-MM-dd HH:mm:ss")
-            });
-
-            return Json(result);
-        }
-
-        /// <summary>
-        /// Announcement/Ann_List
-        [HttpPost]
-        public async Task<IActionResult> DeleteAnnouncements([FromBody] List<int> ids)
-        {
-
-            if (ids == null || !ids.Any())
-                return Json(new { success = false, message = "No items selected for deletion" });
-
-            if (!IsUserLoggedIn(out var currentUser))
-                return Json(new { success = false, message = "Not logged in" });
-
-            try
-            {
-                int successCount = 0;
-
-                foreach (var id in ids)
-                {
-                    var allAnns = await _announApi.GetAllAnnouncement_API();
-                    var annToDelete = new Announcement();
-                    annToDelete = allAnns.FirstOrDefault(x => x.id == id);
-
-                    if (annToDelete != null)
-                    {
-                        bool result = await _announApi.DeleteAnnouncement_API(id);
-                        if (result)
-                            successCount++;
-                    }
-                }
-
-                if (successCount > 0)
-                {
-                    return Json(new
-                    {
-                        success = true,
-                        message = $"Successfully deleted {successCount} item(s)"
-                    });
-                }
-                else
-                {
-                    return Json(new
-                    {
-                        success = false,
-                        message = "Failed to delete items. Items may not exist or you don't have permission"
-                    });
-                }
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = $"Error: {ex.Message}" });
-            }
-        }
-
-        /// <summary>
-        /// CMDB/CMDB_List
-        public async Task<IActionResult> SearchCMDB(string searchTerm, string filterBy = "full_name")
-        {
-            if (string.IsNullOrEmpty(searchTerm))
-                return Json(new List<Feedback>());
-
-            if (!IsUserLoggedIn(out var currentUser))
-                return Json(new { success = false, message = "Not logged in" });
-
-            var CMDBTask = _cmdbApi.GetAllCMDB_API();
-            var departmentTask = _departmentApi.GetAllDepartment_API();
-            await Task.WhenAll(CMDBTask, departmentTask);
-
-            var allCMDB = CMDBTask.Result;
-            var allDep = departmentTask.Result;
-
-            var userCMDB = new List<CMDB>();
-
-            userCMDB = allCMDB.OrderByDescending(y => y.id).ToList();
-
-            List<CMDB> filteredCMDBs;
-
-            if (searchTerm == "re_entrynovalue")
-            {
-                filteredCMDBs = userCMDB;
-            }
-            else
-            {
-                switch (filterBy.ToLower())
-                {
-                    case "full_name":
-                        filteredCMDBs = userCMDB
-                            .Where(t => t.full_name != null && t.full_name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                            .ToList();
-                        break;
-                    case "department":
-                        var filterDeps = allDep.Where(x => x.name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
-                        filteredCMDBs = (from i in userCMDB
-                                         join d in filterDeps on i.department_id equals d.id
-                                         select i).ToList();
-                        break;
-                    case "device_type":
-                        filteredCMDBs = userCMDB
-                            .Where(t => t.device_type != null && t.device_type.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                            .ToList();
-                        break;
-                    case "windows_version":
-                        filteredCMDBs = userCMDB
-                            .Where(t => t.windows_version != null && t.windows_version.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                            .ToList();
-                        break;
-                    case "host_name":
-                        filteredCMDBs = userCMDB
-                            .Where(t => t.hostname != null && t.hostname.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                            .ToList();
-                        break;
-                    case "ram":
-                        filteredCMDBs = userCMDB
-                            .Where(t => t.ram != null && t.ram.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                            .ToList();
-                        break;
-                    case "dvdrw":
-                        filteredCMDBs = userCMDB
-                            .Where(t => t.dvdrw != null && t.dvdrw.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                            .ToList();
-                        break;
-                    default:
-                        filteredCMDBs = userCMDB;
-                        break;
-                }
-            }
-
-            var result = filteredCMDBs.Select(t => new {
-                t.id,
-                t.full_name,
-                t.device_type,
-                t.windows_version,
-                t.hostname,
-                t.ram,
-                t.dvdrw,
-                department = allDep.FirstOrDefault(u => u.id == t.department_id)?.name ?? ""
-            });
-
-            return Json(result);
-        }
-
-        /// <summary>
-        /// CMDB/CMDB_List
-        public async Task<IActionResult> SortCMDB(string sortOrder = "asc")
-        {
-            if (!IsUserLoggedIn(out var currentUser))
-                return Json(new { success = false, message = "Not logged in" });
-
-            var CMDBTask = _cmdbApi.GetAllCMDB_API();
-            var departmentTask = _departmentApi.GetAllDepartment_API();
-            await Task.WhenAll(CMDBTask, departmentTask);
-
-            var allCMDB = CMDBTask.Result;
-            var allDep = departmentTask.Result;
-
-            var userCMDBs = new List<CMDB>();
-            userCMDBs = allCMDB.OrderByDescending(y => y.id).ToList();
-
-            List<CMDB> sortedCMDBs;
-            if (sortOrder.ToLower() == "desc")
-                sortedCMDBs = userCMDBs.OrderBy(x => x.id).ToList();
-            else
-                sortedCMDBs = userCMDBs.OrderByDescending(x => x.id).ToList();
-
-            var result = sortedCMDBs.Select(t => new {
-                t.id,
-                t.full_name,
-                t.device_type,
-                t.windows_version,
-                t.hostname,
-                t.ram,
-                t.dvdrw,
-                department = allDep.FirstOrDefault(u => u.id == t.department_id)?.name ?? ""
-            });
-
-            return Json(result);
-        }
-
-        /// <summary>
-        /// CMDB/CMDB_List
-        [HttpPost]
-        public async Task<IActionResult> DeleteCMDBs([FromBody] List<int> ids)
-        {
-
-            if (ids == null || !ids.Any())
-                return Json(new { success = false, message = "No items selected for deletion" });
-
-            if (!IsUserLoggedIn(out var currentUser))
-                return Json(new { success = false, message = "Not logged in" });
-
-            try
-            {
-                int successCount = 0;
-
-                foreach (var id in ids)
-                {
-                    var allCMDBs = await _cmdbApi.GetAllCMDB_API();
-                    var CMDBToDelete = new CMDB();
-                    CMDBToDelete = allCMDBs.FirstOrDefault(x => x.id == id);
-
-
-                    if (CMDBToDelete != null)
-                    {
-                        bool result = await _cmdbApi.DeleteCMDB_API(id);
-                        if (result)
-                            successCount++;
-                    }
-                }
-
-                if (successCount > 0)
-                {
-                    return Json(new
-                    {
-                        success = true,
-                        message = $"Successfully deleted {successCount} item(s)"
-                    });
-                }
-                else
-                {
-                    return Json(new
-                    {
-                        success = false,
-                        message = "Failed to delete items. Items may not exist or you don't have permission"
-                    });
-                }
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = $"Error: {ex.Message}" });
-            }
-        }
-
-        /// <summary>
-        /// Knowledge/KB_List
-        public async Task<IActionResult> SearchKB(string searchWord, string searchTerm, string filterBy = "number")
-        {
-            if (string.IsNullOrEmpty(searchTerm))
-                return Json(new List<Feedback>());
-
-            if (!IsUserLoggedIn(out var currentUser))
-                return Json(new { success = false, message = "Not logged in" });
-
-            var UserTask = _userApi.GetAllUser_API();
-            var KBTask = _kbApi.GetAllKnowledge_API();
-
-            await Task.WhenAll(UserTask, KBTask);
-
-            var allUser = UserTask.Result;
-            var allKB = KBTask.Result;
-
-            var userKB = new List<Knowledge>();
-
-            if (searchWord == "admin")
-                userKB = allKB.OrderByDescending(x => x.id).ToList();
-            else
-                userKB = allKB.Where(x => x.author == currentUser.id).OrderByDescending(x => x.id).ToList();
-
-            List<Knowledge> filteredKBs;
-
-            if (searchTerm == "re_entrynovalue")
-            {
-                filteredKBs = userKB;
-            }
-            else
-            {
-                switch (filterBy.ToLower())
-                {
-                    case "number":
-                        filteredKBs = userKB
-                            .Where(t => t.kb_number != null && t.kb_number.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                            .ToList();
-                        break;
-                    case "author":
-                        var filterDeps = allUser.Where(x => x.fullname.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
-                        filteredKBs = (from i in userKB
-                                       join d in filterDeps on i.author equals d.id
-                                         select i).ToList();
-                        break;
-                    case "title":
-                        filteredKBs = userKB
-                            .Where(t => t.title != null && t.title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                            .ToList();
-                        break;
-                    case "short_description":
-                        filteredKBs = userKB
-                            .Where(t => t.short_description != null && t.short_description.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                            .ToList();
-                        break;
-                    case "create_date":
-                        filteredKBs = userKB
-                            .Where(t => t.create_date != null && t.create_date.ToString("yyyy-MM-dd HH:mm:ss").Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                            .ToList();
-                        break;
-                    case "update_date":
-                        filteredKBs = userKB
-                            .Where(t => t.updated != null && t.updated.ToString("yyyy-MM-dd HH:mm:ss").Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                            .ToList();
-                        break;
-                    default:
-                        filteredKBs = userKB;
-                        break;
-                }
-            }
-
-            var result = filteredKBs.Select(t => new {
-                t.id,
-                t.short_description,
-                t.title,
-                t.kb_number,
-                active = t.active ? "Active" : "Inactive",
-                author = allUser.FirstOrDefault(u => u.id == t.author)?.fullname ?? "",
-                create_date = t.create_date.ToString("yyyy-MM-dd HH:mm:ss"),
-                update_date = t.updated.ToString("yyyy-MM-dd HH:mm:ss")
-            });
-
-            return Json(result);
-        }
-
-        /// <summary>
-        /// Knowledge/KB_List
-        public async Task<IActionResult> SortKB(string sortWord, string sortOrder = "asc")
-        {
-            if (!IsUserLoggedIn(out var currentUser))
-                return Json(new { success = false, message = "Not logged in" });
-
-            var UserTask = _userApi.GetAllUser_API();
-            var KBTask = _kbApi.GetAllKnowledge_API();
-
-            await Task.WhenAll(UserTask, KBTask);
-
-            var allUser = UserTask.Result;
-            var allKB = KBTask.Result;
-
-            var userKB = new List<Knowledge>();
-
-            if (sortWord == "admin")
-                userKB = allKB.OrderByDescending(x => x.id).ToList();
-            else
-                userKB = allKB.Where(x => x.author == currentUser.id).OrderByDescending(x => x.id).ToList();
-
-            userKB = allKB.OrderByDescending(y => y.id).ToList();
-
-            List<Knowledge> sortedKBs;
-            if (sortOrder.ToLower() == "desc")
-                sortedKBs = userKB.OrderBy(x => x.id).ToList();
-            else
-                sortedKBs = userKB.OrderByDescending(x => x.id).ToList();
-
-            var result = sortedKBs.Select(t => new {
-                t.id,
-                t.short_description,
-                t.title,
-                t.kb_number,
-                active = t.active ? "Active" : "Inactive",
-                author = allUser.FirstOrDefault(u => u.id == t.author)?.fullname ?? "",
-                create_date = t.create_date.ToString("yyyy-MM-dd HH:mm:ss"),
-                update_date = t.updated.ToString("yyyy-MM-dd HH:mm:ss")
-            });
-
-            return Json(result);
-        }
-
-        /// <summary>
-        /// Knowledge/KB_List
-        public async Task<IActionResult> FilterKBByStatus(string filterword, string status = "all")
-        {
-            if (!IsUserLoggedIn(out var currentUser))
-                return Json(new { success = false, message = "Not logged in" });
-
-            var UserTask = _userApi.GetAllUser_API();
-            var KBTask = _kbApi.GetAllKnowledge_API();
-
-            await Task.WhenAll(UserTask, KBTask);
-
-            var allUser = UserTask.Result;
-            var allKB = KBTask.Result;
-
-            var userKB = new List<Knowledge>();
-            if (filterword == "admin")
-                userKB = allKB.OrderByDescending(x => x.id).ToList();
-            else
-                userKB = allKB.Where(x => x.author == currentUser.id).OrderByDescending(x => x.id).ToList();
-
-            List<Knowledge> filteredKBs;
-
-            switch (status.ToLower())
-            {
-                case "active":
-                    filteredKBs = userKB.Where(t => t.active).ToList();
-                    break;
-                case "inactive":
-                    filteredKBs = userKB.Where(t => !t.active).ToList();
-                    break;
-                default:
-                    filteredKBs = userKB;
-                    break;
-            }
-
-            var result = filteredKBs.Select(t => new {
-                t.id,
-                t.short_description,
-                t.title,
-                t.kb_number,
-                active = t.active ? "Active" : "Inactive",
-                author = allUser.FirstOrDefault(u => u.id == t.author)?.fullname ?? "",
-                create_date = t.create_date.ToString("yyyy-MM-dd HH:mm:ss"),
-                update_date = t.updated.ToString("yyyy-MM-dd HH:mm:ss")
-            });
-
-            return Json(result);
-        }
-
-        /// <summary>
-        /// Knowledge/KB_List
-        [HttpPost]
-        public async Task<IActionResult> DeleteKBs([FromBody] List<int> ids)
-        {
-
-            if (ids == null || !ids.Any())
-                return Json(new { success = false, message = "No items selected for deletion" });
-
-            if (!IsUserLoggedIn(out var currentUser))
-                return Json(new { success = false, message = "Not logged in" });
-
-            try
-            {
-                int successCount = 0;
-
-                foreach (var id in ids)
-                {
-                    var allKBs = await _kbApi.GetAllKnowledge_API();
-                    var KBToDelete = new Knowledge();
-                    KBToDelete = allKBs.FirstOrDefault(x => x.id == id);
-
-
-                    if (KBToDelete != null)
-                    {
-                        bool result = await _kbApi.DeleteKnowledge_API(id);
-                        if (result)
-                            successCount++;
-                    }
-                }
-
-                if (successCount > 0)
-                {
-                    return Json(new
-                    {
-                        success = true,
-                        message = $"Successfully deleted {successCount} item(s)"
-                    });
-                }
-                else
-                {
-                    return Json(new
-                    {
-                        success = false,
-                        message = "Failed to delete items. Items may not exist or you don't have permission"
-                    });
-                }
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = $"Error: {ex.Message}" });
-            }
-        }
-
-        /// <summary>
-        /// Knowledge/KB_List
-        public async Task<IActionResult> SearchVersion(string searchTerm, string filterBy = "version")
-        {
-            if (string.IsNullOrEmpty(searchTerm))
-                return Json(new List<Feedback>());
-
-            if (!IsUserLoggedIn(out var currentUser))
-                return Json(new { success = false, message = "Not logged in" });
-
-            var VersionTask = _myversionApi.GetAllMyversion_API();
-
-            await Task.WhenAll(VersionTask);
-
-            var allVersion = VersionTask.Result;
-
-            var userVersion = new List<Myversion>();
-
-            userVersion = allVersion.OrderByDescending(x => x.id).ToList();
-
-            List<Myversion> filteredVersions;
-
-            if (searchTerm == "re_entrynovalue")
-            {
-                filteredVersions = userVersion;
-            }
-            else
-            {
-                switch (filterBy.ToLower())
-                {
-                    case "version":
-                        filteredVersions = userVersion
-                            .Where(t => t.version_num != null && t.version_num.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                            .ToList();
-                        break;
-                    default:
-                        filteredVersions = userVersion;
-                        break;
-                }
-            }
-
-            var result = filteredVersions.Select(t => new {
-                t.id,
-                t.version_num,
-                release_date = t.release_date.ToString("yyyy-MM-dd HH:mm:ss")
-            });
-
-            return Json(result);
-        }
-
-        /// <summary>
-        /// Knowledge/KB_List
-        [HttpPost]
-        public async Task<IActionResult> DeleteVersions([FromBody] List<int> ids)
-        {
-
-            if (ids == null || !ids.Any())
-                return Json(new { success = false, message = "No items selected for deletion" });
-
-            if (!IsUserLoggedIn(out var currentUser))
-                return Json(new { success = false, message = "Not logged in" });
-
-            try
-            {
-                int successCount = 0;
-
-                foreach (var id in ids)
-                {
-                    var allVersions = await _myversionApi.GetAllMyversion_API();
-                    var VersionToDelete = new Myversion();
-                    VersionToDelete = allVersions.FirstOrDefault(x => x.id == id);
-
-
-                    if (VersionToDelete != null)
-                    {
-                        bool result = await _myversionApi.DeleteMyversion_API(id);
-                        if (result)
-                            successCount++;
-                    }
-                }
-
-                if (successCount > 0)
-                {
-                    return Json(new
-                    {
-                        success = true,
-                        message = $"Successfully deleted {successCount} item(s)"
-                    });
-                }
-                else
-                {
-                    return Json(new
-                    {
-                        success = false,
-                        message = "Failed to delete items. Items may not exist or you don't have permission"
-                    });
-                }
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = $"Error: {ex.Message}" });
-            }
-        }
-
-        /// <summary>
-        /// Category/Subcategory_List
-        public async Task<IActionResult> SearchSubcategory(string searchTerm, string filterBy = "sucategory")
-        {
-            if (string.IsNullOrEmpty(searchTerm))
-                return Json(new List<Category>());
-
-            if (!IsUserLoggedIn(out var currentUser))
-                return Json(new { success = false, message = "Not logged in" });
-
-            var sucategoryTask = _subcategoryApi.GetAllSubcategory_API();
-            var departmentTask = _departmentApi.GetAllDepartment_API();
-            var inccategoryTask = _incidentcategoryApi.GetAllIncidentcategory_API();
-            await Task.WhenAll(sucategoryTask, departmentTask, inccategoryTask);
-
-            var allSucategory = sucategoryTask.Result;
-            var allDepartment = departmentTask.Result;
-            var allIncCategory = inccategoryTask.Result;
-
-            var userSucategory = new List<Subcategory>();
-            userSucategory = allSucategory.OrderByDescending(x => x.id).ToList();
-
-            List<Subcategory> filteredSucategorys;
-
-            if (searchTerm == "re_entrynovalue")
-            {
-                filteredSucategorys = userSucategory;
-            }
-            else
-            {
-                switch (filterBy.ToLower())
-                {
-
-                    case "category":
-                        var filterIncCategorys = allIncCategory.Where(x => x.name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
-                        filteredSucategorys = (from i in userSucategory
-                                               join d in filterIncCategorys on i.category equals d.id
-                                               select i).ToList();
-                        break;
-                    case "department":
-                        var filterDepartments = allDepartment.Where(x => x.name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
-                        filteredSucategorys = (from i in userSucategory
-                                               join d in filterDepartments on i.department_id equals d.id
-                                               select i).ToList();
-                        break;
-                    case "subcategory":
-                    default:
-                        filteredSucategorys = userSucategory
-                            .Where(t => t.subcategory != null && t.subcategory.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                            .ToList();
-                        break;
-                }
-            }
-
-            var result = filteredSucategorys.Select(t => new {
-               t.subcategory,
-               inc_category = allIncCategory.FirstOrDefault(x => x.id == t.category)?.name,
-               department_name = allDepartment.FirstOrDefault(x => x.id == t.department_id)?.name
-            });
-
-            return Json(result);
         }
 
         /// <summary>

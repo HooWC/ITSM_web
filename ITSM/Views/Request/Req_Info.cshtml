@@ -346,15 +346,6 @@
                 </div>
             </div>
 
-            <div class="inc-cre-form-grid">
-                <div class="inc-cre-form-column">
-                    <div class="inc-cre-form-group">
-                        <label for="channel" class="inc-cre-form-label">Cloed Date</label>
-                        <input type="text" class="inc-cre-form-control" value="@(Model.request.closed_date != null ? Model.request.closed_date?.ToString("yyyy-MM-dd HH:mm:ss") : "-")" readonly>
-                    </div>
-                </div>
-            </div>
-
             <div class="inc-cre-form-group inc-cre-full-width">
                 <label for="description" class="inc-cre-form-label inc-cre-required">Description</label>
                 <textarea id="description" autocomplete="off" name="description" class="inc-cre-form-control inc-cre-description-textarea" rows="5" @(Model.request.state == "Rejected" || Model.request.state == "Completed" ? "readonly" : "")>@Model.request.description</textarea>

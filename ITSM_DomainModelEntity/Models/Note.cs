@@ -33,6 +33,8 @@ namespace ITSM_DomainModelEntity.Models
         [ForeignKey("ReceiverUser")]
         public int? receiver_id { get; set; }
 
+        public string? post_type { get; set; }
+
         // Navigation properties
         public virtual Incident? Incident { get; set; }
         public virtual User? User { get; set; }

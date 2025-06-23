@@ -27048,17 +27048,16 @@ body:not(.modal-open) .layout-content-navbar .layout-navbar {
     border: none;
 }
 
-    .congratulation-card::before {
+    /*.congratulation-card::before {
         content: '';
         position: absolute;
         top: 0;
         left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, rgb(21, 25, 40) 20%, rgba(38, 46, 73, 0.938) 50%, rgba(88, 91, 124, 0.2) 90%, rgba(255, 255, 255, 0) 100%), url('/img/back/lori.png') no-repeat bottom left 110px;
-        background-size: cover;
+        height: 100%;*/
+        /*background: linear-gradient(90deg, rgb(21, 25, 40) 20%, rgba(38, 46, 73, 0.938) 50%, rgba(88, 91, 124, 0.2) 90%, rgba(255, 255, 255, 0) 100%), url('/img/back/lori.png') no-repeat bottom left 110px;*/
+        /*background-size: cover;
         z-index: 1;
-    }
+    }*/
 
 .text-content {
     position: relative;
@@ -27095,9 +27094,9 @@ body:not(.modal-open) .layout-content-navbar .layout-navbar {
     }
 
 @media (max-width: 768px) {
-    .congratulation-card::before {
+    /*.congratulation-card::before {
         background: linear-gradient(180deg, rgba(74, 109, 255, 0.8) 0%, transparent 100%), url('../assets/img/my/lori.png') no-repeat center bottom;
-    }
+    }*/
 
     .image-content {
         padding-top: 0;

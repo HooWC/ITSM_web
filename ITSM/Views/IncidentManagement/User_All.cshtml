@@ -7,39 +7,35 @@
 
 <style>
     .inc-tab-incidents-table th.number-column {
-    width: 8%;
+        width: 10%;
     }
 
     .inc-tab-incidents-table th.i_sucategory-column {
-    width: 11%;
+        width: 13%;
     }
 
     .inc-tab-incidents-table th.i_create-date-column {
-    width: 12%;
+        width: 13%;
     }
 
     .inc-tab-incidents-table th.i_update-date-column {
-    width: 12%;
+        width: 13%;
     }
 
     .inc-tab-incidents-table th.i_urgency-column {
-    width: 12%;
+        width: 13%;
     }
 
     .inc-tab-incidents-table th.i_state-column {
-    width: 9%;
+        width: 10%;
     }
 
     .inc-tab-incidents-table th.i_category-column {
-    width: 11%;
+        width: 13%;
     }
 
     .inc-tab-incidents-table th.i_assignment-group-column {
-    width: 13%;
-    }
-
-    .inc-tab-incidents-table th.i_assigned-to-column {
-    width: 12%;
+        width: 15%;
     }
 </style>
 
@@ -59,7 +55,6 @@
                     <a href="#" class="inc-tab-dropdown-item phone_incident_hide_design" data-filter="category">Category</a>
                     <a href="#" class="inc-tab-dropdown-item phone_incident_hide_design" data-filter="sucategory">Sucategory</a>
                     <a href="#" class="inc-tab-dropdown-item phone_incident_hide_design" data-filter="assignment_group">Assignment group</a>
-                    <a href="#" class="inc-tab-dropdown-item phone_incident_hide_design" data-filter="assigned_to">Assigned to</a>
                     <a href="#" class="inc-tab-dropdown-item phone_incident_hide_design" data-filter="opened">Opened</a>
                     <a href="#" class="inc-tab-dropdown-item phone_incident_hide_design" data-filter="updated">updated</a>
                 </div>
@@ -115,7 +110,6 @@
                     <th class="i_category-column phone_incident_hide_design">Category</th>
                     <th class="i_sucategory-column phone_incident_hide_design">Sucategory</th>
                     <th class="i_assignment-group-column  phone_incident_hide_design">Assignment group</th>
-                    <th class="i_assigned-to-column phone_incident_hide_design">Assigned to</th>
                     <th class="i_create-date-column phone_incident_hide_design">Opened</th>
                     <th class="i_update-date-column phone_incident_hide_design">Updated</th>
                 </tr>
@@ -149,7 +143,6 @@
                         <td data-label="inc_category" class="phone_incident_hide_design">@(i.IncidentcategoryData?.name)</td>
                         <td data-label="subcategory" class="phone_incident_hide_design">@(i.SubcategoryData?.subcategory)</td>
                         <td data-label="assignment group" class="phone_incident_hide_design">@(i.AssignmentGroup?.name)</td>
-                        <td data-label="assigned to" class="phone_incident_hide_design">@(i.AssignedTo?.fullname)</td>
                         <td data-label="create date" class="phone_incident_hide_design">@i.create_date.ToString("yyyy-MM-dd HH:mm:ss")</td>
                         <td data-label="update date" class="phone_incident_hide_design">@i.updated.ToString("yyyy-MM-dd HH:mm:ss")</td>
                     </tr>

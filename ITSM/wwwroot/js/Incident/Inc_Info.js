@@ -48,7 +48,7 @@
 
     function loadDepartments() {
         $.ajax({
-            url: '/Ajax/DepartmentData',
+            url: window.AppRoot + 'Ajax/DepartmentData',
             type: 'GET',
             dataType: 'json',
             success: function(data) {
@@ -64,7 +64,7 @@
 
     function loadUsersByDepartment(departmentId) {
         $.ajax({
-            url: '/Ajax/AssignedToData',
+            url: window.AppRoot + 'Ajax/AssignedToData',
             type: 'POST',
             data: {
                 departmentId: departmentId,
@@ -231,107 +231,107 @@
 
     updateActivityCount();
 
-    $("#post-note-btn").click(function() {
-        if (isResolved) {
-            return;
-        }
+    //$("#post-note-btn").click(function() {
+    //    if (isResolved) {
+    //        return;
+    //    }
 
-        var workNotes = $("#work-notes").val().trim();
+    //    var workNotes = $("#work-notes").val().trim();
 
-        if (workNotes) {
-            $(this).prop("disabled", true);
+    //    if (workNotes) {
+    //        $(this).prop("disabled", true);
 
-            var incidentId = $("#id").val();
+    //        var incidentId = $("#id").val();
 
-            $.ajax({
-                url: '/Ajax/AddNote',
-                type: 'POST',
-                data: {
-                    incidentId: incidentId,
-                    message: workNotes
-                },
-                dataType: 'json',
-                success: function(response) {
-                    $("#post-note-btn").prop("disabled", false);
+    //        $.ajax({
+    //            url: window.AppRoot + 'Ajax/AddNote',
+    //            type: 'POST',
+    //            data: {
+    //                incidentId: incidentId,
+    //                message: workNotes
+    //            },
+    //            dataType: 'json',
+    //            success: function(response) {
+    //                $("#post-note-btn").prop("disabled", false);
 
-                    if (response.success) {
-                        var dateString = response.note.create_date;
+    //                if (response.success) {
+    //                    var dateString = response.note.create_date;
 
-                        var newActivity = $('<div class="inc-cre-activity-item">' +
-                            '<div class="inc-cre-user-avatar">' +
-                            '<img src="' + userPhotoData + '" alt="' + response.note.user_name + '" class="w-px-40 rounded-circle">' +
-                            '</div>' +
-                            '<div class="inc-cre-activity-content">' +
-                            '<div class="inc-cre-activity-header">' +
-                            '<span class="inc-cre-user-name"><a href="/User/Form_User_Info" target="_blank">' + response.note.user_name + '</a></span>' +
-                            '<span class="inc-cre-activity-time">Work notes • ' + dateString + '</span>' +
-                            '</div>' +
-                            '<div class="inc-cre-activity-details">' +
-                            '<div class="inc-cre-work-note-content">' + response.note.message.replace(/\n/g, '<br>') + '</div>' +
-                            '</div>' +
-                            '</div>' +
-                            '</div>');
+    //                    var newActivity = $('<div class="inc-cre-activity-item">' +
+    //                        '<div class="inc-cre-user-avatar">' +
+    //                        '<img src="' + userPhotoData + '" alt="' + response.note.user_name + '" class="w-px-40 rounded-circle">' +
+    //                        '</div>' +
+    //                        '<div class="inc-cre-activity-content">' +
+    //                        '<div class="inc-cre-activity-header">' +
+    //                        '<span class="inc-cre-user-name"><a href="/User/Form_User_Info" target="_blank">' + response.note.user_name + '</a></span>' +
+    //                        '<span class="inc-cre-activity-time">Work notes • ' + dateString + '</span>' +
+    //                        '</div>' +
+    //                        '<div class="inc-cre-activity-details">' +
+    //                        '<div class="inc-cre-work-note-content">' + response.note.message.replace(/\n/g, '<br>') + '</div>' +
+    //                        '</div>' +
+    //                        '</div>' +
+    //                        '</div>');
 
-                        $(".inc-cre-activity-container").prepend(newActivity);
-                        $("#work-notes").val('');
-                        updateActivityCount();
-                    }
-                },
-                error: function(xhr, status, error) {
-                    $("#post-note-btn").prop("disabled", false);
-                    console.error("Add note request failed:", error);
-                }
-            });
-        }
-    });
+    //                    $(".inc-cre-activity-container").prepend(newActivity);
+    //                    $("#work-notes").val('');
+    //                    updateActivityCount();
+    //                }
+    //            },
+    //            error: function(xhr, status, error) {
+    //                $("#post-note-btn").prop("disabled", false);
+    //                console.error("Add note request failed:", error);
+    //            }
+    //        });
+    //    }
+    //});
 
-    function loadNotes() {
-        var incidentId = $("#id").val();
+    //function loadNotes() {
+    //    var incidentId = $("#id").val();
 
-        $.ajax({
-            url: '/Ajax/GetNotesByIncident',
-            type: 'GET',
-            data: { incidentId: incidentId },
-            dataType: 'json',
-            success: function(response) {
-                if (response.success && response.notes) {
-                    $(".inc-cre-activity-container").empty();
+    //    $.ajax({
+    //        url: window.AppRoot + 'Ajax/GetNotesByIncident',
+    //        type: 'GET',
+    //        data: { incidentId: incidentId },
+    //        dataType: 'json',
+    //        success: function(response) {
+    //            if (response.success && response.notes) {
+    //                $(".inc-cre-activity-container").empty();
 
-                    var isResolvedOrClosed = incidentState === "Resolved" || incidentState === "Closed";
-                    if (isResolvedOrClosed && (!response.notes || response.notes.length === 0)) {
-                        $(".inc-cre-activity-container").html('<div class="inc-cre-no-history" style="text-align: center; padding: 30px; color: #6c757d; font-style: italic;">No chat history available</div>');
-                        return;
-                    }
+    //                var isResolvedOrClosed = incidentState === "Resolved" || incidentState === "Closed";
+    //                if (isResolvedOrClosed && (!response.notes || response.notes.length === 0)) {
+    //                    $(".inc-cre-activity-container").html('<div class="inc-cre-no-history" style="text-align: center; padding: 30px; color: #6c757d; font-style: italic;">No chat history available</div>');
+    //                    return;
+    //                }
 
-                    $.each(response.notes, function(i, note) {
-                        var noteItem = $('<div class="inc-cre-activity-item">' +
-                            '<div class="inc-cre-user-avatar">' +
-                            '<img src="' + (note.user_avatar ? 'data:image/jpeg;base64,' + note.user_avatar : 'https://www.diydoutu.com/touxiang/20201222-1.jpg') + '" alt="' + note.user_name + '">' +
-                            '</div>' +
-                            '<div class="inc-cre-activity-content">' +
-                            '<div class="inc-cre-activity-header">' +
-                            '<span class="inc-cre-user-name"><a class="note_username_a" href="/User/Form_User_Info?id=' + note.user_id +'" target="_blank">' + note.user_name + '</a></span>' +
-                            '<span class="inc-cre-activity-time">Work notes • ' + note.create_date + '</span>' +
-                            '</div>' +
-                            '<div class="inc-cre-activity-details">' +
-                            '<div class="inc-cre-work-note-content">' + note.message.replace(/\n/g, '<br>') + '</div>' +
-                            '</div>' +
-                            '</div>' +
-                            '</div>');
+    //                $.each(response.notes, function (i, note) {
+    //                    var noteItem = $('<div class="inc-cre-activity-item">' +
+    //                        '<div class="inc-cre-user-avatar">' +
+    //                        '<img src="' + (note.user_avatar ? 'data:image/jpeg;base64,' + note.user_avatar : 'https://www.diydoutu.com/touxiang/20201222-1.jpg') + '" alt="' + note.user_name + '">' +
+    //                        '</div>' +
+    //                        '<div class="inc-cre-activity-content">' +
+    //                        '<div class="inc-cre-activity-header">' +
+    //                        '<span class="inc-cre-user-name"><a class="note_username_a" href="/User/Form_User_Info?id=' + note.user_id + '" target="_blank">' + note.user_name + '</a></span>' +
+    //                        '<span class="inc-cre-activity-time">Work notes • ' + note.create_date + '</span>' +
+    //                        '</div>' +
+    //                        '<div class="inc-cre-activity-details">' +
+    //                        '<div class="inc-cre-work-note-content">' + note.message.replace(/\n/g, '<br>') + '</div>' +
+    //                        '</div>' +
+    //                        '</div>' +
+    //                        '</div>');
 
-                        $(".inc-cre-activity-container").append(noteItem);
-                    });
+    //                    $(".inc-cre-activity-container").append(noteItem);
+    //                });
 
-                    updateActivityCount();
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error("Load note request failed:", error);
-            }
-        });
-    }
+    //                updateActivityCount();
+    //            }
+    //        },
+    //        error: function(xhr, status, error) {
+    //            console.error("Load note request failed:", error);
+    //        }
+    //    });
+    //}
 
-    loadNotes();
+    //loadNotes();
 
     $("#resolve-button, #resolve-button-footer").click(function () {
         if (isResolved) {
@@ -357,7 +357,7 @@
         formData += "&resolveNotes=" + encodeURIComponent(resolveNotes);
 
         $.ajax({
-            url: '/Ajax/ResolveIncident',
+            url: window.AppRoot + 'Ajax/ResolveIncident',
             type: 'POST',
             data: formData,
             success: function (response) {
@@ -377,7 +377,7 @@
         var incidentId = $("#id").val();
 
         $.ajax({
-            url: '/Ajax/GetResolutionHistory',
+            url: window.AppRoot + 'Ajax/GetResolutionHistory',
             type: 'GET',
             data: { incidentId: incidentId },
             dataType: 'json',
@@ -425,7 +425,7 @@
         var formData = $("#incidentForm").serialize();
 
         $.ajax({
-            url: '/Ajax/CloseIncident',
+            url: window.AppRoot + 'Ajax/CloseIncident',
             type: 'POST',
             data: formData,
             success: function (response) {
@@ -445,7 +445,7 @@
         var formData = $("#incidentForm").serialize();
 
         $.ajax({
-            url: '/Ajax/ReopenIncident',
+            url: window.AppRoot + 'Ajax/ReopenIncident',
             type: 'POST',
             data: formData,
             success: function (response) {

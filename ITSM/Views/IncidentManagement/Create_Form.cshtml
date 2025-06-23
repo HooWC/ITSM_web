@@ -182,9 +182,7 @@
                                 </svg>
                             </button>
                         </label>
-                        <select id="state" name="state" class="inc-cre-form-control">
-                            <option value="Pending" selected>Pending</option>
-                        </select>
+                        <input type="text" id="state" name="state" autocomplete="off" class="inc-cre-form-control" readonly value="Pending" />
                     </div>
 
                     @* <div class="inc-cre-form-group">
@@ -358,7 +356,7 @@
           $target.addClass('active open');
       }
 
-      $('#Incidents_menu_create').addClass("active");
+      $('#Incidents_menu_all_user').addClass("active");
 
           // Update Priority Logic
       // function updatePriority() {

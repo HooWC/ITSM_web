@@ -150,12 +150,19 @@
                                                         <div class="form-group" style="flex: 1;">
                                                             <div class="form-select-wrapper">
                                                                 <select class="form-select" name="department_id" required>
-                                                                    @foreach (var i in Model.DepartmentList)
+                                                                    @if (Model.DepartmentList != null && Model.DepartmentList.Any())
                                                                     {
-                                                                        <option value="@i.id">@i.name</option>
+                                                                        foreach (var dept in Model.DepartmentList)
+                                                                        {
+                                                                            <option value="@dept.id">@dept.name</option>
+                                                                        }
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <option value="">No departments available</option>
                                                                     }
                                                                 </select>
-                                                                <i class="select-icon uil uil-users-alt"></i>
+                                                                <i class="select-icon uil uil-building"></i>
                                                                 <i class="select-arrow uil uil-angle-down"></i>
                                                             </div>
                                                         </div>

@@ -62,16 +62,10 @@ namespace ITSM.Controllers
             var incList = new List<Incident>();
             if (type == "User_All")
                 incList = allInc.Where(x => x.sender == currentUser.id).OrderByDescending(y => y.id).ToList();
-            else if (type == "Assigned_To_Me")
-                incList = allInc.Where(x => x.assigned_to == currentUser.id && x.state != "Resolved" && x.state != "Closed").OrderByDescending(y => y.id).ToList();
             else if (type == "All")
                 incList = allInc.OrderByDescending(y => y.id).ToList();
-            else if(type == "Resolved_Assigned_To_Me")
-                incList = allInc.Where(x => (x.assigned_to == currentUser.id || x.updated_by == currentUser.id) && x.state == "Resolved").OrderByDescending(y => y.id).ToList();
-            else if(type == "Closed_Assigned_To_Me")
-                incList = allInc.Where(x => (x.assigned_to == currentUser.id || x.updated_by == currentUser.id) && x.state == "Closed").OrderByDescending(y => y.id).ToList();
-            else if (type == "Manager_Assign_Work")
-                incList = allInc.Where(x => x.assignment_group == currentUser.department_id && x.assigned_to == null && x.state != "Closed" && x.state != "Resolved").OrderByDescending(y => y.id).ToList();
+            else if(type == "Assigned_To_Group")
+                incList = allInc.Where(x => x.assignment_group == currentUser.department_id).OrderByDescending(y => y.id).ToList();
 
             var allDepartments = dep.Result;
             var allUsers = user.Result;
@@ -81,7 +75,6 @@ namespace ITSM.Controllers
             foreach (var incident in incList)
             {
                 incident.AssignmentGroup = allDepartments.FirstOrDefault(d => d.id == incident.assignment_group);
-                incident.AssignedTo = allUsers.FirstOrDefault(u => u.id == incident.assigned_to);
                 incident.IncidentcategoryData = allIncCategory.FirstOrDefault(x => x.id == incident.category);
                 incident.SubcategoryData = allSucategory.FirstOrDefault(x => x.id == incident.subcategory);
             }
@@ -268,7 +261,19 @@ namespace ITSM.Controllers
 
             var incData = await _incApi.FindByIDIncident_API(id);
 
-            var read_note_true = allNotes.Where(x => x.note_read == false && x.receiver_id == currentUser.id && x.incident_id == incData.id).ToList();
+            //var read_note_true = allNotes.Where(x => x.note_read == false && x.receiver_id == currentUser.department_id && x.incident_id == incData.id).ToList();
+            //read_note_true.ForEach(x => x.note_read = true);
+
+            var read_note_true = allNotes
+                .Where(x =>
+                    !x.note_read &&
+                    x.incident_id == incData.id &&
+                    (
+                        (x.post_type == "department" && x.receiver_id == currentUser.department_id) ||
+                        (x.post_type != "department" && x.receiver_id == currentUser.id)
+                    ))
+                .ToList();
+
             read_note_true.ForEach(x => x.note_read = true);
 
             foreach (var i in read_note_true)
@@ -277,7 +282,6 @@ namespace ITSM.Controllers
             var noteMessageCount = await _userService.GetNoteAsync();
 
             incData.AssignmentGroup = allDepartment.Where(x => x.id == incData.assignment_group).FirstOrDefault();
-            incData.AssignedTo = incData.assigned_to == null ? null : allUser.FirstOrDefault(x => x.id == incData.assigned_to);
             incData.IncidentcategoryData = allIncCategory.FirstOrDefault(x => x.id == incData.category);
             incData.SubcategoryData = allSucategory.FirstOrDefault(x => x.id == incData.subcategory);
             incData.Sender = allUser.FirstOrDefault(x => x.id == incData.sender);
@@ -327,7 +331,6 @@ namespace ITSM.Controllers
             var incData = await _incApi.FindByIDIncident_API(inc.id);
 
             incData.AssignmentGroup = allDepartment.FirstOrDefault(x => x.id == incData.assignment_group);
-            incData.AssignedTo = incData.assigned_to == null ? null : allUser.FirstOrDefault(x => x.id == incData.assigned_to);
             incData.IncidentcategoryData = allIncCategory.FirstOrDefault(x => x.id == incData.category);
             incData.SubcategoryData = allSucategory.FirstOrDefault(x => x.id == incData.subcategory);
 
@@ -377,15 +380,14 @@ namespace ITSM.Controllers
                     incData.describe = inc.describe;
                     incData.state = inc.state;
                     incData.updated_by = currentUser.id;
-                    incData.assigned_to = inc.assigned_to;
 
-                    if (incData.assigned_to != inc.assigned_to && inc.assigned_to != null)
-                    {
-                        var inc_note_list = allNotes.Where(x => x.incident_id == inc.id && x.note_read == false && x.receiver_id != inc.sender).ToList();
-                        inc_note_list.ForEach(x => x.receiver_id = inc.assigned_to);
-                        foreach(var i in  inc_note_list)
-                            await _noteApi.UpdateNote_API(i);
-                    }
+                    //if (incData.assigned_to != inc.assigned_to && inc.assigned_to != null)
+                    //{
+                    //    var inc_note_list = allNotes.Where(x => x.incident_id == inc.id && x.note_read == false && x.receiver_id != inc.sender).ToList();
+                    //    inc_note_list.ForEach(x => x.receiver_id = inc.assigned_to);
+                    //    foreach(var i in  inc_note_list)
+                    //        await _noteApi.UpdateNote_API(i);
+                    //}
 
                     if (fileBytesList != null && fileBytesList.Count > 0)
                     {
@@ -408,14 +410,8 @@ namespace ITSM.Controllers
                     {
                         if (roleBack == "Admin")
                             return RedirectToAction("All", "IncidentManagement");
-                        else if (roleBack == "Resolved")
-                            return RedirectToAction("Resolved_Assigned_To_Me", "IncidentManagement");
-                        else if (roleBack == "ToMe")
-                            return RedirectToAction("Assigned_To_Me", "IncidentManagement");
                         else if (roleBack == "ToGroup")
                             return RedirectToAction("Assigned_To_Group", "IncidentManagement");
-                        else if (roleBack == "Closed")
-                            return RedirectToAction("Closed_Assigned_To_Me", "IncidentManagement");
                         else
                             return RedirectToAction("User_All", "IncidentManagement");
                     }
@@ -447,33 +443,7 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Assigned_To_Group()
         {
-            var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
-
-            var inc = _incApi.GetAllIncident_API();
-            var dep = _depApi.GetAllDepartment_API();
-            var user = _userApi.GetAllUser_API();
-
-            await Task.WhenAll(inc, dep, user);
-
-            var allInc = inc.Result;
-            var incList = allInc.Where(x => x.assignment_group == currentUser.department_id).OrderByDescending(y => y.id).ToList();
-
-            var allDepartments = dep.Result;
-            var allUsers = user.Result;
-
-            foreach (var incident in incList)
-            {
-                incident.AssignmentGroup = allDepartments.FirstOrDefault(d => d.id == incident.assignment_group);
-                incident.AssignedTo = allUsers.FirstOrDefault(u => u.id == incident.assigned_to);
-            }
-
-            var model = new AllModelVM()
-            {
-                user = currentUser,
-                IncidentList = incList,
-                noteMessageCount = noteMessageCount
-            };
+            var model = await get_Inc_Data("Assigned_To_Group");
 
             return View(model);
         }
@@ -522,7 +492,6 @@ namespace ITSM.Controllers
             var incData = await _incApi.FindByIDIncident_API(id);
 
             incData.AssignmentGroup = allDepartment.Where(x => x.id == incData.assignment_group).FirstOrDefault();
-            incData.AssignedTo = incData.assigned_to == null ? null : allUser.FirstOrDefault(x => x.id == incData.assigned_to);
             incData.IncidentcategoryData = allIncCategory.FirstOrDefault(x => x.id == incData.category);
             incData.SubcategoryData = allSucategory.FirstOrDefault(x => x.id == incData.subcategory);
             incData.Sender = allUser.FirstOrDefault(x => x.id == incData.sender);
@@ -605,7 +574,7 @@ namespace ITSM.Controllers
 
             var allInc = inc.Result;
             var incList = new List<Incident>();
-            incList = allInc.Where(x => (x.assigned_to == currentUser.id && x.state != "Resolved" && x.state != "Closed")
+            incList = allInc.Where(x => (x.assignment_group == currentUser.department_id && x.state != "Resolved" && x.state != "Closed")
             || (x.sender == currentUser.id && x.state != "Resolved" && x.state != "Closed")
             ).OrderByDescending(y => y.id).ToList();
 
@@ -619,18 +588,20 @@ namespace ITSM.Controllers
             foreach (var incident in incList)
             {
                 incident.AssignmentGroup = allDepartments.FirstOrDefault(d => d.id == incident.assignment_group);
-                incident.AssignedTo = allUsers.FirstOrDefault(u => u.id == incident.assigned_to);
                 incident.IncidentcategoryData = allIncCategory.FirstOrDefault(x => x.id == incident.category);
                 incident.SubcategoryData = allSucategory.FirstOrDefault(x => x.id == incident.subcategory);
 
                 var get_noteMessageNote = allNotes
                     .Where(x =>
-                    x.incident_id == incident.id &&
-                    x.receiver_id == currentUser.id &&
-                    x.note_read == false)
+                        x.incident_id == incident.id &&
+                        x.note_read == false &&
+                        (
+                            (x.post_type == "department" && x.receiver_id == currentUser.department_id) ||
+                            (x.post_type != "department" && x.receiver_id == currentUser.id)
+                        ))
                     .Count();
 
-                if(get_noteMessageNote > 0)
+                if (get_noteMessageNote > 0)
                 {
                     incMessages.Add(new IncMessage
                     {

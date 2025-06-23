@@ -151,7 +151,7 @@ function sortIncidents() {
         word = "sort_basic";
 
     $.ajax({
-        url: '/Ajax/SortIncident',
+        url: window.AppRoot + 'Ajax/SortIncident',
         method: 'GET',
         data: {
             sortOrder: currentSortOrder,
@@ -231,7 +231,7 @@ function DeleteItem() {
     }
 
     $.ajax({
-        url: '/Ajax/DeleteIncidents',
+        url: window.AppRoot + 'Ajax/DeleteIncidents',
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(selectedIds),
@@ -319,7 +319,7 @@ function searchIncidents() {
         word = "search_basic";
 
     $.ajax({
-        url: '/Ajax/SearchIncident',
+        url: window.AppRoot + 'Ajax/SearchIncident',
         method: 'GET',
         data: {
             searchTerm: searchTerm,
@@ -366,7 +366,7 @@ function filterByStatus() {
         word = "filter_basic";
 
     $.ajax({
-        url: '/Ajax/FilterIncidentByStatus',
+        url: window.AppRoot + 'Ajax/FilterIncidentByStatus',
         method: 'GET',
         data: {
             status: currentStatus,
@@ -426,33 +426,10 @@ function updateIncidentTable(data) {
         return;
     }
 
-    if (searchFunctionName.includes("SearchAssignWork"))
-    {
-        $.each(data, function (index, inc) {
-            var row = `
-                    <tr class="incident-item" data-id="${inc.id}">
-                        <td class="inc-tab-incident-number" data-label="Number">
-                            <a href="/IncidentManagement/Manager_Assign_Work_Info?id=${inc.id}">${inc.inc_number}</a>
-                        </td>
-                        <td data-label="urgency" class="phone_incident_hide_design">${inc.urgency}</td>
-                        <td data-label="state">${inc.state}</td>
-                        <td data-label="category" class="phone_incident_hide_design">${inc.category}</td>
-                        <td data-label="subcategory" class="phone_incident_hide_design">${inc.subcategory}</td>
-                        <td data-label="assignment group" class="phone_incident_hide_design">${inc.assignment_group}</td>
-                        <td data-label="create date" class="phone_incident_hide_design">${inc.create_date}</td>
-                        <td data-label="update date" class="phone_incident_hide_design">${inc.update_date}</td>
-                    </tr>
-                `;
-            tableBody.append(row);
-            phone_function();
-        });
-    }
-    else
-    {
-        var typeName = $('#typeName').val();
+    var typeName = $('#typeName').val();
 
-        $.each(data, function (index, inc) {
-            var row = `
+    $.each(data, function (index, inc) {
+        var row = `
                     <tr class="incident-item" data-id="${inc.id}">
                         <td class="inc-tab-incident-number" data-label="Number">
                             <a href="/IncidentManagement/Inc_Info_Form?id=${inc.id}&&type=${typeName}">${inc.inc_number}</a>
@@ -462,15 +439,13 @@ function updateIncidentTable(data) {
                         <td data-label="category" class="phone_incident_hide_design">${inc.category}</td>
                         <td data-label="subcategory" class="phone_incident_hide_design">${inc.subcategory}</td>
                         <td data-label="assignment group" class="phone_incident_hide_design">${inc.assignment_group}</td>
-                        <td data-label="assigned to" class="phone_incident_hide_design">${inc.assigned_to}</td>
                         <td data-label="create date" class="phone_incident_hide_design">${inc.create_date}</td>
                         <td data-label="update date" class="phone_incident_hide_design">${inc.update_date}</td>
                     </tr>
                 `;
-            tableBody.append(row);
-            phone_function();
-        });
-    }
+        tableBody.append(row);
+        phone_function();
+    });
 
     initPagination();
 

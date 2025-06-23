@@ -12,6 +12,7 @@ data-bs-theme="dark">
     <meta charset="utf-8" />
     <meta name="viewport"
     content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <base href="@Url.Content("~/")" />
 
     <title>HSG ITSM</title>
 
@@ -60,6 +61,11 @@ data-bs-theme="dark">
 
     <!-- Helpers -->
     <script src="~/assets/vendor/js/helpers.js"></script>
+
+    <script>
+        window.AppRoot = '@Url.Content("~/")';
+        // console.log("AppRoot =", window.AppRoot); 
+    </script>
 </head>
 
 <body>
@@ -280,20 +286,25 @@ data-bs-theme="dark">
                                     </a>
                                 </li>
                             }
-                            @if (Model.user.r_manager)
+                            @* @if (Model.user.r_manager)
                             {
                                 <li class="menu-item" id="Incidents_menu_assign_work">
                                     <a href="~/IncidentManagement/Manager_Assign_Work" class="menu-link">
                                         <div class="text-truncate" data-i18n="Connections">Assign Work</div>
                                     </a>
                                 </li>
-                            }
+                            } *@
                             <li class="menu-item" id="Incidents_menu_all_user">
                                 <a href="~/IncidentManagement/User_All" class="menu-link">
                                     <div class="text-truncate" data-i18n="Connections">My Ticket</div>
                                 </a>
                             </li>
-                            <li class="menu-item" id="Incidents_menu_create">
+                            <li class="menu-item" id="Incidents_menu_assigned_to_team">
+                                <a href="~/IncidentManagement/Assigned_To_Group" class="menu-link">
+                                    <div class="text-truncate" data-i18n="Notifications">Assigned to us</div>
+                                </a>
+                            </li>
+                            @* <li class="menu-item" id="Incidents_menu_create">
                                 <a href="~/IncidentManagement/Create_Form" class="menu-link">
                                     <div class="text-truncate" data-i18n="Account">Create New</div>
                                 </a>
@@ -302,8 +313,8 @@ data-bs-theme="dark">
                                 <a href="~/IncidentManagement/Assigned_To_Me" class="menu-link">
                                     <div class="text-truncate" data-i18n="Notifications">Assigned to me</div>
                                 </a>
-                            </li>
-                            <li class="menu-item" id="Incidents_menu_assigned_resolve">
+                            </li> *@
+                           @*  <li class="menu-item" id="Incidents_menu_assigned_resolve">
                                 <a href="~/IncidentManagement/Resolved_Assigned_To_Me" class="menu-link">
                                     <div class="text-truncate" data-i18n="Notifications">Resolved by me</div>
                                 </a>
@@ -312,7 +323,7 @@ data-bs-theme="dark">
                                 <a href="~/IncidentManagement/Closed_Assigned_To_Me" class="menu-link">
                                     <div class="text-truncate" data-i18n="Notifications">Closed by me</div>
                                 </a>
-                            </li>
+                            </li> *@
                             <li class="menu-item" id="Incidents_menu_assigned_message">
                                 <a href="~/IncidentManagement/Inc_Message" class="menu-link">
                                     <div class="text-truncate" data-i18n="Notifications">
@@ -787,7 +798,6 @@ data-bs-theme="dark">
     <script async defer src="https://buttons.github.io/buttons.js"></script>
 
     <!-- <script src="../dist/css/style1.js"></script> -->
-
     <!-- ============================================= -->
     <!-- My JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
@@ -795,8 +805,10 @@ data-bs-theme="dark">
     <script src="~/js/Request/service_catalog.js"></script>
     <script src="~/js/Layout/RightPhoneFunction.js"></script>
     <script src="~/js/Form/error_handler.js"></script>
+    <script src="~/lib/microsoft/signalr/signalr.min.js"></script>
 
     <script>
+
         document.addEventListener('DOMContentLoaded', function() {
           
             const openBtn = document.querySelector('.open-button');
@@ -1008,5 +1020,6 @@ data-bs-theme="dark">
         });
     </script>
 
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
