@@ -156,7 +156,7 @@ $('#sortByNumber').click(function () {
 function sortCMDBs() {
 
     $.ajax({
-        url: '/Ajax/SortCMDB',
+        url: window.AppRoot + 'Ajax/SortCMDB',
         method: 'GET',
         data: {
             sortOrder: currentSortOrder
@@ -247,7 +247,7 @@ function DeleteItem() {
 
     // Send delete request
     $.ajax({
-        url: '/Ajax/DeleteCMDBs',
+        url: window.AppRoot + 'Ajax/DeleteCMDBs',
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(selectedIds),
@@ -337,7 +337,7 @@ function searchCMDBs() {
     }
 
     $.ajax({
-        url: '/Ajax/SearchCMDB',
+        url: window.AppRoot + 'Ajax/SearchCMDB',
         method: 'GET',
         data: {
             searchTerm: searchTerm,
@@ -380,7 +380,7 @@ function filterByStatus() {
         word = "filter_basic";
 
     $.ajax({
-        url: '/Ajax/FilterFeedbackByStatus',
+        url: window.AppRoot + 'Ajax/FilterFeedbackByStatus',
         method: 'GET',
         data: {
             status: currentStatus,

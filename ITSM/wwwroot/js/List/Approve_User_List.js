@@ -132,7 +132,7 @@ $('#sortByNumber').click(function () {
 function sortUsers() {
 
     $.ajax({
-        url: '/Ajax/SortUser',
+        url: window.AppRoot + 'Ajax/SortUser',
         method: 'GET',
         data: {
             sortOrder: currentSortOrder
@@ -213,7 +213,7 @@ function DeleteItem() {
 
     // Send delete request
     $.ajax({
-        url: '/Ajax/DeleteUser',
+        url: window.AppRoot + 'Ajax/DeleteUser',
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(selectedIds),
@@ -256,7 +256,7 @@ $('#approveButton').click(function () {
     }
 
     $.ajax({
-        url: '/Ajax/ApproveUsers',
+        url: window.AppRoot + 'Ajax/ApproveUsers',
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(selectedIds),
@@ -321,7 +321,7 @@ function searchUsers() {
     }
 
     $.ajax({
-        url: '/Ajax/SearchUser',
+        url: window.AppRoot + 'Ajax/SearchUser',
         method: 'GET',
         data: {
             searchTerm: searchTerm,
@@ -353,7 +353,7 @@ function filterByStatus() {
     }
 
     $.ajax({
-        url: '/Ajax/FilterUserByStatus',
+        url: window.AppRoot + 'Ajax/FilterUserByStatus',
         method: 'GET',
         data: {
             status: currentStatus

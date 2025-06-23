@@ -167,7 +167,7 @@ function sortIncidents() {
         word = "_admin";
 
     $.ajax({
-        url: '/Ajax/SortFeedback',
+        url: window.AppRoot + 'Ajax/SortFeedback',
         method: 'GET',
         data: {
             sortOrder: currentSortOrder,
@@ -265,7 +265,7 @@ function DeleteItem() {
 
     // Send delete request
     $.ajax({
-        url: '/Ajax/DeleteFeedbacks',
+        url: window.AppRoot + 'Ajax/DeleteFeedbacks',
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({
@@ -366,7 +366,7 @@ function searchFeedbacks() {
         word = "search_basic";
 
     $.ajax({
-        url: '/Ajax/SearchFeedback',
+        url: window.AppRoot + 'Ajax/SearchFeedback',
         method: 'GET',
         data: {
             searchTerm: searchTerm,
@@ -410,7 +410,7 @@ function filterByStatus() {
         word = "filter_basic";
 
     $.ajax({
-        url: '/Ajax/FilterFeedbackByStatus',
+        url: window.AppRoot + 'Ajax/FilterFeedbackByStatus',
         method: 'GET',
         data: {
             status: currentStatus,

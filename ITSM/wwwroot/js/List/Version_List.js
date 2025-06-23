@@ -225,7 +225,7 @@ function DeleteItem() {
 
     // Send delete request
     $.ajax({
-        url: '/Ajax/DeleteVersions',
+        url: window.AppRoot + 'Ajax/DeleteVersions',
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(selectedIds),
@@ -315,7 +315,7 @@ function searchMyversions() {
     }
 
     $.ajax({
-        url: '/Ajax/SearchVersion',
+        url: window.AppRoot + 'Ajax/SearchVersion',
         method: 'GET',
         data: {
             searchTerm: searchTerm,

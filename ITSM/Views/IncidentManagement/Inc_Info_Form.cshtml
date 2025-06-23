@@ -711,12 +711,11 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            // 建立SignalR连接
             const connection = new signalR.HubConnectionBuilder()
                 .withUrl(window.AppRoot + "noteHub", {
                     skipNegotiation: false,
-                    transport: signalR.HttpTransportType.LongPolling,  // 先使用 LongPolling
-                    timeout: 100000, // 100 秒超时
+                    transport: signalR.HttpTransportType.LongPolling,
+                    timeout: 100000,
                     headers: {
                         "X-Requested-With": "XMLHttpRequest"
                     }
@@ -739,39 +738,35 @@
                 .configureLogging(signalR.LogLevel.Information)
                 .build();
 
-            // 启动连接并加入组
             async function startConnection() {
                 try {
                     await connection.start();
-                    console.log("SignalR连接成功");
+                    // console.log("SignalR connection successful");
                     await connection.invoke("JoinIncidentGroup", '@Model.incident.id');
-                    console.log("加入事件组成功");
+                    // console.log("Joined the event group successfully");
                 } catch (err) {
-                    console.error("SignalR连接错误:", err);
+                    // console.error("SignalR connection error:", err);
                     setTimeout(startConnection, 5000);
                 }
             }
 
             startConnection();
 
-            // 处理连接断开
             connection.onclose(async () => {
-                console.log("SignalR连接断开，尝试重新连接...");
+                // console.log("SignalR connection is disconnected, trying to reconnect...");
                 await startConnection();
             });
 
-            // 处理接收到的笔记
             connection.on("ReceiveNote", function (incidentId, note) {
-                console.log("收到新笔记:", note);
+                    // console.log("New notes received:", note);
                 if (incidentId === '@Model.incident.id') {
-                    // 创建新的笔记HTML
                     var noteHtml = $('<div class="inc-cre-activity-item">' +
                                 '<div class="inc-cre-user-avatar">' +
-                                '<img src="' + (note.user_avatar ? 'data:'+ note.user_photo_type +';base64,' + note.user_avatar : 'https://www.diydoutu.com/touxiang/20201222-1.jpg') + '" alt="' + note.user_name + '">' +
+                                '<img src="' + (note.user_avatar ? 'data:'+ note.user_photo_type +';base64,' + note.user_avatar : window.AppRoot + 'img/avatar/user_avatar.jpg') + '" alt="' + note.user_name + '">' +
                                 '</div>' +
                                 '<div class="inc-cre-activity-content">' +
                                 '<div class="inc-cre-activity-header">' +
-                                '<span class="inc-cre-user-name"><a class="note_username_a" href="/User/Form_User_Info?id=' + note.user_id + '" target="_blank">' + note.user_name + '</a></span>' +
+                                '<span class="inc-cre-user-name"><a class="note_username_a" href="'+ window.AppRoot +'User/Form_User_Info?id=' + note.user_id + '" target="_blank">' + note.user_name + '</a></span>' +
                                 '<span class="inc-cre-activity-time">Work notes • ' + note.create_date + '</span>' +
                                 '</div>' +
                                 '<div class="inc-cre-activity-details">' +
@@ -780,116 +775,110 @@
                                 '</div>' +
                                 '</div>');
                     
-                    // 将新笔记添加到活动容器的顶部
                     $(".inc-cre-activity-container").prepend(noteHtml);
                     
-                    // 更新活动计数
                     updateActivityCount();
                 }
             });
 
-            // 发送笔记
+            // Send Note
             $("#post-note-btn").click(async function () {
                 const message = $("#work-notes").val().trim();
                 if (!message) {
-                    alert("请输入笔记内容");
+                    alert("Please enter the note content");
                     return;
                 }
 
-                    $.ajax({
-                         url: window.AppRoot + 'Ajax/AddNote',
-                         type: 'POST',
-                         data: {
-                             incidentId: '@Model.incident.id',
-                             message: message
-                         },
-                         dataType: 'json',
-                         success: function(response) {
-
-                             if (response.success) {
-                                 $("#work-notes").val('');
-                             } else {
-                                 alert("添加笔记失败: " + response.message);
-                             }
-                         },
-                         error: function(xhr, status, error) {
-                             console.error("发送笔记时出错:", error);
-                             alert("发送笔记时出错，请重试");
-                         }
-                     });
+                                        $.ajax({
+                        url: window.AppRoot + 'Ajax/AddNote',
+                        type: 'POST',
+                        data: {
+                            incidentId: '@Model.incident.id',
+                            message: message
+                        },
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.success) {
+                                $("#work-notes").val(''); // 清空输入框
+                                $("#work-notes").trigger('input'); // 触发input事件以更新UI
+                            } else {
+                                alert("Failed to add note: " + response.message);
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            // console.error("Error sending note:", error);
+                            alert("Error sending note, please try again");
+                        }
+                    });
             });
 
-            // 加载现有笔记
+            // Load Note
             async function loadNotes() {
-                    $.ajax({
-                        url: window.AppRoot + 'Ajax/GetNotesByIncident',
-                        type: 'GET',
-                        data: { incidentId: '@Model.incident.id' },
-                        dataType: 'json',
-                        success: function (response) {
-                            if (response.success) {
-                                const activityContainer = $(".inc-cre-activity-container");
-                                activityContainer.empty();
+                $.ajax({
+                    url: window.AppRoot + 'Ajax/GetNotesByIncident',
+                    type: 'GET',
+                    data: { incidentId: '@Model.incident.id' },
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.success) {
+                            const activityContainer = $(".inc-cre-activity-container");
+                            activityContainer.empty();
 
-                                var isResolvedOrClosed = incidentState === "Resolved" || incidentState === "Closed";
-                                if (isResolvedOrClosed && (!response.notes || response.notes.length === 0)) {
-                                    activityContainer.html('<div class="inc-cre-no-history" style="text-align: center; padding: 30px; color: #6c757d; font-style: italic;">No chat history available</div>');
-                                    return;
-                                }
+                            var isResolvedOrClosed = incidentState === "Resolved" || incidentState === "Closed";
+                            if (isResolvedOrClosed && (!response.notes || response.notes.length === 0)) {
+                                activityContainer.html('<div class="inc-cre-no-history" style="text-align: center; padding: 30px; color: #6c757d; font-style: italic;">No chat history available</div>');
+                                return;
+                            }
 
-                                response.notes.forEach(function (note) {
-                                    var noteHtml = $(`
-                                        <div class="inc-cre-activity-item">
-                                            <div class="inc-cre-user-avatar">
-                                                <img src="${note.user_avatar ? 'data:' + note.user_photo_type + ';base64,' + note.user_avatar : 'https://www.diydoutu.com/touxiang/20201222-1.jpg'}" alt="${note.user_name}">
+                            response.notes.forEach(function (note) {
+                                var noteHtml = $(`
+                                    <div class="inc-cre-activity-item">
+                                        <div class="inc-cre-user-avatar">
+                                            <img src="${note.user_avatar ? 'data:' + note.user_photo_type + ';base64,' + note.user_avatar : window.AppRoot + 'img/avatar/user_avatar.jpg'}" alt="${note.user_name}">
+                                        </div>
+                                        <div class="inc-cre-activity-content">
+                                            <div class="inc-cre-activity-header">
+                                                <span class="inc-cre-user-name">
+                                                    <a class="note_username_a" href="${window.AppRoot}User/Form_User_Info?id=${note.user_id}" target="_blank">
+                                                        ${note.user_name}
+                                                    </a>
+                                                </span>
+                                                <span class="inc-cre-activity-time">Work notes • ${note.create_date}</span>
                                             </div>
-                                            <div class="inc-cre-activity-content">
-                                                <div class="inc-cre-activity-header">
-                                                    <span class="inc-cre-user-name">
-                                                        <a class="note_username_a" href="${window.AppRoot}User/Form_User_Info?id=${note.user_id}" target="_blank">
-                                                            ${note.user_name}
-                                                        </a>
-                                                    </span>
-                                                    <span class="inc-cre-activity-time">Work notes • ${note.create_date}</span>
-                                                </div>
-                                                <div class="inc-cre-activity-details">
-                                                    <div class="inc-cre-work-note-content">
-                                                        ${note.message.replace(/\n/g, '<br>')}
-                                                    </div>
+                                            <div class="inc-cre-activity-details">
+                                                <div class="inc-cre-work-note-content">
+                                                    ${note.message.replace(/\n/g, '<br>')}
                                                 </div>
                                             </div>
                                         </div>
-                                    `);
+                                    </div>
+                                `);
 
-                                    activityContainer.append(noteHtml);
-                                });
+                                activityContainer.append(noteHtml);
+                            });
 
-                                updateActivityCount();
-                            }
-                        },
-                        error: function (xhr, status, error) {
-                            console.error("加载笔记时出错:", error);
+                            updateActivityCount();
                         }
-                    });
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error loading notes:", error);
+                    }
+                });
             }
 
-            // 更新活动计数
             function updateActivityCount() {
                 const count = $(".inc-cre-activity-item").length;
                 $("#activity-count").text(count);
             }
 
-            // 页面加载时加载笔记
             loadNotes();
 
-            // 页面卸载时离开组
-            $(window).on('beforeunload', async function () {
+            $(window).on('unload', function () {
                 if (connection.state === signalR.HubConnectionState.Connected) {
-                    await connection.invoke("LeaveIncidentGroup", '@Model.incident.id');
+                    connection.invoke("LeaveIncidentGroup", '@Model.incident.id');
                 }
             });
 
-            // 添加回车键发送功能
             $("#work-notes").keypress(function (e) {
                 if (e.which === 13 && !e.shiftKey) {
                     e.preventDefault();

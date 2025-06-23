@@ -205,7 +205,7 @@ function DeleteItem() {
 
     // Send delete request
     $.ajax({
-        url: '/Ajax/DeleteRole',
+        url: window.AppRoot + 'Ajax/DeleteRole',
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(selectedIds),
@@ -295,7 +295,7 @@ function searchRole() {
     }
 
     $.ajax({
-        url: '/Ajax/SearchRole',
+        url: window.AppRoot + 'Ajax/SearchRole',
         method: 'GET',
         data: {
             searchTerm: searchTerm,

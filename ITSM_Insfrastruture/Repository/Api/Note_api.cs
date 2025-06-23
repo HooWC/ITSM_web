@@ -121,8 +121,8 @@ namespace ITSM_Insfrastruture.Repository.Api
                 var response = await _client.PostAsync(_allNoteUrl, jsonStr);
 
                 // Testing Date Error
-                var responseStr = await response.Content.ReadAsStringAsync();
-                Console.WriteLine($"RESPONSE: {responseStr}");
+                //var responseStr = await response.Content.ReadAsStringAsync();
+                //Console.WriteLine($"RESPONSE: {responseStr}");
 
                 return response.IsSuccessStatusCode;
             }

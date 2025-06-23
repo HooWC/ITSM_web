@@ -19,5 +19,15 @@ namespace ITSM_DomainModelEntity.Function
         {
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, incidentId);
         }
+
+        public async Task UpdateUnreadCount(string userId, int count)
+        {
+            await Clients.User(userId).SendAsync("ReceiveUnreadCount", count);
+        }
+
+        public async Task MarkNoteAsRead(string noteId, string userId)
+        {
+            await Clients.All.SendAsync("NoteMarkedAsRead", noteId, userId);
+        }
     }
 }

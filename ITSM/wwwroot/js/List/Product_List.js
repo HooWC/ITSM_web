@@ -158,7 +158,7 @@ $('#sortByNumber').click(function () {
 function sortProducts() {
 
     $.ajax({
-        url: '/Ajax/SortProduct',
+        url: window.AppRoot + 'Ajax/SortProduct',
         method: 'GET',
         data: {
             sortOrder: currentSortOrder
@@ -249,7 +249,7 @@ function DeleteItem() {
 
     // Send delete request
     $.ajax({
-        url: '/Ajax/DeleteProduct',
+        url: window.AppRoot + 'Ajax/DeleteProduct',
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(selectedIds),
@@ -339,7 +339,7 @@ function searchProducts() {
     }
 
     $.ajax({
-        url: '/Ajax/SearchProduct',
+        url: window.AppRoot + 'Ajax/SearchProduct',
         method: 'GET',
         data: {
             searchTerm: searchTerm,
@@ -374,7 +374,7 @@ function filterByStatus() {
     }
 
     $.ajax({
-        url: '/Ajax/FilterProductByStatus',
+        url: window.AppRoot + 'Ajax/FilterProductByStatus',
         method: 'GET',
         data: {
             status: currentStatus

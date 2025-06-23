@@ -173,7 +173,7 @@ function sortRequests() {
         word = "sort_basic";
 
     $.ajax({
-        url: '/Ajax/SortRequest',
+        url: window.AppRoot + 'Ajax/SortRequest',
         method: 'GET',
         data: {
             sortOrder: currentSortOrder,
@@ -265,7 +265,7 @@ function DeleteItem() {
 
     // Send delete request
     $.ajax({
-        url: '/Ajax/DeleteRequests',
+        url: window.AppRoot + 'Ajax/DeleteRequests',
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(selectedIds),
@@ -367,7 +367,7 @@ function searchIncidents() {
         word = "search_basic";
 
     $.ajax({
-        url: '/Ajax/SearchRequest',
+        url: window.AppRoot + 'Ajax/SearchRequest',
         method: 'GET',
         data: {
             searchTerm: searchTerm,
@@ -413,7 +413,7 @@ function filterByStatus() {
         word = "filter_basic";
 
     $.ajax({
-        url: '/Ajax/FilterRequestByStatus',
+        url: window.AppRoot + 'Ajax/FilterRequestByStatus',
         method: 'GET',
         data: {
             status: currentStatus,

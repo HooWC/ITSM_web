@@ -134,7 +134,7 @@ $('#sortByNumber').click(function () {
 function sortIncidents() {
 
     $.ajax({
-        url: '/Ajax/SortAnnouncement',
+        url: window.AppRoot + 'Ajax/SortAnnouncement',
         method: 'GET',
         data: {
             sortOrder: currentSortOrder
@@ -212,7 +212,7 @@ function DeleteItem() {
     }
 
     $.ajax({
-        url: '/Ajax/DeleteAnnouncements',
+        url: window.AppRoot + 'Ajax/DeleteAnnouncements',
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(selectedIds),
@@ -284,7 +284,7 @@ function searchAnnouncements() {
     }
 
     $.ajax({
-        url: '/Ajax/SearchAnnouncement',
+        url: window.AppRoot + 'Ajax/SearchAnnouncement',
         method: 'GET',
         data: {
             searchTerm: searchTerm,
@@ -324,7 +324,7 @@ function filterByStatus() {
         word = "filter_basic";
 
     $.ajax({
-        url: '/Ajax/FilterFeedbackByStatus',
+        url: window.AppRoot + 'Ajax/FilterFeedbackByStatus',
         method: 'GET',
         data: {
             status: currentStatus,

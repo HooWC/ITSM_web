@@ -170,7 +170,7 @@ function sortIncidents() {
         word = "sort_basic";
 
     $.ajax({
-        url: '/Ajax/SortKB',
+        url: window.AppRoot + 'Ajax/SortKB',
         method: 'GET',
         data: {
             sortOrder: currentSortOrder,
@@ -262,7 +262,7 @@ function DeleteItem() {
 
     // Send delete request
     $.ajax({
-        url: '/Ajax/DeleteKBs',
+        url: window.AppRoot + 'Ajax/DeleteKBs',
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(selectedIds),
@@ -360,7 +360,7 @@ function searchKnowledges() {
         word = "search_basic";
 
     $.ajax({
-        url: '/Ajax/SearchKB',
+        url: window.AppRoot + 'Ajax/SearchKB',
         method: 'GET',
         data: {
             searchTerm: searchTerm,
@@ -404,7 +404,7 @@ function filterByStatus() {
         word = "filter_basic";
 
     $.ajax({
-        url: '/Ajax/FilterKBByStatus',
+        url: window.AppRoot + 'Ajax/FilterKBByStatus',
         method: 'GET',
         data: {
             status: currentStatus,

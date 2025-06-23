@@ -157,7 +157,7 @@ $('#sortByNumber').click(function () {
 // Sort todos function
 function sortTodos() {
     $.ajax({
-        url: '/Ajax/SortTodo',
+        url: window.AppRoot + 'Ajax/SortTodo',
         method: 'GET',
         data: {
             sortOrder: currentSortOrder
@@ -247,7 +247,7 @@ function DeleteItem() {
 
     // Send delete request
     $.ajax({
-        url: '/Ajax/DeleteTodos',
+        url: window.AppRoot + 'Ajax/DeleteTodos',
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(selectedIds),
@@ -337,7 +337,7 @@ function searchTodos() {
     }
 
     $.ajax({
-        url: '/Ajax/SearchTodo',
+        url: window.AppRoot + 'Ajax/SearchTodo',
         method: 'GET',
         data: {
             searchTerm: searchTerm,
@@ -372,7 +372,7 @@ function filterByStatus() {
     }
 
     $.ajax({
-        url: '/Ajax/FilterTodoByStatus',
+        url: window.AppRoot + 'Ajax/FilterTodoByStatus',
         method: 'GET',
         data: {
             status: currentStatus
