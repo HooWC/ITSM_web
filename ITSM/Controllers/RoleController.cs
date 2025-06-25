@@ -38,7 +38,6 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Role_List()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var roleTask = _roleApi.GetAllRole_API();
             await Task.WhenAll(roleTask);
@@ -48,8 +47,7 @@ namespace ITSM.Controllers
             var model = new AllModelVM
             {
                 user = currentUser,
-                RoleList = allRole,
-                noteMessageCount = noteMessageCount
+                RoleList = allRole
             };
 
             return View(model);
@@ -58,12 +56,10 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Role_Create()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var model = new AllModelVM
             {
-                user = currentUser,
-                noteMessageCount = noteMessageCount
+                user = currentUser
             };
 
             return View(model);
@@ -73,12 +69,10 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Role_Create(Role roleName)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var model = new AllModelVM
             {
-                user = currentUser,
-                noteMessageCount = noteMessageCount
+                user = currentUser
             };
 
             if (roleName.role == null)
@@ -115,15 +109,13 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Role_Info(int id)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var role = await _roleApi.FindByIDRole_API(id);
 
             var model = new AllModelVM
             {
                 user = currentUser,
-                role = role,
-                noteMessageCount = noteMessageCount
+                role = role
             };
 
             return View(model);
@@ -133,15 +125,13 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Role_Info(Role roleInfo)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var roleTask = await _roleApi.FindByIDRole_API(roleInfo.id);
 
             var model = new AllModelVM
             {
                 user = currentUser,
-                role = roleTask,
-                noteMessageCount = noteMessageCount
+                role = roleTask
             };
 
             if (roleTask.role == null)

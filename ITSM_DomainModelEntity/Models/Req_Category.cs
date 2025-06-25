@@ -15,5 +15,7 @@ namespace ITSM_DomainModelEntity.Models
         public int id { get; set; }
 
         public string? name { get; set; }
+
+        public string? erp_version { get; set; }
     }
 }

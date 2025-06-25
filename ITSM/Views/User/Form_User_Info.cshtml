@@ -122,26 +122,26 @@
             </button>
             <div class="inc-cre-title-group">
                 <div class="inc-cre-title">User Information</div>
-                <div class="inc-cre-subtitle">@Model.info_user.emp_id</div>
+                <div class="inc-cre-subtitle">@Model.info_user?.fullname</div>
             </div>
         </div>
     </header>
 
     <main class="inc-cre-form-wrapper">
         <form id="incidentForm" class="inc-cre-incident-form">
-            <input type="text" name="id" id="id" class="inc-cre-form-control" value="@Model.info_user.id" style="display:none;" readonly>
+            <input type="text" name="id" id="id" class="inc-cre-form-control" value="@Model.info_user?.id" style="display:none;" readonly>
             <div class="inc-cre-form-grid">
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="emp_id" class="inc-cre-form-label">Employee Number</label>
-                        <input type="text" name="emp_id" id="emp_id" class="inc-cre-form-control" value="@Model.info_user.emp_id" readonly>
+                        <input type="text" name="emp_id" id="emp_id" class="inc-cre-form-control" value="-" readonly>
                     </div>
                 </div>
 
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="gender" class="inc-cre-form-label">Gender</label>
-                        <input type="text" name="gender" id="gender" class="inc-cre-form-control" value="@Model.info_user.gender" readonly>
+                        <input type="text" name="gender" id="gender" class="inc-cre-form-control" value="@Model.info_user?.gender" readonly>
                     </div>
                 </div>
             </div>
@@ -150,14 +150,14 @@
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="fullname" class="inc-cre-form-label">Full Name</label>
-                        <input type="text" name="fullname" id="fullname" class="inc-cre-form-control" value="@Model.info_user.fullname" autocomplete="off" readonly>
+                        <input type="text" name="fullname" id="fullname" class="inc-cre-form-control" value="@Model.info_user?.fullname" autocomplete="off" readonly>
                     </div>
                 </div>
 
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="email" class="inc-cre-form-label">Email</label>
-                        <input type="email" name="email" id="email" class="inc-cre-form-control" value="@Model.info_user.email" autocomplete="off" readonly>
+                        <input type="email" name="email" id="email" class="inc-cre-form-control" value="@Model.info_user?.email" autocomplete="off" readonly>
                     </div>
                 </div>
             </div>
@@ -166,14 +166,14 @@
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="department_id" class="inc-cre-form-label">Department</label>
-                        <input type="text" name="department_id" id="department_id" class="inc-cre-form-control" value="@Model.info_user.Department.name" readonly>
+                        <input type="text" name="department_id" id="department_id" class="inc-cre-form-control" value="@Model.info_user?.Department.name" readonly>
                     </div>
                 </div>
 
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="race" class="inc-cre-form-label">Race</label>
-                        <input type="text" name="race" id="race" class="inc-cre-form-control" value="@Model.info_user.race" readonly>
+                        <input type="text" name="race" id="race" class="inc-cre-form-control" value="@Model.info_user?.race" readonly>
                     </div>
                 </div>
             </div>
@@ -182,14 +182,14 @@
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="title" class="inc-cre-form-label">Title</label>
-                        <input type="text" name="title" id="title" class="inc-cre-form-control" autocomplete="off" value="@Model.info_user.title" readonly>
+                        <input type="text" name="title" id="title" class="inc-cre-form-control" autocomplete="off" value="@Model.info_user?.title" readonly>
                     </div>
                 </div>
 
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="mobile_phone" class="inc-cre-form-label">Mobile Phone</label>
-                        <input type="text" name="mobile_phone" id="mobile_phone" autocomplete="off" class="inc-cre-form-control" value="@Model.info_user.mobile_phone" readonly>
+                        <input type="text" name="mobile_phone" id="mobile_phone" autocomplete="off" class="inc-cre-form-control" value="@Model.info_user?.mobile_phone" readonly>
                     </div>
                 </div>
             </div>
@@ -198,7 +198,7 @@
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="business_phone" class="inc-cre-form-label">Business Phone</label>
-                        <input type="text" name="business_phone" id="business_phone" autocomplete="off" class="inc-cre-form-control" value="@Model.info_user.business_phone" readonly>
+                        <input type="text" name="business_phone" id="business_phone" autocomplete="off" class="inc-cre-form-control" value="@Model.info_user?.business_phone" readonly>
                     </div>
                 </div>
             </div>
@@ -207,15 +207,4 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-@* <script>
-    $(function () {
-      var $target = $('#User_menu');
-      if (!$target.hasClass('active') || !$target.hasClass('open')) {
-          $('.menu-item').removeClass('active open');
-          $target.addClass('active open');
-      }
-
-      $('#User_menu_approve').addClass("active");
-    });
-</script> *@
 

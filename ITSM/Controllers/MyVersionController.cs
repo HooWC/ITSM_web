@@ -22,7 +22,6 @@ namespace ITSM.Controllers
         public async Task<IActionResult> All()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var versionTask = _myversionApi.GetAllMyversion_API();
             await Task.WhenAll(versionTask);
@@ -34,8 +33,7 @@ namespace ITSM.Controllers
             var model = new AllModelVM
             {
                 user = currentUser,
-                MyversionList = versionList,
-                noteMessageCount = noteMessageCount
+                MyversionList = versionList
             };
 
             return View(model);
@@ -44,12 +42,10 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Create()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var model = new AllModelVM
             {
-                user = currentUser,
-                noteMessageCount = noteMessageCount
+                user = currentUser
             };
 
             return View(model);
@@ -59,12 +55,10 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Create(Myversion version)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var model = new AllModelVM
             {
-                user = currentUser,
-                noteMessageCount = noteMessageCount
+                user = currentUser
             };
 
             if (version.version_num == null && version.message == null)
@@ -107,15 +101,13 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Info(int id)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var myversion = await _myversionApi.FindByIDMyversion_API(id);
 
             var model = new AllModelVM
             {
                 user = currentUser,
-                myversion = myversion,
-                noteMessageCount = noteMessageCount
+                myversion = myversion
             };
 
             return View(model);
@@ -125,15 +117,13 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Info(Myversion version)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var myversion = await _myversionApi.FindByIDMyversion_API(version.id);
 
             var model = new AllModelVM
             {
                 user = currentUser,
-                myversion = myversion,
-                noteMessageCount = noteMessageCount
+                myversion = myversion
             };
 
             if (version.version_num == null && version.message == null)
@@ -171,7 +161,6 @@ namespace ITSM.Controllers
         public async Task<IActionResult> View_Page()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var allVersion = await _myversionApi.GetAllMyversion_API();
 
@@ -180,8 +169,7 @@ namespace ITSM.Controllers
             var model = new AllModelVM
             {
                 user = currentUser,
-                MyversionList = versionList,
-                noteMessageCount = noteMessageCount
+                MyversionList = versionList
             };
 
             return View(model);

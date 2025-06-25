@@ -32,10 +32,10 @@
         transition: all 0.3s ease;
     }
 
-    .inc-cre-resolve-item:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    }
+        .inc-cre-resolve-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
 
     .inc-cre-resolve-content {
         width: 100%;
@@ -105,19 +105,19 @@
         transition: all 0.3s ease;
     }
 
-    .resolved-mode .inc-cre-activity-item:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-    }
+        .resolved-mode .inc-cre-activity-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
 
-    .inc-cre-btn-closed{
+    .inc-cre-btn-closed {
         background-color: #6b0e0e;
-        transition:all .2s ease-in-out;
+        transition: all .2s ease-in-out;
     }
 
-    .inc-cre-btn-closed:hover{
-        background-color: #590d0d;
-    }
+        .inc-cre-btn-closed:hover {
+            background-color: #590d0d;
+        }
 
     #modalImage {
         max-width: 100%;
@@ -137,8 +137,8 @@
         <div class="inc-cre-header-left">
             <button class="inc-cre-menu-button">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                stroke-linejoin="round">
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                     stroke-linejoin="round">
                     <path d="M4 21v-4.586a1 1 0 0 1 .293-.707l11-11a1 1 0 0 1 1.414 0l2.586 2.586a1 1 0 0 1 0 1.414l-11 11A1 1 0 0 1 8.586 21H4z"></path>
                 </svg>
             </button>
@@ -230,7 +230,8 @@
                     </div>
 
                     <div class="inc-cre-form-group">
-                        <label for="category" class="inc-cre-form-label">Category
+                        <label for="category" class="inc-cre-form-label">
+                            Category
                             <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/CaSub_Info', '_blank')">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <circle cx="12" cy="12" r="10"></circle>
@@ -249,7 +250,8 @@
                     </div>
 
                     <div class="inc-cre-form-group">
-                        <label for="subcategory" class="inc-cre-form-label">Subcategory
+                        <label for="subcategory" class="inc-cre-form-label">
+                            Subcategory
                             <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/CaSub_Info', '_blank')">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <circle cx="12" cy="12" r="10"></circle>
@@ -398,7 +400,7 @@
                 </div>
             </div>
 
-            
+
 
             <div class="inc-cre-form-group inc-cre-full-width">
                 @if (Model.incident.state != "Resolved" && Model.incident.state != "Closed" && Model.incident.Sender?.id == Model.user?.id)
@@ -437,7 +439,7 @@
                                 {
                                     <div class="inc-cre-image-item" onclick="showImage('@(i.photo != null ? $"data:{i.photo_type};base64,{Convert.ToBase64String(i.photo)}" : "")')">
                                         <img src="@(i.photo != null ? $"data:{i.photo_type};base64,{Convert.ToBase64String(i.photo)}" : "")"
-                                        alt="incident photo">
+                                             alt="incident photo">
                                         <div class="inc-cre-image-overlay">
                                             <span class="inc-cre-image-zoom">
                                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -490,60 +492,14 @@
         </div>
     }
 
-
-    <div class="inc-cre-related-search-container">
-        <button class="inc-cre-btn inc-cre-btn-related-search">
-            Notes & Resolve
-        </button>
-    </div>
-
-    <div class="inc-cre-tab-section">
-        <div class="inc-cre-tabs">
-            <button class="inc-cre-tab active">Notes</button>
-        </div>
-
-        <div class="inc-cre-tab-content">
-            <div id="notes-tab" class="inc-cre-tab-pane active">
-                <div class="inc-cre-notes-container">
-
-                    @if ((Model.user?.id == Model.incident?.sender || Model.user?.department_id == Model.incident?.assignment_group) && Model.user?.approve == true)
-                    {
-                        <div class="inc-cre-notes-header">
-                            <div class="inc-cre-watch-list">
-                                <span>Work notes list</span>
-                                <button type="button" class="inc-cre-btn-help" style="margin-left:5px;" onclick="window.open('/Info/Work_Notes_Info', '_blank')">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <circle cx="12" cy="12" r="10"></circle>
-                                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="inc-cre-work-notes-area">
-                            <textarea id="work-notes" class="inc-cre-notes-textarea" placeholder="Enter chat history..."></textarea>
-                            <div class="inc-cre-notes-actions">
-                                <label class="inc-cre-checkbox-container"></label>
-                                <button type="button" class="inc-cre-btn inc-cre-btn-post" id="post-note-btn">Post</button>
-                            </div>
-                        </div>
-                    }
-
-                    <div class="inc-cre-activities-section">
-                        <h3 class="inc-cre-section-title">Activities: <span id="activity-count">0</span></h3>
-
-                        <div class="inc-cre-activity-container">
-                            <!-- Char History -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     @if (Model.incident.state == "Resolved" || Model.incident.state == "Closed" || Model.user?.department_id == Model.incident.assignment_group)
     {
+        <div class="inc-cre-related-search-container">
+            <button class="inc-cre-btn inc-cre-btn-related-search">
+                Resolve
+            </button>
+        </div>
+
         <div class="inc-cre-tab-section">
             <div class="inc-cre-tabs">
                 <button class="inc-cre-tab active">Resolve</button>
@@ -607,19 +563,6 @@
         </div>
     }
 
-    @* @if (Model.incident.state != "Resolved" && Model.incident.state != "Closed")
-    {
-        <footer class="inc-cre-form-footer">
-            <div class="inc-cre-footer-buttons">
-                <button type="button" class="inc-cre-btn inc-cre-btn-closed-footer" id="close-button-footer">Closed</button>
-                @if (Model.user.Role.role.ToLower() != "user")
-                {
-                    <button type="button" class="inc-cre-btn inc-cre-btn-resolve-footer" id="resolve-button-footer">Resolve</button>
-                }
-                <button type="button" class="inc-cre-btn inc-cre-btn-submit-footer" onclick="document.getElementById('incidentForm').submit();">Save</button>
-            </div>
-        </footer>
-    } *@
 </div>
 
 <div id="inc-cre-modal" class="inc-cre-modal">
@@ -707,187 +650,3 @@
     });
 </script>
 <script src="~/js/Incident/Inc_Info.js"></script>
-
-@section Scripts {
-    <script>
-        $(document).ready(function () {
-            const connection = new signalR.HubConnectionBuilder()
-                .withUrl(window.AppRoot + "noteHub", {
-                    skipNegotiation: false,
-                    transport: signalR.HttpTransportType.LongPolling,
-                    timeout: 100000,
-                    headers: {
-                        "X-Requested-With": "XMLHttpRequest"
-                    }
-                })
-                .withAutomaticReconnect({
-                    nextRetryDelayInMilliseconds: retryContext => {
-                        if (retryContext.previousRetryCount === 0) {
-                            return 0;
-                        } else if (retryContext.previousRetryCount < 3) {
-                            return 2000;
-                        } else if (retryContext.previousRetryCount < 5) {
-                            return 5000;
-                        } else if (retryContext.previousRetryCount < 10) {
-                            return 10000;
-                        } else {
-                            return null;
-                        }
-                    }
-                })
-                .configureLogging(signalR.LogLevel.Information)
-                .build();
-
-            async function startConnection() {
-                try {
-                    await connection.start();
-                    // console.log("SignalR connection successful");
-                    await connection.invoke("JoinIncidentGroup", '@Model.incident.id');
-                    // console.log("Joined the event group successfully");
-                } catch (err) {
-                    // console.error("SignalR connection error:", err);
-                    setTimeout(startConnection, 5000);
-                }
-            }
-
-            startConnection();
-
-            connection.onclose(async () => {
-                // console.log("SignalR connection is disconnected, trying to reconnect...");
-                await startConnection();
-            });
-
-            connection.on("ReceiveNote", function (incidentId, note) {
-                    // console.log("New notes received:", note);
-                if (incidentId === '@Model.incident.id') {
-                    var noteHtml = $('<div class="inc-cre-activity-item">' +
-                                '<div class="inc-cre-user-avatar">' +
-                                '<img src="' + (note.user_avatar ? 'data:'+ note.user_photo_type +';base64,' + note.user_avatar : window.AppRoot + 'img/avatar/user_avatar.jpg') + '" alt="' + note.user_name + '">' +
-                                '</div>' +
-                                '<div class="inc-cre-activity-content">' +
-                                '<div class="inc-cre-activity-header">' +
-                                '<span class="inc-cre-user-name"><a class="note_username_a" href="'+ window.AppRoot +'User/Form_User_Info?id=' + note.user_id + '" target="_blank">' + note.user_name + '</a></span>' +
-                                '<span class="inc-cre-activity-time">Work notes • ' + note.create_date + '</span>' +
-                                '</div>' +
-                                '<div class="inc-cre-activity-details">' +
-                                '<div class="inc-cre-work-note-content">' + note.message.replace(/\n/g, '<br>') + '</div>' +
-                                '</div>' +
-                                '</div>' +
-                                '</div>');
-                    
-                    $(".inc-cre-activity-container").prepend(noteHtml);
-                    
-                    updateActivityCount();
-                }
-            });
-
-            // Send Note
-            $("#post-note-btn").click(async function () {
-                const message = $("#work-notes").val().trim();
-                if (!message) {
-                    alert("Please enter the note content");
-                    return;
-                }
-
-                                        $.ajax({
-                        url: window.AppRoot + 'Ajax/AddNote',
-                        type: 'POST',
-                        data: {
-                            incidentId: '@Model.incident.id',
-                            message: message
-                        },
-                        dataType: 'json',
-                        success: function(response) {
-                            if (response.success) {
-                                $("#work-notes").val(''); // 清空输入框
-                                $("#work-notes").trigger('input'); // 触发input事件以更新UI
-                            } else {
-                                alert("Failed to add note: " + response.message);
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            // console.error("Error sending note:", error);
-                            alert("Error sending note, please try again");
-                        }
-                    });
-            });
-
-            // Load Note
-            async function loadNotes() {
-                $.ajax({
-                    url: window.AppRoot + 'Ajax/GetNotesByIncident',
-                    type: 'GET',
-                    data: { incidentId: '@Model.incident.id' },
-                    dataType: 'json',
-                    success: function (response) {
-                        if (response.success) {
-                            const activityContainer = $(".inc-cre-activity-container");
-                            activityContainer.empty();
-
-                            var isResolvedOrClosed = incidentState === "Resolved" || incidentState === "Closed";
-                            if (isResolvedOrClosed && (!response.notes || response.notes.length === 0)) {
-                                activityContainer.html('<div class="inc-cre-no-history" style="text-align: center; padding: 30px; color: #6c757d; font-style: italic;">No chat history available</div>');
-                                return;
-                            }
-
-                            response.notes.forEach(function (note) {
-                                var noteHtml = $(`
-                                    <div class="inc-cre-activity-item">
-                                        <div class="inc-cre-user-avatar">
-                                            <img src="${note.user_avatar ? 'data:' + note.user_photo_type + ';base64,' + note.user_avatar : window.AppRoot + 'img/avatar/user_avatar.jpg'}" alt="${note.user_name}">
-                                        </div>
-                                        <div class="inc-cre-activity-content">
-                                            <div class="inc-cre-activity-header">
-                                                <span class="inc-cre-user-name">
-                                                    <a class="note_username_a" href="${window.AppRoot}User/Form_User_Info?id=${note.user_id}" target="_blank">
-                                                        ${note.user_name}
-                                                    </a>
-                                                </span>
-                                                <span class="inc-cre-activity-time">Work notes • ${note.create_date}</span>
-                                            </div>
-                                            <div class="inc-cre-activity-details">
-                                                <div class="inc-cre-work-note-content">
-                                                    ${note.message.replace(/\n/g, '<br>')}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                `);
-
-                                activityContainer.append(noteHtml);
-                            });
-
-                            updateActivityCount();
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        console.error("Error loading notes:", error);
-                    }
-                });
-            }
-
-            function updateActivityCount() {
-                const count = $(".inc-cre-activity-item").length;
-                $("#activity-count").text(count);
-            }
-
-            loadNotes();
-
-            $(window).on('unload', function () {
-                if (connection.state === signalR.HubConnectionState.Connected) {
-                    connection.invoke("LeaveIncidentGroup", '@Model.incident.id');
-                }
-            });
-
-            $("#work-notes").keypress(function (e) {
-                if (e.which === 13 && !e.shiftKey) {
-                    e.preventDefault();
-                    $("#post-note-btn").click();
-                }
-            });
-        });
-    </script>
-}
-
-
-

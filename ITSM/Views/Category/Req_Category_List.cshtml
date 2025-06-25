@@ -1,17 +1,17 @@
 ﻿@using ITSM_DomainModelEntity.ViewModels
 @model AllModelVM
 @{
-    ViewData["Title"] = "Inc_Message";
+    ViewData["Title"] = "Req_Category_List";
     Layout = "_Layout";
 }
 
 <style>
-    .inc-tab-incidents-table th.number-column {
-        width: 15%;
+    .inc-tab-incidents-table th.name-column {
+        width: 40%;
     }
 
-    .inc-tab-incidents-table th.i_message-column {
-        width: 85%;
+    .inc-tab-incidents-table th.version-column {
+        width: 60%;
     }
 </style>
 
@@ -21,7 +21,7 @@
             <button class="inc-tab-icon-button">
                 <i class="fas fa-list"></i>
             </button>
-            <h2 class="all-title-header-front">Incidents Message</h2>
+            <h2 class="all-title-header-front">Request Categories</h2>
         </div>
         <div class="inc-tab-header-right">
             <button class="inc-tab-icon-button" id="refreshButton">
@@ -34,40 +34,28 @@
                     <line x1="12" y1="17" x2="12.01" y2="17"></line>
                 </svg>
             </button>
-            @* <button class="inc-tab-new-button item-delete-btn show-error-box-btn" id="deleteButton" disabled>Delete</button> *@
-            @* <button class="inc-tab-new-button" onclick="window.location.href='/IncidentManagement/Create_Form';">New</button> *@
+            <button class="inc-tab-new-button" onclick="window.location.href='/Category/Req_Category_Create';">New</button>
 
         </div>
     </header>
-
-    @* <div class="inc-tab-table-options">
-        <div class="inc-tab-checkbox-container">
-            <input type="checkbox" id="select-all">
-        </div>
-        <span class="inc-tab-all-text">All</span>
-    </div> *@
-
-    <input type="text" name="typeName" id="typeName" class="inc-cre-form-control" value="Message" style="display:none;" readonly>
 
     <div class="inc-tab-table-container">
         <table class="inc-tab-incidents-table">
             <thead>
                 <tr>
-                    @* <th class="inc-tab-checkbox-column"></th> *@
-                    <th class="inc-tab-sortable number-column" id="sortByNumber">Number</th>
-                    <th class="i_message-column">Message</th>
+                    <th class="inc-tab-sortable name-column">Name</th>
+                    <th class="inc-tab-sortable version-column">ERP Version</th>
                 </tr>
             </thead>
             <tbody id="incTableBody">
 
-                @foreach (var i in Model.incMessages)
+                @foreach (var i in Model.reqCategoryList)
                 {
-                    <tr class="incident-item" data-id="@i.inc_info?.id">
-                        @* <td><input type="checkbox" class="item-checkbox"></td> *@
-                        <td class="inc-tab-incident-number" data-label="Number">
-                            <a href="~/IncidentManagement/Inc_Info_Form?id=@i.inc_info?.id&type=Message">@i.inc_info?.inc_number</a>
+                    <tr class="incident-item" data-id="@i.id">
+                        <td class="inc-tab-incident-number" data-label="Name">
+                            <a href="~/Category/Req_Category_Info?id=@i.id">@i.name</a>
                         </td>
-                        <td data-label="NoteMessageCount" style="color:red;">@i.NoteMessageCount Message</td>
+                        <td data-label="erp_version">@i.erp_version</td>
                     </tr>
                 }
 
@@ -85,15 +73,16 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="~/js/List/Category_List.js"></script>
 <script>
       $(function () {
-        var $target = $('#Incidents_menu');
+        var $target = $('#req_category_menu');
         if (!$target.hasClass('active') || !$target.hasClass('open')) {
             $('.menu-item').removeClass('active open');
             $target.addClass('active open');
         }
 
-        $('#Incidents_menu_assigned_message').addClass("active");
+        $('#req_category_menu_all').addClass("active");
     });
 </script>
-<script src="~/js/List/AllList.js"></script>
+

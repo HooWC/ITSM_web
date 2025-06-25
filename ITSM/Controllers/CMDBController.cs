@@ -41,7 +41,6 @@ namespace ITSM.Controllers
         public async Task<IActionResult> CMDB_List()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var CMDBTask = _cmdbApi.GetAllCMDB_API();
             var DepartmentTask = _depApi.GetAllDepartment_API();
@@ -56,8 +55,7 @@ namespace ITSM.Controllers
             var model = new AllModelVM
             {
                 user = currentUser,
-                CMDBList = allCMDB.OrderByDescending(X => X.id).ToList(),
-                noteMessageCount = noteMessageCount
+                CMDBList = allCMDB.OrderByDescending(X => X.id).ToList()
             };
 
             return View(model);
@@ -66,7 +64,6 @@ namespace ITSM.Controllers
         public async Task<IActionResult> CMDB_Create()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var DepartmentTask = _depApi.GetAllDepartment_API();
             await Task.WhenAll(DepartmentTask);
@@ -76,8 +73,7 @@ namespace ITSM.Controllers
             var model = new AllModelVM()
             {
                 user = currentUser,
-                DepartmentList = allDep,
-                noteMessageCount = noteMessageCount
+                DepartmentList = allDep
             };
 
             return View(model);
@@ -87,7 +83,6 @@ namespace ITSM.Controllers
         public async Task<IActionResult> CMDB_Create(CMDB cmdb_info)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var DepartmentTask = _depApi.GetAllDepartment_API();
             await Task.WhenAll(DepartmentTask);
@@ -97,8 +92,7 @@ namespace ITSM.Controllers
             var model = new AllModelVM()
             {
                 user = currentUser,
-                DepartmentList = allDep,
-                noteMessageCount = noteMessageCount
+                DepartmentList = allDep
             };
 
             if (
@@ -161,7 +155,6 @@ namespace ITSM.Controllers
         public async Task<IActionResult> CMDB_Info(int id)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var departmentTask = _depApi.GetAllDepartment_API();
             await Task.WhenAll(departmentTask);
@@ -176,8 +169,7 @@ namespace ITSM.Controllers
             {
                 user = currentUser,
                 CMDB = cmdb_info,
-                DepartmentList = allDeps,
-                noteMessageCount = noteMessageCount
+                DepartmentList = allDeps
             };
 
             return View(model);
@@ -187,7 +179,6 @@ namespace ITSM.Controllers
         public async Task<IActionResult> CMDB_Info(CMDB cmdb_if)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var departmentTask = _depApi.GetAllDepartment_API();
             await Task.WhenAll(departmentTask);
@@ -202,8 +193,7 @@ namespace ITSM.Controllers
             {
                 user = currentUser,
                 CMDB = cmdb_info,
-                DepartmentList = allDeps,
-                noteMessageCount = noteMessageCount
+                DepartmentList = allDeps
             };
 
             if (cmdb_if.full_name != null &&

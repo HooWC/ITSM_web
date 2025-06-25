@@ -38,7 +38,6 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Department_List()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var depTask = _depApi.GetAllDepartment_API();
             await Task.WhenAll(depTask);
@@ -50,8 +49,7 @@ namespace ITSM.Controllers
             var model = new AllModelVM
             {
                 user = currentUser,
-                DepartmentList = departmentList,
-                noteMessageCount = noteMessageCount
+                DepartmentList = departmentList
             };
 
             return View(model);
@@ -60,12 +58,10 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Department_Create()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var model = new AllModelVM
             {
-                user = currentUser,
-                noteMessageCount = noteMessageCount
+                user = currentUser
             };
 
             return View(model);
@@ -75,12 +71,10 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Department_Create(Department dep)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var model = new AllModelVM
             {
-                user = currentUser,
-                noteMessageCount = noteMessageCount
+                user = currentUser
             };
 
             if (dep.name == null)
@@ -109,15 +103,13 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Department_Info(int id)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var department = await _depApi.FindByIDDepartment_API(id);
 
             var model = new AllModelVM
             {
                 user = currentUser,
-                department = department,
-                noteMessageCount = noteMessageCount
+                department = department
             };
 
             return View(model);
@@ -127,15 +119,13 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Department_Info(Department dep)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var departmentTask = await _depApi.FindByIDDepartment_API(dep.id);
 
             var model = new AllModelVM
             {
                 user = currentUser,
-                department = departmentTask,
-                noteMessageCount = noteMessageCount
+                department = departmentTask
             };
 
             if (departmentTask.name == null)

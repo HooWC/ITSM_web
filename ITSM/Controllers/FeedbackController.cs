@@ -50,7 +50,6 @@ namespace ITSM.Controllers
         private async Task<AllModelVM> GetCommonFeedbackData(string type)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var feedTask = _feedbackApi.GetAllFeedback_API();
             var userTask = _userApi.GetAllUser_API();
@@ -73,20 +72,17 @@ namespace ITSM.Controllers
             return new AllModelVM
             {
                 user = currentUser,
-                FeedbackList = feedList,
-                noteMessageCount = noteMessageCount
+                FeedbackList = feedList
             };
         }
 
         public async Task<IActionResult> Feedback_Create()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var model =  new AllModelVM()
             {
-                user = currentUser,
-                noteMessageCount = noteMessageCount
+                user = currentUser
             };
 
             return View(model);
@@ -96,12 +92,10 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Feedback_Create(Feedback feed)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var model = new AllModelVM()
             {
-                user = currentUser,
-                noteMessageCount = noteMessageCount
+                user = currentUser
             };
 
             if (feed.message == null)
@@ -152,7 +146,6 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Feedback_Info(int id, string role)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var feedback = await _feedbackApi.FindByIDFeedback_API(id);
             var feedbackUser = await _userApi.FindByIDUser_API(feedback.user_id);
@@ -162,8 +155,7 @@ namespace ITSM.Controllers
             {
                 user = currentUser,
                 feedback = feedback,
-                roleBack = role,
-                noteMessageCount = noteMessageCount
+                roleBack = role
             };
 
             return View(model);
@@ -173,7 +165,6 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Feedback_Info(Feedback feed, string roleBack)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var feedback = await _feedbackApi.FindByIDFeedback_API(feed.id);
             var feedbackUser = await _userApi.FindByIDUser_API(feedback.user_id);
@@ -183,8 +174,7 @@ namespace ITSM.Controllers
             {
                 user = currentUser,
                 feedback = feedback,
-                roleBack = roleBack,
-                noteMessageCount = noteMessageCount
+                roleBack = roleBack
             };
 
             if (feed.message == null)

@@ -4,18 +4,6 @@ using Microsoft.AspNetCore.Http.Features;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSignalR(options =>
-{
-    options.EnableDetailedErrors = true;
-    options.MaximumReceiveMessageSize = 102400000;
-    options.ClientTimeoutInterval = TimeSpan.FromSeconds(120);
-    options.HandshakeTimeout = TimeSpan.FromSeconds(30);
-    options.KeepAliveInterval = TimeSpan.FromSeconds(15);
-}).AddJsonProtocol(options =>
-{
-    options.PayloadSerializerOptions.PropertyNamingPolicy = null;
-});
-
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
@@ -37,21 +25,7 @@ builder.Services.AddSession(options =>
 
 builder.Services.AddScoped<UserService>();
 
-// 添加 CORS 支持
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("SignalRPolicy", builder =>
-    {
-        builder.AllowAnyHeader()
-               .AllowAnyMethod()
-               .SetIsOriginAllowed((host) => true)
-               .AllowCredentials();
-    });
-});
-
 var app = builder.Build();
-
-app.MapHub<NoteHub>("/noteHub");
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -61,8 +35,6 @@ if (!app.Environment.IsDevelopment())
 app.UseStaticFiles();
 
 app.UseRouting();
-
-app.UseCors("SignalRPolicy");
 
 app.UseSession(); // Enable Session Middleware
 

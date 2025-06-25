@@ -119,11 +119,13 @@ namespace ITSM_Insfrastruture.Repository.Api
                     "application/json"
                 );
 
+                Console.WriteLine("Sending JSON: " + JsonConvert.SerializeObject(Req_Category, jsonSettings));
+
                 var response = await _client.PostAsync(_allReq_CategoryUrl, jsonStr);
 
                 // Testing Date Error
-                // var responseStr = await response.Content.ReadAsStringAsync();
-                // Console.WriteLine($"RESPONSE: {responseStr}");
+                //var responseStr = await response.Content.ReadAsStringAsync();
+                //Console.WriteLine($"RESPONSE: {responseStr}");
 
                 return response.IsSuccessStatusCode;
             }

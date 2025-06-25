@@ -10,7 +10,6 @@ using System;
 using ITSM_DomainModelEntity.FunctionModels;
 using System.Data;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.SignalR;
 using ITSM_DomainModelEntity.Function;
 
 namespace ITSM.Controllers
@@ -34,11 +33,9 @@ namespace ITSM.Controllers
         private readonly Myversion_api _myversionApi;
         private readonly Subcategory_api _subcategoryApi;
         private readonly Incident_Category_api _incidentcategoryApi;
-        private readonly IHubContext<NoteHub> _hubContext;
 
-        public AjaxController(IHttpContextAccessor httpContextAccessor, IHubContext<NoteHub> hubContext)
+        public AjaxController(IHttpContextAccessor httpContextAccessor)
         {
-            _hubContext = hubContext;
             _tokenService = new TokenService(httpContextAccessor);
             _todoApi = new Todo_api(httpContextAccessor);
             _departmentApi = new Department_api(httpContextAccessor);
@@ -225,7 +222,7 @@ namespace ITSM.Controllers
                 {
                     var allTodos = await _todoApi.GetAllTodo_API();
                     var todoToDelete = allTodos.FirstOrDefault(t => t.id == id && t.user_id == currentUser.id);
-                    
+
                     if (todoToDelete != null)
                     {
                         bool result = await _todoApi.DeleteTodo_API(id);
@@ -236,16 +233,18 @@ namespace ITSM.Controllers
 
                 if (successCount > 0)
                 {
-                    return Json(new { 
-                        success = true, 
-                        message = $"Successfully deleted {successCount} item(s)" 
+                    return Json(new
+                    {
+                        success = true,
+                        message = $"Successfully deleted {successCount} item(s)"
                     });
                 }
                 else
                 {
-                    return Json(new { 
-                        success = false, 
-                        message = "Failed to delete items. Items may not exist or you don't have permission" 
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Failed to delete items. Items may not exist or you don't have permission"
                     });
                 }
             }
@@ -344,7 +343,7 @@ namespace ITSM.Controllers
 
             List<Incident> filteredIncs;
 
-            if(searchTerm == "re_entrynovalue")
+            if (searchTerm == "re_entrynovalue")
             {
                 filteredIncs = userIncs;
             }
@@ -405,18 +404,18 @@ namespace ITSM.Controllers
                 }
             }
 
-                var result = filteredIncs.Select(t => new
-                {
-                    t.id,
-                    t.inc_number,
-                    t.urgency,
-                    t.state,
-                    category = allIncCategory.FirstOrDefault(x => x.id == t.category)?.name,
-                    subcategory = allSucategory.FirstOrDefault(x => x.id == t.subcategory)?.subcategory,
-                    assignment_group = allDepartments.FirstOrDefault(d => d.id == t.assignment_group)?.name ?? "",
-                    create_date = t.create_date.ToString("yyyy-MM-dd HH:mm:ss"),
-                    update_date = t.updated.ToString("yyyy-MM-dd HH:mm:ss")
-                });
+            var result = filteredIncs.Select(t => new
+            {
+                t.id,
+                t.inc_number,
+                t.urgency,
+                t.state,
+                category = allIncCategory.FirstOrDefault(x => x.id == t.category)?.name,
+                subcategory = allSucategory.FirstOrDefault(x => x.id == t.subcategory)?.subcategory,
+                assignment_group = allDepartments.FirstOrDefault(d => d.id == t.assignment_group)?.name ?? "",
+                create_date = t.create_date.ToString("yyyy-MM-dd HH:mm:ss"),
+                update_date = t.updated.ToString("yyyy-MM-dd HH:mm:ss")
+            });
 
             return Json(result);
         }
@@ -605,138 +604,6 @@ namespace ITSM.Controllers
         /// <summary>
         /// IncidentManagement/Inc_Info_Form
         [HttpPost]
-        public async Task<IActionResult> AddNote(int incidentId, string message)
-        {
-            if (string.IsNullOrEmpty(message))
-                return Json(new { success = false, message = "笔记内容不能为空" });
-
-            if (!IsUserLoggedIn(out var currentUser))
-                return Json(new { success = false, message = "未登录" });
-
-            try
-            {
-                var noteTask = _noteApi.GetAllNote_API();
-                var userTask = _userApi.GetAllUser_API();
-
-                await Task.WhenAll(noteTask, userTask);
-
-                var allNotes = noteTask.Result;
-                var allUsers = userTask.Result;
-
-                string newId = "";
-                if (allNotes.Count > 0)
-                {
-                    var NoteLast = allNotes.Last();
-                    string n_id_up = NoteLast.note_number;
-                    string prefix = new string(n_id_up.TakeWhile(char.IsLetter).ToArray());
-                    string numberPart = new string(n_id_up.SkipWhile(char.IsLetter).ToArray());
-                    int number = int.Parse(numberPart);
-                    newId = prefix + (number + 1);
-                }
-                else
-                    newId = "NOT1";
-
-                var inc_info = await _incApi.FindByIDIncident_API(incidentId);
-                int? receiverId = 0;
-                string? post = "";
-
-                if (currentUser.id == inc_info?.sender)
-                {
-                    receiverId = inc_info?.assignment_group;
-                    post = "department";
-                }
-                else
-                {
-                    receiverId = inc_info?.sender;
-                    post = "user";
-                }
-
-                var newNote = new ITSM_DomainModelEntity.Models.Note
-                {
-                    note_number = newId,
-                    incident_id = incidentId,
-                    user_id = currentUser.id,
-                    message = message,
-                    note_read = false,
-                    receiver_id = receiverId,
-                    post_type = post
-                };
-
-                bool result = await _noteApi.CreateNote_API(newNote);
-                
-                if (result)
-                {
-                    var user = await _userApi.FindByIDUser_API(currentUser.id);
-
-                    var noteData = new
-                    {
-                        note_number = newId,
-                        user_id = user.id,
-                        user_name = user.fullname,
-                        user_avatar = user.photo,
-                        user_photo_type = user.photo_type,
-                        create_date = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
-                        message = message
-                    };
-
-                    // 通过SignalR发送实时通知
-                    await _hubContext.Clients.Group(incidentId.ToString()).SendAsync("ReceiveNote", incidentId.ToString(), noteData);
-
-                    return Json(new { success = true, message = "笔记添加成功", note = noteData });
-                }
-                else
-                {
-                    return Json(new { success = false, message = "笔记添加失败" });
-                }
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = $"错误: {ex.Message}" });
-            }
-        }
-
-        /// <summary>
-        /// IncidentManagement/Inc_Info_Form
-        public async Task<IActionResult> GetNotesByIncident(int incidentId)
-        {
-            if (!IsUserLoggedIn(out var currentUser))
-                return Json(new { success = false, message = "未登录" });
-
-            try
-            {
-                var allNotes = await _noteApi.GetAllNote_API();
-                var incidentNotes = allNotes
-                    .Where(n => n.incident_id == incidentId)
-                    .OrderByDescending(n => n.create_date)
-                    .ToList();
-
-                var userIds = incidentNotes.Select(n => n.user_id).Distinct().ToList();
-                var allUsers = await _userApi.GetAllUser_API();
-                var relatedUsers = allUsers.Where(u => userIds.Contains(u.id)).ToList();
-
-                var result = incidentNotes.Select(note => new
-                {
-                    id = note.id,
-                    note_number = note.note_number,
-                    user_id = note.user_id,
-                    user_name = relatedUsers.FirstOrDefault(u => u.id == note.user_id)?.fullname ?? "Unknown",
-                    user_avatar = relatedUsers.FirstOrDefault(u => u.id == note.user_id)?.photo,
-                    user_photo_type = relatedUsers.FirstOrDefault(u => u.id == note.user_id)?.photo_type,
-                    create_date = note.create_date.ToString("yyyy-MM-dd HH:mm:ss"),
-                    message = note.message
-                });
-
-                return Json(new { success = true, notes = result });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = $"错误: {ex.Message}" });
-            }
-        }
-
-        /// <summary>
-        /// IncidentManagement/Inc_Info_Form
-        [HttpPost]
         public async Task<JsonResult> ResolveIncident(Incident inc, string resolveType, string resolveNotes)
         {
             if (!IsUserLoggedIn(out var currentUser))
@@ -758,7 +625,7 @@ namespace ITSM.Controllers
                 incData.subcategory = inc.subcategory;
                 incData.assignment_group = inc.assignment_group;
                 incData.assigned_to = inc.assigned_to == 0 ? null : inc.assigned_to;
-                
+
                 // resolved data
                 incData.resolution = resolveNotes;
                 incData.resolved_by = currentUser.id;
@@ -817,7 +684,7 @@ namespace ITSM.Controllers
                     resolved_by_name = resolvedByName,
                     resolved_by_avatar = resolvedBy?.photo
                 };
-                
+
                 return Json(new { success = true, resolution = resolutionData });
             }
             catch (Exception ex)
@@ -917,8 +784,8 @@ namespace ITSM.Controllers
             {
                 filteredFeeds = userFeed;
             }
-            else 
-            { 
+            else
+            {
                 switch (filterBy.ToLower())
                 {
                     case "message":
@@ -1399,7 +1266,7 @@ namespace ITSM.Controllers
                         break;
                 }
             }
-                
+
             var result = filteredDepartments.Select(t => new {
                 t.name,
                 description = t.description != null ? t.description : ""
@@ -1586,7 +1453,7 @@ namespace ITSM.Controllers
                             .Where(t => t.fullname != null && t.fullname.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
                             .ToList();
                         break;
-                    
+
                     case "department":
                         var filterDepartments = allDepartments.Where(x => x.name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
                         filteredUsers = (from i in userList
@@ -1625,7 +1492,7 @@ namespace ITSM.Controllers
                         break;
                 }
             }
-                
+
             var result = filteredUsers.Select(t => new {
                 t.id,
                 t.emp_id,
@@ -1986,7 +1853,7 @@ namespace ITSM.Controllers
                         var filterProducts = allProduct.Where(x => x.pro_number.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
                         filteredReqs = (from i in userReqs
                                         join p in filterProducts on i.pro_id equals p.id
-                                         select i).ToList();
+                                        select i).ToList();
                         break;
                     case "user":
                         var filterUsers = allUser.Where(x => x.fullname.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
@@ -2285,7 +2152,7 @@ namespace ITSM.Controllers
                     await _productApi.UpdateProduct_API(productData);
                 }
 
-                bool result = await _reqApi.UpdateRequest_API(reqData); 
+                bool result = await _reqApi.UpdateRequest_API(reqData);
 
                 if (result)
                     return Json(new { success = true, role = currentUser.Role.role.ToLower() });

@@ -1,7 +1,7 @@
 ﻿@using ITSM_DomainModelEntity.ViewModels
 @model AllModelVM
 @{
-    ViewData["Title"] = "Subcategory_List";
+    ViewData["Title"] = "Req_Subcategory_List";
     Layout = "_Layout";
 }
 
@@ -11,11 +11,7 @@
     }
 
     .inc-tab-incidents-table th.category {
-        width: 35%;
-    }
-
-    .inc-tab-incidents-table th.department {
-        width: 35%;
+        width: 70%;
     }
 </style>
 
@@ -25,13 +21,12 @@
             <button class="inc-tab-icon-button">
                 <i class="fas fa-list"></i>
             </button>
-            <h2 class="all-title-header-front">Incident Subcategories</h2>
+            <h2 class="all-title-header-front">Req Subcategories</h2>
             <div class="inc-tab-dropdown">
                 <button class="inc-tab-dropdown-toggle" id="filterDropdown">Subcategory <i class="fas fa-chevron-down"></i></button>
                 <div class="inc-tab-dropdown-menu" id="filterMenu" style="display:none;">
                     <a href="#" class="inc-tab-dropdown-item" data-filter="subcategory">Subcategory</a>
                     <a href="#" class="inc-tab-dropdown-item" data-filter="category">Category</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="department">Department</a>
                 </div>
             </div>
             <div class="inc-tab-search-container">
@@ -49,40 +44,28 @@
                     <line x1="12" y1="17" x2="12.01" y2="17"></line>
                 </svg>
             </button>
-            <button class="inc-tab-new-button item-delete-btn show-error-box-btn" id="deleteButton" disabled>Delete</button>
-            <button class="inc-tab-new-button" onclick="window.location.href='/Category/Subcategory_Create';">New</button>
+            <button class="inc-tab-new-button" onclick="window.location.href='/Category/Req_Subcategory_Create';">New</button>
 
         </div>
     </header>
-
-    <div class="inc-tab-table-options">
-        <div class="inc-tab-checkbox-container">
-            <input type="checkbox" id="select-all">
-        </div>
-        <span class="inc-tab-all-text">All</span>
-    </div>
 
     <div class="inc-tab-table-container">
         <table class="inc-tab-incidents-table">
             <thead>
                 <tr>
-                    <th class="inc-tab-checkbox-column"></th>
                     <th class="inc-tab-sortable subcategory-column">Subcategory</th>
                     <th class="category">Category</th>
-                    <th class="department">Department</th>
                 </tr>
             </thead>
             <tbody id="incTableBody">
 
-                @foreach (var i in Model.Subcategory_List)
+                @foreach (var i in Model.reqSubCategoryList)
                 {
                     <tr class="incident-item" data-id="@i.id">
-                        <td><input type="checkbox" class="item-checkbox"></td>
                         <td class="inc-tab-incident-number" data-label="subcategory">
-                            <a href="~/Category/Subcategory_Info?id=@i.id">@i.subcategory</a>
+                            <a href="~/Category/Req_Subcategory_Info?id=@i.id">@i.name</a>
                         </td>
-                        <td data-label="inccategory_name">@i.Incidentcategory.name</td>
-                        <td data-label="dep_name">@i.Department.name</td>
+                        <td data-label="inccategory_name">@i.Req_Category?.name (@i.Req_Category?.erp_version)</td>
                     </tr>
                 }
 
@@ -103,13 +86,13 @@
 <script src="~/js/List/Subcategory_List.js"></script>
 <script>
       $(function () {
-        var $target = $('#Subcategory_menu');
+        var $target = $('#req_subcategory_menu');
         if (!$target.hasClass('active') || !$target.hasClass('open')) {
             $('.menu-item').removeClass('active open');
             $target.addClass('active open');
         }
 
-        $('#Subcategory_menu_all').addClass("active");
+        $('#req_subcategory_menu_all').addClass("active");
     });
 </script>
 

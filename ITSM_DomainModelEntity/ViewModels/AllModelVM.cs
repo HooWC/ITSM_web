@@ -157,6 +157,13 @@ namespace ITSM_DomainModelEntity.ViewModels
 
         public List<IncMessage> incMessages { get; set; }
 
+        public Req_Category req_category { get; set; }
+        public List<Req_Category> reqCategoryList {  get; set; }
+        public Req_Subcategory req_subcategory { get; set; }
+        public List<Req_Subcategory> reqSubCategoryList {  get; set; }
+        public Req_Function req_function { get; set; }
+        public List<Req_Function> reqFunctionList {  get; set; }
+
         public AllModelVM()
         {
             YearlyIncidentStats = new List<YearlyStats>();

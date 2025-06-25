@@ -43,12 +43,10 @@ namespace ITSM.Controllers
         public async Task<AllModelVM> get_data()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var model = new AllModelVM()
             {
-                user = currentUser,
-                noteMessageCount = noteMessageCount
+                user = currentUser
             };
 
             return model;

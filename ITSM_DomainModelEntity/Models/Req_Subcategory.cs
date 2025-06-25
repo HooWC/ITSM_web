@@ -18,7 +18,7 @@ namespace ITSM_DomainModelEntity.Models
         public string? name { get; set; }
 
         [ForeignKey("Req_Category")]
-        public int req_category_id { get; set; }
+        public int? req_category_id { get; set; }
 
         // Navigation properties
         public virtual Req_Category? Req_Category { get; set; }

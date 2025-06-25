@@ -1,0 +1,36 @@
+﻿@using ITSM_DomainModelEntity.ViewModels
+@model AllModelVM
+@{
+    ViewData["Title"] = "Application";
+    Layout = "_Layout";
+}
+
+<div class="application-box-container">
+    <div class="application-box-wrapper">
+        <div class="application-box application-box-erp8">
+            <i class="fas fa-cube"></i>
+            <h2>ERP 8</h2>
+            <p>Choose ERP 8 version</p>
+            <button onclick="window.location.href='@Url.Content("~/Request/Application_8form")'">ERP 8 (Account)</button>
+        </div>
+        <div class="application-box application-box-erp9">
+            <i class="fas fa-cubes"></i>
+            <h2>ERP 9</h2>
+            <p>Choose ERP 9 version</p>
+            <button onclick="window.location.href='@Url.Content("~/Request/Application_9form")'">ERP 9 (Store)</button>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+      $(function () {
+        var $target = $('#Requests_menu');
+        if (!$target.hasClass('active') || !$target.hasClass('open')) {
+            $('.menu-item').removeClass('active open');
+            $target.addClass('active open');
+        }
+
+        $('#Requests_child_application').addClass("active");
+    });
+</script>

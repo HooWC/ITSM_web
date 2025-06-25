@@ -5,7 +5,7 @@
     var caller_id = $("#caller_id").val();
 
     // Binding category change event
-    $('#category').on('change', function() {
+    $('#category').on('change', function () {
         const categoryId = parseInt(this.value);
         const subcategorySelect = document.getElementById('subcategory');
 
@@ -51,10 +51,10 @@
             url: window.AppRoot + 'Ajax/DepartmentData',
             type: 'GET',
             dataType: 'json',
-            success: function(data) {
+            success: function (data) {
                 departmentList = data;
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 console.error("Failed to load department data:", error);
             }
         });
@@ -71,13 +71,13 @@
                 caller_id: caller_id
             },
             dataType: 'json',
-            success: function(data) {
+            success: function (data) {
                 if (data && Array.isArray(data)) {
                     usersByDepartment[departmentId] = data;
                     openModal("Select Assign Person", data, $("#assigned-to"));
                 }
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 console.error("Failed to obtain user data request:", error);
             }
         });
@@ -93,11 +93,11 @@
             subcategorySelect.empty();
 
             if (categoryId) {
-                var filteredSubcategories = allSubcategories.filter(function(sub) {
+                var filteredSubcategories = allSubcategories.filter(function (sub) {
                     return sub.category === categoryId;
                 });
 
-                filteredSubcategories.forEach(function(sub) {
+                filteredSubcategories.forEach(function (sub) {
                     subcategorySelect.append($('<option>', {
                         value: sub.id,
                         text: sub.subcategory,

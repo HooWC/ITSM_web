@@ -21,6 +21,9 @@ namespace ITSM.Controllers
         private readonly Category_api _categoryApi;
         private readonly Subcategory_api _subcategoryApi;
         private readonly Incident_Category_api _incidentcategoryApi;
+        private readonly Req_Category_api _reqcategoryApi;
+        private readonly Req_Subcategory_api _reqsubcategoryApi;
+        private readonly Req_Function_api _reqfunctionApi;
 
         public CategoryController(IHttpContextAccessor httpContextAccessor, UserService userService)
         {
@@ -36,13 +39,15 @@ namespace ITSM.Controllers
             _categoryApi = new Category_api(httpContextAccessor);
             _subcategoryApi = new Subcategory_api(httpContextAccessor);
             _incidentcategoryApi = new Incident_Category_api(httpContextAccessor);
+            _reqcategoryApi = new Req_Category_api(httpContextAccessor);
+            _reqsubcategoryApi = new Req_Subcategory_api(httpContextAccessor);
+            _reqfunctionApi = new Req_Function_api(httpContextAccessor);
             _userService = userService;
         }
 
         public async Task<IActionResult> Category_List()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var categoryTask = _categoryApi.GetAllCategory_API();
             await Task.WhenAll(categoryTask);
@@ -54,8 +59,7 @@ namespace ITSM.Controllers
             var model =  new AllModelVM
             {
                 user = currentUser,
-                CategoryList = categoryList,
-                noteMessageCount = noteMessageCount
+                CategoryList = categoryList
             };
 
             return View(model);
@@ -64,12 +68,10 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Category_Create()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var model = new AllModelVM
             {
-                user = currentUser,
-                noteMessageCount = noteMessageCount
+                user = currentUser
             };
 
             return View(model);
@@ -79,12 +81,10 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Category_Create(Category category)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var model = new AllModelVM
             {
-                user = currentUser,
-                noteMessageCount = noteMessageCount
+                user = currentUser
             };
 
             if (category.title == null)
@@ -113,15 +113,13 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Category_Info(int id)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var category = await _categoryApi.FindByIDCategory_API(id);
 
             var model = new AllModelVM
             {
                 user = currentUser,
-                category = category,
-                noteMessageCount = noteMessageCount
+                category = category
             };
 
             return View(model);
@@ -131,15 +129,13 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Category_Info(Category c)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var categoryTask = await _categoryApi.FindByIDCategory_API(c.id);
 
             var model = new AllModelVM
             {
                 user = currentUser,
-                category = categoryTask,
-                noteMessageCount = noteMessageCount
+                category = categoryTask
             };
 
             if (categoryTask.title == null)
@@ -165,7 +161,6 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Inc_Category_List()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var allIncidentCategory = await _incidentcategoryApi.GetAllIncidentcategory_API();
 
@@ -174,8 +169,7 @@ namespace ITSM.Controllers
             var model = new AllModelVM
             {
                 user = currentUser,
-                Incident_Category_List = inccategoryList,
-                noteMessageCount = noteMessageCount
+                Incident_Category_List = inccategoryList
             };
 
             return View(model);
@@ -184,12 +178,10 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Inc_Category_Create()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var model = new AllModelVM
             {
-                user = currentUser,
-                noteMessageCount = noteMessageCount
+                user = currentUser
             };
 
             return View(model);
@@ -199,12 +191,10 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Inc_Category_Create(Incidentcategory incCategory)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var model = new AllModelVM
             {
-                user = currentUser,
-                noteMessageCount = noteMessageCount
+                user = currentUser
             };
 
             if (incCategory.name == null)
@@ -240,15 +230,13 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Inc_Category_Info(int id)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var inccategory = await _incidentcategoryApi.FindByIDIncidentcategory_API(id);
 
             var model = new AllModelVM
             {
                 user = currentUser,
-                Incident_Category = inccategory,
-                noteMessageCount = noteMessageCount
+                Incident_Category = inccategory
             };
 
             return View(model);
@@ -258,15 +246,13 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Inc_Category_Info(Incidentcategory incCategory)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var inccategoryTask = await _incidentcategoryApi.FindByIDIncidentcategory_API(incCategory.id);
 
             var model = new AllModelVM
             {
                 user = currentUser,
-                Incident_Category = inccategoryTask,
-                noteMessageCount = noteMessageCount
+                Incident_Category = inccategoryTask
             };
 
             if (incCategory.name == null)
@@ -299,7 +285,6 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Subcategory_List()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var subcategoryTask = _subcategoryApi.GetAllSubcategory_API();
             var departmentTask = _depApi.GetAllDepartment_API();
@@ -321,8 +306,7 @@ namespace ITSM.Controllers
             var model = new AllModelVM
             {
                 user = currentUser,
-                Subcategory_List = subcategoryList,
-                noteMessageCount = noteMessageCount
+                Subcategory_List = subcategoryList
             };
 
             return View(model);
@@ -331,7 +315,6 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Subcategory_Create()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var departmentTask = _depApi.GetAllDepartment_API();
             var inccategoryTask = _incidentcategoryApi.GetAllIncidentcategory_API();
@@ -344,8 +327,7 @@ namespace ITSM.Controllers
             {
                 user = currentUser,
                 DepartmentList = allDepartment,
-                Incident_Category_List = allIncCategory,
-                noteMessageCount = noteMessageCount
+                Incident_Category_List = allIncCategory
             };
 
             return View(model);
@@ -355,7 +337,6 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Subcategory_Create(Subcategory sub)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var departmentTask = _depApi.GetAllDepartment_API();
             var inccategoryTask = _incidentcategoryApi.GetAllIncidentcategory_API();
@@ -368,8 +349,7 @@ namespace ITSM.Controllers
             {
                 user = currentUser,
                 DepartmentList = allDepartment,
-                Incident_Category_List = allIncCategory,
-                noteMessageCount = noteMessageCount
+                Incident_Category_List = allIncCategory
             };
 
             if (sub.subcategory == null)
@@ -407,7 +387,6 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Subcategory_Info(int id)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var subcategory = await _subcategoryApi.FindByIDSubcategory_API(id);
             var departmentTask = _depApi.GetAllDepartment_API();
@@ -422,8 +401,7 @@ namespace ITSM.Controllers
                 user = currentUser,
                 Sub_Category = subcategory,
                 DepartmentList = allDepartment,
-                Incident_Category_List = allIncCategory,
-                noteMessageCount = noteMessageCount
+                Incident_Category_List = allIncCategory
             };
 
             return View(model);
@@ -433,7 +411,6 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Subcategory_Info(Subcategory sub)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var subcategoryTask = await _subcategoryApi.FindByIDSubcategory_API(sub.id);
             var departmentTask = _depApi.GetAllDepartment_API();
@@ -448,8 +425,7 @@ namespace ITSM.Controllers
                 user = currentUser,
                 Sub_Category = subcategoryTask,
                 DepartmentList = allDepartment,
-                Incident_Category_List = allIncCategory,
-                noteMessageCount = noteMessageCount
+                Incident_Category_List = allIncCategory
             };
 
             if (sub.subcategory == null)
@@ -477,6 +453,460 @@ namespace ITSM.Controllers
             else
             {
                 ViewBag.Error = "Update Subcategory Error";
+                return View(model);
+            }
+        }
+
+        public async Task<IActionResult> Req_Category_List()
+        {
+            var currentUser = await _userService.GetCurrentUserAsync();
+
+            var allReqCategory = await _reqcategoryApi.GetAllReq_Category_API();
+
+            var reqcategoryList = allReqCategory.OrderByDescending(y => y.id).ToList();
+
+            var model = new AllModelVM
+            {
+                user = currentUser,
+                reqCategoryList = reqcategoryList
+            };
+
+            return View(model);
+        }
+
+        public async Task<IActionResult> Req_Category_Create()
+        {
+            var currentUser = await _userService.GetCurrentUserAsync();
+
+            var model = new AllModelVM
+            {
+                user = currentUser
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Req_Category_Create(Req_Category reqcategory)
+        {
+            var currentUser = await _userService.GetCurrentUserAsync();
+
+            var model = new AllModelVM
+            {
+                user = currentUser
+            };
+
+            if (reqcategory.name == null)
+            {
+                ViewBag.Error = "Please fill in all required fields";
+                return View(model);
+            }
+
+            var allRequestCategory = await _reqcategoryApi.GetAllReq_Category_API();
+            var sameData = allRequestCategory.Where(x => x.name.ToLower() == reqcategory.name.ToLower() && x.erp_version == reqcategory.erp_version).ToList();
+            if (sameData.Count > 0)
+            {
+                ViewBag.Error = "This category name already exist.";
+                return View(model);
+            }
+
+            Req_Category new_req_category = new Req_Category()
+            {
+                name = reqcategory.name,
+                erp_version = reqcategory.erp_version
+            };
+
+            bool result = await _reqcategoryApi.CreateReq_Category_API(new_req_category);
+
+            if (result)
+                return RedirectToAction("Req_Category_List", "Category");
+            else
+            {
+                ViewBag.Error = "Create Request Category Error";
+                return View(model);
+            }
+        }
+
+        public async Task<IActionResult> Req_Category_Info(int id)
+        {
+            var currentUser = await _userService.GetCurrentUserAsync();
+
+            var reqcategory = await _reqcategoryApi.FindByIDReq_Category_API(id);
+
+            var model = new AllModelVM
+            {
+                user = currentUser,
+                req_category = reqcategory
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Req_Category_Info(Req_Category reqcategory)
+        {
+            var currentUser = await _userService.GetCurrentUserAsync();
+
+            var reqcategoryTask = await _reqcategoryApi.FindByIDReq_Category_API(reqcategory.id);
+
+            var model = new AllModelVM
+            {
+                user = currentUser,
+                req_category = reqcategoryTask
+            };
+
+            if (reqcategory.name == null)
+            {
+                ViewBag.Error = "Please fill in all required fields";
+                return View(model);
+            }
+
+            var allRequestCategory = await _reqcategoryApi.GetAllReq_Category_API();
+            var sameData = allRequestCategory.Where(x => x.name?.ToLower() == reqcategory.name.ToLower() && x.id != reqcategory.id).ToList();
+            if (sameData.Count > 0)
+            {
+                ViewBag.Error = "This name already exist.";
+                return View(model);
+            }
+
+            reqcategoryTask.name = reqcategory.name;
+            reqcategoryTask.erp_version = reqcategory.erp_version;
+
+            bool result = await _reqcategoryApi.UpdateReq_Category_API(reqcategoryTask);
+
+            if (result)
+                return RedirectToAction("Req_Category_List", "Category");
+            else
+            {
+                ViewBag.Error = "Update Request Category Error";
+                return View(model);
+            }
+        }
+
+        public async Task<IActionResult> Req_Subcategory_List()
+        {
+            var currentUser = await _userService.GetCurrentUserAsync();
+
+            var allReqSubcategory = await _reqsubcategoryApi.GetAllReq_Subcategory_API();
+
+            var reqSubcategoryList = allReqSubcategory.OrderByDescending(y => y.id).ToList();
+
+            var reqcategory = await _reqcategoryApi.GetAllReq_Category_API();
+
+            if(reqSubcategoryList.Count > 0)
+            {
+                foreach (var i in reqSubcategoryList)
+                    i.Req_Category = reqcategory.FirstOrDefault(x => x.id == i.req_category_id);
+            }
+
+            var model = new AllModelVM
+            {
+                user = currentUser,
+                reqSubCategoryList = reqSubcategoryList
+            };
+
+            return View(model);
+        }
+
+        public async Task<IActionResult> Req_Subcategory_Create()
+        {
+            var currentUser = await _userService.GetCurrentUserAsync();
+
+            var req_category = await _reqcategoryApi.GetAllReq_Category_API();
+
+            var model = new AllModelVM
+            {
+                user = currentUser,
+                reqCategoryList = req_category
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Req_Subcategory_Create(Req_Subcategory reqsubcategory)
+        {
+            var currentUser = await _userService.GetCurrentUserAsync();
+
+            var model = new AllModelVM
+            {
+                user = currentUser
+            };
+
+            if (reqsubcategory.name == null && reqsubcategory.req_category_id != null)
+            {
+                ViewBag.Error = "Please fill in all required fields";
+                return View(model);
+            }
+
+            var allRequestSubcategory = await _reqsubcategoryApi.GetAllReq_Subcategory_API();
+            var sameData = allRequestSubcategory.Where(x => x.name?.ToLower() == reqsubcategory.name?.ToLower() && x.req_category_id == reqsubcategory.req_category_id).ToList();
+            if (sameData.Count > 0)
+            {
+                ViewBag.Error = "This category name already exist.";
+                return View(model);
+            }
+
+            Req_Subcategory new_req_subcategory = new Req_Subcategory()
+            {
+                name = reqsubcategory.name,
+                req_category_id = reqsubcategory.req_category_id
+            };
+
+            bool result = await _reqsubcategoryApi.CreateReq_Subcategory_API(new_req_subcategory);
+
+            if (result)
+                return RedirectToAction("Req_Subcategory_List", "Category");
+            else
+            {
+                ViewBag.Error = "Create Request Subcategory Error";
+                return View(model);
+            }
+        }
+
+        public async Task<IActionResult> Req_Subcategory_Info(int id)
+        {
+            var currentUser = await _userService.GetCurrentUserAsync();
+
+            var reqsubcategory = await _reqsubcategoryApi.FindByIDReq_Subcategory_API(id);
+
+            var req_category = await _reqcategoryApi.GetAllReq_Category_API();
+
+            reqsubcategory.Req_Category = req_category.FirstOrDefault(x => x.id == reqsubcategory.req_category_id);
+
+            var model = new AllModelVM
+            {
+                user = currentUser,
+                req_subcategory = reqsubcategory,
+                reqCategoryList = req_category
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Req_Subcategory_Info(Req_Subcategory reqsubcategory)
+        {
+            var currentUser = await _userService.GetCurrentUserAsync();
+
+            var reqsubcategoryTask = await _reqsubcategoryApi.FindByIDReq_Subcategory_API(reqsubcategory.id);
+
+            var req_category = await _reqcategoryApi.GetAllReq_Category_API();
+
+            reqsubcategory.Req_Category = req_category.FirstOrDefault(x => x.id == reqsubcategory.req_category_id);
+
+            var model = new AllModelVM
+            {
+                user = currentUser,
+                req_subcategory = reqsubcategoryTask,
+                reqCategoryList = req_category
+            };
+
+            if (reqsubcategory.name == null)
+            {
+                ViewBag.Error = "Please fill in all required fields";
+                return View(model);
+            }
+
+            var allRequestSubcategory = await _reqsubcategoryApi.GetAllReq_Subcategory_API();
+            var sameData = allRequestSubcategory.Where(x => x.name?.ToLower() == reqsubcategory.name.ToLower() && x.id != reqsubcategory.id).ToList();
+            if (sameData.Count > 0)
+            {
+                ViewBag.Error = "This name already exist.";
+                return View(model);
+            }
+
+            reqsubcategoryTask.name = reqsubcategory.name;
+            reqsubcategoryTask.req_category_id = reqsubcategory.req_category_id;
+
+            bool result = await _reqsubcategoryApi.UpdateReq_Subcategory_API(reqsubcategoryTask);
+
+            if (result)
+                return RedirectToAction("Req_Subcategory_List", "Category");
+            else
+            {
+                ViewBag.Error = "Update Request Subcaategory Error";
+                return View(model);
+            }
+        }
+
+        public async Task<IActionResult> Req_Function_List()
+        {
+            var currentUser = await _userService.GetCurrentUserAsync();
+
+            var allReqFunction = await _reqfunctionApi.GetAllReq_Function_API();
+
+            var reqFunctionList = allReqFunction.OrderByDescending(y => y.id).ToList();
+
+            var allReqSubcategoryTask = await _reqsubcategoryApi.GetAllReq_Subcategory_API();
+            var allReqCategoryTask = await _reqcategoryApi.GetAllReq_Category_API();
+
+            if(allReqFunction.Count > 0)
+            {
+                foreach (var i in allReqFunction)
+                {
+                    i.Req_Subcategory = allReqSubcategoryTask.FirstOrDefault(x => x.id == i.req_subcategory_id);
+                    if (i.Req_Subcategory != null)
+                        i.Req_Subcategory.Req_Category = allReqCategoryTask.FirstOrDefault(x => x.id == i.Req_Subcategory.req_category_id);
+                }
+            }
+
+            var model = new AllModelVM
+            {
+                user = currentUser,
+                reqFunctionList = reqFunctionList
+            };
+
+            return View(model);
+        }
+
+        public async Task<IActionResult> Req_Function_Create()
+        {
+            var currentUser = await _userService.GetCurrentUserAsync();
+
+            var req_subcategory = await _reqsubcategoryApi.GetAllReq_Subcategory_API();
+            var allReqCategory = await _reqcategoryApi.GetAllReq_Category_API();
+
+            if(req_subcategory.Count > 0)
+            {
+                foreach (var i in req_subcategory)
+                    i.Req_Category = allReqCategory.FirstOrDefault(x => x.id == i.req_category_id);
+            }
+
+            var model = new AllModelVM
+            {
+                user = currentUser,
+                reqSubCategoryList = req_subcategory
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Req_Function_Create(Req_Function reqfunction)
+        {
+            var currentUser = await _userService.GetCurrentUserAsync();
+
+            var req_subcategory = await _reqsubcategoryApi.GetAllReq_Subcategory_API();
+            var allReqCategory = await _reqcategoryApi.GetAllReq_Category_API();
+
+            if (req_subcategory.Count > 0)
+            {
+                foreach (var i in req_subcategory)
+                    i.Req_Category = allReqCategory.FirstOrDefault(x => x.id == i.req_category_id);
+            }
+
+            var model = new AllModelVM
+            {
+                user = currentUser,
+                reqSubCategoryList = req_subcategory
+            };
+
+            if (reqfunction.name == null)
+            {
+                ViewBag.Error = "Please fill in all required fields";
+                return View(model);
+            }
+
+            var allReqFunction = await _reqfunctionApi.GetAllReq_Function_API();
+            var sameData = allReqFunction.Where(x => x.name?.ToLower() == reqfunction.name?.ToLower() && x.req_subcategory_id == reqfunction.req_subcategory_id).ToList();
+            if (sameData.Count > 0)
+            {
+                ViewBag.Error = "This category name already exist.";
+                return View(model);
+            }
+
+            Req_Function new_req_function = new Req_Function()
+            {
+                name = reqfunction.name,
+                req_subcategory_id = reqfunction.req_subcategory_id
+            };
+
+            bool result = await _reqfunctionApi.CreateReq_Function_API(new_req_function);
+
+            if (result)
+                return RedirectToAction("Req_Function_List", "Category");
+            else
+            {
+                ViewBag.Error = "Create Request Function Error";
+                return View(model);
+            }
+        }
+
+        public async Task<IActionResult> Req_Function_Info(int id)
+        {
+            var currentUser = await _userService.GetCurrentUserAsync();
+
+            var reqfunction = await _reqfunctionApi.FindByIDReq_Function_API(id);
+
+            var req_subcategory = await _reqsubcategoryApi.GetAllReq_Subcategory_API();
+
+            var req_category = await _reqcategoryApi.GetAllReq_Category_API();
+
+            reqfunction.Req_Subcategory = req_subcategory.FirstOrDefault(x => x.id == reqfunction.req_subcategory_id);
+            if(reqfunction.Req_Subcategory != null)
+            {
+                reqfunction.Req_Subcategory.Req_Category = req_category.FirstOrDefault(x => x.id == reqfunction.Req_Subcategory.req_category_id);
+            }
+
+            var model = new AllModelVM
+            {
+                user = currentUser,
+                req_function = reqfunction,
+                reqSubCategoryList = req_subcategory
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Req_Function_Info(Req_Function reqfunctionpost)
+        {
+            var currentUser = await _userService.GetCurrentUserAsync();
+
+            var reqfunction = await _reqfunctionApi.FindByIDReq_Function_API(reqfunctionpost.id);
+
+            var req_subcategory = await _reqsubcategoryApi.GetAllReq_Subcategory_API();
+
+            var req_category = await _reqcategoryApi.GetAllReq_Category_API();
+
+            reqfunction.Req_Subcategory = req_subcategory.FirstOrDefault(x => x.id == reqfunction.req_subcategory_id);
+            if (reqfunction.Req_Subcategory != null)
+            {
+                reqfunction.Req_Subcategory.Req_Category = req_category.FirstOrDefault(x => x.id == reqfunction.Req_Subcategory.req_category_id);
+            }
+
+            var model = new AllModelVM
+            {
+                user = currentUser,
+                req_function = reqfunction,
+                reqSubCategoryList = req_subcategory
+            };
+
+            if (reqfunctionpost.name == null)
+            {
+                ViewBag.Error = "Please fill in all required fields";
+                return View(model);
+            }
+
+            var allRequestFunction = await _reqfunctionApi.GetAllReq_Function_API();
+            var sameData = allRequestFunction.Where(x => x.name?.ToLower() == reqfunctionpost.name.ToLower() && x.id != reqfunctionpost.id).ToList();
+            if (sameData.Count > 0)
+            {
+                ViewBag.Error = "This name already exist.";
+                return View(model);
+            }
+
+            reqfunction.name = reqfunctionpost.name;
+            reqfunction.req_subcategory_id = reqfunctionpost.req_subcategory_id;
+
+            bool result = await _reqfunctionApi.UpdateReq_Function_API(reqfunction);
+
+            if (result)
+                return RedirectToAction("Req_Function_List", "Category");
+            else
+            {
+                ViewBag.Error = "Update Request Function Error";
                 return View(model);
             }
         }

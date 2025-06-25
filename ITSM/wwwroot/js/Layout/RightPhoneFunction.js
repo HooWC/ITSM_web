@@ -6,7 +6,7 @@
             success: function (response) {
                 if (response.success) {
                     // Redirect to the login page after successful logout
-                    window.location.href = '/Auth/Login';
+                    window.location.href = window.AppRoot + 'Auth/Login';
                 } else {
                     console.error('Login Failed:', response.message);
                 }

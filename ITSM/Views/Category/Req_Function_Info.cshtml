@@ -1,7 +1,7 @@
 ﻿@using ITSM_DomainModelEntity.ViewModels
 @model AllModelVM
 @{
-    ViewData["Title"] = "Subcategory_Info";
+    ViewData["Title"] = "Req_Function_Info";
     Layout = "_Layout";
 }
 
@@ -33,12 +33,12 @@
                 </svg>
             </button>
             <div class="inc-cre-title-group">
-                <div class="inc-cre-title">Incident Subcategory Information</div>
+                <div class="inc-cre-title">Request Function Information</div>
                 <div class="inc-cre-subtitle">Info record</div>
             </div>
         </div>
         <div class="inc-cre-header-right">
-            <button class="inc-cre-btn inc-cre-btn-icon" onclick="location.href='/Category/Subcategory_List'">
+            <button class="inc-cre-btn inc-cre-btn-icon" onclick="location.href='/Category/Req_Function_List'">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="4" y1="6" x2="20" y2="6"></line>
                     <line x1="4" y1="12" x2="20" y2="12"></line>
@@ -84,26 +84,20 @@
             </div>
         }
 
-        <form id="incidentForm" class="inc-cre-incident-form" action="~/Category/Subcategory_Info" method="post">
-            <input type="text" name="id" id="id" class="inc-cre-form-control" value="@Model.Sub_Category.id" style="display:none;" readonly>
-            <div class="inc-cre-form-group inc-cre-short-description-group">
-                <label for="subcategory" class="inc-cre-form-label inc-cre-required">Subcategory Name</label>
-                <div class="inc-cre-input-with-actions">
-                    <input type="text" autocomplete="off" name="subcategory" id="subcategory" value="@Model.Sub_Category.subcategory" class="inc-cre-form-control" required>
-                </div>
-            </div>
 
+        <form id="incidentForm" class="inc-cre-incident-form" action="~/Category/Req_Function_Info" method="post">
+            <input type="text" name="id" id="id" class="inc-cre-form-control" value="@Model.req_function?.id" style="display:none;" readonly>
             <div class="inc-cre-form-grid">
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
-                        <label for="category" class="inc-cre-form-label">Category</label>
-                        <select id="category" name="category" class="inc-cre-form-control">
+                        <label for="req_subcategory_id" class="inc-cre-form-label">Request Subcategory</label>
+                        <select id="req_subcategory_id" name="req_subcategory_id" class="inc-cre-form-control">
                             @{
-                                var selectCategory = Model.Sub_Category.category;
+                                var selectSubcategory = Model.req_function?.req_subcategory_id;
                             }
-                            @foreach (var item in Model.Incident_Category_List)
+                            @foreach (var item in Model.reqSubCategoryList)
                             {
-                                <option value="@item.id" selected="@(item.id == selectCategory)">@item.name</option>
+                                <option value="@item.id" selected="@(item.id == selectSubcategory)">@item.name (@item.Req_Category?.erp_version)</option>
                             }
                         </select>
                     </div>
@@ -111,33 +105,28 @@
 
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
-                        <label for="department_id" class="inc-cre-form-label">Department</label>
-                        <select id="department_id" name="department_id" class="inc-cre-form-control">
-                            @{
-                                var selectDep = Model.Sub_Category.department_id;
-                            }
-                            @foreach (var item in Model.DepartmentList)
-                            {
-                                <option value="@item.id" selected="@(item.id == selectDep)">@item.name</option>
-                            }
-                        </select>
+                        <label for="name" class="inc-cre-form-label inc-cre-required">Request Function Name</label>
+                        <div class="inc-cre-input-with-actions">
+                            <input type="text" autocomplete="off" name="name" id="name" class="inc-cre-form-control" value="@Model.req_function?.name" required>
+                        </div>
                     </div>
                 </div>
             </div>
         </form>
+
     </main>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
     $(function () {
-      var $target = $('#Subcategory_menu');
+      var $target = $('#req_function_menu');
       if (!$target.hasClass('active') || !$target.hasClass('open')) {
           $('.menu-item').removeClass('active open');
           $target.addClass('active open');
       }
 
-      $('#Subcategory_menu_all').addClass("active");
+      $('#req_function_menu_all').addClass("active");
     });
 </script>
 

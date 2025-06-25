@@ -24,7 +24,6 @@ namespace ITSM.Controllers
         private readonly Incident_Photos_api _incphotosApi;
         private readonly Subcategory_api _subcategoryApi;
         private readonly Incident_Category_api _inccategoryApi;
-        private readonly Note_api _noteApi;
 
         public IncidentManagementController(IHttpContextAccessor httpContextAccessor, UserService userService)
         {
@@ -40,14 +39,12 @@ namespace ITSM.Controllers
             _incphotosApi = new Incident_Photos_api(httpContextAccessor);
             _subcategoryApi = new Subcategory_api(httpContextAccessor);
             _inccategoryApi = new Incident_Category_api(httpContextAccessor);
-            _noteApi = new Note_api(httpContextAccessor);
             _userService = userService;
         }
 
         public async Task<AllModelVM> get_Inc_Data(string type)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var inc = _incApi.GetAllIncident_API();
             var dep = _depApi.GetAllDepartment_API();
@@ -82,8 +79,7 @@ namespace ITSM.Controllers
             var model = new AllModelVM
             {
                 user = currentUser,
-                IncidentList = incList,
-                noteMessageCount = noteMessageCount
+                IncidentList = incList
             };
 
             return model;
@@ -106,7 +102,6 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Create_Form()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var inc_categoryTask = _inccategoryApi.GetAllIncidentcategory_API();
             var sucategoryTask = _subcategoryApi.GetAllSubcategory_API();
@@ -120,8 +115,7 @@ namespace ITSM.Controllers
             {
                 user = currentUser,
                 Incident_Category_List = allIncCategory,
-                Subcategory_List = allSucategory,
-                noteMessageCount = noteMessageCount
+                Subcategory_List = allSucategory
             };
 
             return View(model);
@@ -131,7 +125,6 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Create_Form(List<IFormFile> files, Incident inc)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var inc_categoryTask = _inccategoryApi.GetAllIncidentcategory_API();
             var sucategoryTask = _subcategoryApi.GetAllSubcategory_API();
@@ -145,8 +138,7 @@ namespace ITSM.Controllers
             {
                 user = currentUser,
                 Incident_Category_List = allIncCategory,
-                Subcategory_List = allSucategory,
-                noteMessageCount = noteMessageCount
+                Subcategory_List = allSucategory
             };
 
             if (!string.IsNullOrEmpty(inc.describe))
@@ -245,41 +237,19 @@ namespace ITSM.Controllers
             var departmentTask = _depApi.GetAllDepartment_API();
             var userTask = _userApi.GetAllUser_API();
             var incphotosTask = _incphotosApi.GetAllIncidentPhotos_API();
-            var noteTask = _noteApi.GetAllNote_API();
 
             var inc_categoryTask = _inccategoryApi.GetAllIncidentcategory_API();
             var sucategoryTask = _subcategoryApi.GetAllSubcategory_API();
 
-            await Task.WhenAll(departmentTask, userTask, incphotosTask, noteTask, inc_categoryTask, sucategoryTask);
+            await Task.WhenAll(departmentTask, userTask, incphotosTask, inc_categoryTask, sucategoryTask);
 
             var allDepartment = departmentTask.Result;
             var allUser = userTask.Result;
-            var allNotes = noteTask.Result;
             var allInc_Photos = incphotosTask.Result;
             var allIncCategory = inc_categoryTask.Result;
             var allSucategory = sucategoryTask.Result;
 
             var incData = await _incApi.FindByIDIncident_API(id);
-
-            //var read_note_true = allNotes.Where(x => x.note_read == false && x.receiver_id == currentUser.department_id && x.incident_id == incData.id).ToList();
-            //read_note_true.ForEach(x => x.note_read = true);
-
-            var read_note_true = allNotes
-                .Where(x =>
-                    !x.note_read &&
-                    x.incident_id == incData.id &&
-                    (
-                        (x.post_type == "department" && x.receiver_id == currentUser.department_id) ||
-                        (x.post_type != "department" && x.receiver_id == currentUser.id)
-                    ))
-                .ToList();
-
-            read_note_true.ForEach(x => x.note_read = true);
-
-            foreach (var i in read_note_true)
-                await _noteApi.UpdateNote_API(i);
-
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             incData.AssignmentGroup = allDepartment.Where(x => x.id == incData.assignment_group).FirstOrDefault();
             incData.IncidentcategoryData = allIncCategory.FirstOrDefault(x => x.id == incData.category);
@@ -298,8 +268,7 @@ namespace ITSM.Controllers
                 roleBack = type,
                 Incident_Photos_List = allRelatedPhotos,
                 Incident_Category_List = allIncCategory,
-                Subcategory_List = allSucategory,
-                noteMessageCount = noteMessageCount
+                Subcategory_List = allSucategory
             };
 
             return View(model);
@@ -309,7 +278,6 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Inc_Info_Form(List<IFormFile> files, Incident inc, string roleBack)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var departmentTask = _depApi.GetAllDepartment_API();
             var userTask = _userApi.GetAllUser_API();
@@ -317,16 +285,14 @@ namespace ITSM.Controllers
 
             var inc_categoryTask = _inccategoryApi.GetAllIncidentcategory_API();
             var sucategoryTask = _subcategoryApi.GetAllSubcategory_API();
-            var noteTask = _noteApi.GetAllNote_API();
 
-            await Task.WhenAll(departmentTask, userTask, incphotosTask, inc_categoryTask, sucategoryTask, noteTask);
+            await Task.WhenAll(departmentTask, userTask, incphotosTask, inc_categoryTask, sucategoryTask);
 
             var allDepartment = departmentTask.Result;
             var allUser = userTask.Result;
             var allInc_Photos = incphotosTask.Result;
             var allIncCategory = inc_categoryTask.Result;
             var allSucategory = sucategoryTask.Result;
-            var allNotes = noteTask.Result;
 
             var incData = await _incApi.FindByIDIncident_API(inc.id);
 
@@ -346,8 +312,7 @@ namespace ITSM.Controllers
                 roleBack = roleBack,
                 Incident_Photos_List = allRelatedPhotos,
                 Incident_Category_List = allIncCategory,
-                Subcategory_List = allSucategory,
-                noteMessageCount = noteMessageCount
+                Subcategory_List = allSucategory
             };
 
             if (inc.describe != null)
@@ -380,14 +345,6 @@ namespace ITSM.Controllers
                     incData.describe = inc.describe;
                     incData.state = inc.state;
                     incData.updated_by = currentUser.id;
-
-                    //if (incData.assigned_to != inc.assigned_to && inc.assigned_to != null)
-                    //{
-                    //    var inc_note_list = allNotes.Where(x => x.incident_id == inc.id && x.note_read == false && x.receiver_id != inc.sender).ToList();
-                    //    inc_note_list.ForEach(x => x.receiver_id = inc.assigned_to);
-                    //    foreach(var i in  inc_note_list)
-                    //        await _noteApi.UpdateNote_API(i);
-                    //}
 
                     if (fileBytesList != null && fileBytesList.Count > 0)
                     {
@@ -472,7 +429,6 @@ namespace ITSM.Controllers
         public async Task<AllModelVM> get_Manager_Assign_Work_Info(int id)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var departmentTask = _depApi.GetAllDepartment_API();
             var userTask = _userApi.GetAllUser_API();
@@ -507,8 +463,7 @@ namespace ITSM.Controllers
                 incident = incData,
                 Incident_Photos_List = allRelatedPhotos,
                 Incident_Category_List = allIncCategory,
-                Subcategory_List = allSucategory,
-                noteMessageCount = noteMessageCount
+                Subcategory_List = allSucategory
             };
 
             return model;
@@ -555,79 +510,6 @@ namespace ITSM.Controllers
                 ViewBag.Error = "Please fill in all required fields";
                 return View(model);
             }
-        }
-        
-        public async Task<AllModelVM> get_Inc_Message_Data()
-        {
-            var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
-
-            var inc = _incApi.GetAllIncident_API();
-            var dep = _depApi.GetAllDepartment_API();
-            var user = _userApi.GetAllUser_API();
-            var notes = _noteApi.GetAllNote_API();
-
-            var inc_categoryTask = _inccategoryApi.GetAllIncidentcategory_API();
-            var sucategoryTask = _subcategoryApi.GetAllSubcategory_API();
-
-            await Task.WhenAll(inc, dep, user, notes, inc_categoryTask, sucategoryTask);
-
-            var allInc = inc.Result;
-            var incList = new List<Incident>();
-            incList = allInc.Where(x => (x.assignment_group == currentUser.department_id && x.state != "Resolved" && x.state != "Closed")
-            || (x.sender == currentUser.id && x.state != "Resolved" && x.state != "Closed")
-            ).OrderByDescending(y => y.id).ToList();
-
-            var allDepartments = dep.Result;
-            var allUsers = user.Result;
-            var allIncCategory = inc_categoryTask.Result;
-            var allSucategory = sucategoryTask.Result;
-            var allNotes = notes.Result;
-
-            var incMessages = new List<IncMessage>();
-            foreach (var incident in incList)
-            {
-                incident.AssignmentGroup = allDepartments.FirstOrDefault(d => d.id == incident.assignment_group);
-                incident.IncidentcategoryData = allIncCategory.FirstOrDefault(x => x.id == incident.category);
-                incident.SubcategoryData = allSucategory.FirstOrDefault(x => x.id == incident.subcategory);
-
-                var get_noteMessageNote = allNotes
-                    .Where(x =>
-                        x.incident_id == incident.id &&
-                        x.note_read == false &&
-                        (
-                            (x.post_type == "department" && x.receiver_id == currentUser.department_id) ||
-                            (x.post_type != "department" && x.receiver_id == currentUser.id)
-                        ))
-                    .Count();
-
-                if (get_noteMessageNote > 0)
-                {
-                    incMessages.Add(new IncMessage
-                    {
-                        inc_info = incident,
-                        NoteMessageCount = get_noteMessageNote,
-                    });
-                }
-                
-            }
-
-            var model = new AllModelVM
-            {
-                user = currentUser,
-                incMessages = incMessages,
-                noteMessageCount = noteMessageCount
-            };
-
-
-            return model;
-        }
-        
-        public async Task<IActionResult> Inc_Message()
-        {
-            var model = await get_Inc_Message_Data();
-
-            return View(model);
         }
 
         private string GetMimeTypeFromFileSignature(byte[] fileBytes)

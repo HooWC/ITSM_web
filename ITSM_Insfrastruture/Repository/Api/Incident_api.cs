@@ -128,6 +128,9 @@ namespace ITSM_Insfrastruture.Repository.Api
                 var jsonStr = new StringContent(JsonConvert.SerializeObject(incident), Encoding.UTF8, "application/json");
                 var response = await _client.PostAsync(_allIncUrl, jsonStr);
 
+                var responseStr = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"RESPONSE: {responseStr}");
+
                 return response.IsSuccessStatusCode;
             }
             catch (Exception ex)

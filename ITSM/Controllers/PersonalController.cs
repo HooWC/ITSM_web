@@ -46,7 +46,6 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Home()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var todoTask = _todoApi.GetAllTodo_API();
             var incidentTask = _incApi.GetAllIncident_API();
@@ -111,8 +110,7 @@ namespace ITSM.Controllers
                 DepartmentName = getDepartmentName,
                 RoleName = getRoleName,
                 Team = sameDepartment,
-                IncidentsHistory = incident_list,
-                noteMessageCount = noteMessageCount
+                IncidentsHistory = incident_list
             };
 
             return View(model);
@@ -121,7 +119,6 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Todo_List()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var todoTask = _todoApi.GetAllTodo_API();
 
@@ -131,8 +128,7 @@ namespace ITSM.Controllers
             var model = new AllModelVM
             {
                 user = currentUser,
-                TodoList = todo,
-                noteMessageCount = noteMessageCount
+                TodoList = todo
             };
 
             return View(model);
@@ -141,12 +137,10 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Todo_Create()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var model = new AllModelVM
             {
-                user = currentUser,
-                noteMessageCount = noteMessageCount
+                user = currentUser
             };
 
             return View(model);
@@ -156,12 +150,10 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Todo_Create(Todo todo, string active_word)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var model = new AllModelVM
             {
-                user = currentUser,
-                noteMessageCount = noteMessageCount
+                user = currentUser
             };
 
             if (todo.title == null)
@@ -211,15 +203,13 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Todo_Edit(int id)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var todo = await _todoApi.FindByIDTodo_API(id);
 
             var model = new AllModelVM
             {
                 user = currentUser,
-                todo = todo,
-                noteMessageCount = noteMessageCount
+                todo = todo
             };
 
             return View(model);
@@ -229,15 +219,13 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Todo_Edit(Todo todo, string active_word)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var edit_todo = await _todoApi.FindByIDTodo_API(todo.id);
 
             var model = new AllModelVM
             {
                 user = currentUser,
-                todo = edit_todo,
-                noteMessageCount = noteMessageCount
+                todo = edit_todo
             };
 
             if (todo.title == null)
@@ -268,7 +256,6 @@ namespace ITSM.Controllers
         public async Task<IActionResult> User_Info()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var departmentTask = _departmentApi.GetAllDepartment_API();
             var roleTask = _roleApi.GetAllRole_API();
@@ -284,8 +271,7 @@ namespace ITSM.Controllers
             {
                 user = currentUser,
                 RoleList = allRole,
-                DepartmentList = allDepartment,
-                noteMessageCount = noteMessageCount
+                DepartmentList = allDepartment
             };
 
             return View(model);
@@ -295,7 +281,6 @@ namespace ITSM.Controllers
         public async Task<IActionResult> User_Info(IFormFile file, User user)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var departmentTask = _departmentApi.GetAllDepartment_API();
             var roleTask = _roleApi.GetAllRole_API();
@@ -315,8 +300,7 @@ namespace ITSM.Controllers
             {
                 user = currentUser,
                 RoleList = allRole,
-                DepartmentList = allDepartment,
-                noteMessageCount = noteMessageCount
+                DepartmentList = allDepartment
             };
 
             if (!string.IsNullOrEmpty(user.emp_id) &&

@@ -40,13 +40,11 @@ namespace ITSM.Controllers
             _productApi = new Product_api(httpContextAccessor);
             _departmentApi = new Department_api(httpContextAccessor);
             _userService = userService;
-
         }
 
         public async Task<IActionResult> User_List()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var userTask = _userApi.GetAllUser_API();
             var depTask = _depApi.GetAllDepartment_API();
@@ -70,8 +68,7 @@ namespace ITSM.Controllers
             var model = new AllModelVM()
             {
                 user = currentUser,
-                UserList = allUser.OrderByDescending(y => y.id).ToList(),
-                noteMessageCount = noteMessageCount
+                UserList = allUser.OrderByDescending(y => y.id).ToList()
             };
 
             return View(model);
@@ -80,7 +77,6 @@ namespace ITSM.Controllers
         public async Task<IActionResult> UserCreate()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var departmentTask = _departmentApi.GetAllDepartment_API();
             var roleTask = _roleApi.GetAllRole_API();
@@ -93,8 +89,7 @@ namespace ITSM.Controllers
             {
                 user = currentUser,
                 RoleList = allRole.OrderByDescending(x => x.id).ToList(),
-                DepartmentList = allDepartment,
-                noteMessageCount = noteMessageCount
+                DepartmentList = allDepartment
             };
 
             return View(model);
@@ -104,7 +99,6 @@ namespace ITSM.Controllers
         public async Task<IActionResult> UserCreate(IFormFile file, User user)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var departmentTask = _departmentApi.GetAllDepartment_API();
             var roleTask = _roleApi.GetAllRole_API();
@@ -119,8 +113,7 @@ namespace ITSM.Controllers
             {
                 user = currentUser,
                 RoleList = allRole.OrderByDescending(x => x.id).ToList(),
-                DepartmentList = allDepartment,
-                noteMessageCount = noteMessageCount
+                DepartmentList = allDepartment
             };
 
             if (!string.IsNullOrEmpty(user.emp_id) &&
@@ -271,7 +264,6 @@ namespace ITSM.Controllers
         public async Task<IActionResult> User_Info(int id)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var departmentTask = _departmentApi.GetAllDepartment_API();
             var roleTask = _roleApi.GetAllRole_API();
@@ -296,8 +288,7 @@ namespace ITSM.Controllers
                 user = currentUser,
                 RoleList = allRole,
                 DepartmentList = allDepartment,
-                info_user = info_user,
-                noteMessageCount = noteMessageCount
+                info_user = info_user
             };
 
             return View(model);
@@ -308,7 +299,6 @@ namespace ITSM.Controllers
         public async Task<IActionResult> User_Info(User user, string new_password)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var departmentTask = _departmentApi.GetAllDepartment_API();
             var roleTask = _roleApi.GetAllRole_API();
@@ -328,8 +318,7 @@ namespace ITSM.Controllers
                 user = currentUser,
                 RoleList = allRole,
                 DepartmentList = allDepartment,
-                info_user = info_user,
-                noteMessageCount = noteMessageCount
+                info_user = info_user
             };
 
             if (!string.IsNullOrEmpty(user.emp_id) &&
@@ -607,7 +596,6 @@ namespace ITSM.Controllers
         public async Task<IActionResult> User_Approve_List()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var userTask = _userApi.GetAllUser_API();
             var depTask = _depApi.GetAllDepartment_API();
@@ -639,8 +627,7 @@ namespace ITSM.Controllers
             var model = new AllModelVM()
             {
                 user = currentUser,
-                UserList = myApproveUser,
-                noteMessageCount = noteMessageCount
+                UserList = myApproveUser
             };
 
             return View(model);
@@ -649,7 +636,6 @@ namespace ITSM.Controllers
         public async Task<AllModelVM> get_User_Info(int id)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            var noteMessageCount = await _userService.GetNoteAsync();
 
             var departmentTask = _departmentApi.GetAllDepartment_API();
             var roleTask = _roleApi.GetAllRole_API();
@@ -674,8 +660,7 @@ namespace ITSM.Controllers
                 user = currentUser,
                 RoleList = allRole,
                 DepartmentList = allDepartment,
-                info_user = info_user,
-                noteMessageCount = noteMessageCount
+                info_user = info_user
             };
 
             return model;

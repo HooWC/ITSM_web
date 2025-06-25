@@ -31,19 +31,5 @@ namespace ITSM.Controllers
             currentUser.Role = allRole.FirstOrDefault(x => x.id == currentUser.role_id);
             return currentUser;
         }
-
-        public async Task<int?> GetNoteAsync()
-        {
-            var currentUser = await GetCurrentUserAsync();
-            var allNotes = await _noteApi.GetAllNote_API();
-
-            var noteMessageCount = allNotes
-                .Where(x => x.note_read == false &&
-                           ((x.post_type == "department" && x.receiver_id == currentUser.department_id) ||
-                            (x.post_type != "department" && x.receiver_id == currentUser.id)))
-                .Count();
-
-            return noteMessageCount;
-        }
     }
 }
