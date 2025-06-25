@@ -248,4 +248,27 @@
             }
         });
     });
+
+    window.showImage = function (src) {
+        var modal = document.getElementById('imageModal');
+        var modalImg = document.getElementById('modalImage');
+        modal.style.display = "block";
+        modalImg.src = src;
+    }
+
+    $('.image-close-btn').click(function () {
+        $('#imageModal').hide();
+    });
+
+    $('#imageModal').click(function (e) {
+        if (e.target === this || e.target.id === 'modalImage') {
+            $(this).hide();
+        }
+    });
+
+    $(document).keydown(function (e) {
+        if (e.key === 'Escape') {
+            $('#imageModal').hide();
+        }
+    });
 });

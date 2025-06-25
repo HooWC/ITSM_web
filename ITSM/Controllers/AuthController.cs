@@ -48,7 +48,6 @@ namespace ITSM.Controllers
                         return RedirectToAction("Index", "Home");
                 }
 
-                // 分别获取数据，不使用Task.WhenAll
                 var allDepartment = await _departmentApi.GetAll_With_No_Token_Department_API();
                 var allRole = await _roleApi.GetAll_With_No_Token_Role_API();
 
@@ -58,7 +57,6 @@ namespace ITSM.Controllers
                     DepartmentList = allDepartment ?? new List<Department>()
                 };
 
-                // 如果获取数据失败，添加错误信息
                 if ((allDepartment == null || !allDepartment.Any()) && (allRole == null || !allRole.Any()))
                 {
                     ViewBag.ErrorMessage = "Unable to load departments and roles. Please try again.";
@@ -110,13 +108,6 @@ namespace ITSM.Controllers
                     if (!currentUser.active)
                     {
                         ViewBag.ErrorMessage = "Your account has been blocked, please contact your supervisor.";
-                        _tokenService.ClearToken();
-                        return View(model);
-                    }
-
-                    if (!currentUser.approve && !currentUser.r_manager && currentUser.Role.role.ToLower() != "admin")
-                    {
-                        ViewBag.ErrorMessage = "Your account is still under application, please wait for your supervisor's approval.";
                         _tokenService.ClearToken();
                         return View(model);
                     }
@@ -215,8 +206,6 @@ namespace ITSM.Controllers
                     role_id = allRole.FirstOrDefault(x => x.role.ToLower() == "user").id,
                     password = user.password,
                     race = user.race,
-                    approve = false,
-                    Manager = null,
                     r_manager = false
                 };
                 

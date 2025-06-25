@@ -153,9 +153,7 @@ namespace ITSM_Insfrastruture.Repository.Api
                 create_date = apiUser.create_date ?? DateTime.Now,
                 active = apiUser.active,
                 photo = apiUser.photo,
-                photo_type = apiUser.photo_type,
-                approve = apiUser.approve,
-                Manager = apiUser.Manager,
+                photo_type = apiUser.photo_type
             };
 
             return user;

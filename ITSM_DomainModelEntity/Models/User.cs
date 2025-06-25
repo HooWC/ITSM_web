@@ -65,16 +65,10 @@ namespace ITSM_DomainModelEntity.Models
 
         public string? photo_type { get; set; }
 
-        public bool approve { get; set; }
-
-        [ForeignKey("M_User")]
-        public int? Manager {  get; set; }
-
         public bool r_manager { get; set; }
 
         // Navigation properties
         public virtual Role? Role { get; set; }
         public virtual Department? Department { get; set; }
-        public virtual User? M_User { get; set; }
     }
 }

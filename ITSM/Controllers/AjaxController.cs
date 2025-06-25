@@ -33,6 +33,9 @@ namespace ITSM.Controllers
         private readonly Myversion_api _myversionApi;
         private readonly Subcategory_api _subcategoryApi;
         private readonly Incident_Category_api _incidentcategoryApi;
+        private readonly Req_Category_api _reqcategoryApi;
+        private readonly Req_Subcategory_api _reqsubcategoryApi;
+        private readonly Req_Function_api _reqfunctionApi;
 
         public AjaxController(IHttpContextAccessor httpContextAccessor)
         {
@@ -53,6 +56,9 @@ namespace ITSM.Controllers
             _myversionApi = new Myversion_api(httpContextAccessor);
             _subcategoryApi = new Subcategory_api(httpContextAccessor);
             _incidentcategoryApi = new Incident_Category_api(httpContextAccessor);
+            _reqcategoryApi = new Req_Category_api(httpContextAccessor);
+            _reqsubcategoryApi = new Req_Subcategory_api(httpContextAccessor);
+            _reqfunctionApi = new Req_Function_api(httpContextAccessor);
         }
 
         private bool IsUserLoggedIn(out User currentUser)
@@ -290,7 +296,7 @@ namespace ITSM.Controllers
                         return user;
                     })
                     .Where(user => user.department_id == departmentId && user.id != caller_id
-                    && user.approve && user.active)
+                     && user.active)
                     .ToList();
 
                 return Json(result);
@@ -1471,20 +1477,9 @@ namespace ITSM.Controllers
                                          join d in filterRoles on i.role_id equals d.id
                                          select i).ToList();
                         break;
-                    case "manager_name":
-                        var filtermanager = allUsers.Where(x => x.fullname.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
-                        filteredUsers = (from i in userList
-                                         join rm in filtermanager on i.Manager equals rm.id
-                                         select i).ToList();
-                        break;
                     case "r_manager":
                         filteredUsers = userList
                             .Where(t => (t.r_manager ? "Yes" : "No").Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                            .ToList();
-                        break;
-                    case "approve":
-                        filteredUsers = userList
-                            .Where(t => (t.approve ? "Yes" : "No").Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
                             .ToList();
                         break;
                     default:
@@ -1502,10 +1497,6 @@ namespace ITSM.Controllers
                 t.mobile_phone,
                 role = allRoles.FirstOrDefault(d => d.id == t.role_id)?.role ?? "",
                 r_manager = t.r_manager ? "Yes" : "No",
-                approve = t.approve ? "Yes" : "No",
-                m_user_fullname = t.Manager == null
-                    ? ""
-                    : allUsers.FirstOrDefault(x => x.id == t.Manager)?.fullname ?? "Null",
                 active = t.active == true ? "Active" : "Blocked"
             });
 
@@ -1550,10 +1541,6 @@ namespace ITSM.Controllers
                 t.mobile_phone,
                 role = allRoles.FirstOrDefault(d => d.id == t.role_id)?.role ?? "",
                 r_manager = t.r_manager ? "Yes" : "No",
-                approve = t.approve ? "Yes" : "No",
-                m_user_fullname = t.Manager == null
-                    ? ""
-                    : allUsers.FirstOrDefault(x => x.id == t.Manager)?.fullname ?? "Null",
                 active = t.active == true ? "Active" : "Blocked"
             });
 
@@ -1589,10 +1576,6 @@ namespace ITSM.Controllers
                 t.mobile_phone,
                 role = allRoles.FirstOrDefault(d => d.id == t.role_id)?.role ?? "",
                 r_manager = t.r_manager ? "Yes" : "No",
-                approve = t.approve ? "Yes" : "No",
-                m_user_fullname = t.Manager == null
-                    ? ""
-                    : allUsers.FirstOrDefault(x => x.id == t.Manager)?.fullname ?? "Null",
                 active = t.active == true ? "Active" : "Blocked"
             });
 
@@ -1640,10 +1623,6 @@ namespace ITSM.Controllers
                 t.mobile_phone,
                 role = allRoles.FirstOrDefault(d => d.id == t.role_id)?.role ?? "",
                 r_manager = t.r_manager ? "Yes" : "No",
-                approve = t.approve ? "Yes" : "No",
-                m_user_fullname = t.Manager == null
-                    ? ""
-                    : allUsers.FirstOrDefault(x => x.id == t.Manager)?.fullname ?? "Null",
                 active = t.active == true ? "Active" : "Blocked"
             });
 
@@ -1691,64 +1670,7 @@ namespace ITSM.Controllers
                 t.mobile_phone,
                 role = allRoles.FirstOrDefault(d => d.id == t.role_id)?.role ?? "",
                 r_manager = t.r_manager ? "Yes" : "No",
-                approve = t.approve ? "Yes" : "No",
-                m_user_fullname = t.Manager == null
-                    ? ""
-                    : allUsers.FirstOrDefault(x => x.id == t.Manager)?.fullname ?? "Null",
                 active = t.active == true ? "Active" : "Blocked"
-            });
-
-            return Json(result);
-        }
-
-        /// <summary>
-        /// User/Approve User
-        [HttpPost]
-        public async Task<IActionResult> ApproveUsers([FromBody] List<int> ids)
-        {
-            if (ids == null || !ids.Any())
-                return Json(new { success = false, message = "No items selected for active" });
-
-            if (!IsUserLoggedIn(out var currentUser))
-                return Json(new { success = false, message = "Not logged in" });
-
-            var allUsers = await _userApi.GetAllUser_API();
-
-            foreach (var id in ids)
-            {
-                var userApprove = allUsers.FirstOrDefault(t => t.id == id);
-                var userManager = allUsers.FirstOrDefault(t => t.department_id == userApprove.department_id && t.r_manager == true);
-
-                if (userApprove != null)
-                {
-                    // Approve User
-                    userApprove.approve = true;
-                    userApprove.Manager = userManager.id;
-                    await _userApi.UpdateUser_API(userApprove);
-                }
-            }
-
-            var userList = allUsers
-                .Where(
-                    x => x.department_id == currentUser.department_id &&
-                         x.approve == false &&
-                         x.r_manager == false &&
-                         x.id != currentUser.id
-                ).OrderByDescending(x => x.id).ToList();
-
-            var allDepartments = await _departmentApi.GetAllDepartment_API();
-            var allRoles = await _roleApi.GetAllRole_API();
-
-            List<User> ReNewUsers = userList;
-
-            var result = ReNewUsers.Select(t => new {
-                t.id,
-                t.emp_id,
-                t.fullname,
-                t.gender,
-                departmentName = allDepartments.FirstOrDefault(d => d.id == t.department_id)?.name ?? "",
-                t.mobile_phone,
-                approve = t.approve ? "Yes" : "No"
             });
 
             return Json(result);
@@ -2132,7 +2054,7 @@ namespace ITSM.Controllers
             try
             {
                 var reqData = await _reqApi.FindByIDRequest_API(req_id);
-                var productData = await _productApi.FindByIDProduct_API(reqData.pro_id);
+                var productData = await _productApi.FindByIDProduct_API(reqData.pro_id != null ? (int)reqData.pro_id : 0);
 
                 var allRole = await _roleApi.GetAllRole_API();
                 currentUser.Role = allRole.FirstOrDefault(x => x.id == currentUser.role_id);
@@ -2143,13 +2065,16 @@ namespace ITSM.Controllers
                 reqData.state = "Rejected";
                 reqData.updated_by = currentUser.id;
 
-                var pro_count = productData.quantity + reqData.quantity;
-                if (pro_count > 0)
+                if(productData != null)
                 {
-                    productData.active = true;
-                    productData.quantity = pro_count;
+                    int pro_count = productData.quantity + (reqData.quantity ?? 0);
+                    if (pro_count > 0)
+                    {
+                        productData.active = true;
+                        productData.quantity = pro_count;
 
-                    await _productApi.UpdateProduct_API(productData);
+                        await _productApi.UpdateProduct_API(productData);
+                    }
                 }
 
                 bool result = await _reqApi.UpdateRequest_API(reqData);
@@ -2176,7 +2101,7 @@ namespace ITSM.Controllers
             try
             {
                 var reqData = await _reqApi.FindByIDRequest_API(req_id);
-                var productData = await _productApi.FindByIDProduct_API(reqData.pro_id);
+                var productData = await _productApi.FindByIDProduct_API(reqData.pro_id != null ? (int)reqData.pro_id : 0);
 
                 var allRole = await _roleApi.GetAllRole_API();
                 currentUser.Role = allRole.FirstOrDefault(x => x.id == currentUser.role_id);
@@ -2187,15 +2112,18 @@ namespace ITSM.Controllers
                 reqData.state = "Pending";
                 reqData.updated_by = currentUser.id;
 
-                var pro_count = productData.quantity - reqData.quantity;
-                if (pro_count < 0)
-                    return Json(new { success = false, message = "Not enough product" });
-                else
+                if(productData != null)
                 {
-                    if (pro_count <= 0)
-                        productData.active = false;
-                    productData.quantity = pro_count;
-                    await _productApi.UpdateProduct_API(productData);
+                    var pro_count = productData.quantity - reqData.quantity;
+                    if (pro_count < 0)
+                        return Json(new { success = false, message = "Not enough product" });
+                    else
+                    {
+                        if (pro_count <= 0)
+                            productData.active = false;
+                        productData.quantity = (pro_count ?? 0);
+                        await _productApi.UpdateProduct_API(productData);
+                    }
                 }
 
                 bool result = await _reqApi.UpdateRequest_API(reqData);
@@ -2259,6 +2187,42 @@ namespace ITSM.Controllers
             catch (Exception ex)
             {
                 return Json(new { success = false, message = $"Error: {ex.Message}" });
+            }
+        }
+
+        public async Task<IActionResult> GetSubcategoriesByCategory(int categoryId)
+        {
+            try
+            {
+                var allSubcategories = await _reqsubcategoryApi.GetAllReq_Subcategory_API();
+                var filteredSubcategories = allSubcategories
+                    .Where(s => s.req_category_id == categoryId)
+                    .OrderBy(s => s.name)
+                    .ToList();
+
+                return Json(new { success = true, data = filteredSubcategories });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        public async Task<IActionResult> GetFunctionsBySubcategory(int subcategoryId)
+        {
+            try
+            {
+                var allFunctions = await _reqfunctionApi.GetAllReq_Function_API();
+                var filteredFunctions = allFunctions
+                    .Where(f => f.req_subcategory_id == subcategoryId)
+                    .OrderBy(f => f.name)
+                    .ToList();
+
+                return Json(new { success = true, data = filteredFunctions });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
             }
         }
 

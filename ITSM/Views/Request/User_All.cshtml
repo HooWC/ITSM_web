@@ -22,7 +22,7 @@
         width: 16%;
     }
 
-    .inc-tab-incidents-table th.r_quantity {
+    .inc-tab-incidents-table th.r_type {
         width: 11%;
     }
 
@@ -49,7 +49,6 @@
                     <a href="#" class="inc-tab-dropdown-item phone_request_hide_design" data-filter="user">User</a>
                     <a href="#" class="inc-tab-dropdown-item phone_request_hide_design" data-filter="assignment_group">Assignment Group</a>
                     <a href="#" class="inc-tab-dropdown-item phone_request_hide_design" data-filter="assigned_to">Assigned to</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="quantity">Quantity</a>
                     <a href="#" class="inc-tab-dropdown-item phone_request_hide_design" data-filter="create_date">Create Date</a>
                 </div>
             </div>
@@ -103,7 +102,7 @@
                     <th class="r_state">State</th>
                     <th class="r_assignment_group phone_request_hide_design">Assignment Group</th>
                     <th class="r_assigned_to phone_request_hide_design">Assigned to</th>
-                    <th class="r_quantity">Quantity</th>
+                    <th class="r_type">Type</th>
                     <th class="r_create_date phone_request_hide_design">Create Date</th>
                 </tr>
             </thead>
@@ -116,11 +115,25 @@
                         <td class="inc-tab-incident-number" data-label="Number">
                             <a href="~/Request/Req_Info?id=@i.id&role=User">@(i.req_id)</a>
                         </td>
-                        <td data-label="Full_Name" class="phone_request_hide_design">@(i.Sender?.fullname)</td>
+                        <td data-label="Full_Name" class="phone_request_hide_design">@(i.Sender?.fullname != null ? i.Sender?.fullname : "-")</td>
                         <td data-label="State">@(i.state)</td>
                         <td data-label="AssignmentGroup" class="phone_request_hide_design">@(i.AssignmentGroup?.name)</td>
-                        <td data-label="AssignedTo" class="phone_request_hide_design">@(i.AssignedTo?.fullname)</td>
-                        <td data-label="Quantity">@(i.quantity)</td>
+                        <td data-label="AssignedTo" class="phone_request_hide_design">@(i.AssignedTo?.fullname != null ? i.AssignedTo?.fullname : "-")</td>
+                        @if (i.req_type == false)
+                        {
+                            <td data-label="Quantity">Hardware</td>
+                        }
+                        else
+                        {
+                            if (i.erp_version?.ToLower() == "erp 8")
+                            {
+                                <td data-label="Quantity">ERP Account</td>
+                            }
+                            else
+                            {
+                                <td data-label="Quantity">ERP</td>
+                            }
+                        }
                         <td data-label="Create_Date" class="phone_request_hide_design">@(i.create_date.ToString("yyyy-MM-dd HH:mm:ss"))</td>
                     </tr>
                 }

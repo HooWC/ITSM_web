@@ -9,6 +9,7 @@
   <ItemGroup>
     <None Remove="Controllers\UserController.cs~RF152a5199.TMP" />
     <None Remove="Controllers\UserService.cs~RFfbae502.TMP" />
+    <None Remove="Views\Shared\5ifcu0yc.vtz~" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,0 +1,338 @@
+﻿@using ITSM_DomainModelEntity.ViewModels
+@model AllModelVM
+@{
+    ViewData["Title"] = "Application_Account_form";
+    Layout = "_Layout";
+}
+
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: 'Segoe UI', Arial, sans-serif;
+        background-color: var(--background-color);
+        color: var(--text-color);
+        line-height: 1.5;
+        margin: 0;
+        min-height: 100vh;
+    }
+
+    #modalImage {
+        max-width: 100%;
+        max-height: 90vh;
+        object-fit: contain;
+        margin: auto;
+        display: block;
+    }
+
+    .inc-file-cre-form-padding {
+        padding: 4px 0px 0px 5px;
+    }
+</style>
+
+<div class="inc-cre-container">
+    <header class="inc-cre-header">
+        <div class="inc-cre-header-left">
+            <button class="inc-cre-menu-button">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                     stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="12" y1="18" x2="12" y2="12"></line>
+                    <line x1="9" y1="15" x2="15" y2="15"></line>
+                </svg>
+            </button>
+            <div class="inc-cre-title-group">
+                <div class="inc-cre-title">ERP Account Form</div>
+                <div class="inc-cre-subtitle">New record</div>
+            </div>
+        </div>
+        <div class="inc-cre-header-right">
+            <button class="inc-cre-btn inc-cre-btn-icon" onclick="location.href='/IncidentManagement/User_All'">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="4" y1="6" x2="20" y2="6"></line>
+                    <line x1="4" y1="12" x2="20" y2="12"></line>
+                    <line x1="4" y1="18" x2="20" y2="18"></line>
+                </svg>
+            </button>
+            <button class="inc-cre-btn inc-cre-btn-icon" onclick="window.open('/Info/Form_Info', '_blank')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+            </button>
+            <button class="inc-cre-btn inc-cre-btn-submit" onclick="document.getElementById('incidentForm').submit();">Submit</button>
+        </div>
+    </header>
+
+    <main class="inc-cre-form-wrapper">
+
+        @if (!string.IsNullOrEmpty(ViewBag.Error as string))
+        {
+            <div id="error-notification" class="error-notification">
+                <div class="error-notification-content">
+                    <div class="error-notification-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                    </div>
+                    <div class="error-notification-text">
+                        <div class="error-notification-title">Submission failed</div>
+                        <div class="error-notification-message" id="error-notification-message">@ViewBag.Error</div>
+                    </div>
+                </div>
+                <button type="button" class="error-notification-close" id="error-notification-close">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+        }
+
+
+        <form id="incidentForm" class="inc-cre-incident-form" action="~/Request/Application_form" method="post" enctype="multipart/form-data">
+            <input type="text" name="version_type" id="version_type" class="inc-cre-form-control" value="ERP 8" style="display:none;" readonly>
+            <div class="inc-cre-form-grid">
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="number" class="inc-cre-form-label">Number</label>
+                        <input type="text" id="number" class="inc-cre-form-control" value="REQ-TBD" readonly>
+                    </div>
+                </div>
+
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="state" class="inc-cre-form-label">
+                            State
+                        </label>
+                        <input type="text" id="state" name="state" autocomplete="off" class="inc-cre-form-control" readonly value="Pending" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="inc-cre-form-grid">
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="erp_user_account" class="inc-cre-form-label">
+                            ERP Account
+                        </label>
+                        <input type="text" id="erp_user_account" name="erp_user_account" autocomplete="off" class="inc-cre-form-control"/>
+                    </div>
+                </div>
+
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="erp_report" class="inc-cre-form-label">
+                            New Report
+                        </label>
+                        <select id="erp_report" name="erp_report" class="inc-cre-form-control" required>
+                            <option value="false">No</option>
+                            <option value="true">Yes</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="inc-cre-form-grid">
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="erp_category" class="inc-cre-form-label">
+                            Category
+                        </label>
+                        <select id="erp_category" name="erp_category" class="inc-cre-form-control" required>
+                            @foreach (var category in Model.reqCategoryList)
+                            {
+                                <option value="@category.id">@category.name</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="erp_subcategory" class="inc-cre-form-label">
+                            Subcategory
+                        </label>
+                        <select id="erp_subcategory" name="erp_subcategory" class="inc-cre-form-control" required>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="inc-cre-form-grid">
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="erp_function" class="inc-cre-form-label">
+                            Subcategory Function
+                        </label>
+                        <select id="erp_function" name="erp_function" class="inc-cre-form-control" required>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="inc-cre-form-column">
+                    <div class="inc-cre-form-group">
+                        <label for="erp_module" class="inc-cre-form-label">
+                            Module ID
+                        </label>
+                        <input type="text" id="erp_module" name="erp_module" autocomplete="off" class="inc-cre-form-control" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="inc-cre-form-group inc-cre-full-width">
+                <div class="inc-cre-form-group">
+                    <label for="file" class="inc-cre-form-label">
+                        Pictures (Maximum size per file: 50MB)
+                        <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/Photo_Info', '_blank')">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                            </svg>
+                        </button>
+                    </label>
+                    <input type="file" name="files" id="file" multiple class="inc-cre-form-control inc-file-cre-form-padding">
+                </div>
+            </div>
+
+            <div class="inc-cre-form-group inc-cre-full-width">
+                <label for="description" class="inc-cre-form-label inc-cre-required">Description</label>
+                <textarea id="description" autocomplete="off" name="description" class="inc-cre-form-control inc-cre-description-textarea" rows="5"></textarea>
+            </div>
+        </form>
+    </main>
+
+</div>
+
+<div id="inc-cre-modal" class="inc-cre-modal">
+    <div class="inc-cre-modal-content">
+        <div class="inc-cre-modal-header">
+            <h3 id="inc-cre-modal-title">Select</h3>
+            <button type="button" class="inc-cre-modal-close">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+        <div class="inc-cre-modal-body">
+            <div class="inc-cre-search-wrapper">
+                <input type="text" id="inc-cre-search-input" class="inc-cre-form-control" placeholder="Search...">
+                <button type="button" class="inc-cre-search-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="inc-cre-table-wrapper">
+                <table class="inc-cre-modal-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Desc</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inc-cre-modal-table-body">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+    $(function () {
+        var $target = $('#Requests_menu');
+        if (!$target.hasClass('active') || !$target.hasClass('open')) {
+            $('.menu-item').removeClass('active open');
+            $target.addClass('active open');
+        }
+
+        $('#Requests_child_application').addClass("active");
+
+        $('#erp_subcategory').prop('disabled', true);
+        $('#erp_function').prop('disabled', true);
+
+        $('#erp_category').change(function() {
+            var categoryId = $(this).val();
+            
+            $('#erp_subcategory').empty().prop('disabled', true);
+            $('#erp_function').empty().prop('disabled', true);
+            
+            if (categoryId) {
+                $.ajax({
+                    url:  window.AppRoot + 'Ajax/GetSubcategoriesByCategory',
+                    type: 'GET',
+                    data: { categoryId: categoryId },
+                    success: function(response) {
+                        if (response.success) {
+                            var subcategories = response.data;
+                            if (subcategories && subcategories.length > 0) {
+                                $('#erp_subcategory').prop('disabled', false);
+                                
+                                subcategories.forEach(function(item) {
+                                    $('#erp_subcategory').append(
+                                        $('<option></option>').val(item.id).text(item.name)
+                                    );
+                                });
+                                
+                                $('#erp_subcategory').trigger('change');
+                            }
+                        }
+                    },
+                    error: function() {
+                        console.error('Failed to fetch subcategories');
+                    }
+                });
+            }
+        });
+
+        $('#erp_subcategory').change(function() {
+            var subcategoryId = $(this).val();
+            
+            $('#erp_function').empty().prop('disabled', true);
+            
+            if (subcategoryId) {
+                $.ajax({
+                    url:  window.AppRoot + 'Ajax/GetFunctionsBySubcategory',
+                    type: 'GET',
+                    data: { subcategoryId: subcategoryId },
+                    success: function(response) {
+                        if (response.success) {
+                            var functions = response.data;
+                            if (functions && functions.length > 0) {
+                                $('#erp_function').prop('disabled', false);
+                                
+                                functions.forEach(function(item) {
+                                    $('#erp_function').append(
+                                        $('<option></option>').val(item.id).text(item.name)
+                                    );
+                                });
+                            }
+                        }
+                    },
+                    error: function() {
+                        console.error('Failed to fetch functions');
+                    }
+                });
+            }
+        });
+
+        if ($('#erp_category').val()) {
+            $('#erp_category').trigger('change');
+        }
+    });
+</script>
+

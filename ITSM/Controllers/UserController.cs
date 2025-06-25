@@ -59,10 +59,6 @@ namespace ITSM.Controllers
             {
                 i.Department = allDep.FirstOrDefault(x => x.id == i.department_id);
                 i.Role = allRole.FirstOrDefault(x => x.id == i.role_id);
-                if(i.Manager != null)
-                    i.M_User = allUser.FirstOrDefault(x => x.id == i.Manager);
-                else
-                    i.M_User = null;
             }
 
             var model = new AllModelVM()
@@ -188,8 +184,6 @@ namespace ITSM.Controllers
                     mobile_phone = user.mobile_phone,
                     password = user.password,
                     race = user.race,
-                    approve = false,
-                    Manager = null,
                     r_manager = user.r_manager,
                     role_id = user.role_id,
                 };
@@ -198,36 +192,10 @@ namespace ITSM.Controllers
                                     x.department_id == user.department_id &&
                                     x.r_manager == true);
 
-                var otherDepartment_User = allUser
-                    .Where(x => x.department_id == user.department_id && x.approve == true)
-                    .ToList();
-
-                if (user.r_manager)
+                if (managerUsed)
                 {
-                    if (managerUsed)
-                    {
-                        ViewBag.Error = "This department manager role already using.";
-                        return View(model);
-                    }
-
-                    foreach (var u in otherDepartment_User)
-                    {
-                        u.Manager = currentUser.id;
-                        await _userApi.UpdateUser_API(u);
-                    }
-
-                    newuser.approve = true;
-                }
-                else
-                {
-                    if (!managerUsed)
-                    {
-                        foreach (var u in otherDepartment_User)
-                        {
-                            u.Manager = null;
-                            await _userApi.UpdateUser_API(u);
-                        }
-                    }
+                    ViewBag.Error = "This department manager role already using.";
+                    return View(model);
                 }
 
                 if (fileBytes != null)
@@ -267,21 +235,14 @@ namespace ITSM.Controllers
 
             var departmentTask = _departmentApi.GetAllDepartment_API();
             var roleTask = _roleApi.GetAllRole_API();
-            var userTask = _userApi.GetAllUser_API();
-            await Task.WhenAll(departmentTask, roleTask, userTask);
+            await Task.WhenAll(departmentTask, roleTask);
 
             var allDepartment = departmentTask.Result;
             var allRole = roleTask.Result;
-            var allUser = userTask.Result;
 
             var info_user = await _userApi.FindByIDUser_API(id);
             info_user.Department = allDepartment.Where(x => x.id == currentUser.department_id).FirstOrDefault();
             info_user.Role = allRole.Where(x => x.id == currentUser.role_id).FirstOrDefault();
-
-            if (info_user.Manager != null)
-                info_user.M_User = allUser.FirstOrDefault(x => x.id == info_user.Manager);
-            else
-                info_user.M_User = null;
 
             var model = new AllModelVM()
             {
@@ -409,120 +370,13 @@ namespace ITSM.Controllers
                                     x.r_manager == true);
 
                 var otherDepartment_User = allUser
-                    .Where(x => x.department_id == user.department_id && x.approve == true && x.id != currentUser.id)
+                    .Where(x => x.department_id == user.department_id && x.id != currentUser.id)
                     .ToList();
 
-                if (user.r_manager)
+                if (managerUsed)
                 {
-                    if (info_user.department_id != user.department_id)
-                    {
-                        var check = allUser.Any(x =>
-                                    x.department_id == info_user.department_id &&
-                                    x.r_manager == true &&
-                                    x.id != currentUser.id);
-
-                        if (!check)
-                        {
-                            var checkBack = allUser
-                                    .Where(x => x.department_id == info_user.department_id && x.approve == true)
-                                    .ToList();
-
-                            foreach (var u in checkBack)
-                            {
-                                u.Manager = null;
-                                await _userApi.UpdateUser_API(u);
-                            }
-                        }
-                    }
-
-                    if (managerUsed)
-                    {
-                        ViewBag.Error = "This department manager role already using.";
-                        return View(model);
-                    }
-
-                    foreach (var u in otherDepartment_User)
-                    {
-                        u.Manager = currentUser.id;
-                        await _userApi.UpdateUser_API(u);
-                    }
-
-                    info_user.approve = true;
-                }
-                else
-                {
-                    var userManager = allUser.FirstOrDefault(t => t.department_id == user.department_id && t.r_manager == true && t.id != user.id);
-                    var Old_userManager = allUser.FirstOrDefault(t => t.department_id == info_user.department_id && t.r_manager == true && t.id != user.id);
-
-                    var sameDepartment_User = allUser
-                                    .Where(x => x.department_id == user.department_id && x.approve == true)
-                                    .ToList();
-
-                    var Old_sameDepartment_User = allUser
-                                    .Where(x => x.department_id == info_user.department_id && x.approve == true)
-                                    .ToList();
-
-                    if (Old_userManager != null)
-                    {
-                        foreach (var u in Old_sameDepartment_User)
-                        {
-                            u.Manager = Old_userManager.id;
-                            await _userApi.UpdateUser_API(u);
-                        }
-                    }
-                    else
-                    {
-                        foreach (var u in Old_sameDepartment_User)
-                        {
-                            u.Manager = null;
-                            await _userApi.UpdateUser_API(u);
-                        }
-                    }
-
-                    if (info_user.department_id != user.department_id)
-                    {
-                        // to department user
-                        if (userManager != null)
-                        {
-                            foreach (var u in sameDepartment_User)
-                            {
-                                u.Manager = userManager.id;
-                                await _userApi.UpdateUser_API(u);
-                            }
-                        }
-                        else
-                        {
-                            foreach (var u in sameDepartment_User)
-                            {
-                                u.Manager = null;
-                                await _userApi.UpdateUser_API(u);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        var check = allUser.Any(x =>
-                                    x.department_id == user.department_id &&
-                                    x.r_manager == true &&
-                                    x.id != currentUser.id);
-
-                        if (!check)
-                        {
-                            foreach (var u in sameDepartment_User)
-                            {
-                                u.Manager = null;
-                                await _userApi.UpdateUser_API(u);
-                            }
-                        }
-                        else
-                        {
-                            foreach (var u in otherDepartment_User)
-                            {
-                                u.Manager = userManager.id;
-                                await _userApi.UpdateUser_API(u);
-                            }
-                        }
-                    }
+                    ViewBag.Error = "This department manager role already using.";
+                    return View(model);
                 }
 
                 info_user.emp_id = user.emp_id;
@@ -593,46 +447,6 @@ namespace ITSM.Controllers
             }
         }
 
-        public async Task<IActionResult> User_Approve_List()
-        {
-            var currentUser = await _userService.GetCurrentUserAsync();
-
-            var userTask = _userApi.GetAllUser_API();
-            var depTask = _depApi.GetAllDepartment_API();
-            var roleTask = _roleApi.GetAllRole_API();
-            await Task.WhenAll(userTask, depTask, roleTask);
-
-            var allUser = userTask.Result;
-            var allDep = depTask.Result;
-            var allRole = roleTask.Result;
-
-            var myApproveUser = allUser
-                .Where(
-                    x => x.department_id == currentUser.department_id &&
-                         x.approve == false &&
-                         x.r_manager == false &&
-                         x.id != currentUser.id
-                ).OrderByDescending(x => x.id).ToList();
-
-            foreach (var i in myApproveUser)
-            {
-                i.Department = allDep.FirstOrDefault(x => x.id == i.department_id);
-                i.Role = allRole.FirstOrDefault(x => x.id == i.role_id);
-                if (i.Manager != null)
-                    i.M_User = allUser.FirstOrDefault(x => x.id == i.Manager);
-                else
-                    i.M_User = null;
-            }
-
-            var model = new AllModelVM()
-            {
-                user = currentUser,
-                UserList = myApproveUser
-            };
-
-            return View(model);
-        }
-
         public async Task<AllModelVM> get_User_Info(int id)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
@@ -649,11 +463,6 @@ namespace ITSM.Controllers
             var info_user = await _userApi.FindByIDUser_API(id);
             info_user.Department = allDepartment.Where(x => x.id == currentUser.department_id).FirstOrDefault();
             info_user.Role = allRole.Where(x => x.id == currentUser.role_id).FirstOrDefault();
-
-            if (info_user.Manager != null)
-                info_user.M_User = allUser.FirstOrDefault(x => x.id == info_user.Manager);
-            else
-                info_user.M_User = null;
 
             var model = new AllModelVM()
             {

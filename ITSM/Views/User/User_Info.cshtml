@@ -301,41 +301,18 @@
             <div class="inc-cre-form-grid">
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
-                        <label for="m_user" class="inc-cre-form-label">Manager Name</label>
-                        <input type="text" minlength="6" autocomplete="off" value="@((Model.info_user.M_User != null && Model.info_user.M_User.fullname != null) ? Model.info_user.M_User.fullname : "")" id="m_user" class="inc-cre-form-control" readonly>
-                    </div>
-                </div>
-
-                <div class="inc-cre-form-column">
-                    <div class="inc-cre-form-group">
                         <label for="r_manager" class="inc-cre-form-label">Manager</label>
                         <select id="r_manager" name="r_manager" class="inc-cre-form-control">
                             @{
                                 var selectManagerRole = (Model.info_user.r_manager != null) ? Model.info_user.r_manager : false;
                             }
-                            @if (!Model.info_user.approve)
-                            {
-                                <option value="false" selected="@(selectManagerRole == false ? "selected" : null)">No</option>
-                            }
-                            else
-                            {
-                                <option value="true" selected="@(selectManagerRole ? "selected" : null)">Yes</option>
-                                <option value="false" selected="@(selectManagerRole == false ? "selected" : null)">No</option>
-                            }
+                            <option value="true" selected="@(selectManagerRole ? "selected" : null)">Yes</option>
+                            <option value="false" selected="@(selectManagerRole == false ? "selected" : null)">No</option>
                         </select>
                     </div>
                 </div>
-            </div>
 
-            <div class="inc-cre-form-grid">
-                <div class="inc-cre-form-column">
-                    <div class="inc-cre-form-group">
-                        <label for="approve" class="inc-cre-form-label">Approve</label>
-                        <input type="text" name="approve" minlength="6" autocomplete="off" id="approve" class="inc-cre-form-control" value="@(!Model.info_user.approve ? "No" : "Yes")" readonly>
-                    </div>
-                </div>
-
-                @if (Model.info_user.id != Model.user?.id && Model.info_user.approve != false)
+                @if (Model.info_user.id != Model.user?.id)
                 {
                     <div class="inc-cre-form-column">
                         <div class="inc-cre-form-group">
@@ -360,26 +337,9 @@
                         </div>
                     </div>
                 }
-                
             </div>
 
             <div class="inc-cre-form-grid">
-                @* <div class="inc-cre-form-column">
-                    <div class="inc-cre-form-group">
-                        <label for="password" class="inc-cre-form-label">
-                            Old Password
-                            <button type="button" class="inc-cre-btn-help" onclick="window.open('/Info/User_Password_Info', '_blank')">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                                </svg>
-                            </button>
-                        </label>
-                        <input type="password" name="password" id="password" class="inc-cre-form-control" autocomplete="off" required>
-                    </div>
-                </div> *@
-
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="new_password" class="inc-cre-form-label">

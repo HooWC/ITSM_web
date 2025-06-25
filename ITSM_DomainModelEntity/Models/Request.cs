@@ -18,12 +18,11 @@ namespace ITSM_DomainModelEntity.Models
         public string? req_id { get; set; }
 
         [ForeignKey("Product")]
-        public int pro_id { get; set; }
+        public int? pro_id { get; set; }
 
         [ForeignKey("Sender")]
         public int sender { get; set; }
 
-        [Required]
         [StringLength(50)]
         public string? state { get; set; }
 
@@ -32,14 +31,14 @@ namespace ITSM_DomainModelEntity.Models
         public DateTime create_date { get; set; }
 
         [ForeignKey("AssignmentGroup")]
-        public int assignment_group { get; set; }
+        public int? assignment_group { get; set; }
 
         public DateTime update_date { get; set; }
 
         [ForeignKey("UpdatedBy")]
         public int? updated_by { get; set; }
 
-        public int quantity { get; set; }
+        public int? quantity { get; set; }
 
         [ForeignKey("AssignedTo")]
         public int? assigned_to {  get; set; }
@@ -67,5 +66,8 @@ namespace ITSM_DomainModelEntity.Models
         public virtual Department? AssignmentGroup { get; set; }
         public virtual User? UpdatedBy { get; set; }
         public virtual User? AssignedTo { get; set; }
+        public virtual Req_Category? ERPCategory { get; set; }
+        public virtual Req_Subcategory? ERPSubcategory { get; set; }
+        public virtual Req_Function? ERPFunction { get; set; }
     }
 }

@@ -96,8 +96,8 @@ namespace ITSM_DomainModelEntity.ViewModels
         public int AllFeedback { get; set; }
         public string? DepartmentName { get; set; }
         public string? RoleName { get; set; }
-        public List<User> Team { get; set; }
-        public List<Incident> IncidentsHistory { get; set; }
+        public List<User>? Team { get; set; }
+        public List<Incident>? IncidentsHistory { get; set; }
 
         //== role back
         public string? roleBack { get; set; }
@@ -132,37 +132,39 @@ namespace ITSM_DomainModelEntity.ViewModels
         public double yearly_req_other_percent { get; set; }     
 
         //== Incidents yearly statistics attributes
-        public List<YearlyStats> YearlyIncidentStats { get; set; }
+        public List<YearlyStats>? YearlyIncidentStats { get; set; }
 
         //== Todo monthly statistics
-        public List<MonthlyTodoStats> MonthlyTodoStats { get; set; }
+        public List<MonthlyTodoStats>? MonthlyTodoStats { get; set; }
 
         //== Request monthly statistics
-        public List<MonthlyRequestStats> MonthlyRequestStats { get; set; }
+        public List<MonthlyRequestStats>? MonthlyRequestStats { get; set; }
 
         //== Incident Photos List
-        public List<IncidentPhotos> Incident_Photos_List { get; set; }
+        public List<IncidentPhotos>? Incident_Photos_List { get; set; }
 
         //== Subcategory List
-        public List<Subcategory> Subcategory_List { get; set; }
+        public List<Subcategory>? Subcategory_List { get; set; }
 
         public Subcategory? Sub_Category {  get; set; }
 
         //== Incident Category List
-        public List<Incidentcategory> Incident_Category_List { get; set; }
+        public List<Incidentcategory>? Incident_Category_List { get; set; }
 
         public Incidentcategory? Incident_Category { get; set; }
 
         public int? noteMessageCount { get; set; }
 
-        public List<IncMessage> incMessages { get; set; }
+        public List<IncMessage>? incMessages { get; set; }
 
-        public Req_Category req_category { get; set; }
-        public List<Req_Category> reqCategoryList {  get; set; }
-        public Req_Subcategory req_subcategory { get; set; }
-        public List<Req_Subcategory> reqSubCategoryList {  get; set; }
-        public Req_Function req_function { get; set; }
-        public List<Req_Function> reqFunctionList {  get; set; }
+        public Req_Category? req_category { get; set; }
+        public List<Req_Category>? reqCategoryList {  get; set; }
+        public Req_Subcategory? req_subcategory { get; set; }
+        public List<Req_Subcategory>? reqSubCategoryList {  get; set; }
+        public Req_Function? req_function { get; set; }
+        public List<Req_Function>? reqFunctionList {  get; set; }
+
+        public List<RequestPhoto>? reqPhotoList { get; set; }
 
         public AllModelVM()
         {

@@ -63,6 +63,8 @@ namespace ITSM_Insfrastruture.Repository.Config
         public static readonly string ReqLink = $"{BaseUrl}/requests";
         // search by id & update && delete Request  (ID) (need token)
         public static readonly string ReqSUDLink = $"{BaseUrl}/requests/";
+
+        public static readonly string ReqIDLink = $"{BaseUrl}/requests/reqid/";
         // === For Request Part ===
 
         // ============================================================================

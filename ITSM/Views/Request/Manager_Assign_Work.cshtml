@@ -7,27 +7,27 @@
 
 <style>
     .inc-tab-incidents-table th.number-column {
-        width: 12%;
+    width: 12%;
     }
 
     .inc-tab-incidents-table th.r_user {
-        width: 20%;
+    width: 20%;
     }
 
     .inc-tab-incidents-table th.r_state {
-        width: 15%;
+    width: 15%;
     }
 
     .inc-tab-incidents-table th.r_assignment_group {
-        width: 19%;
+    width: 19%;
     }
 
-    .inc-tab-incidents-table th.r_quantity {
-        width: 14%;
+    .inc-tab-incidents-table th.r_type {
+    width: 14%;
     }
 
     .inc-tab-incidents-table th.r_create_date {
-        width: 19%;
+    width: 19%;
     }
 </style>
 
@@ -44,7 +44,6 @@
                     <a href="#" class="inc-tab-dropdown-item" data-filter="number">Request ID</a>
                     <a href="#" class="inc-tab-dropdown-item phone_request_hide_design" data-filter="user">User</a>
                     <a href="#" class="inc-tab-dropdown-item phone_request_hide_design" data-filter="assignment_group">Assignment Group</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="quantity">Quantity</a>
                     <a href="#" class="inc-tab-dropdown-item phone_request_hide_design" data-filter="create_date">Create Date</a>
                 </div>
             </div>
@@ -64,7 +63,7 @@
                 </svg>
             </button>
             @* <button class="inc-tab-new-button item-delete-btn show-error-box-btn" id="deleteButton" disabled>Delete</button> *@
-           @*  <button class="inc-tab-new-button" onclick="window.location.href='/Request/Service_Catalog';">New</button> *@
+            @*  <button class="inc-tab-new-button" onclick="window.location.href='/Request/Service_Catalog';">New</button> *@
 
         </div>
     </header>
@@ -85,7 +84,7 @@
                     <th class="r_user phone_request_hide_design">User</th>
                     <th class="r_state">State</th>
                     <th class="r_assignment_group phone_request_hide_design">Assignment Group</th>
-                    <th class="r_quantity">Quantity</th>
+                    <th class="r_type">Type</th>
                     <th class="r_create_date phone_request_hide_design">Create Date</th>
                 </tr>
             </thead>
@@ -101,7 +100,21 @@
                         <td data-label="Full_Name" class="phone_request_hide_design">@i.Sender.fullname</td>
                         <td data-label="State">@i.state</td>
                         <td data-label="AssignmentGroup" class="phone_request_hide_design">@i.AssignmentGroup.name</td>
-                        <td data-label="Quantity">@i.quantity</td>
+                        @if (i.req_type == false)
+                        {
+                            <td data-label="Quantity">Hardware</td>
+                        }
+                        else
+                        {
+                            if (i.erp_version?.ToLower() == "erp 8")
+                            {
+                                <td data-label="Quantity">ERP Account</td>
+                            }
+                            else
+                            {
+                                <td data-label="Quantity">ERP</td>
+                            }
+                        }
                         <td data-label="Create_Date" class="phone_request_hide_design">@i.create_date.ToString("yyyy-MM-dd HH:mm:ss")</td>
                     </tr>
                 }

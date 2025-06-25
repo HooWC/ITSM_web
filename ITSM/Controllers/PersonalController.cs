@@ -72,7 +72,7 @@ namespace ITSM.Controllers
             var incident_all_count = incident.Count;
 
             var allUser = userTask.Result;
-            var sameDepartment = allUser.Where(x => x.department_id == currentUser.department_id && x.active == true && x.approve == true).Take(9).ToList();
+            var sameDepartment = allUser.Where(x => x.department_id == currentUser.department_id && x.active == true).Take(9).ToList();
 
             var allReq = reqTask.Result;
             var req = allReq.Where(x => x.sender == currentUser.id).ToList();

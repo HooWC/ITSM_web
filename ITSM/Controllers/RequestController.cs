@@ -23,6 +23,10 @@ namespace ITSM.Controllers
         private readonly Category_api _categoryApi;
         private readonly Product_api _productApi;
         private readonly Department_api _departmentApi;
+        private readonly Req_Category_api _reqcategoryApi;
+        private readonly Req_Subcategory_api _reqsubcategoryApi;
+        private readonly Req_Function_api _reqfunctionApi;
+        private readonly RequestPhotos_api _reqphoneApi;
 
         public RequestController(IHttpContextAccessor httpContextAccessor, UserService userService)
         {
@@ -40,6 +44,10 @@ namespace ITSM.Controllers
             _categoryApi = new Category_api(httpContextAccessor);
             _productApi = new Product_api(httpContextAccessor);
             _departmentApi = new Department_api(httpContextAccessor);
+            _reqcategoryApi = new Req_Category_api(httpContextAccessor);
+            _reqsubcategoryApi = new Req_Subcategory_api(httpContextAccessor);
+            _reqfunctionApi = new Req_Function_api(httpContextAccessor);
+            _reqphoneApi = new RequestPhotos_api(httpContextAccessor);
         }
 
         public async Task<AllModelVM> get_req_data(string type)
@@ -192,7 +200,7 @@ namespace ITSM.Controllers
                 return View(model);
             }
 
-            info_pro.quantity = info_pro.quantity - req.quantity;
+            info_pro.quantity = info_pro.quantity - (req.quantity ?? 0);
             if (info_pro.quantity <= 0)
                 info_pro.active = false;
 
@@ -220,7 +228,8 @@ namespace ITSM.Controllers
                 description = req.description,
                 assignment_group = info_pro.responsible,
                 quantity = req.quantity,
-                updated_by = currentUser.id
+                updated_by = currentUser.id,
+                req_type = false,
             };
 
             bool result = await _reqApi.CreateRequest_API(new_req);
@@ -312,36 +321,45 @@ namespace ITSM.Controllers
                 return View(model);
             }
 
-            var info_pro = await _productApi.FindByIDProduct_API(req.pro_id);
+            bool result = false;
+            var info_pro = await _productApi.FindByIDProduct_API(req.pro_id != null ? (int)req.pro_id : 0);
 
-            int root = info_pro.quantity + Req.quantity;
-
-            if (req.quantity > root || req.quantity <= 0)
+            if(info_pro != null)
             {
-                ViewBag.Error = "Error Quantity";
+                int root = info_pro.quantity - (Req.quantity ?? 0);
+
+                if (req.quantity > root || req.quantity <= 0)
+                {
+                    ViewBag.Error = "Error Quantity";
+                    return View(model);
+                }
+
+                info_pro.quantity = root - (req.quantity ?? 0);
+                if (info_pro.quantity <= 0)
+                    info_pro.active = false;
+                else
+                    info_pro.active = true;
+
+                await _productApi.UpdateProduct_API(info_pro);
+
+                Req.description = req.description;
+                Req.state = req.state;
+                Req.updated_by = currentUser.id;
+                Req.quantity = req.quantity;
+
+                result = await _reqApi.UpdateRequest_API(Req);
+            }
+            else
+            {
+                ViewBag.Error = "Cannot Fint Product Information";
                 return View(model);
             }
 
-            info_pro.quantity = root - req.quantity;
-            if (info_pro.quantity <= 0)
-                info_pro.active = false;
-            else
-                info_pro.active = true;
-
-            await _productApi.UpdateProduct_API(info_pro);
-            
-            Req.description = req.description;
-            Req.state = req.state;
-            Req.updated_by = currentUser.id;
-            Req.quantity = req.quantity;
-
-            bool result = await _reqApi.UpdateRequest_API(Req);
-
             if (result)
             {
-                if(roleBack == "Admin")
+                if (roleBack == "Admin")
                     return RedirectToAction("All", "Request");
-                else if(roleBack == "Group")
+                else if (roleBack == "Group")
                     return RedirectToAction("Assigned_To_Us", "Request");
                 else
                     return RedirectToAction("User_All", "Request");
@@ -376,19 +394,46 @@ namespace ITSM.Controllers
             var allRequest = requestTask.Result;
 
             var req_info = await _reqApi.FindByIDRequest_API(id);
-            req_info.Product = allProduct.FirstOrDefault(x => x.id == req_info.pro_id);
             req_info.Sender = allUser.FirstOrDefault(x => x.id == req_info.sender);
             req_info.AssignmentGroup = allDepartment.FirstOrDefault(x => x.id == req_info.assignment_group);
             req_info.UpdatedBy = allUser.FirstOrDefault(x => x.id == req_info.updated_by);
             req_info.AssignedTo = allUser.FirstOrDefault(x => x.id == req_info.assigned_to);
 
-            var info_pro = await _productApi.FindByIDProduct_API(req_info.pro_id);
-            req_info.Product.ResponsibleDepartment = allDepartment.FirstOrDefault(x => x.id == info_pro.responsible);
+            var ReqPhotoDataList = new List<RequestPhoto>();   
+            if(req_info.req_type == true)
+            {
+                var reqcategoryTask = _reqcategoryApi.GetAllReq_Category_API();
+                var reqsubcategoryTask = _reqsubcategoryApi.GetAllReq_Subcategory_API();
+                var reqfunctionTask = _reqfunctionApi.GetAllReq_Function_API();
+                var reqphotoTask = _reqphoneApi.GetAllRequestPhoto_API();
+                await Task.WhenAll(reqcategoryTask, reqsubcategoryTask, reqfunctionTask, reqphotoTask);
+
+                var allReqCategory = reqcategoryTask.Result;
+                var allReqSubcategory = reqsubcategoryTask.Result;
+                var allReqFunction = reqfunctionTask.Result;
+                var allReqPhoto = reqphotoTask.Result;
+
+                req_info.ERPCategory = allReqCategory.FirstOrDefault(x => x.id == req_info.erp_category);
+                req_info.ERPSubcategory = allReqSubcategory.FirstOrDefault(x => x.id == req_info.erp_subcategory);
+                req_info.ERPFunction = allReqFunction.FirstOrDefault(x => x.id == req_info.erp_function);
+
+                ReqPhotoDataList = allReqPhoto.Where(x => x.request_id == req_info.id).ToList();
+
+                if (ReqPhotoDataList.Count == 0 || ReqPhotoDataList == null)
+                    ReqPhotoDataList = new List<RequestPhoto>();
+            }
+            else
+            {
+                var info_pro = await _productApi.FindByIDProduct_API(req_info.pro_id != null ? (int)req_info.pro_id : 0);
+                req_info.Product = allProduct.FirstOrDefault(x => x.id == req_info.pro_id);
+                req_info.Product.ResponsibleDepartment = allDepartment.FirstOrDefault(x => x.id == info_pro.responsible);
+            }
 
             var model = new AllModelVM()
             {
                 user = currentUser,
-                request = req_info
+                request = req_info,
+                reqPhotoList = ReqPhotoDataList.Count > 0 ? ReqPhotoDataList : null
             };
 
             return model;
@@ -446,23 +491,216 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Application()
         {
-            var model = await get_req_data("Assigned_To_Me");
+            var currentUser = await _userService.GetCurrentUserAsync();
+
+            var model = new AllModelVM()
+            {
+                user = currentUser
+            };
 
             return View(model);
         }
 
-        public async Task<IActionResult> Application_8form()
+        public async Task<AllModelVM> get_req_application_data(string type)
         {
-            var model = await get_req_data("Assigned_To_Me");
+            var currentUser = await _userService.GetCurrentUserAsync();
+
+            var reqcategoryTask = await _reqcategoryApi.GetAllReq_Category_API();
+
+            var ReqCategorys = new List<Req_Category>();
+            if (type == "Application_Account_form")
+                ReqCategorys = reqcategoryTask.Where(x => x.erp_version.ToLower() == "erp 8").ToList();
+            else if (type == "Application_ERP_form")
+                ReqCategorys = reqcategoryTask.Where(x => x.erp_version.ToLower() == "erp 9").ToList();
+
+            var model = new AllModelVM()
+            {
+                user = currentUser,
+                reqCategoryList = ReqCategorys,
+            };
+
+            return model;
+        }
+
+        public async Task<IActionResult> Application_Account_form()
+        {
+            var model = await get_req_application_data("Application_Account_form");
 
             return View(model);
         }
 
-        public async Task<IActionResult> Application_9form()
+        public async Task<IActionResult> Application_ERP_form()
         {
-            var model = await get_req_data("Assigned_To_Me");
+            var model = await get_req_application_data("Application_ERP_form");
 
             return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Application_form(List<IFormFile> files, Request req, string version_type)
+        {
+            var model = await get_req_application_data("Application_Account_form");
+
+            if (!string.IsNullOrEmpty(req.description))
+            {
+                var allRequest = await _reqApi.GetAllRequest_API();
+
+                List<byte[]> fileBytesList = new List<byte[]>();
+
+                if (files != null && files.Count > 0)
+                {
+                    foreach (var file in files)
+                    {
+                        if (file.Length > 50_000_000) // 50MB
+                        {
+                            ViewBag.Error = "One of the files exceeds the 50MB limit.";
+                            return View(model);
+                        }
+
+                        if (file.Length > 0)
+                        {
+                            using (var memoryStream = new MemoryStream())
+                            {
+                                await file.CopyToAsync(memoryStream);
+                                fileBytesList.Add(memoryStream.ToArray());
+                            }
+                        }
+                    }
+                }
+
+                string newId = "";
+                if (allRequest.Count > 0)
+                {
+                    var incidentLast = allRequest.Last();
+                    string r_id_up = incidentLast.req_id;
+                    string prefix = new string(r_id_up.TakeWhile(char.IsLetter).ToArray());
+                    string numberPart = new string(r_id_up.SkipWhile(char.IsLetter).ToArray());
+                    int number = int.Parse(numberPart);
+                    newId = prefix + (number + 1);
+                }
+                else
+                    newId = "REQ1";
+
+                var alldepartment = await _depApi.GetAllDepartment_API();
+
+                var new_rep = new Request()
+                {
+                    req_id = newId,
+                    description = req.description,
+                    erp_user_account = req.erp_user_account == null ? null : req.erp_user_account,
+                    state = "Pending",
+                    erp_report = req.erp_report,
+                    erp_category = req.erp_category,
+                    erp_subcategory = req.erp_subcategory,
+                    erp_function = req.erp_function == null ? null : req.erp_function,
+                    erp_module = req.erp_module,
+                    req_type = true,
+                    erp_version = version_type,
+                    sender = model.user.id,
+                    assignment_group = alldepartment.FirstOrDefault(x => x.name.ToLower() == "it")?.id
+                };
+
+                bool result = await _reqApi.CreateRequest_API(new_rep);
+
+                if (result)
+                {
+                    var createdIRequest = await _reqApi.FindByReqIDIncident_API(newId);
+
+                    if (createdIRequest != null && fileBytesList != null && fileBytesList.Count > 0)
+                    {
+                        foreach (var fileBytes in fileBytesList)
+                        {
+                            var reqPhone = new RequestPhoto
+                            {
+                                request_id = createdIRequest.id,
+                                photo = fileBytes,
+                                photo_type = GetMimeTypeFromFileSignature(fileBytes)
+                            };
+                            await _reqphoneApi.CreateRequestPhoto_API(reqPhone);
+                        }
+                    }
+
+                    return RedirectToAction("User_All", "Request");
+                }
+                else
+                {
+                    ViewBag.Error = "Create Request Error";
+                    return View(model);
+                }
+            }
+            else
+            {
+                ViewBag.Error = "Please fill in all required fields";
+                return View(model);
+            }
+        }
+
+        private string GetMimeTypeFromFileSignature(byte[] fileBytes)
+        {
+            if (fileBytes.Length < 4) return "application/octet-stream";
+
+            // PNG
+            if (fileBytes[0] == 0x89 && fileBytes[1] == 0x50 &&
+                fileBytes[2] == 0x4E && fileBytes[3] == 0x47)
+                return "image/png";
+
+            // JPEG/JPG
+            if (fileBytes[0] == 0xFF && fileBytes[1] == 0xD8 && fileBytes[2] == 0xFF)
+                return "image/jpeg";
+
+            // GIF
+            if (fileBytes[0] == 0x47 && fileBytes[1] == 0x49 && fileBytes[2] == 0x46)
+                return "image/gif";
+
+            // WebP
+            if (fileBytes.Length >= 12 &&
+                fileBytes[0] == 0x52 && fileBytes[1] == 0x49 &&
+                fileBytes[2] == 0x46 && fileBytes[3] == 0x46 &&
+                fileBytes[8] == 0x57 && fileBytes[9] == 0x45 &&
+                fileBytes[10] == 0x42 && fileBytes[11] == 0x50)
+                return "image/webp";
+
+            // BMP
+            if (fileBytes[0] == 0x42 && fileBytes[1] == 0x4D)
+                return "image/bmp";
+
+            // TIFF (little endian)
+            if (fileBytes[0] == 0x49 && fileBytes[1] == 0x49 &&
+                fileBytes[2] == 0x2A && fileBytes[3] == 0x00)
+                return "image/tiff";
+
+            // TIFF (big endian)
+            if (fileBytes[0] == 0x4D && fileBytes[1] == 0x4D &&
+                fileBytes[2] == 0x00 && fileBytes[3] == 0x2A)
+                return "image/tiff";
+
+            // ICO
+            if (fileBytes[0] == 0x00 && fileBytes[1] == 0x00 &&
+                fileBytes[2] == 0x01 && fileBytes[3] == 0x00)
+                return "image/x-icon";
+
+            // HEIF
+            if (fileBytes.Length >= 12 &&
+                ((fileBytes[4] == 0x66 && fileBytes[5] == 0x74 &&
+                  fileBytes[6] == 0x79 && fileBytes[7] == 0x70 &&
+                  fileBytes[8] == 0x68 && fileBytes[9] == 0x65 &&
+                  fileBytes[10] == 0x69 && fileBytes[11] == 0x63) || // heic
+                 (fileBytes[4] == 0x66 && fileBytes[5] == 0x74 &&
+                  fileBytes[6] == 0x79 && fileBytes[7] == 0x70 &&
+                  fileBytes[8] == 0x6D && fileBytes[9] == 0x69 &&
+                  fileBytes[10] == 0x66 && fileBytes[11] == 0x31)))   // heif
+                return "image/heif";
+
+            // AVIF
+            if (fileBytes.Length >= 12 &&
+                fileBytes[4] == 0x66 && fileBytes[5] == 0x74 &&
+                fileBytes[6] == 0x79 && fileBytes[7] == 0x70 &&
+                fileBytes[8] == 0x61 && fileBytes[9] == 0x76 &&
+                fileBytes[10] == 0x69 && fileBytes[11] == 0x66)
+                return "image/avif";
+
+            // Basic
+            return "application/octet-stream";
         }
     }
 }

@@ -343,9 +343,7 @@ namespace ITSM_Insfrastruture.Repository.Token
                 create_date = original.create_date,
                 active = original.active,
                 photo = null,
-                photo_type = original.photo_type,
-                approve = original.approve,
-                Manager = original.Manager
+                photo_type = original.photo_type
             };
         }
 

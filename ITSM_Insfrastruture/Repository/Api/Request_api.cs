@@ -16,6 +16,7 @@ namespace ITSM_Insfrastruture.Repository.Api
     {
         private readonly string _allReqUrl = Api_Link.ReqLink;
         private readonly string _sudReqUrl = Api_Link.ReqSUDLink;
+        private readonly string _ReqIDUrl = Api_Link.ReqIDLink;
         private readonly HttpClient _client;
         private readonly TokenService _tokenService;
 
@@ -59,6 +60,25 @@ namespace ITSM_Insfrastruture.Repository.Api
             catch (Exception ex)
             {
                 Console.WriteLine($"EX FindByIDRequest_API: {ex.Message}");
+                return null;
+            }
+        }
+
+        public async Task<Request> FindByReqIDIncident_API(string req_id)
+        {
+            try
+            {
+                var tokenModel = _tokenService.GetToken();
+                if (tokenModel == null) return null;
+
+                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenModel.Token);
+                var jsonStr = await _client.GetStringAsync($"{_ReqIDUrl}{req_id}");
+                var RequestList = JsonConvert.DeserializeObject<List<Request>>(jsonStr);
+                return RequestList?.FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"EX FindByIDReqident_API: {ex.Message}");
                 return null;
             }
         }

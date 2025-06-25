@@ -7,43 +7,35 @@
 
 <style>
     .inc-tab-incidents-table th.number-column {
-    width: 8%;
-    }
-
-    .inc-tab-incidents-table th.u_fullname {
-    width: 17%;
-    }
-
-    .inc-tab-incidents-table th.u_approve {
-    width: 8%;
-    }
-
-    .inc-tab-incidents-table th.u_gender {
-    width: 6%;
-    }
-
-    .inc-tab-incidents-table th.u_department {
-    width: 15%;
-    }
-
-    .inc-tab-incidents-table th.u_manager_name {
-    width: 15%;
-    }
-
-    .inc-tab-incidents-table th.u_mobilephone {
     width: 10%;
     }
 
+    .inc-tab-incidents-table th.u_fullname {
+    width: 18%;
+    }
+
+    .inc-tab-incidents-table th.u_gender {
+    width: 11%;
+    }
+
+    .inc-tab-incidents-table th.u_department {
+    width: 18%;
+    }
+
+    .inc-tab-incidents-table th.u_mobilephone {
+    width: 13%;
+    }
+
     .inc-tab-incidents-table th.u_role {
-    width: 6%;
+    width: 10%;
     }
 
     .inc-tab-incidents-table th.u_role_manager {
-    width: 8%;
+    width: 10%;
     }
 
     .inc-tab-incidents-table th.u_active {
-    width: 7%;
+    width: 10%;
     }
 
     .item-active-btn{
@@ -73,8 +65,6 @@
                     <a href="#" class="inc-tab-dropdown-item phone_user_hide_design" data-filter="mobile">Mobile Phone</a>
                     <a href="#" class="inc-tab-dropdown-item phone_user_hide_design" data-filter="role">Role</a>
                     <a href="#" class="inc-tab-dropdown-item phone_user_hide_design" data-filter="r_manager">Role Manager</a>
-                    <a href="#" class="inc-tab-dropdown-item phone_user_hide_design" data-filter="manager_name">Manager Name</a>
-                    <a href="#" class="inc-tab-dropdown-item phone_user_hide_design" data-filter="approve">Approve</a>
                 </div>
             </div>
             <div class="inc-tab-search-container">
@@ -125,8 +115,6 @@
                     <th class="u_mobilephone phone_user_hide_design">Mobile Phone</th>
                     <th class="u_role phone_user_hide_design">Role</th>
                     <th class="u_role_manager phone_user_hide_design">Manager</th>
-                    <th class="u_manager_name phone_user_hide_design">Manager Name</th>
-                    <th class="u_approve phone_user_hide_design">Approve</th>
                     <th class="u_active">Active</th>
                 </tr>
             </thead>
@@ -135,7 +123,7 @@
                 @foreach (var i in Model.UserList)
                 {
                     <tr class="incident-item" data-id="@i.id">
-                        @if(i.id != Model.user?.id && i.approve)
+                        @if(i.id != Model.user?.id)
                         {
                             <td><input type="checkbox" class="item-checkbox"></td>
                         }
@@ -152,8 +140,6 @@
                         <td data-label="Mobile_Phone" class="phone_user_hide_design">@i.mobile_phone</td>
                         <td data-label="R_Role" class="phone_user_hide_design">@((i.Role != null) ? i.Role.role : "N/A")</td>
                         <td data-label="r_manager" class="phone_user_hide_design">@(i.r_manager ? "Yes" : "No")</td>
-                        <td data-label="m_user" class="phone_user_hide_design">@((i.M_User != null && i.M_User.fullname != null) ? i.M_User.fullname : "")</td>
-                        <td data-label="approve" class="phone_user_hide_design">@(i.approve ? "Yes" : "No")</td>
                         <td data-label="Active">@(i.active ? "Active" : "Blocked")</td>
                     </tr>
                 }
