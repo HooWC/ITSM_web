@@ -49,6 +49,7 @@
                     <a href="#" class="inc-tab-dropdown-item phone_request_hide_design" data-filter="user">User</a>
                     <a href="#" class="inc-tab-dropdown-item phone_request_hide_design" data-filter="assignment_group">Assignment Group</a>
                     <a href="#" class="inc-tab-dropdown-item phone_request_hide_design" data-filter="assigned_to">Assigned to</a>
+                    <a href="#" class="inc-tab-dropdown-item phone_request_hide_design" data-filter="type">Type</a>
                     <a href="#" class="inc-tab-dropdown-item phone_request_hide_design" data-filter="create_date">Create Date</a>
                 </div>
             </div>
@@ -116,7 +117,22 @@
                             <a href="~/Request/Req_Info?id=@i.id&type=Admin">@(i.req_id)</a>
                         </td>
                         <td data-label="Full_Name" class="phone_request_hide_design">@(i.Sender?.fullname != null ? i.Sender?.fullname : "-")</td>
-                        <td data-label="State">@(i.state)</td>
+                        @if (i.state == "Rejected")
+                        {
+                            <td data-label="state" style="color:darkred">@i.state</td>
+                        }
+                        else if (i.state == "Completed")
+                        {
+                            <td data-label="state" style="color:chocolate">@i.state</td>
+                        }
+                        else if (i.state == "In Progress")
+                        {
+                            <td data-label="state" style="color:dodgerblue">@i.state</td>
+                        }
+                        else
+                        {
+                            <td data-label="state">@i.state</td>
+                        }
                         <td data-label="AssignmentGroup" class="phone_request_hide_design">@(i.AssignmentGroup?.name)</td>
                         <td data-label="AssignedTo" class="phone_request_hide_design">@(i.AssignedTo?.fullname != null ? i.AssignedTo?.fullname : "-")</td>
                         @if (i.req_type == false)

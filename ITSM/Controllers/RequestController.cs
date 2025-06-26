@@ -53,6 +53,8 @@ namespace ITSM.Controllers
         public async Task<AllModelVM> get_req_data(string type)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var productTask = _productApi.GetAllProduct_API();
             var userTask = _userApi.GetAllUser_API();
@@ -75,7 +77,7 @@ namespace ITSM.Controllers
             else if (type == "Manager_Assign_Work")
                 Reqs = allRequest.Where(x => x.assignment_group == currentUser.department_id && x?.assigned_to == null && x.state != "Rejected" && x.state != "Completed").OrderByDescending(x => x.id).ToList();
             else if (type == "Assigned_To_Me")
-                Reqs = allRequest.Where(x => x.assigned_to == currentUser.id && x.state != "Resolved" && x.state != "Closed").OrderByDescending(y => y.id).ToList();
+                Reqs = allRequest.Where(x => x.assigned_to == currentUser.id).OrderByDescending(y => y.id).ToList();
 
             foreach (var i in Reqs)
             {
@@ -89,7 +91,9 @@ namespace ITSM.Controllers
             var model = new AllModelVM()
             {
                 user = currentUser,
-                RequestList = Reqs
+                RequestList = Reqs,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return model;
@@ -112,7 +116,9 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Service_Catalog()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
+
             var depTask = _depApi.GetAllDepartment_API();
             var categoryTask = _categoryApi.GetAllCategory_API();
             var productTask = _productApi.GetAllProduct_API();
@@ -131,7 +137,9 @@ namespace ITSM.Controllers
             {
                 user = currentUser,
                 ProductList = allProduct,
-                CategoryList = allCategory
+                CategoryList = allCategory,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);
@@ -140,6 +148,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Create_Form(int id)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var depTask = _depApi.GetAllDepartment_API();
             var categoryTask = _categoryApi.GetAllCategory_API();
@@ -154,7 +164,9 @@ namespace ITSM.Controllers
             var model = new AllModelVM()
             {
                 user = currentUser,
-                product = info_pro
+                product = info_pro,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);
@@ -164,6 +176,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Create_Form(int pro_id, Request req)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var depTask = _depApi.GetAllDepartment_API();
             var categoryTask = _categoryApi.GetAllCategory_API();
@@ -224,7 +238,7 @@ namespace ITSM.Controllers
                 req_id = newId,
                 pro_id = pro_id,
                 sender = currentUser.id,
-                state = "Pedding",
+                state = "Pending",
                 description = req.description,
                 assignment_group = info_pro.responsible,
                 quantity = req.quantity,
@@ -253,10 +267,12 @@ namespace ITSM.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> Req_Info(int id, string type)
+        public async Task<AllModelVM> get_Req_Info_Data(int id,string type)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
+
             var productTask = _productApi.GetAllProduct_API();
             var userTask = _userApi.GetAllUser_API();
             var departmentTask = _departmentApi.GetAllDepartment_API();
@@ -269,51 +285,78 @@ namespace ITSM.Controllers
             var allCategory = categoryTask.Result;
 
             var Req = await _reqApi.FindByIDRequest_API(id);
-            Req.Product = allProduct.FirstOrDefault(x => x.id == Req.pro_id);
             Req.Sender = allUser.FirstOrDefault(x => x.id == Req.sender);
             Req.AssignmentGroup = allDepartment.FirstOrDefault(x => x.id == Req.assignment_group);
             Req.UpdatedBy = allUser.FirstOrDefault(x => x.id == Req.updated_by);
-            Req.Product.ResponsibleDepartment = allDepartment.FirstOrDefault(x => x.id == Req.Product.responsible);
+            Req.AssignedTo = allUser.FirstOrDefault(x => x.id == Req.assigned_to);
+
+            var req_category_list = new List<Req_Category>();
+            var ReqPhotoDataList = new List<RequestPhoto>();
+
+            if (Req.req_type == true)
+            {
+                var reqcategoryTask = _reqcategoryApi.GetAllReq_Category_API();
+                var reqsubcategoryTask = _reqsubcategoryApi.GetAllReq_Subcategory_API();
+                var reqfunctionTask = _reqfunctionApi.GetAllReq_Function_API();
+                var reqphotoTask = _reqphoneApi.GetAllRequestPhoto_API();
+                await Task.WhenAll(reqcategoryTask, reqsubcategoryTask, reqfunctionTask, reqphotoTask);
+
+                var allReqCategory = reqcategoryTask.Result;
+                var allReqSubcategory = reqsubcategoryTask.Result;
+                var allReqFunction = reqfunctionTask.Result;
+                var allReqPhoto = reqphotoTask.Result;
+
+                if (Req.req_type == true && Req.erp_version.ToLower() == "erp 8")
+                    req_category_list = allReqCategory.Where(x => x.erp_version?.ToLower() == "erp 8").ToList();
+                else if (Req.req_type == true && Req.erp_version.ToLower() == "erp 9")
+                    req_category_list = allReqCategory.Where(x => x.erp_version?.ToLower() == "erp 9").ToList();
+                else
+                    req_category_list = new List<Req_Category>();
+
+                Req.ERPCategory = allReqCategory.FirstOrDefault(x => x.id == Req.erp_category);
+                Req.ERPSubcategory = allReqSubcategory.FirstOrDefault(x => x.id == Req.erp_subcategory);
+                Req.ERPFunction = allReqFunction.FirstOrDefault(x => x.id == Req.erp_function);
+
+                ReqPhotoDataList = allReqPhoto.Where(x => x.request_id == Req.id).ToList();
+
+                if (ReqPhotoDataList.Count == 0 || ReqPhotoDataList == null)
+                    ReqPhotoDataList = new List<RequestPhoto>();
+            }
+            else
+            {
+                var info_pro = await _productApi.FindByIDProduct_API(Req.pro_id != null ? (int)Req.pro_id : 0);
+                Req.Product = allProduct.FirstOrDefault(x => x.id == Req.pro_id);
+                if (Req.Product != null)
+                    Req.Product.ResponsibleDepartment = allDepartment.FirstOrDefault(x => x.id == info_pro.responsible);
+            }
 
             var model = new AllModelVM()
             {
                 user = currentUser,
                 request = Req,
-                roleBack = type
+                roleBack = type,
+                reqPhotoList = ReqPhotoDataList.Count > 0 ? ReqPhotoDataList : null,
+                reqCategoryList = req_category_list.Count > 0 ? req_category_list : null,
+                incCount = incCount,
+                reqCount = reqCount
             };
+
+            return model;
+        }
+
+        public async Task<IActionResult> Req_Info(int id, string type)
+        {
+            var model = await get_Req_Info_Data(id, type);
 
             return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Req_Info(Request req, string roleBack)
+        public async Task<IActionResult> Req_Info(List<IFormFile> files, Request req, string roleBack)
         {
-            var currentUser = await _userService.GetCurrentUserAsync();
+            var model = await get_Req_Info_Data(req.id, roleBack);
 
-            var productTask = _productApi.GetAllProduct_API();
-            var userTask = _userApi.GetAllUser_API();
-            var departmentTask = _departmentApi.GetAllDepartment_API();
-            var categoryTask = _categoryApi.GetAllCategory_API();
-            await Task.WhenAll(productTask, userTask, departmentTask, categoryTask);
-
-            var allProduct = productTask.Result;
-            var allUser = userTask.Result;
-            var allDepartment = departmentTask.Result;
-            var allCategory = categoryTask.Result;
-
-            var Req = await _reqApi.FindByIDRequest_API(req.id);
-            Req.Product = allProduct.FirstOrDefault(x => x.id == Req.pro_id);
-            Req.Sender = allUser.FirstOrDefault(x => x.id == Req.sender);
-            Req.AssignmentGroup = allDepartment.FirstOrDefault(x => x.id == Req.assignment_group);
-            Req.UpdatedBy = allUser.FirstOrDefault(x => x.id == Req.updated_by);
-            Req.Product.ResponsibleDepartment = allDepartment.FirstOrDefault(x => x.id == Req.Product.responsible);
-
-            var model = new AllModelVM()
-            {
-                user = currentUser,
-                request = Req,
-                roleBack = roleBack
-            };
+            var reqinfo = await _reqApi.FindByIDRequest_API(req.id);
 
             if (req.description == null)
             {
@@ -321,39 +364,89 @@ namespace ITSM.Controllers
                 return View(model);
             }
 
-            bool result = false;
-            var info_pro = await _productApi.FindByIDProduct_API(req.pro_id != null ? (int)req.pro_id : 0);
-
-            if(info_pro != null)
+            if(reqinfo.req_type == false)
             {
-                int root = info_pro.quantity - (Req.quantity ?? 0);
+                var info_pro = await _productApi.FindByIDProduct_API(req.pro_id != null ? (int)req.pro_id : 0);
 
-                if (req.quantity > root || req.quantity <= 0)
+                if (info_pro != null)
                 {
-                    ViewBag.Error = "Error Quantity";
+                    int root = info_pro.quantity - (reqinfo.quantity != null ? (int)reqinfo.quantity : 0);
+
+                    if (req.quantity > root || req.quantity <= 0)
+                    {
+                        ViewBag.Error = "Error Quantity";
+                        return View(model);
+                    }
+
+                    info_pro.quantity = root - (reqinfo.quantity != null ? (int)reqinfo.quantity : 0);
+                    if (info_pro.quantity <= 0)
+                        info_pro.active = false;
+                    else
+                        info_pro.active = true;
+
+                    await _productApi.UpdateProduct_API(info_pro);
+
+                    reqinfo.quantity = req.quantity;
+                }
+                else
+                {
+                    ViewBag.Error = "Cannot Fint Product Information";
                     return View(model);
                 }
-
-                info_pro.quantity = root - (req.quantity ?? 0);
-                if (info_pro.quantity <= 0)
-                    info_pro.active = false;
-                else
-                    info_pro.active = true;
-
-                await _productApi.UpdateProduct_API(info_pro);
-
-                Req.description = req.description;
-                Req.state = req.state;
-                Req.updated_by = currentUser.id;
-                Req.quantity = req.quantity;
-
-                result = await _reqApi.UpdateRequest_API(Req);
             }
             else
             {
-                ViewBag.Error = "Cannot Fint Product Information";
-                return View(model);
+                List<byte[]> fileBytesList = new List<byte[]>();
+
+                if (files != null && files.Count > 0)
+                {
+                    foreach (var file in files)
+                    {
+                        if (file.Length > 50_000_000) // 50MB
+                        {
+                            ViewBag.Error = "One of the files exceeds the 50MB limit.";
+                            return View(model);
+                        }
+
+                        if (file.Length > 0)
+                        {
+                            using (var memoryStream = new MemoryStream())
+                            {
+                                await file.CopyToAsync(memoryStream);
+                                fileBytesList.Add(memoryStream.ToArray());
+                            }
+                        }
+                    }
+                }
+
+                if (fileBytesList != null && fileBytesList.Count > 0)
+                {
+                    foreach (var fileBytes in fileBytesList)
+                    {
+                        var reqPhone = new RequestPhoto
+                        {
+                            request_id = reqinfo.id,
+                            photo = fileBytes,
+                            photo_type = GetMimeTypeFromFileSignature(fileBytes)
+                        };
+                        await _reqphoneApi.CreateRequestPhoto_API(reqPhone);
+                    }
+                }
+
+                reqinfo.erp_category = req.erp_category;
+                reqinfo.erp_subcategory = req.erp_subcategory;
+                reqinfo.erp_function = req.erp_function;
+                reqinfo.erp_module = req.erp_module;
+                reqinfo.erp_user_account = req.erp_user_account;
+                reqinfo.erp_report = req.erp_report;
             }
+
+            reqinfo.description = req.description;
+            reqinfo.state = req.state;
+            reqinfo.updated_by = model.user.id;
+            reqinfo.assigned_to = req.assigned_to;
+
+            bool result = await _reqApi.UpdateRequest_API(reqinfo);
 
             if (result)
             {
@@ -361,6 +454,8 @@ namespace ITSM.Controllers
                     return RedirectToAction("All", "Request");
                 else if (roleBack == "Group")
                     return RedirectToAction("Assigned_To_Us", "Request");
+                else if (roleBack == "Tome")
+                    return RedirectToAction("Assigned_To_Me", "Request");
                 else
                     return RedirectToAction("User_All", "Request");
             }
@@ -381,7 +476,9 @@ namespace ITSM.Controllers
         public async Task<AllModelVM> get_Manager_Assign_Work_Info(int id)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
-            
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
+
             var productTask = _productApi.GetAllProduct_API();
             var userTask = _userApi.GetAllUser_API();
             var departmentTask = _departmentApi.GetAllDepartment_API();
@@ -426,14 +523,17 @@ namespace ITSM.Controllers
             {
                 var info_pro = await _productApi.FindByIDProduct_API(req_info.pro_id != null ? (int)req_info.pro_id : 0);
                 req_info.Product = allProduct.FirstOrDefault(x => x.id == req_info.pro_id);
-                req_info.Product.ResponsibleDepartment = allDepartment.FirstOrDefault(x => x.id == info_pro.responsible);
+                if(req_info.Product != null)
+                    req_info.Product.ResponsibleDepartment = allDepartment.FirstOrDefault(x => x.id == info_pro.responsible);
             }
 
             var model = new AllModelVM()
             {
                 user = currentUser,
                 request = req_info,
-                reqPhotoList = ReqPhotoDataList.Count > 0 ? ReqPhotoDataList : null
+                reqPhotoList = ReqPhotoDataList.Count > 0 ? ReqPhotoDataList : null,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return model;
@@ -453,11 +553,11 @@ namespace ITSM.Controllers
 
             var reqData = await _reqApi.FindByIDRequest_API(req.id);
 
-            if (req.description != null)
+            if (req.description != null && req.assigned_to != null)
             {
                 if (reqData != null)
                 {
-                    reqData.assigned_to = reqData.assigned_to;
+                    reqData.assigned_to = req.assigned_to;
 
                     bool result = await _reqApi.UpdateRequest_API(reqData);
 
@@ -492,10 +592,14 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Application()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var model = new AllModelVM()
             {
-                user = currentUser
+                user = currentUser,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);
@@ -504,6 +608,8 @@ namespace ITSM.Controllers
         public async Task<AllModelVM> get_req_application_data(string type)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var reqcategoryTask = await _reqcategoryApi.GetAllReq_Category_API();
 
@@ -517,6 +623,8 @@ namespace ITSM.Controllers
             {
                 user = currentUser,
                 reqCategoryList = ReqCategorys,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return model;

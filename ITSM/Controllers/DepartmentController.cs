@@ -38,6 +38,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Department_List()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var depTask = _depApi.GetAllDepartment_API();
             await Task.WhenAll(depTask);
@@ -49,7 +51,9 @@ namespace ITSM.Controllers
             var model = new AllModelVM
             {
                 user = currentUser,
-                DepartmentList = departmentList
+                DepartmentList = departmentList,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);
@@ -58,10 +62,14 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Department_Create()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var model = new AllModelVM
             {
-                user = currentUser
+                user = currentUser,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);
@@ -71,10 +79,14 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Department_Create(Department dep)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var model = new AllModelVM
             {
-                user = currentUser
+                user = currentUser,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             if (dep.name == null)
@@ -103,13 +115,17 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Department_Info(int id)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var department = await _depApi.FindByIDDepartment_API(id);
 
             var model = new AllModelVM
             {
                 user = currentUser,
-                department = department
+                department = department,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);
@@ -119,13 +135,17 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Department_Info(Department dep)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var departmentTask = await _depApi.FindByIDDepartment_API(dep.id);
 
             var model = new AllModelVM
             {
                 user = currentUser,
-                department = departmentTask
+                department = departmentTask,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             if (departmentTask.name == null)

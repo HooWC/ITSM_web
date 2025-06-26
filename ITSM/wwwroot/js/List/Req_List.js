@@ -169,6 +169,8 @@ function sortRequests() {
         word = "req_sort_group";
     else if (sortFunctionName.includes("SortReqAssignWork"))
         word = "assign_work";
+    else if (sortFunctionName.includes("ToMe"))
+        word = "req_sort_tome";
     else
         word = "sort_basic";
 
@@ -363,6 +365,8 @@ function searchIncidents() {
         word = "req_group";
     else if (searchFunctionName.includes("SearchReqAssignWork"))
         word = "assign_work";
+    else if (searchFunctionName.includes("ToMe"))
+        word = "req_tome";
     else
         word = "search_basic";
 
@@ -409,6 +413,8 @@ function filterByStatus() {
         word = "req_filter_user";
     else if (filterFunctionName.includes("F_Group"))
         word = "req_filter_group";
+    else if (filterFunctionName.includes("ToMe"))
+        word = "req_filter_tome";
     else
         word = "filter_basic";
 
@@ -475,7 +481,7 @@ function updateRequestTable(data) {
                         <td data-label="Full_Name" class="phone_request_hide_design">${req.user_name}</td>
                         <td data-label="State">${req.state}</td>
                         <td data-label="AssignmentGroup" class="phone_request_hide_design">${req.assignment_group}</td>
-                        <td data-label="Quantity">${req.quantity}</td>
+                        <td data-label="Quantity">${req.req_type_name}</td>
                         <td data-label="Create_Date" class="phone_request_hide_design">${req.create_date}</td>
                     </tr>
                 `;
@@ -497,7 +503,7 @@ function updateRequestTable(data) {
                         <td data-label="State">${req.state}</td>
                         <td data-label="AssignmentGroup" class="phone_request_hide_design">${req.assignment_group}</td>
                         <td data-label="AssignedTo" class="phone_request_hide_design">${req.assigned_to}</td>
-                        <td data-label="Quantity">${req.quantity}</td>
+                        <td data-label="type_name">${req.req_type_name}</td>
                         <td data-label="Create_Date" class="phone_request_hide_design">${req.create_date}</td>
                     </tr>
                 `;

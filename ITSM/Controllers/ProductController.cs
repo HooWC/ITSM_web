@@ -42,6 +42,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Product_List()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var productTask = _productApi.GetAllProduct_API();
             var departmentTask = _departmentApi.GetAllDepartment_API();
@@ -61,7 +63,9 @@ namespace ITSM.Controllers
             var model = new AllModelVM
             {
                 user = currentUser,
-                ProductList = productList
+                ProductList = productList,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);
@@ -70,6 +74,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Product_Create()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var categoryTask = _categoryApi.GetAllCategory_API();
             var departmentTask = _departmentApi.GetAllDepartment_API();
@@ -83,7 +89,9 @@ namespace ITSM.Controllers
             {
                 user = currentUser,
                 CategoryList = allCategory,
-                DepartmentList = allDepartment
+                DepartmentList = allDepartment,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);
@@ -93,6 +101,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Product_Create(IFormFile file, Product product)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var categoryTask = _categoryApi.GetAllCategory_API();
             var departmentTask = _departmentApi.GetAllDepartment_API();
@@ -108,7 +118,9 @@ namespace ITSM.Controllers
             {
                 user = currentUser,
                 CategoryList = allCategory,
-                DepartmentList = allDepartment
+                DepartmentList = allDepartment,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             if (product.item_title != null && product.description != null && product.quantity > 0)
@@ -178,6 +190,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Product_Info(int id)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var categoryTask = _categoryApi.GetAllCategory_API();
             var departmentTask = _departmentApi.GetAllDepartment_API();
@@ -196,7 +210,9 @@ namespace ITSM.Controllers
                 user = currentUser,
                 product = pro_info,
                 CategoryList = allCategory,
-                DepartmentList = allDepartment
+                DepartmentList = allDepartment,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);
@@ -206,6 +222,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Product_Info(IFormFile file, Product product)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var categoryTask = _categoryApi.GetAllCategory_API();
             var departmentTask = _departmentApi.GetAllDepartment_API();
@@ -223,7 +241,9 @@ namespace ITSM.Controllers
                 user = currentUser,
                 product = pro_info,
                 CategoryList = allCategory,
-                DepartmentList = allDepartment
+                DepartmentList = allDepartment,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             if (product.item_title != null && product.description != null && product.quantity >= 0)

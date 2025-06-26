@@ -284,7 +284,7 @@
 
                 if (response.success && response.resolution) {
                     var res = response.resolution;
-                    var userAvatar = res.resolved_by_avatar ? 'data:image/jpeg;base64,' + res.resolved_by_avatar : '/img/avatar/user_avatar.jpg';
+                    var userAvatar = res.resolved_by_avatar ? 'data:' + res.resolved_photo_type + ';base64,' + res.resolved_by_avatar : window.AppRoot + 'img/avatar/user_avatar.jpg';
 
                     var historyItem = $('<div class="inc-cre-resolve-item">' +
                         '<div class="inc-cre-resolve-content">' +
@@ -294,7 +294,7 @@
                         '</div>' +
                         '<div class="inc-cre-resolve-user">' +
                         '<img src="' + userAvatar + '" alt="Avatar" class="inc-cre-resolve-user-avatar" />' +
-                        '<span>Resolved By: ' + res.resolved_by_name + '</span>' +
+                        '<span>Resolved Note: <a href="' + window.AppRoot + 'User/Form_User_Info?id=' + res.user_id + '" target="_blank">' + res.resolved_by_name + '</a></span>' +
                         '</div>' +
                         '<div class="inc-cre-resolve-details">' + res.resolution.replace(/\n/g, '<br>') + '</div>' +
                         '</div>' +
@@ -315,7 +315,6 @@
     }
 
     $("#close-button").click(function () {
-        console.log("c1");
         if (isResolved || isClosed) {
             return;
         }
@@ -362,25 +361,25 @@
     function reback_page() {
         let roleBack = $('#roleBack').val();
         if (roleBack.includes("Admin")) {
-            window.location.href = '/IncidentManagement/All';
+            window.location.href = window.AppRoot + 'IncidentManagement/All';
         }
         else if (roleBack.includes("Resolved")) {
-            window.location.href = '/IncidentManagement/Resolved_Assigned_To_Me';
+            window.location.href = window.AppRoot + 'IncidentManagement/Resolved_Assigned_To_Me';
         }
         else if (roleBack.includes("ToMe")) {
-            window.location.href = '/IncidentManagement/Assigned_To_Me';
+            window.location.href = window.AppRoot + 'IncidentManagement/Assigned_To_Me';
         }
         else if (roleBack.includes("ToGroup")) {
-            window.location.href = '/IncidentManagement/Assigned_To_Group';
+            window.location.href = window.AppRoot + 'IncidentManagement/Assigned_To_Group';
         }
         else if (roleBack.includes("Closed")) {
-            window.location.href = '/IncidentManagement/Closed_Assigned_To_Me';
+            window.location.href = window.AppRoot + 'IncidentManagement/Closed_Assigned_To_Me';
         }
         else if (roleBack.includes("Message")) {
-            window.location.href = '/IncidentManagement/Inc_Message';
+            window.location.href = window.AppRoot + 'IncidentManagement/Inc_Message';
         }
         else {
-            window.location.href = '/IncidentManagement/User_All';
+            window.location.href = window.AppRoot + 'IncidentManagement/User_All';
         }
     }
 

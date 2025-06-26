@@ -137,7 +137,7 @@
                 </svg>
             </button>
 
-            <button class="inc-cre-btn inc-cre-btn-closed" id="close-button">Reject</button>
+            <button class="inc-cre-btn inc-cre-btn-closed" id="Rejected_req">Reject</button>
             <button class="inc-cre-btn inc-cre-btn-submit" onclick="document.getElementById('incidentForm').submit();">Assign</button>
 
         </div>
@@ -146,6 +146,7 @@
     <main class="inc-cre-form-wrapper">
 
         <input type="text" name="caller_id" id="caller_id" class="inc-cre-form-control" value="@Model.request.Sender?.id" style="display:none;" readonly>
+        <input type="hidden" id="roleBack_Name" class="inc-cre-form-control" value="AssignWork" readonly>
 
         @if (!string.IsNullOrEmpty(ViewBag.Error as string))
         {
@@ -213,31 +214,7 @@
                     <div class="inc-cre-form-column">
                         <div class="inc-cre-form-group">
                             <label for="state" class="inc-cre-form-label">Status</label>
-                            <select id="state" name="state" class="inc-cre-form-control">
-                                @{
-                                    var selectState = Model.request.state;
-                                }
-                                @if (selectState != "Completed" && selectState != "Rejected")
-                                {
-                                    @if (Model.user?.Role?.role?.ToLower() != "user")
-                                    {
-                                        <option value="Pending" selected="@(selectState == "Pending")">Pending</option>
-                                        <option value="In Progress" selected="@(selectState == "In Progress")">In Progress</option>
-                                    }
-                                    else
-                                    {
-                                        <option value="@selectState" selected="selected">@selectState</option>
-                                    }
-                                }
-                                else if (selectState == "Completed")
-                                {
-                                    <option value="Completed" selected="@(selectState == "Completed")">Completed</option>
-                                }
-                                else if (selectState == "Rejected")
-                                {
-                                    <option value="Rejected" selected="@(selectState == "Rejected")">Rejected</option>
-                                }
-                            </select>
+                            <input type="text" class="inc-cre-form-control" value="@Model.request.state" readonly>
                         </div>
                     </div>
 
@@ -269,7 +246,7 @@
                     <div class="inc-cre-form-column">
                         <div class="inc-cre-form-group">
                             <label for="quantity" class="inc-cre-form-label">Quantity</label>
-                            <input type="number" name="quantity" id="quantity" class="inc-cre-form-control" value="@Model.request.quantity" min="1" max="@(Model.request.quantity + Model.request?.Product?.quantity)" @(Model.request?.state == "Rejected" || Model.request.state == "Completed" ? "readonly" : "") required>
+                            <input type="text" name="quantity" id="quantity" class="inc-cre-form-control" value="@Model.request.quantity" readonly>
                         </div>
                     </div>
 
@@ -322,7 +299,7 @@
 
                 <div class="inc-cre-form-group inc-cre-full-width">
                     <label for="description" class="inc-cre-form-label inc-cre-required">Description</label>
-                    <textarea id="description" autocomplete="off" name="description" class="inc-cre-form-control inc-cre-description-textarea" rows="5" @(Model.request.state == "Rejected" || Model.request.state == "Completed" ? "readonly" : "")>@Model.request.description</textarea>
+                    <textarea id="description" autocomplete="off" name="description" class="inc-cre-form-control inc-cre-description-textarea" rows="5" readonly>@Model.request.description</textarea>
                 </div>
             </form>
         }
@@ -388,6 +365,26 @@
                                     </svg>
                                 </button>
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="inc-cre-form-grid">
+                    <div class="inc-cre-form-column">
+                        <div class="inc-cre-form-group">
+                            <label for="erp_user_account" class="inc-cre-form-label">
+                                ERP Type
+                            </label>
+                            <input type="text" id="erp_user_account" name="erp_user_account" autocomplete="off" class="inc-cre-form-control" readonly value="@(Model.request?.erp_version?.ToLower() == "erp 8" ? "ERP Account" : "ERP")" />
+                        </div>
+                    </div>
+
+                    <div class="inc-cre-form-column">
+                        <div class="inc-cre-form-group">
+                            <label for="erp_report" class="inc-cre-form-label">
+                                Create Date
+                            </label>
+                            <input type="text" id="erp_report" name="erp_report" autocomplete="off" class="inc-cre-form-control" readonly value="@(Model.request?.create_date.ToString("yyyy-MM-dd HH:mm:ss"))" />
                         </div>
                     </div>
                 </div>

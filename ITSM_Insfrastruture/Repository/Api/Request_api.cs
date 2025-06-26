@@ -101,6 +101,9 @@ namespace ITSM_Insfrastruture.Repository.Api
                 var jsonStr = new StringContent(JsonConvert.SerializeObject(request, jsonSettings), Encoding.UTF8, "application/json");
                 var response = await _client.PutAsync($"{_sudReqUrl}{request.id}", jsonStr);
 
+                //var responseStr = await response.Content.ReadAsStringAsync();
+                //Console.WriteLine($"RESPONSE UPDATE: {responseStr}");
+
                 return response.IsSuccessStatusCode;
             }
             catch (Exception ex)

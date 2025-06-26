@@ -48,6 +48,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Category_List()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var categoryTask = _categoryApi.GetAllCategory_API();
             await Task.WhenAll(categoryTask);
@@ -59,7 +61,9 @@ namespace ITSM.Controllers
             var model =  new AllModelVM
             {
                 user = currentUser,
-                CategoryList = categoryList
+                CategoryList = categoryList,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);
@@ -68,10 +72,14 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Category_Create()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var model = new AllModelVM
             {
-                user = currentUser
+                user = currentUser,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);
@@ -81,10 +89,14 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Category_Create(Category category)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var model = new AllModelVM
             {
-                user = currentUser
+                user = currentUser,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             if (category.title == null)
@@ -113,13 +125,17 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Category_Info(int id)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var category = await _categoryApi.FindByIDCategory_API(id);
 
             var model = new AllModelVM
             {
                 user = currentUser,
-                category = category
+                category = category,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);
@@ -129,13 +145,17 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Category_Info(Category c)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var categoryTask = await _categoryApi.FindByIDCategory_API(c.id);
 
             var model = new AllModelVM
             {
                 user = currentUser,
-                category = categoryTask
+                category = categoryTask,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             if (categoryTask.title == null)
@@ -161,6 +181,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Inc_Category_List()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var allIncidentCategory = await _incidentcategoryApi.GetAllIncidentcategory_API();
 
@@ -169,7 +191,9 @@ namespace ITSM.Controllers
             var model = new AllModelVM
             {
                 user = currentUser,
-                Incident_Category_List = inccategoryList
+                Incident_Category_List = inccategoryList,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);
@@ -178,10 +202,14 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Inc_Category_Create()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var model = new AllModelVM
             {
-                user = currentUser
+                user = currentUser,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);
@@ -191,10 +219,14 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Inc_Category_Create(Incidentcategory incCategory)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var model = new AllModelVM
             {
-                user = currentUser
+                user = currentUser,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             if (incCategory.name == null)
@@ -230,13 +262,17 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Inc_Category_Info(int id)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var inccategory = await _incidentcategoryApi.FindByIDIncidentcategory_API(id);
 
             var model = new AllModelVM
             {
                 user = currentUser,
-                Incident_Category = inccategory
+                Incident_Category = inccategory,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);
@@ -246,13 +282,17 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Inc_Category_Info(Incidentcategory incCategory)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var inccategoryTask = await _incidentcategoryApi.FindByIDIncidentcategory_API(incCategory.id);
 
             var model = new AllModelVM
             {
                 user = currentUser,
-                Incident_Category = inccategoryTask
+                Incident_Category = inccategoryTask,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             if (incCategory.name == null)
@@ -285,6 +325,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Subcategory_List()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var subcategoryTask = _subcategoryApi.GetAllSubcategory_API();
             var departmentTask = _depApi.GetAllDepartment_API();
@@ -306,7 +348,9 @@ namespace ITSM.Controllers
             var model = new AllModelVM
             {
                 user = currentUser,
-                Subcategory_List = subcategoryList
+                Subcategory_List = subcategoryList,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);
@@ -315,6 +359,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Subcategory_Create()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var departmentTask = _depApi.GetAllDepartment_API();
             var inccategoryTask = _incidentcategoryApi.GetAllIncidentcategory_API();
@@ -327,7 +373,9 @@ namespace ITSM.Controllers
             {
                 user = currentUser,
                 DepartmentList = allDepartment,
-                Incident_Category_List = allIncCategory
+                Incident_Category_List = allIncCategory,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);
@@ -337,6 +385,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Subcategory_Create(Subcategory sub)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var departmentTask = _depApi.GetAllDepartment_API();
             var inccategoryTask = _incidentcategoryApi.GetAllIncidentcategory_API();
@@ -349,7 +399,9 @@ namespace ITSM.Controllers
             {
                 user = currentUser,
                 DepartmentList = allDepartment,
-                Incident_Category_List = allIncCategory
+                Incident_Category_List = allIncCategory,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             if (sub.subcategory == null)
@@ -387,6 +439,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Subcategory_Info(int id)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var subcategory = await _subcategoryApi.FindByIDSubcategory_API(id);
             var departmentTask = _depApi.GetAllDepartment_API();
@@ -401,7 +455,9 @@ namespace ITSM.Controllers
                 user = currentUser,
                 Sub_Category = subcategory,
                 DepartmentList = allDepartment,
-                Incident_Category_List = allIncCategory
+                Incident_Category_List = allIncCategory,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);
@@ -411,6 +467,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Subcategory_Info(Subcategory sub)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var subcategoryTask = await _subcategoryApi.FindByIDSubcategory_API(sub.id);
             var departmentTask = _depApi.GetAllDepartment_API();
@@ -425,7 +483,9 @@ namespace ITSM.Controllers
                 user = currentUser,
                 Sub_Category = subcategoryTask,
                 DepartmentList = allDepartment,
-                Incident_Category_List = allIncCategory
+                Incident_Category_List = allIncCategory,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             if (sub.subcategory == null)
@@ -460,6 +520,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Req_Category_List()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var allReqCategory = await _reqcategoryApi.GetAllReq_Category_API();
 
@@ -468,7 +530,9 @@ namespace ITSM.Controllers
             var model = new AllModelVM
             {
                 user = currentUser,
-                reqCategoryList = reqcategoryList
+                reqCategoryList = reqcategoryList,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);
@@ -477,10 +541,14 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Req_Category_Create()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var model = new AllModelVM
             {
-                user = currentUser
+                user = currentUser,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);
@@ -490,10 +558,14 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Req_Category_Create(Req_Category reqcategory)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var model = new AllModelVM
             {
-                user = currentUser
+                user = currentUser,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             if (reqcategory.name == null)
@@ -530,13 +602,17 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Req_Category_Info(int id)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var reqcategory = await _reqcategoryApi.FindByIDReq_Category_API(id);
 
             var model = new AllModelVM
             {
                 user = currentUser,
-                req_category = reqcategory
+                req_category = reqcategory,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);
@@ -546,13 +622,17 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Req_Category_Info(Req_Category reqcategory)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var reqcategoryTask = await _reqcategoryApi.FindByIDReq_Category_API(reqcategory.id);
 
             var model = new AllModelVM
             {
                 user = currentUser,
-                req_category = reqcategoryTask
+                req_category = reqcategoryTask,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             if (reqcategory.name == null)
@@ -586,6 +666,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Req_Subcategory_List()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var allReqSubcategory = await _reqsubcategoryApi.GetAllReq_Subcategory_API();
 
@@ -602,7 +684,9 @@ namespace ITSM.Controllers
             var model = new AllModelVM
             {
                 user = currentUser,
-                reqSubCategoryList = reqSubcategoryList
+                reqSubCategoryList = reqSubcategoryList,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);
@@ -611,13 +695,17 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Req_Subcategory_Create()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var req_category = await _reqcategoryApi.GetAllReq_Category_API();
 
             var model = new AllModelVM
             {
                 user = currentUser,
-                reqCategoryList = req_category
+                reqCategoryList = req_category,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);
@@ -627,10 +715,14 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Req_Subcategory_Create(Req_Subcategory reqsubcategory)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var model = new AllModelVM
             {
-                user = currentUser
+                user = currentUser,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             if (reqsubcategory.name == null && reqsubcategory.req_category_id != null)
@@ -667,6 +759,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Req_Subcategory_Info(int id)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var reqsubcategory = await _reqsubcategoryApi.FindByIDReq_Subcategory_API(id);
 
@@ -678,7 +772,9 @@ namespace ITSM.Controllers
             {
                 user = currentUser,
                 req_subcategory = reqsubcategory,
-                reqCategoryList = req_category
+                reqCategoryList = req_category,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);
@@ -688,6 +784,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Req_Subcategory_Info(Req_Subcategory reqsubcategory)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var reqsubcategoryTask = await _reqsubcategoryApi.FindByIDReq_Subcategory_API(reqsubcategory.id);
 
@@ -699,7 +797,9 @@ namespace ITSM.Controllers
             {
                 user = currentUser,
                 req_subcategory = reqsubcategoryTask,
-                reqCategoryList = req_category
+                reqCategoryList = req_category,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             if (reqsubcategory.name == null)
@@ -733,6 +833,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Req_Function_List()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var allReqFunction = await _reqfunctionApi.GetAllReq_Function_API();
 
@@ -754,7 +856,9 @@ namespace ITSM.Controllers
             var model = new AllModelVM
             {
                 user = currentUser,
-                reqFunctionList = reqFunctionList
+                reqFunctionList = reqFunctionList,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);
@@ -763,6 +867,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Req_Function_Create()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var req_subcategory = await _reqsubcategoryApi.GetAllReq_Subcategory_API();
             var allReqCategory = await _reqcategoryApi.GetAllReq_Category_API();
@@ -776,7 +882,9 @@ namespace ITSM.Controllers
             var model = new AllModelVM
             {
                 user = currentUser,
-                reqSubCategoryList = req_subcategory
+                reqSubCategoryList = req_subcategory,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);
@@ -786,6 +894,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Req_Function_Create(Req_Function reqfunction)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var req_subcategory = await _reqsubcategoryApi.GetAllReq_Subcategory_API();
             var allReqCategory = await _reqcategoryApi.GetAllReq_Category_API();
@@ -799,7 +909,9 @@ namespace ITSM.Controllers
             var model = new AllModelVM
             {
                 user = currentUser,
-                reqSubCategoryList = req_subcategory
+                reqSubCategoryList = req_subcategory,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             if (reqfunction.name == null)
@@ -836,6 +948,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Req_Function_Info(int id)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var reqfunction = await _reqfunctionApi.FindByIDReq_Function_API(id);
 
@@ -853,7 +967,9 @@ namespace ITSM.Controllers
             {
                 user = currentUser,
                 req_function = reqfunction,
-                reqSubCategoryList = req_subcategory
+                reqSubCategoryList = req_subcategory,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);
@@ -863,6 +979,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Req_Function_Info(Req_Function reqfunctionpost)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var reqfunction = await _reqfunctionApi.FindByIDReq_Function_API(reqfunctionpost.id);
 
@@ -880,7 +998,9 @@ namespace ITSM.Controllers
             {
                 user = currentUser,
                 req_function = reqfunction,
-                reqSubCategoryList = req_subcategory
+                reqSubCategoryList = req_subcategory,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             if (reqfunctionpost.name == null)

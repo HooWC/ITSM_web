@@ -41,6 +41,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> CMDB_List()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var CMDBTask = _cmdbApi.GetAllCMDB_API();
             var DepartmentTask = _depApi.GetAllDepartment_API();
@@ -55,7 +57,9 @@ namespace ITSM.Controllers
             var model = new AllModelVM
             {
                 user = currentUser,
-                CMDBList = allCMDB.OrderByDescending(X => X.id).ToList()
+                CMDBList = allCMDB.OrderByDescending(X => X.id).ToList(),
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);
@@ -64,6 +68,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> CMDB_Create()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var DepartmentTask = _depApi.GetAllDepartment_API();
             await Task.WhenAll(DepartmentTask);
@@ -73,7 +79,9 @@ namespace ITSM.Controllers
             var model = new AllModelVM()
             {
                 user = currentUser,
-                DepartmentList = allDep
+                DepartmentList = allDep,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);
@@ -83,6 +91,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> CMDB_Create(CMDB cmdb_info)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var DepartmentTask = _depApi.GetAllDepartment_API();
             await Task.WhenAll(DepartmentTask);
@@ -92,7 +102,9 @@ namespace ITSM.Controllers
             var model = new AllModelVM()
             {
                 user = currentUser,
-                DepartmentList = allDep
+                DepartmentList = allDep,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             if (
@@ -155,6 +167,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> CMDB_Info(int id)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var departmentTask = _depApi.GetAllDepartment_API();
             await Task.WhenAll(departmentTask);
@@ -169,7 +183,9 @@ namespace ITSM.Controllers
             {
                 user = currentUser,
                 CMDB = cmdb_info,
-                DepartmentList = allDeps
+                DepartmentList = allDeps,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);
@@ -179,6 +195,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> CMDB_Info(CMDB cmdb_if)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var departmentTask = _depApi.GetAllDepartment_API();
             await Task.WhenAll(departmentTask);
@@ -193,7 +211,9 @@ namespace ITSM.Controllers
             {
                 user = currentUser,
                 CMDB = cmdb_info,
-                DepartmentList = allDeps
+                DepartmentList = allDeps,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             if (cmdb_if.full_name != null &&

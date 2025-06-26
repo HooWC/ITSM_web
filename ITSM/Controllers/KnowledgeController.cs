@@ -45,6 +45,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> KB_Home()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var CategoryTask = _categoryApi.GetAllCategory_API();
             var UserTask = _userApi.GetAllUser_API();
@@ -75,6 +77,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> KB_List()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var CategoryTask = _categoryApi.GetAllCategory_API();
             var UserTask = _userApi.GetAllUser_API();
@@ -104,6 +108,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> KB_List_User()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var CategoryTask = _categoryApi.GetAllCategory_API();
             var UserTask = _userApi.GetAllUser_API();
@@ -126,7 +132,9 @@ namespace ITSM.Controllers
             var model = new AllModelVM
             {
                 user = currentUser,
-                KnowledgeList = KB_info_list.OrderByDescending(X => X.id).ToList()
+                KnowledgeList = KB_info_list.OrderByDescending(X => X.id).ToList(),
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);
@@ -135,6 +143,8 @@ namespace ITSM.Controllers
         public async Task<AllModelVM> get_kb_data(int id, string role)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var userTask = _userApi.GetAllUser_API();
             var categoryTask = _categoryApi.GetAllCategory_API();
@@ -152,7 +162,9 @@ namespace ITSM.Controllers
                 user = currentUser,
                 CategoryList = allCategorys,
                 roleBack = role,
-                knowledge = kb_info
+                knowledge = kb_info,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return model;
@@ -169,6 +181,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> KB_Info(IFormFile file, string type, Knowledge kb, string roleBack)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var userTask = _userApi.GetAllUser_API();
             var categoryTask = _categoryApi.GetAllCategory_API();
@@ -186,7 +200,9 @@ namespace ITSM.Controllers
                 user = currentUser,
                 CategoryList = allCategorys,
                 knowledge = kb_info,
-                roleBack = roleBack
+                roleBack = roleBack,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             if (kb.title != null &&
@@ -274,6 +290,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> KB_Search(int categorytitle, string kb_search_word, string showall)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var CategoryTask = _categoryApi.GetAllCategory_API();
             var UserTask = _userApi.GetAllUser_API();
@@ -313,7 +331,9 @@ namespace ITSM.Controllers
                 user = currentUser,
                 KnowledgeList = kbs,
                 category = category_info != null ? category_info : null,
-                kb_search_word = kb_search_word
+                kb_search_word = kb_search_word,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);
@@ -322,6 +342,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> KB_Read(int kbid, string kbsearchword, string showall)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var CategoryTask = _categoryApi.GetAllCategory_API();
             var UserTask = _userApi.GetAllUser_API();
@@ -349,7 +371,9 @@ namespace ITSM.Controllers
                 category = category_info,
                 kb_search_word = kbsearchword != null ? kbsearchword : null,
                 kb_search_all = showall != null ? showall : null,
-                KnowledgeList = allKB.Where(x => x.category_id == kb_info.category_id && x.id != kb_info.id).Take(5).OrderByDescending(x => x.id).ToList()
+                KnowledgeList = allKB.Where(x => x.category_id == kb_info.category_id && x.id != kb_info.id).Take(5).OrderByDescending(x => x.id).ToList(),
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);
@@ -358,6 +382,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> KB_Create()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var CategoryTask = _categoryApi.GetAllCategory_API();
             await Task.WhenAll(CategoryTask);
@@ -367,7 +393,9 @@ namespace ITSM.Controllers
             var model = new AllModelVM()
             {
                 user = currentUser,
-                CategoryList = allCategory
+                CategoryList = allCategory,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);
@@ -377,6 +405,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> KB_Create(Knowledge kb)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var CategoryTask = _categoryApi.GetAllCategory_API();
             var KBTask = _kbApi.GetAllKnowledge_API();
@@ -388,7 +418,9 @@ namespace ITSM.Controllers
             var model = new AllModelVM()
             {
                 user = currentUser,
-                CategoryList = allCategory
+                CategoryList = allCategory,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             if (
@@ -442,6 +474,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> KB_Import()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var CategoryTask = _categoryApi.GetAllCategory_API();
             await Task.WhenAll(CategoryTask);
@@ -451,7 +485,9 @@ namespace ITSM.Controllers
             var model = new AllModelVM()
             {
                 user = currentUser,
-                CategoryList = allCategory
+                CategoryList = allCategory,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);
@@ -461,6 +497,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> KB_Import(IFormFile file, Knowledge kb)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var CategoryTask = _categoryApi.GetAllCategory_API();
             var KBTask = _kbApi.GetAllKnowledge_API();
@@ -472,7 +510,9 @@ namespace ITSM.Controllers
             var model = new AllModelVM()
             {
                 user = currentUser,
-                CategoryList = allCategory
+                CategoryList = allCategory,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             if (kb.title != null &&

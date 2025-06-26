@@ -11,6 +11,7 @@ using ITSM_DomainModelEntity.FunctionModels;
 using System.Data;
 using Microsoft.AspNetCore.Http.HttpResults;
 using ITSM_DomainModelEntity.Function;
+using Humanizer;
 
 namespace ITSM.Controllers
 {
@@ -627,10 +628,6 @@ namespace ITSM.Controllers
 
                 incData.describe = inc.describe;
                 incData.urgency = inc.urgency;
-                incData.category = inc.category;
-                incData.subcategory = inc.subcategory;
-                incData.assignment_group = inc.assignment_group;
-                incData.assigned_to = inc.assigned_to == 0 ? null : inc.assigned_to;
 
                 // resolved data
                 incData.resolution = resolveNotes;
@@ -688,7 +685,9 @@ namespace ITSM.Controllers
                     resolved_date = incident.resolved_date?.ToString("yyyy-MM-dd HH:mm:ss"),
                     resolved_by = incident.resolved_by,
                     resolved_by_name = resolvedByName,
-                    resolved_by_avatar = resolvedBy?.photo
+                    resolved_by_avatar = resolvedBy?.photo,
+                    resolved_photo_type = resolvedBy?.photo_type,
+                    user_id = resolvedBy?.id
                 };
 
                 return Json(new { success = true, resolution = resolutionData });
@@ -1747,6 +1746,8 @@ namespace ITSM.Controllers
                 userReqs = allReqs.Where(x => x.assignment_group == currentUser.department_id && x?.assigned_to == null && x.state != "Rejected" && x.state != "Completed").OrderByDescending(x => x.id).ToList();
             else if (searchWord == "req_group")
                 userReqs = allReqs.Where(x => x.assignment_group == currentUser.department_id).OrderByDescending(x => x.id).ToList();
+            else if (searchWord == "req_tome")
+                userReqs = allReqs.Where(x => x.assigned_to == currentUser.id).OrderByDescending(y => y.id).ToList();
             else
                 userReqs = allReqs.OrderByDescending(x => x.id).ToList();
 
@@ -1811,6 +1812,18 @@ namespace ITSM.Controllers
                             .Where(t => t.create_date != null && t.create_date.ToString("yyyy-MM-dd HH:mm:ss").Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
                             .ToList();
                         break;
+                    case "type":
+                        var filteredByType = userReqs.Where(t =>
+                            (t.req_type == false
+                                ? "Hardware"
+                                : (t.erp_version?.ToLower() == "erp 8"
+                                    ? "ERP Account"
+                                    : "ERP"))
+                            .Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
+                        ).ToList();
+
+                        filteredReqs = filteredByType;
+                        break;
                     case "number":
                     default:
                         filteredReqs = userReqs
@@ -1824,13 +1837,13 @@ namespace ITSM.Controllers
             {
                 t.id,
                 t.req_id,
-                t.quantity,
                 t.state,
-                product_id = allProduct.FirstOrDefault(d => d.id == t.pro_id)?.pro_number ?? "",
+                req_type_name = t.req_type == false
+                    ? "Hardware"
+                    : (t.erp_version.ToLower() == "erp 8" ? "ERP Account" : "ERP"),
                 user_name = allUser.FirstOrDefault(u => u.id == t.sender)?.fullname ?? "",
                 assignment_group = allDepartment.FirstOrDefault(x => x.id == t.assignment_group).name,
-                assigned_to = allUser.FirstOrDefault(x => x.id == t.assigned_to).fullname,
-                update_by = allUser.FirstOrDefault(x => x.id == t.updated_by)?.fullname ?? "",
+                assigned_to = t.assigned_to != null ? allUser.FirstOrDefault(x => x.id == t.assigned_to).fullname : "-",
                 create_date = t.create_date.ToString("yyyy-MM-dd HH:mm:ss")
             });
 
@@ -1853,6 +1866,8 @@ namespace ITSM.Controllers
                 userReqs = allReqs.Where(x => x.sender == currentUser.id).OrderByDescending(x => x.id).ToList();
             else if (filterword == "req_filter_group")
                 userReqs = allReqs.Where(x => x.assignment_group == currentUser.department_id).OrderByDescending(x => x.id).ToList();
+            else if (filterword == "req_filter_tome")
+                userReqs = allReqs.Where(x => x.assigned_to == currentUser.id).OrderByDescending(y => y.id).ToList();
             else
                 userReqs = allReqs.OrderByDescending(x => x.id).ToList();
 
@@ -1895,13 +1910,13 @@ namespace ITSM.Controllers
             var result = filteredReqs.Select(t => new {
                 t.id,
                 t.req_id,
-                t.quantity,
                 t.state,
-                product_id = allProduct.FirstOrDefault(d => d.id == t.pro_id)?.pro_number ?? "",
+                req_type_name = t.req_type == false
+                    ? "Hardware"
+                    : (t.erp_version.ToLower() == "erp 8" ? "ERP Account" : "ERP"),
                 user_name = allUser.FirstOrDefault(u => u.id == t.sender)?.fullname ?? "",
                 assignment_group = allDepartment.FirstOrDefault(x => x.id == t.assignment_group).name,
-                assigned_to = allUser.FirstOrDefault(x => x.id == t.assigned_to).fullname,
-                update_by = allUser.FirstOrDefault(x => x.id == t.updated_by)?.fullname ?? "",
+                assigned_to = t.assigned_to != null ? allUser.FirstOrDefault(x => x.id == t.assigned_to).fullname : "-",
                 create_date = t.create_date.ToString("yyyy-MM-dd HH:mm:ss")
             });
 
@@ -1925,6 +1940,8 @@ namespace ITSM.Controllers
                 userReqs = allReqs.Where(x => x.assignment_group == currentUser.department_id).OrderByDescending(x => x.id).ToList();
             else if (sortWord == "assign_work")
                 userReqs = allReqs.Where(x => x.assignment_group == currentUser.department_id && x?.assigned_to == null && x.state != "Rejected" && x.state != "Completed").OrderByDescending(x => x.id).ToList();
+            else if (sortWord == "req_sort_tome")
+                userReqs = allReqs.Where(x => x.assigned_to == currentUser.id).OrderByDescending(y => y.id).ToList();
             else
                 userReqs = allReqs.OrderByDescending(x => x.id).ToList();
 
@@ -1948,13 +1965,13 @@ namespace ITSM.Controllers
             var result = sortedRequests.Select(t => new {
                 t.id,
                 t.req_id,
-                t.quantity,
                 t.state,
-                product_id = allProduct.FirstOrDefault(d => d.id == t.pro_id)?.pro_number ?? "",
+                req_type_name = t.req_type == false
+                    ? "Hardware"
+                    : (t.erp_version.ToLower() == "erp 8" ? "ERP Account" : "ERP"),
                 user_name = allUser.FirstOrDefault(u => u.id == t.sender)?.fullname ?? "",
                 assignment_group = allDepartment.FirstOrDefault(x => x.id == t.assignment_group).name,
-                assigned_to = allUser.FirstOrDefault(x => x.id == t.assigned_to).fullname,
-                update_by = allUser.FirstOrDefault(x => x.id == t.updated_by)?.fullname ?? "",
+                assigned_to = t.assigned_to != null ? allUser.FirstOrDefault(x => x.id == t.assigned_to).fullname : "-",
                 create_date = t.create_date.ToString("yyyy-MM-dd HH:mm:ss")
             });
 
@@ -2015,18 +2032,30 @@ namespace ITSM.Controllers
         /// <summary>
         /// Request/Req_Info
         [HttpPost]
-        public async Task<JsonResult> CompletedRequest(int req_id)
+        public async Task<JsonResult> CompletedRequest(Request req, string resolveType, string resolveNotes)
         {
             if (!IsUserLoggedIn(out var currentUser))
                 return Json(new { success = false, message = "Not logged in" });
 
+            if (string.IsNullOrEmpty(resolveType) || string.IsNullOrEmpty(resolveNotes))
+                return Json(new { success = false, message = "Resolution type and resolution notes are required." });
+
             try
             {
-                var reqData = await _reqApi.FindByIDRequest_API(req_id);
+                var reqData = await _reqApi.FindByIDRequest_API(req.id);
 
                 if (reqData == null)
                     return Json(new { success = false, message = "Request not found" });
 
+                reqData.description = req.description;
+                reqData.assigned_to = req.assigned_to == 0 ? null : req.assigned_to;
+
+                // resolved data
+                reqData.erp_resolution = resolveNotes;
+                reqData.erp_resolved_date = DateTime.Now;
+                reqData.erp_resolution_type = resolveType;
+
+                // Force state to Resolved regardless of what was in the form
                 reqData.state = "Completed";
                 reqData.updated_by = currentUser.id;
 
@@ -2054,8 +2083,7 @@ namespace ITSM.Controllers
             try
             {
                 var reqData = await _reqApi.FindByIDRequest_API(req_id);
-                var productData = await _productApi.FindByIDProduct_API(reqData.pro_id != null ? (int)reqData.pro_id : 0);
-
+                
                 var allRole = await _roleApi.GetAllRole_API();
                 currentUser.Role = allRole.FirstOrDefault(x => x.id == currentUser.role_id);
 
@@ -2065,15 +2093,20 @@ namespace ITSM.Controllers
                 reqData.state = "Rejected";
                 reqData.updated_by = currentUser.id;
 
-                if(productData != null)
+                if(reqData.req_type == false)
                 {
-                    int pro_count = productData.quantity + (reqData.quantity ?? 0);
-                    if (pro_count > 0)
-                    {
-                        productData.active = true;
-                        productData.quantity = pro_count;
+                    var productData = await _productApi.FindByIDProduct_API(reqData.pro_id != null ? (int)reqData.pro_id : 0);
 
-                        await _productApi.UpdateProduct_API(productData);
+                    if (productData != null)
+                    {
+                        int pro_count = productData.quantity + (reqData.quantity ?? 0);
+                        if (pro_count > 0)
+                        {
+                            productData.active = true;
+                            productData.quantity = pro_count;
+
+                            await _productApi.UpdateProduct_API(productData);
+                        }
                     }
                 }
 
@@ -2101,7 +2134,6 @@ namespace ITSM.Controllers
             try
             {
                 var reqData = await _reqApi.FindByIDRequest_API(req_id);
-                var productData = await _productApi.FindByIDProduct_API(reqData.pro_id != null ? (int)reqData.pro_id : 0);
 
                 var allRole = await _roleApi.GetAllRole_API();
                 currentUser.Role = allRole.FirstOrDefault(x => x.id == currentUser.role_id);
@@ -2112,17 +2144,22 @@ namespace ITSM.Controllers
                 reqData.state = "Pending";
                 reqData.updated_by = currentUser.id;
 
-                if(productData != null)
+                if(reqData.req_type == false)
                 {
-                    var pro_count = productData.quantity - reqData.quantity;
-                    if (pro_count < 0)
-                        return Json(new { success = false, message = "Not enough product" });
-                    else
+                    var productData = await _productApi.FindByIDProduct_API(reqData.pro_id != null ? (int)reqData.pro_id : 0);
+
+                    if (productData != null)
                     {
-                        if (pro_count <= 0)
-                            productData.active = false;
-                        productData.quantity = (pro_count ?? 0);
-                        await _productApi.UpdateProduct_API(productData);
+                        var pro_count = productData.quantity - reqData.quantity;
+                        if (pro_count < 0)
+                            return Json(new { success = false, message = "Not enough product" });
+                        else
+                        {
+                            if (pro_count <= 0)
+                                productData.active = false;
+                            productData.quantity = (pro_count ?? 0);
+                            await _productApi.UpdateProduct_API(productData);
+                        }
                     }
                 }
 
@@ -2136,6 +2173,49 @@ namespace ITSM.Controllers
             catch (Exception ex)
             {
                 return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// IncidentManagement/Inc_Info_Form
+        public async Task<IActionResult> GetReqResolutionHistory(int reqId)
+        {
+            if (!IsUserLoggedIn(out var currentUser))
+                return Json(new { success = false, message = "Not logged in" });
+
+            try
+            {
+                var req = await _reqApi.FindByIDRequest_API(reqId);
+
+                if (req == null)
+                    return Json(new { success = false, message = "Request not found" });
+
+                if (req.state != "Completed")
+                    return Json(new { success = false, message = "Request is not completed yet" });
+
+                var resolvedBy = new ITSM_DomainModelEntity.Models.User();
+                resolvedBy = await _userApi.FindByIDUser_API(req.assigned_to != null ? (int)req.assigned_to : 0);
+
+                var resolvedByName = resolvedBy != null ? resolvedBy.fullname : "Unknown";
+
+                var resolutionData = new
+                {
+                    req.id,
+                    erp_resolution_type = req.erp_resolution_type,
+                    erp_resolution = req.erp_resolution,
+                    erp_resolved_date = req.erp_resolved_date?.ToString("yyyy-MM-dd HH:mm:ss"),
+                    assigned_to = req.assigned_to,
+                    resolved_by_name = resolvedByName,
+                    resolved_by_avatar = resolvedBy?.photo,
+                    resolved_photo_type = resolvedBy?.photo_type,
+                    user_id = resolvedBy?.id
+                };
+
+                return Json(new { success = true, resolution = resolutionData });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = $"Error: {ex.Message}" });
             }
         }
 
@@ -2225,6 +2305,7 @@ namespace ITSM.Controllers
                 return Json(new { success = false, message = ex.Message });
             }
         }
+
 
     }
 }

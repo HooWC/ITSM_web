@@ -22,6 +22,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> All()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var versionTask = _myversionApi.GetAllMyversion_API();
             await Task.WhenAll(versionTask);
@@ -33,7 +35,9 @@ namespace ITSM.Controllers
             var model = new AllModelVM
             {
                 user = currentUser,
-                MyversionList = versionList
+                MyversionList = versionList,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);
@@ -42,10 +46,14 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Create()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var model = new AllModelVM
             {
-                user = currentUser
+                user = currentUser,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);
@@ -55,10 +63,14 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Create(Myversion version)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var model = new AllModelVM
             {
-                user = currentUser
+                user = currentUser,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             if (version.version_num == null && version.message == null)
@@ -101,13 +113,17 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Info(int id)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var myversion = await _myversionApi.FindByIDMyversion_API(id);
 
             var model = new AllModelVM
             {
                 user = currentUser,
-                myversion = myversion
+                myversion = myversion,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);
@@ -117,13 +133,17 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Info(Myversion version)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var myversion = await _myversionApi.FindByIDMyversion_API(version.id);
 
             var model = new AllModelVM
             {
                 user = currentUser,
-                myversion = myversion
+                myversion = myversion,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             if (version.version_num == null && version.message == null)
@@ -161,6 +181,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> View_Page()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var allVersion = await _myversionApi.GetAllMyversion_API();
 
@@ -169,7 +191,9 @@ namespace ITSM.Controllers
             var model = new AllModelVM
             {
                 user = currentUser,
-                MyversionList = versionList
+                MyversionList = versionList,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);

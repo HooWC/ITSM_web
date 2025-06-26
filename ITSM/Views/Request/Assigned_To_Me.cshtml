@@ -1,7 +1,176 @@
-﻿
+﻿@using ITSM_DomainModelEntity.ViewModels
+@model AllModelVM
 @{
     ViewData["Title"] = "Assigned_To_Me";
+    Layout = "_Layout";
 }
 
-<h1>Assigned_To_Me</h1>
+<style>
+    .inc-tab-incidents-table th.number-column {
+        width: 10%;
+    }
+
+    .inc-tab-incidents-table th.r_user {
+        width: 16%;
+    }
+
+    .inc-tab-incidents-table th.r_state {
+        width: 15%;
+    }
+
+    .inc-tab-incidents-table th.r_assignment_group {
+        width: 16%;
+    }
+
+    .inc-tab-incidents-table th.r_type {
+        width: 11%;
+    }
+
+    .inc-tab-incidents-table th.r_assigned_to {
+        width: 16%;
+    }
+
+    .inc-tab-incidents-table th.r_create_date {
+        width: 16%;
+    }
+</style>
+
+<div class="inc-tab-container">
+    <header>
+        <div class="inc-tab-header-left">
+            <button class="inc-tab-icon-button">
+                <i class="fas fa-list"></i>
+            </button>
+            <h2 class="all-title-header-front">Requests</h2>
+            <div class="inc-tab-dropdown">
+                <button class="inc-tab-dropdown-toggle" id="filterDropdown">Number <i class="fas fa-chevron-down"></i></button>
+                <div class="inc-tab-dropdown-menu" id="filterMenu" style="display:none;">
+                    <a href="#" class="inc-tab-dropdown-item" data-filter="number">Request ID</a>
+                    <a href="#" class="inc-tab-dropdown-item phone_request_hide_design" data-filter="user">User</a>
+                    <a href="#" class="inc-tab-dropdown-item phone_request_hide_design" data-filter="assignment_group">Assignment Group</a>
+                    <a href="#" class="inc-tab-dropdown-item phone_request_hide_design" data-filter="assigned_to">Assigned to</a>
+                    <a href="#" class="inc-tab-dropdown-item phone_request_hide_design" data-filter="type">Type</a>
+                    <a href="#" class="inc-tab-dropdown-item phone_request_hide_design" data-filter="create_date">Create Date</a>
+                </div>
+            </div>
+            <div class="inc-tab-search-container">
+                <input type="text" placeholder="Search" class="inc-tab-search-input" id="searchInput">
+            </div>
+        </div>
+        <div class="inc-tab-header-right">
+            <button class="inc-tab-icon-button" id="refreshButton">
+                <i class="fas fa-sync-alt"></i>
+            </button>
+            <button class="inc-cre-btn inc-cre-btn-icon" onclick="window.open('/Info/All_List_Info', '_blank')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+            </button>
+            <div class="inc-tab-dropdown">
+                <button class="inc-tab-dropdown-toggle" id="statusDropdown">All <i class="fas fa-chevron-down"></i></button>
+                <div class="inc-tab-dropdown-menu" id="statusMenu" style="display:none;">
+                    <a href="#" class="inc-tab-dropdown-item" data-status="all">All</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-status="pending">Pending</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-status="in_progress">In Progress</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-status="completed">Completed</a>
+                    <a href="#" class="inc-tab-dropdown-item" data-status="rejected">Rejected</a>
+                </div>
+            </div>
+
+        </div>
+    </header>
+
+    <input type="text" name="typeName" id="typeName" class="inc-cre-form-control" value="Tome" style="display:none;" readonly>
+
+    <div class="inc-tab-table-container">
+        <table class="inc-tab-incidents-table">
+            <thead>
+                <tr>
+                    <th class="inc-tab-sortable number-column" id="sortByNumber">Number <i class="fas fa-arrow-up" id="sortIcon"></i></th>
+                    <th class="r_user phone_request_hide_design">User</th>
+                    <th class="r_state">State</th>
+                    <th class="r_assignment_group phone_request_hide_design">Assignment Group</th>
+                    <th class="r_assigned_to phone_request_hide_design">Assigned to</th>
+                    <th class="r_type">Type</th>
+                    <th class="r_create_date phone_request_hide_design">Create Date</th>
+                </tr>
+            </thead>
+            <tbody id="incTableBody">
+
+                @foreach (var i in Model.RequestList)
+                {
+                    <tr class="incident-item" data-id="@i.id">
+                        <td class="inc-tab-incident-number" data-label="Number">
+                            <a href="~/Request/Req_Info?id=@i.id&type=Tome">@(i.req_id)</a>
+                        </td>
+                        <td data-label="Full_Name" class="phone_request_hide_design">@(i.Sender?.fullname != null ? i.Sender?.fullname : "-")</td>
+                        @if (i.state == "Rejected")
+                        {
+                            <td data-label="state" style="color:darkred">@i.state</td>
+                        }
+                        else if (i.state == "Completed")
+                        {
+                            <td data-label="state" style="color:chocolate">@i.state</td>
+                        }
+                        else if (i.state == "In Progress")
+                        {
+                            <td data-label="state" style="color:dodgerblue">@i.state</td>
+                        }
+                        else
+                        {
+                            <td data-label="state">@i.state</td>
+                        }
+                        <td data-label="AssignmentGroup" class="phone_request_hide_design">@(i.AssignmentGroup?.name)</td>
+                        <td data-label="AssignedTo" class="phone_request_hide_design">@(i.AssignedTo?.fullname != null ? i.AssignedTo?.fullname : "-")</td>
+                        @if (i.req_type == false)
+                        {
+                            <td data-label="Quantity">Hardware</td>
+                        }
+                        else
+                        {
+                            if (i.erp_version?.ToLower() == "erp 8")
+                            {
+                                <td data-label="Quantity">ERP Account</td>
+                            }
+                            else
+                            {
+                                <td data-label="Quantity">ERP</td>
+                            }
+                        }
+                        <td data-label="Create_Date" class="phone_request_hide_design">@(i.create_date.ToString("yyyy-MM-dd HH:mm:ss"))</td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+
+    <div class="inc-tab-pagination">
+        <button class="inc-tab-pagination-button" id="firstPageBtn" disabled><i class="fas fa-angle-double-left"></i></button>
+        <button class="inc-tab-pagination-button" id="prevPageBtn" disabled><i class="fas fa-angle-left"></i></button>
+        <span class="inc-tab-pagination-info" id="paginationInfo">-</span>
+        <button class="inc-tab-pagination-button" id="nextPageBtn"><i class="fas fa-angle-right"></i></button>
+        <button class="inc-tab-pagination-button" id="lastPageBtn"><i class="fas fa-angle-double-right"></i></button>
+    </div>
+</div>
+
+<span style="display:none" id="forAjaxGetFunctionName_search">ToMe</span>
+<span style="display:none" id="forAjaxGetFunctionName_sort">ToMe</span>
+<span style="display:none" id="forAjaxGetFunctionName_filter">ToMe</span>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="~/js/List/Req_List.js"></script>
+<script>
+      $(function () {
+        var $target = $('#Requests_menu');
+        if (!$target.hasClass('active') || !$target.hasClass('open')) {
+            $('.menu-item').removeClass('active open');
+            $target.addClass('active open');
+        }
+
+        $('#Requests_child_assigned').addClass("active");
+    });
+</script>
 

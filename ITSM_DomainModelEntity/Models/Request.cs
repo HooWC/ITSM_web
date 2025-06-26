@@ -58,7 +58,7 @@ namespace ITSM_DomainModelEntity.Models
         public bool? erp_report { get; set; }
         public string? erp_resolution_type { get; set; }
         public string? erp_resolution { get; set; } 
-        public DateTime? erp_resolved_data { get; set; }
+        public DateTime? erp_resolved_date { get; set; }
 
         // Navigation properties
         public virtual Product? Product { get; set; }

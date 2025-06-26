@@ -45,6 +45,8 @@ namespace ITSM.Controllers
         public async Task<AllModelVM> get_Inc_Data(string type)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var inc = _incApi.GetAllIncident_API();
             var dep = _depApi.GetAllDepartment_API();
@@ -79,7 +81,9 @@ namespace ITSM.Controllers
             var model = new AllModelVM
             {
                 user = currentUser,
-                IncidentList = incList
+                IncidentList = incList,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return model;
@@ -102,6 +106,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Create_Form()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var inc_categoryTask = _inccategoryApi.GetAllIncidentcategory_API();
             var sucategoryTask = _subcategoryApi.GetAllSubcategory_API();
@@ -115,7 +121,9 @@ namespace ITSM.Controllers
             {
                 user = currentUser,
                 Incident_Category_List = allIncCategory,
-                Subcategory_List = allSucategory
+                Subcategory_List = allSucategory,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);
@@ -125,6 +133,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Create_Form(List<IFormFile> files, Incident inc)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var inc_categoryTask = _inccategoryApi.GetAllIncidentcategory_API();
             var sucategoryTask = _subcategoryApi.GetAllSubcategory_API();
@@ -138,7 +148,9 @@ namespace ITSM.Controllers
             {
                 user = currentUser,
                 Incident_Category_List = allIncCategory,
-                Subcategory_List = allSucategory
+                Subcategory_List = allSucategory,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             if (!string.IsNullOrEmpty(inc.describe))
@@ -233,6 +245,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Inc_Info_Form(int id, string type)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var departmentTask = _depApi.GetAllDepartment_API();
             var userTask = _userApi.GetAllUser_API();
@@ -268,7 +282,9 @@ namespace ITSM.Controllers
                 roleBack = type,
                 Incident_Photos_List = allRelatedPhotos,
                 Incident_Category_List = allIncCategory,
-                Subcategory_List = allSucategory
+                Subcategory_List = allSucategory,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);
@@ -278,6 +294,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Inc_Info_Form(List<IFormFile> files, Incident inc, string roleBack)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var departmentTask = _depApi.GetAllDepartment_API();
             var userTask = _userApi.GetAllUser_API();
@@ -312,7 +330,9 @@ namespace ITSM.Controllers
                 roleBack = roleBack,
                 Incident_Photos_List = allRelatedPhotos,
                 Incident_Category_List = allIncCategory,
-                Subcategory_List = allSucategory
+                Subcategory_List = allSucategory,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             if (inc.describe != null)
@@ -429,6 +449,8 @@ namespace ITSM.Controllers
         public async Task<AllModelVM> get_Manager_Assign_Work_Info(int id)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var departmentTask = _depApi.GetAllDepartment_API();
             var userTask = _userApi.GetAllUser_API();
@@ -463,7 +485,9 @@ namespace ITSM.Controllers
                 incident = incData,
                 Incident_Photos_List = allRelatedPhotos,
                 Incident_Category_List = allIncCategory,
-                Subcategory_List = allSucategory
+                Subcategory_List = allSucategory,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return model;

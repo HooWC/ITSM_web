@@ -166,6 +166,10 @@ namespace ITSM_DomainModelEntity.ViewModels
 
         public List<RequestPhoto>? reqPhotoList { get; set; }
 
+        public int incCount { get; set; }
+
+        public int reqCount { get; set; }
+
         public AllModelVM()
         {
             YearlyIncidentStats = new List<YearlyStats>();

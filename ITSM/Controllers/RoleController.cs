@@ -38,6 +38,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Role_List()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var roleTask = _roleApi.GetAllRole_API();
             await Task.WhenAll(roleTask);
@@ -47,7 +49,9 @@ namespace ITSM.Controllers
             var model = new AllModelVM
             {
                 user = currentUser,
-                RoleList = allRole
+                RoleList = allRole,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);
@@ -56,10 +60,14 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Role_Create()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var model = new AllModelVM
             {
-                user = currentUser
+                user = currentUser,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);
@@ -69,10 +77,14 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Role_Create(Role roleName)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var model = new AllModelVM
             {
-                user = currentUser
+                user = currentUser,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             if (roleName.role == null)
@@ -109,13 +121,17 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Role_Info(int id)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var role = await _roleApi.FindByIDRole_API(id);
 
             var model = new AllModelVM
             {
                 user = currentUser,
-                role = role
+                role = role,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);
@@ -125,13 +141,17 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Role_Info(Role roleInfo)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var roleTask = await _roleApi.FindByIDRole_API(roleInfo.id);
 
             var model = new AllModelVM
             {
                 user = currentUser,
-                role = roleTask
+                role = roleTask,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             if (roleTask.role == null)

@@ -46,6 +46,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Home()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var todoTask = _todoApi.GetAllTodo_API();
             var incidentTask = _incApi.GetAllIncident_API();
@@ -119,6 +121,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Todo_List()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var todoTask = _todoApi.GetAllTodo_API();
 
@@ -128,7 +132,9 @@ namespace ITSM.Controllers
             var model = new AllModelVM
             {
                 user = currentUser,
-                TodoList = todo
+                TodoList = todo,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);
@@ -137,10 +143,14 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Todo_Create()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var model = new AllModelVM
             {
-                user = currentUser
+                user = currentUser,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);
@@ -150,10 +160,14 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Todo_Create(Todo todo, string active_word)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var model = new AllModelVM
             {
-                user = currentUser
+                user = currentUser,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             if (todo.title == null)
@@ -203,13 +217,17 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Todo_Edit(int id)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var todo = await _todoApi.FindByIDTodo_API(id);
 
             var model = new AllModelVM
             {
                 user = currentUser,
-                todo = todo
+                todo = todo,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);
@@ -219,13 +237,17 @@ namespace ITSM.Controllers
         public async Task<IActionResult> Todo_Edit(Todo todo, string active_word)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var edit_todo = await _todoApi.FindByIDTodo_API(todo.id);
 
             var model = new AllModelVM
             {
                 user = currentUser,
-                todo = edit_todo
+                todo = edit_todo,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             if (todo.title == null)
@@ -256,6 +278,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> User_Info()
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var departmentTask = _departmentApi.GetAllDepartment_API();
             var roleTask = _roleApi.GetAllRole_API();
@@ -271,7 +295,9 @@ namespace ITSM.Controllers
             {
                 user = currentUser,
                 RoleList = allRole,
-                DepartmentList = allDepartment
+                DepartmentList = allDepartment,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);
@@ -281,6 +307,8 @@ namespace ITSM.Controllers
         public async Task<IActionResult> User_Info(IFormFile file, User user)
         {
             var currentUser = await _userService.GetCurrentUserAsync();
+            var incCount = await _userService.GetIncidentTeamCount();
+            var reqCount = await _userService.GetRequestToMeCount();
 
             var departmentTask = _departmentApi.GetAllDepartment_API();
             var roleTask = _roleApi.GetAllRole_API();
@@ -300,7 +328,9 @@ namespace ITSM.Controllers
             {
                 user = currentUser,
                 RoleList = allRole,
-                DepartmentList = allDepartment
+                DepartmentList = allDepartment,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             if (!string.IsNullOrEmpty(user.emp_id) &&
