@@ -412,11 +412,11 @@
 
       $('#home_log_out').on('click', function () {
             $.ajax({
-                url: '/Ajax/_Logout',
+                url: window.AppRoot + 'Ajax/_Logout',
                 method: 'GET',
                 success: function (response) {
                     if (response.success) {
-                        window.location.href = '/Auth/Login';
+                        window.location.href = window.AppRoot + 'Auth/Login';
                     } else {
                         console.error('Login Failed:', response.message);
                     }

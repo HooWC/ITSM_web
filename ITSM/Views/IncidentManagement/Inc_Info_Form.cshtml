@@ -208,6 +208,22 @@
             </div>
         }
 
+        <div id="resolve-error-notification" class="error-notification" style="display: none;">
+            <div class="error-notification-content">
+                <div class="error-notification-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                </div>
+                <div class="error-notification-text">
+                    <div class="error-notification-title">Resolution failed</div>
+                    <div class="error-notification-message" id="resolve-error-notification-message"></div>
+                </div>
+            </div>
+        </div>
+
         <form id="incidentForm" class="inc-cre-incident-form" action="~/IncidentManagement/Inc_Info_Form" method="post" enctype="multipart/form-data">
             <input type="text" name="id" id="id" class="inc-cre-form-control" value="@Model.incident.id" style="display:none;" readonly>
             <input type="text" name="roleBack" id="roleBack" class="inc-cre-form-control" value="@Model.roleBack" style="display:none;" readonly>
@@ -399,9 +415,6 @@
                     }
                 </div>
             </div>
-
-
-
             <div class="inc-cre-form-group inc-cre-full-width">
                 @if (Model.incident.state != "Resolved" && Model.incident.state != "Closed" && Model.incident.Sender?.id == Model.user?.id)
                 {

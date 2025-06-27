@@ -46,12 +46,12 @@
                 <button class="inc-tab-dropdown-toggle" id="filterDropdown">Full Name <i class="fas fa-chevron-down"></i></button>
                 <div class="inc-tab-dropdown-menu" id="filterMenu" style="display:none;">
                     <a href="#" class="inc-tab-dropdown-item" data-filter="full_name">Full Name</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="department">Department</a>
+                    <a href="#" class="inc-tab-dropdown-item phone_request_hide_design" data-filter="department">Department</a>
                     <a href="#" class="inc-tab-dropdown-item" data-filter="device_type">Device Type</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="windows_version">Windows Version</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="host_name">Host Name</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="ram">Ram</a>
-                    <a href="#" class="inc-tab-dropdown-item" data-filter="dvdrw">DVDRW</a>
+                    <a href="#" class="inc-tab-dropdown-item phone_request_hide_design" phone_request_hide_design data-filter="windows_version">Windows Version</a>
+                    <a href="#" class="inc-tab-dropdown-item phone_request_hide_design" data-filter="host_name">Host Name</a>
+                    <a href="#" class="inc-tab-dropdown-item phone_request_hide_design" data-filter="ram">Ram</a>
+                    <a href="#" class="inc-tab-dropdown-item phone_request_hide_design" data-filter="dvdrw">DVDRW</a>
                 </div>
             </div>
             <div class="inc-tab-search-container">
@@ -88,12 +88,12 @@
                 <tr>
                     <th class="inc-tab-checkbox-column"></th>
                     <th class="inc-tab-sortable number-column" id="sortByNumber">Full Name <i class="fas fa-arrow-up" id="sortIcon"></i></th>
-                    <th class="department">Department</th>
+                    <th class="department phone_request_hide_design">Department</th>
                     <th class="device_type">Device Type</th>
-                    <th class="window">Windows Version</th>
-                    <th class="host_name">Host Name</th>
-                    <th class="ram">Ram</th>
-                    <th class="dvdrw">Dvdrw</th>
+                    <th class="window phone_request_hide_design">Windows Version</th>
+                    <th class="host_name phone_request_hide_design">Host Name</th>
+                    <th class="ram phone_request_hide_design">Ram</th>
+                    <th class="dvdrw phone_request_hide_design">Dvdrw</th>
                 </tr>
             </thead>
             <tbody id="incTableBody">
@@ -105,12 +105,12 @@
                         <td class="inc-tab-incident-number" data-label="Number">
                             <a href="~/CMDB/CMDB_Info?id=@i.id">@i.full_name</a>
                         </td>
-                        <td data-label="department_name">@i.Department.name</td>
+                        <td data-label="department_name" class="phone_request_hide_design">@i.Department.name</td>
                         <td data-label="device_type">@i.device_type</td>
-                        <td data-label="windows_version">@i.windows_version</td>
-                        <td data-label="hostname">@i.hostname</td>
-                        <td data-label="ram">@i.ram</td>
-                        <td data-label="dvdrw">@i.dvdrw</td>
+                        <td data-label="windows_version" class="phone_request_hide_design">@i.windows_version</td>
+                        <td data-label="hostname" class="phone_request_hide_design">@i.hostname</td>
+                        <td data-label="ram" class="phone_request_hide_design">@i.ram</td>
+                        <td data-label="dvdrw" class="phone_request_hide_design">@i.dvdrw</td>
                     </tr>
                 }
 

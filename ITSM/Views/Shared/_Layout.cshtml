@@ -67,6 +67,23 @@ data-bs-theme="dark">
         window.AppRoot = '@Url.Content("~/")';
         // console.log("AppRoot =", window.AppRoot);
     </script>
+    <style>
+        .count-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 17px;
+            height: 17px;
+            padding: 0 12px;
+            font-size: 10px;
+            font-weight: 600;
+            line-height: 1;
+            color: #fff;
+            background-color: #2629a5;
+            border-radius: 10px;
+            margin-left: 8px;
+        }
+    </style>
 </head>
 
 <body>
@@ -86,12 +103,10 @@ data-bs-theme="dark">
                         <i class="icon-image menu-icon tf-icons bx bx-home-smile"></i>
                         <div class="icon-name">Dashboard</div>
                     </a>
-                    <div class="game-icon">
-                        <a href="javascript:void(0);">
-                            <i class="icon-image fa-solid fa-ban"></i>
-                            <div class="icon-name">-</div>
-                        </a>
-                    </div>
+                    <a href="~/Personal/Home" class="game-icon">
+                        <i class="icon-image fa-solid fa-user"></i>
+                        <div class="icon-name">Personal</div>
+                    </a>
                     <a href="~/Personal/User_Info" class="game-icon wide-icon">
                         <i class="icon-image fa-solid fa-user-shield"></i>
                         <div class="icon-name">Profile</div>
@@ -135,12 +150,12 @@ data-bs-theme="dark">
                         <div class="icon-name">New Incident</div>
                     </a>
                     <a href="~/Request/Service_Catalog" class="game-icon">
-                        <i class="icon-image fa-solid fa-file-circle-plus"></i>
-                        <div class="icon-name">New Request</div>
+                        <i class="icon-image fa-solid fa-computer"></i>
+                        <div class="icon-name">New Hardware</div>
                     </a>
-                    <a href="~/Personal/Home" class="game-icon">
-                        <i class="icon-image fa-solid fa-user"></i>
-                        <div class="icon-name">Personal</div>
+                    <a href="~/Request/Application" class="game-icon">
+                        <i class="icon-image fa-solid fa-file-circle-plus"></i>
+                        <div class="icon-name">New Application</div>
                     </a>
                     <a href="~/Personal/Todo_List" class="game-icon">
                         <i class="icon-image fa-solid fa-list-check"></i>
@@ -171,11 +186,27 @@ data-bs-theme="dark">
                         <i class="icon-image fa-solid fa-lightbulb"></i>
                         <div class="icon-name">Version</div>
                     </a>
-
-                    <!-- Row 6 (bottom row) -->
                     <a href="~/OtherPage/Show_Session" class="game-icon">
                         <i class="icon-image fa-solid fa-gears"></i>
                         <div class="icon-name">Session</div>
+                    </a>
+
+                    <!-- Row 6 (bottom row) -->
+                    <a href="~/IncidentManagement/Assigned_To_Group" class="game-icon">
+                        @if (@Model.incCount > 0)
+                        {
+                            <div class="notification">@Model.incCount</div>
+                        }
+                        <i class="icon-image fa-solid fa-screwdriver-wrench"></i>
+                        <div class="icon-name">US</div>
+                    </a>
+                    <a href="~/Request/Assigned_To_Me" class="game-icon">
+                        @if (@Model.reqCount > 0)
+                        {
+                            <div class="notification">@Model.reqCount</div>
+                        }
+                        <i class="icon-image fa-solid fa-desktop"></i>
+                        <div class="icon-name">ME</div>
                     </a>
                     <div class="game-icon" id="log-outBtn">
                         <a href="javascript:void(0);">
@@ -363,7 +394,7 @@ data-bs-theme="dark">
                             </div>
                         </a>
                         <ul class="menu-sub">
-                            @if (Model.user.Role.role.ToLower() == "admin")
+                            @if (Model.user.Role.role.ToLower() == "admin" || Model.user?.r_manager == true)
                             {
                                 <li class="menu-item" id="Requests_child_all">
                                     <a href="~/Request/All" class="menu-link">

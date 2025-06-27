@@ -7,6 +7,8 @@ var IncidentPages = Math.ceil(IncidentItems / itemsPerPage);
 var currentFilter = 'full_name';
 var currentStatus = 'all';
 
+phone_function()
+
 // Initialize pagination
 initPagination();
 
@@ -439,15 +441,16 @@ function updateCMDBTable(data) {
                         <td class="inc-tab-incident-number" data-label="Number">
                             <a href="/CMDB/CMDB_Info?id=${cmdb.id}">${cmdb.full_name}</a>
                         </td>
-                        <td data-label="department_name">${cmdb.department}</td>
+                        <td data-label="department_name" class="phone_request_hide_design">${cmdb.department}</td>
                         <td data-label="device_type">${cmdb.device_type}</td>
-                        <td data-label="windows_version">${cmdb.windows_version}</td>
-                        <td data-label="hostname">${cmdb.hostname}</td>
-                        <td data-label="ram">${cmdb.ram}</td>
-                        <td data-label="dvdrw">${cmdb.dvdrw}</td>
+                        <td data-label="windows_version" class="phone_request_hide_design">${cmdb.windows_version}</td>
+                        <td data-label="hostname" class="phone_request_hide_design">${cmdb.hostname}</td>
+                        <td data-label="ram" class="phone_request_hide_design">${cmdb.ram}</td>
+                        <td data-label="dvdrw" class="phone_request_hide_design">${cmdb.dvdrw}</td>
                     </tr>
                 `;
         tableBody.append(row);
+        phone_function()
     });
 
     // Reinitialize paging
@@ -463,5 +466,15 @@ function errorLogin(error) {
 
     if (msg === "Not logged in") {
         window.location.href = "/Auth/Login";
+    }
+}
+
+function phone_function() {
+    // Phone Design
+    if (/Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        $(".phone_request_hide_design").hide();
+        $('.inc-tab-incidents-table th.number-column').css('width', '30%');
+        $(".inc-tab-incidents-table th.device_type").css('width', '70%');
+        $(".all-title-header-front").css('font-size', '1rem');
     }
 }

@@ -434,8 +434,12 @@ function updateIncidentTable(data) {
                         <td class="inc-tab-incident-number" data-label="Number">
                             <a href="/IncidentManagement/Inc_Info_Form?id=${inc.id}&&type=${typeName}">${inc.inc_number}</a>
                         </td>
-                        <td data-label="urgency" class="phone_incident_hide_design">${inc.urgency}</td>
-                        <td data-label="state">${inc.state}</td>
+                        <td data-label="urgency">${inc.urgency}</td>
+                        <td data-label="state" style="color: ${
+                            inc.state === 'Closed' ? 'darkred' :
+                            inc.state === 'Resolved' ? 'chocolate' :
+                            inc.state === 'In Progress' ? 'dodgerblue' : '#C4C6C7'
+                            }">${inc.state}</td>
                         <td data-label="category" class="phone_incident_hide_design">${inc.category}</td>
                         <td data-label="subcategory" class="phone_incident_hide_design">${inc.subcategory}</td>
                         <td data-label="assignment group" class="phone_incident_hide_design">${inc.assignment_group}</td>
@@ -466,7 +470,7 @@ function phone_function() {
     if (/Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
         $(".phone_incident_hide_design").hide();
         $('.inc-tab-incidents-table th.number-column').css('width', '28%');
-        $(".inc-tab-incidents-table th.i_priority-column").css('width', '45%');
+        $(".inc-tab-incidents-table th.i_urgency-column").css('width', '45%');
         $(".inc-tab-incidents-table th.i_state-column").css('width', '27%');
         $(".all-title-header-front").css('font-size', '1rem');
     }

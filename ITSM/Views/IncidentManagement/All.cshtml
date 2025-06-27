@@ -123,7 +123,7 @@
                         <td class="inc-tab-incident-number" data-label="Number">
                             <a href="~/IncidentManagement/Inc_Info_Form?id=@i.id&type=Admin">@(i.inc_number)</a>
                         </td>
-                        <td data-label="urgency" class="phone_incident_hide_design">@(i.urgency)</td>
+                        <td data-label="urgency">@(i.urgency)</td>
                         @if (i.state == "Closed")
                         {
                             <td data-label="state" style="color:darkred">@i.state</td>

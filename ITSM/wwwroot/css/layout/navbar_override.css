@@ -16,18 +16,3 @@
     margin-left: 0 !important;
 }
 
-.count-badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 17px;
-    height: 17px;
-    padding: 0 12px;
-    font-size: 10px;
-    font-weight: 600;
-    line-height: 1;
-    color: #fff;
-    background-color: #2629a5;
-    border-radius: 10px;
-    margin-left: 8px;
-}

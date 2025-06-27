@@ -479,9 +479,13 @@ function updateRequestTable(data) {
                             <a href="/Request/Manager_Assign_Work_Info?id=${req.id}">${req.req_id}</a>
                         </td>
                         <td data-label="Full_Name" class="phone_request_hide_design">${req.user_name}</td>
-                        <td data-label="State">${req.state}</td>
+                        <td data-label="state" style="color: ${
+                            req.state === 'Rejected' ? 'darkred' :
+                            req.state === 'Completed' ? 'chocolate' :
+                            req.state === 'In Progress' ? 'dodgerblue' : 'black'
+                        }">${req.state}</td>
                         <td data-label="AssignmentGroup" class="phone_request_hide_design">${req.assignment_group}</td>
-                        <td data-label="Quantity">${req.req_type_name}</td>
+                        <td data-label="type_name">${req.req_type_name}</td>
                         <td data-label="Create_Date" class="phone_request_hide_design">${req.create_date}</td>
                     </tr>
                 `;
@@ -500,7 +504,11 @@ function updateRequestTable(data) {
                             <a href="/Request/Req_Info?id=${req.id}&&type=${typeName}">${req.req_id}</a>
                         </td>
                         <td data-label="Full_Name" class="phone_request_hide_design">${req.user_name}</td>
-                        <td data-label="State">${req.state}</td>
+                        <td data-label="state" style="color: ${
+                            req.state === 'Rejected' ? 'darkred' :
+                            req.state === 'Completed' ? 'chocolate' :
+                            req.state === 'In Progress' ? 'dodgerblue' : '#C4C6C7'
+                        }">${req.state}</td>
                         <td data-label="AssignmentGroup" class="phone_request_hide_design">${req.assignment_group}</td>
                         <td data-label="AssignedTo" class="phone_request_hide_design">${req.assigned_to}</td>
                         <td data-label="type_name">${req.req_type_name}</td>
@@ -533,9 +541,8 @@ function phone_function() {
     if (/Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
         $(".phone_request_hide_design").hide();
         $('.inc-tab-incidents-table th.number-column').css('width', '28%');
-        $(".inc-tab-incidents-table th.r_product_type").css('width', '32%');
-        $(".inc-tab-incidents-table th.r_state").css('width', '22%');
-        $(".inc-tab-incidents-table th.r_quantity").css('width', '18%');
+        $(".inc-tab-incidents-table th.r_state").css('width', '37%');
+        $(".inc-tab-incidents-table th.r_type").css('width', '35%');
         $(".all-title-header-front").css('font-size', '1rem');
     }
 }

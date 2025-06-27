@@ -173,22 +173,15 @@
             <div class="inc-cre-form-grid">
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
-                        <label for="emp_id" class="inc-cre-form-label inc-cre-required">Employee Number</label>
-                        <input type="text" name="emp_id" id="emp_id" class="inc-cre-form-control" value="@Model.user.emp_id">
+                        <label for="emp_id" class="inc-cre-form-label">Employee Number</label>
+                        <input type="text" name="emp_id" id="emp_id" class="inc-cre-form-control" value="@Model.user.emp_id" readonly>
                     </div>
                 </div>
 
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="gender" class="inc-cre-form-label">Gender</label>
-                        <select id="gender" name="gender" class="inc-cre-form-control">
-                            @{
-                                var selectGender = Model.user.gender;
-                            }
-                            <option value="Male" selected="@(selectGender == "Male" ? "selected" : null)">Male</option>
-                            <option value="Female" selected="@(selectGender == "Female" ? "selected" : null)">Female</option>
-                            <option value="Other" selected="@(selectGender == "Other" ? "selected" : null)">Other</option>
-                        </select>
+                        <input type="text" name="gender" id="gender" class="inc-cre-form-control" value="@Model.user.gender" autocomplete="off" readonly>
                     </div>
                 </div>
             </div>
@@ -196,8 +189,8 @@
             <div class="inc-cre-form-grid">
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
-                        <label for="fullname" class="inc-cre-form-label inc-cre-required">Full Name</label>
-                        <input type="text" name="fullname" id="fullname" class="inc-cre-form-control" value="@Model.user.fullname" autocomplete="off" required>
+                        <label for="fullname" class="inc-cre-form-label">Full Name</label>
+                        <input type="text" name="fullname" id="fullname" class="inc-cre-form-control" value="@Model.user.fullname" autocomplete="off" readonly>
                     </div>
                 </div>
 
@@ -228,23 +221,15 @@
             <div class="inc-cre-form-grid">
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
-                        <label for="title" class="inc-cre-form-label inc-cre-required">Title</label>
-                        <input type="text" name="title" id="title" class="inc-cre-form-control" autocomplete="off" value="@Model.user.title" required>
+                        <label for="title" class="inc-cre-form-label">Title</label>
+                        <input type="text" name="title" id="title" class="inc-cre-form-control" autocomplete="off" value="@Model.user.title" readonly>
                     </div>
                 </div>
 
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="race" class="inc-cre-form-label">Race</label>
-                        <select id="race" name="race" class="inc-cre-form-control">
-                            @{
-                                var selectRace = Model.user.race;
-                            }
-                            <option value="Malay" selected="@(selectRace == "Malay")">Malay</option>
-                            <option value="Indian" selected="@(selectRace == "Indian")">Indian</option>
-                            <option value="Chinese" selected="@(selectRace == "Chinese")">Chinese</option>
-                            <option value="Other" selected="@(selectRace == "Other")">Other</option>
-                        </select>
+                        <input type="text" name="race" id="race" class="inc-cre-form-control" value="@Model.user.race" autocomplete="off" readonly>
                     </div>
                 </div>
             </div>

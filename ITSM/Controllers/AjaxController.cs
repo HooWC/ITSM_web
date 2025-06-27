@@ -12,6 +12,7 @@ using System.Data;
 using Microsoft.AspNetCore.Http.HttpResults;
 using ITSM_DomainModelEntity.Function;
 using Humanizer;
+using AspNetCoreGeneratedDocument;
 
 namespace ITSM.Controllers
 {
@@ -1736,10 +1737,21 @@ namespace ITSM.Controllers
             if (!IsUserLoggedIn(out var currentUser))
                 return Json(new { success = false, message = "Not logged in" });
 
+            var user_info = await _userApi.FindByIDUser_API(currentUser.id);
+
+            var allRole = await _roleApi.GetAllRole_API();
             var allReqs = await _reqApi.GetAllRequest_API();
+
+            user_info.Role = allRole.FirstOrDefault(x => x.id == currentUser.role_id);
+
             var userReqs = new List<Request>();
             if (searchWord == "req")
-                userReqs = allReqs.OrderByDescending(x => x.id).ToList();
+            {
+                if (currentUser.Role?.role.ToLower() != "admin" && user_info.r_manager == true)
+                    userReqs = allReqs.Where(x => x.assignment_group == currentUser.department_id).OrderByDescending(x => x.id).ToList();
+                else
+                    userReqs = allReqs.OrderByDescending(x => x.id).ToList();
+            }
             else if (searchWord == "req_user")
                 userReqs = allReqs.Where(x => x.sender == currentUser.id).OrderByDescending(x => x.id).ToList();
             else if (searchWord == "assign_work")
@@ -1857,11 +1869,21 @@ namespace ITSM.Controllers
             if (!IsUserLoggedIn(out var currentUser))
                 return Json(new { success = false, message = "Not logged in" });
 
+            var user_info = await _userApi.FindByIDUser_API(currentUser.id);
+
             var allReqs = await _reqApi.GetAllRequest_API();
+            var allRole = await _roleApi.GetAllRole_API();
+
+            user_info.Role = allRole.FirstOrDefault(x => x.id == currentUser.role_id);
 
             var userReqs = new List<Request>();
             if (filterword == "req_filter")
-                userReqs = allReqs.OrderByDescending(x => x.id).ToList();
+            {
+                if (currentUser.Role?.role.ToLower() != "admin" && user_info.r_manager == true)
+                    userReqs = allReqs.Where(x => x.assignment_group == currentUser.department_id).OrderByDescending(x => x.id).ToList();
+                else
+                    userReqs = allReqs.OrderByDescending(x => x.id).ToList();
+            }
             else if (filterword == "req_filter_user")
                 userReqs = allReqs.Where(x => x.sender == currentUser.id).OrderByDescending(x => x.id).ToList();
             else if (filterword == "req_filter_group")
@@ -1930,10 +1952,21 @@ namespace ITSM.Controllers
             if (!IsUserLoggedIn(out var currentUser))
                 return Json(new { success = false, message = "Not logged in" });
 
+            var user_info = await _userApi.FindByIDUser_API(currentUser.id);
+
             var allReqs = await _reqApi.GetAllRequest_API();
+            var allRole = await _roleApi.GetAllRole_API();
+
+            user_info.Role = allRole.FirstOrDefault(x => x.id == currentUser.role_id);
+
             var userReqs = new List<Request>();
             if (sortWord == "req_sort")
-                userReqs = allReqs.OrderByDescending(x => x.id).ToList();
+            {
+                if (currentUser.Role?.role.ToLower() != "admin" && user_info.r_manager == true)
+                    userReqs = allReqs.Where(x => x.assignment_group == currentUser.department_id).OrderByDescending(x => x.id).ToList();
+                else
+                    userReqs = allReqs.OrderByDescending(x => x.id).ToList();
+            }
             else if (sortWord == "req_sort_user")
                 userReqs = allReqs.Where(x => x.sender == currentUser.id).OrderByDescending(x => x.id).ToList();
             else if (sortWord == "req_sort_group")
@@ -2048,7 +2081,6 @@ namespace ITSM.Controllers
                     return Json(new { success = false, message = "Request not found" });
 
                 reqData.description = req.description;
-                reqData.assigned_to = req.assigned_to == 0 ? null : req.assigned_to;
 
                 // resolved data
                 reqData.erp_resolution = resolveNotes;

@@ -69,7 +69,16 @@ namespace ITSM.Controllers
 
             var Reqs = new List<Request>();
             if(type == "All")
-                Reqs = allRequest.OrderByDescending(x => x.id).ToList();
+            {
+                if(currentUser.Role?.role.ToLower() != "admin" && currentUser.r_manager == true)
+                {
+                    Reqs = allRequest.Where(x => x.assignment_group == currentUser.department_id).OrderByDescending(x => x.id).ToList();
+                }
+                else
+                {
+                    Reqs = allRequest.OrderByDescending(x => x.id).ToList();
+                }
+            }
             else if(type == "User_All")
                 Reqs = allRequest.Where(x => x.sender == currentUser.id).OrderByDescending(x => x.id).ToList();
             else if(type == "Assigned_To_Us")
@@ -370,23 +379,26 @@ namespace ITSM.Controllers
 
                 if (info_pro != null)
                 {
-                    int root = info_pro.quantity - (reqinfo.quantity != null ? (int)reqinfo.quantity : 0);
-
-                    if (req.quantity > root || req.quantity <= 0)
+                    if(req.quantity != reqinfo.quantity)
                     {
-                        ViewBag.Error = "Error Quantity";
-                        return View(model);
+                        int root = info_pro.quantity + (reqinfo.quantity != null ? (int)reqinfo.quantity : 0);
+
+                        if (req.quantity > root || req.quantity <= 0)
+                        {
+                            ViewBag.Error = "Error Quantity";
+                            return View(model);
+                        }
+
+                        info_pro.quantity = root - (reqinfo.quantity != null ? (int)reqinfo.quantity : 0);
+                        if (info_pro.quantity <= 0)
+                            info_pro.active = false;
+                        else
+                            info_pro.active = true;
+
+                        await _productApi.UpdateProduct_API(info_pro);
+
+                        reqinfo.quantity = req.quantity;
                     }
-
-                    info_pro.quantity = root - (reqinfo.quantity != null ? (int)reqinfo.quantity : 0);
-                    if (info_pro.quantity <= 0)
-                        info_pro.active = false;
-                    else
-                        info_pro.active = true;
-
-                    await _productApi.UpdateProduct_API(info_pro);
-
-                    reqinfo.quantity = req.quantity;
                 }
                 else
                 {

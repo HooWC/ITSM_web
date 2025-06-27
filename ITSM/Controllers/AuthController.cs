@@ -37,7 +37,7 @@ namespace ITSM.Controllers
             _userService = userService;
         }
 
-        public async Task<IActionResult> Login()
+        public IActionResult Login()
         {
             try
             {
@@ -47,54 +47,22 @@ namespace ITSM.Controllers
                     if (token != null)
                         return RedirectToAction("Index", "Home");
                 }
-
-                var allDepartment = await _departmentApi.GetAll_With_No_Token_Department_API();
-                var allRole = await _roleApi.GetAll_With_No_Token_Role_API();
-
-                var model = new AllModelVM()
-                {
-                    RoleList = allRole ?? new List<Role>(),
-                    DepartmentList = allDepartment ?? new List<Department>()
-                };
-
-                if ((allDepartment == null || !allDepartment.Any()) && (allRole == null || !allRole.Any()))
-                {
-                    ViewBag.ErrorMessage = "Unable to load departments and roles. Please try again.";
-                }
-                
-                return View(model);
+                return View();
             }
             catch (Exception ex)
             {
                 ViewBag.ErrorMessage = "An error occurred while loading data.";
-                return View(new AllModelVM 
-                { 
-                    RoleList = new List<Role>(),
-                    DepartmentList = new List<Department>()
-                });
+                return View();
             }
         }
 
         [HttpPost]
         public async Task<IActionResult> Login(string emp_id, string password)
         {
-            var RoleTask = _roleApi.GetAll_With_No_Token_Role_API();
-            var DepartmentTask = _departmentApi.GetAll_With_No_Token_Department_API();
-            await Task.WhenAll(RoleTask, DepartmentTask);
-
-            var allRole = RoleTask.Result;
-            var allDepartment = DepartmentTask.Result;
-
-            var model = new AllModelVM()
-            {
-                RoleList = allRole,
-                DepartmentList = allDepartment
-            };
-            
             if (string.IsNullOrEmpty(emp_id) ||  string.IsNullOrEmpty(password))
             {
                 ViewBag.ErrorMessage = "Please fill in all required fields";
-                return View(model);
+                return View();
             }
 
             try
@@ -109,7 +77,7 @@ namespace ITSM.Controllers
                     {
                         ViewBag.ErrorMessage = "Your account has been blocked, please contact your supervisor.";
                         _tokenService.ClearToken();
-                        return View(model);
+                        return View();
                     }
 
                     return RedirectToAction("Index", "Home");
@@ -117,7 +85,7 @@ namespace ITSM.Controllers
                 else
                 {
                     ViewBag.ErrorMessage = "Wrong employee id or password. Try again.";
-                    return View(model);
+                    return View();
                 }
             }
             catch (Exception ex)
@@ -125,7 +93,7 @@ namespace ITSM.Controllers
                 Console.WriteLine($"Ex Message: {ex.Message}");
                 Console.WriteLine($"Ex StackTrace: {ex.StackTrace}");
                 ViewBag.ErrorMessage = "An error occurred during login, please try again later";
-                return View(model);
+                return View();
             }
         }
 

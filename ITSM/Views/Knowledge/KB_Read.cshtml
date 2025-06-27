@@ -46,16 +46,18 @@
     </ul>
 </nav>
 
-<div class="KB-read-search-section">
-    <form action="~/Knowledge/KB_Search" method="get" class="KB-read-search-container">
-        <input autocomplete="off" type="text" name="kb_search_word" placeholder="Search Title...">
-        <button type="submit"><i class="fas fa-search"></i></button>
-    </form>
-</div>
-
 <main class="KB3-main">
+    <div class="KB-read-search-section">
+        <form action="~/Knowledge/KB_Search" method="get" class="KB-read-search-container">
+            <input autocomplete="off" type="text" name="kb_search_word" placeholder="Search Title...">
+            <button type="submit"><i class="fas fa-search"></i></button>
+        </form>
+    </div>
     <div class="KB3-article-container">
+        
         <div class="KB3-article-main">
+            
+
             <div class="KB3-article-header">
                 <div class="KB3-article-id">@Model.knowledge.kb_number</div>
             </div>
@@ -65,7 +67,7 @@
             <div class="KB3-article-meta">
                 <div class="KB3-meta-item">
                     <i class="fas fa-user"></i>
-                    <span>Authored by <a href="#" class="KB3-author-link">@Model.knowledge.Author.fullname</a></span>
+                    <span>Authored by <a href="~/User/Form_User_Info?id=@Model.knowledge.Author?.id" target="_blank" class="KB3-author-link">@Model.knowledge.Author?.fullname</a></span>
                 </div>
                 <div class="KB3-meta-item">
                     <i class="fas fa-calendar"></i>

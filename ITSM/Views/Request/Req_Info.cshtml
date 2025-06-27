@@ -148,6 +148,10 @@
                 {
                     <button class="inc-cre-btn inc-cre-btn-submit" onclick="document.getElementById('incidentForm').submit();">Save</button>
                 }
+                else if(Model.user?.department_id == Model.request?.assignment_group && Model.user?.r_manager == true)
+                {
+                    <button class="inc-cre-btn inc-cre-btn-submit" onclick="document.getElementById('incidentForm').submit();">Save</button>
+                }
             }
             else if (Model.request.state == "Rejected")
             {
@@ -193,6 +197,22 @@
                 </button>
             </div>
         }
+
+        <div id="resolve-error-notification" class="error-notification" style="display: none;">
+            <div class="error-notification-content">
+                <div class="error-notification-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                </div>
+                <div class="error-notification-text">
+                    <div class="error-notification-title">Resolution failed</div>
+                    <div class="error-notification-message" id="resolve-error-notification-message"></div>
+                </div>
+            </div>
+        </div>
 
 
         @if (Model?.request?.req_type == false)
@@ -307,13 +327,33 @@
                             </label>
                             @if (Model.request?.AssignedTo?.fullname != null)
                             {
-                                <div class="inc-cre-input-with-icon">
-                                    <div class="inc-cre-form-control inc-cre-user-link">
-                                        <a href="~/User/Form_User_Info?id=@Model.request?.AssignedTo?.id" target="_blank">
-                                            @(Model.request?.AssignedTo?.fullname != null ? Model.request?.AssignedTo?.fullname : "-")
-                                        </a>
+                                @if (Model.user?.department_id == Model.request?.assignment_group && Model.user?.r_manager == true)
+                                {
+                                    <div class="inc-cre-input-with-icon">
+                                        <div class="inc-cre-form-control inc-cre-user-link">
+                                            <a id="assigned-to" href="~/User/Form_User_Info?id=@Model.request?.AssignedTo?.id" target="_blank">
+                                                @(Model.request?.AssignedTo?.fullname ?? "")
+                                            </a>
+                                        </div>
+                                        <input type="hidden" id="assigned-to-id" name="assigned_to" value="@Model.request.assigned_to">
+                                        <button type="button" class="inc-cre-icon-search" id="assigned-to-search" @(Model.request.assignment_group > 0 ? "" : "disabled")>
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <circle cx="11" cy="11" r="8"></circle>
+                                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                            </svg>
+                                        </button>
                                     </div>
-                                </div>
+                                }
+                                else
+                                {
+                                    <div class="inc-cre-input-with-icon">
+                                        <div class="inc-cre-form-control inc-cre-user-link">
+                                            <a href="~/User/Form_User_Info?id=@Model.request?.AssignedTo?.id" target="_blank">
+                                                @(Model.request?.AssignedTo?.fullname != null ? Model.request?.AssignedTo?.fullname : "-")
+                                            </a>
+                                        </div>
+                                    </div>
+                                }
                             }
                             else
                             {
@@ -348,9 +388,8 @@
                     name="description"
                     autocomplete="off"
                     class="inc-cre-form-control inc-cre-description-textarea"
-                    rows="5"
-                    @(Model.user?.id == Model.request?.sender ? "" : "readonly")>@Model.request?.description
-                    </textarea>
+                    rows="6"
+                    @(Model.user?.id == Model.request?.sender ? "" : "readonly")>@Model.request?.description?.Trim()</textarea>
                 </div>
             </form>
         }
@@ -415,13 +454,32 @@
                             </label>
                             @if (Model.request?.AssignedTo?.fullname != null)
                             {
-                                <div class="inc-cre-input-with-icon">
-                                    <div class="inc-cre-form-control inc-cre-user-link">
-                                        <a href="~/User/Form_User_Info?id=@Model.request?.AssignedTo?.id" target="_blank">
-                                            @(Model.request?.AssignedTo?.fullname != null ? Model.request?.AssignedTo?.fullname : "-")
-                                        </a>
+                                @if (Model.user?.department_id == Model.request?.assignment_group && Model.user?.r_manager == true)
+                                {
+                                    <div class="inc-cre-input-with-icon">
+                                        <div class="inc-cre-form-control inc-cre-user-link">
+                                            <a id="assigned-to" href="~/User/Form_User_Info?id=@Model.request?.AssignedTo?.id" target="_blank">
+                                                @(Model.request?.AssignedTo?.fullname ?? "")
+                                            </a>
+                                        </div>
+                                        <input type="hidden" id="assigned-to-id" name="assigned_to" value="@Model.request.assigned_to">
+                                        <button type="button" class="inc-cre-icon-search" id="assigned-to-search" @(Model.request.assignment_group > 0 ? "" : "disabled")>
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <circle cx="11" cy="11" r="8"></circle>
+                                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                            </svg>
+                                        </button>
                                     </div>
-                                </div>
+                                }else
+                                {
+                                    <div class="inc-cre-input-with-icon">
+                                        <div class="inc-cre-form-control inc-cre-user-link">
+                                            <a href="~/User/Form_User_Info?id=@Model.request?.AssignedTo?.id" target="_blank">
+                                                @(Model.request?.AssignedTo?.fullname != null ? Model.request?.AssignedTo?.fullname : "-")
+                                            </a>
+                                        </div>
+                                    </div>
+                                }
                             }
                             else
                             {
@@ -592,8 +650,7 @@
                               autocomplete="off"
                               class="inc-cre-form-control inc-cre-description-textarea"
                               rows="5"
-                              @(Model.user?.id == Model.request?.sender ? "" : "readonly")>@Model.request?.description
-                    </textarea>
+                              @(Model.user?.id == Model.request?.sender ? "" : "readonly")>@Model.request?.description?.Trim()</textarea>
                 </div>
             </form>
         }
@@ -736,7 +793,7 @@
                                 <h3 class="inc-cre-section-title">Resolution Information</h3>
                                 <div class="inc-cre-resolve-history-container">
                                     <div id="resolution-history-content">
-                                        <!-- Resolved History -->
+                                        @* Resolved History *@
                                     </div>
                                 </div>
                             </div>
@@ -748,6 +805,44 @@
     }
 
 </div>
+
+<div id="inc-cre-modal" class="inc-cre-modal">
+    <div class="inc-cre-modal-content">
+        <div class="inc-cre-modal-header">
+            <h3 id="inc-cre-modal-title">Select</h3>
+            <button type="button" class="inc-cre-modal-close">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+        <div class="inc-cre-modal-body">
+            <div class="inc-cre-search-wrapper">
+                <input type="text" id="inc-cre-search-input" class="inc-cre-form-control" placeholder="Search...">
+                <button type="button" class="inc-cre-search-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="inc-cre-table-wrapper">
+                <table class="inc-cre-modal-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Desc</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inc-cre-modal-table-body">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <div id="imageModal" class="image-modal">
     <button class="image-close-btn"></button>

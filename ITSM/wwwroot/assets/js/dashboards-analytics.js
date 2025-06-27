@@ -13,6 +13,8 @@ document.addEventListener('DOMContentLoaded', function (e) {
     borderColor = config.colors.borderColor;
     fontFamily = config.fontFamily;
 
+    let growthChart;
+
     // Order Area Chart
     // --------------------------------------------------------------------
     const orderAreaChartEl = document.querySelector('#orderChart'),
@@ -407,7 +409,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
     // --------------------------------------------------------------------
     const growthChartEl = document.querySelector('#growthChart');
 
-    let growthChart;
+    
 
     let initialGrowth = 0;
     if (statsElement && statsElement.dataset.stats) {

@@ -175,16 +175,6 @@
         var resolveType = $("#resolve-type").val();
         var resolveNotes = $("#resolve-notes").val().trim();
 
-        if (!resolveType) {
-            alert("Please select a resolution type");
-            return;
-        }
-
-        if (!resolveNotes) {
-            alert("Please enter resolution details");
-            return;
-        }
-
         var formData = $("#incidentForm").serialize();
         formData += "&resolveType=" + encodeURIComponent(resolveType);
         formData += "&resolveNotes=" + encodeURIComponent(resolveNotes);
@@ -197,13 +187,19 @@
                 if (response.success) {
                     reback_page();
                 } else {
-                    // alert("Error: " + response.message);
+                    $("#resolve-error-notification-message").text(response.message);
+                    $("#resolve-error-notification").show();
                 }
             },
             error: function (xhr, status, error) {
-                // alert("Error: " + error);
+                $("#resolve-error-notification-message").text("An error occurred while resolving the incident.");
+                $("#resolve-error-notification").show();
             }
         });
+    });
+
+    $("#resolve-type, #resolve-notes").on('input', function () {
+        $("#resolve-error-notification").hide();
     });
 
     $("#Rejected_req").click(function () {

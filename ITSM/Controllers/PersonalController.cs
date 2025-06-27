@@ -333,10 +333,7 @@ namespace ITSM.Controllers
                 reqCount = reqCount
             };
 
-            if (!string.IsNullOrEmpty(user.emp_id) &&
-                !string.IsNullOrEmpty(user.fullname) &&
-                !string.IsNullOrEmpty(user.email) &&
-                !string.IsNullOrEmpty(user.title) &&
+            if (!string.IsNullOrEmpty(user.email) &&
                 !string.IsNullOrEmpty(user.mobile_phone))
             {
                 byte[] fileBytes = null;
@@ -356,53 +353,10 @@ namespace ITSM.Controllers
                     }
                 }
 
-                //if (user.password != null && new_password != null)
-                //{
-                //    if (user.password == new_password)
-                //    {
-                //        ViewBag.Error = "The old and new passwords cannot be the same. Please try again.";
-                //        return View(model);
-                //    }
-                //    else if (new_password.Length <= 6)
-                //    {
-                //        ViewBag.Error = "The mew password must be at least 6 word. Please try again.";
-                //        return View(model);
-                //    }
-                //    else
-                //    {
-                //        try
-                //        {
-                //            bool loginResult = await _authApi.LoginAsync(user.emp_id, user.password);
-
-                //            if (loginResult)
-                //                info_user.password = new_password;
-                //            else
-                //            {
-                //                ViewBag.Error = "Wrong employee id or password. Try again.";
-                //                return View(model);
-                //            }
-                //        }
-                //        catch (Exception ex)
-                //        {
-                //            Console.WriteLine($"Ex Message: {ex.Message}");
-                //            Console.WriteLine($"Ex StackTrace: {ex.StackTrace}");
-                //            ViewBag.Error = "An error occurred during login, please try again later";
-                //            return View(model);
-                //        }
-                //    }
-                //}
-
-                bool emailEmpid = allUser.Any(u => u.emp_id.ToLower() == user.emp_id.ToLower() && u.id != user.id);
                 bool emailExists = allUser.Any(u => u.email == user.email && u.id != user.id);
                 bool mobilephoneExists = allUser.Any(u => u.mobile_phone == user.mobile_phone && u.id != user.id);
                 bool businessphoneExists = !string.IsNullOrWhiteSpace(user.business_phone) &&
                                             allUser.Any(u => u.business_phone == user.business_phone && u.id != user.id);
-
-                if (emailEmpid)
-                {
-                    ViewBag.Error = "This Emp Id is already in use.";
-                    return View(model);
-                }
 
                 if (emailExists)
                 {
@@ -422,24 +376,10 @@ namespace ITSM.Controllers
                     return View(model);
                 }
 
-                //if (info_user.department_id != user.department_id)
-                //{
-                //    var userManager = allUser.FirstOrDefault(t => t.department_id == user.department_id && t.r_manager == true);
-                //    if (userManager != null)
-                //        info_user.Manager = userManager.id;
-                //    else info_user.Manager = null;
-                //}
-
-                info_user.emp_id = user.emp_id;
                 info_user.email = user.email;
-                info_user.gender = user.gender;
-                info_user.fullname = user.fullname;
-                info_user.title = user.title;
-                info_user.race = user.race;
                 info_user.business_phone = user.business_phone;
                 info_user.mobile_phone = user.mobile_phone;
 
-                // Prefix
                 if (user.gender == "Male")
                     info_user.prefix = "Mr.";
                 else if (user.gender == "Female")
