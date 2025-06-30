@@ -53,5 +53,15 @@ namespace ITSM.Controllers
             var count = requestListCount.Where(x => x.assigned_to == currentUser.id && x.state != "Completed" && x.state != "Rejected").Count();
             return count;
         }
+
+        public async Task<IActionResult> checkIsAdmin()
+        {
+            var currentUser = await GetCurrentUserAsync();
+            if (currentUser.Role?.role?.ToLower() != "admin")
+                return RedirectToAction("Index", "Home");
+
+            return Ok();
+        }
+
     }
 }

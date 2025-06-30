@@ -47,6 +47,10 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Category_List()
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var currentUser = await _userService.GetCurrentUserAsync();
             var incCount = await _userService.GetIncidentTeamCount();
             var reqCount = await _userService.GetRequestToMeCount();
@@ -71,6 +75,10 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Category_Create()
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var currentUser = await _userService.GetCurrentUserAsync();
             var incCount = await _userService.GetIncidentTeamCount();
             var reqCount = await _userService.GetRequestToMeCount();
@@ -88,6 +96,10 @@ namespace ITSM.Controllers
         [HttpPost]
         public async Task<IActionResult> Category_Create(Category category)
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var currentUser = await _userService.GetCurrentUserAsync();
             var incCount = await _userService.GetIncidentTeamCount();
             var reqCount = await _userService.GetRequestToMeCount();
@@ -124,6 +136,10 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Category_Info(int id)
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var currentUser = await _userService.GetCurrentUserAsync();
             var incCount = await _userService.GetIncidentTeamCount();
             var reqCount = await _userService.GetRequestToMeCount();
@@ -144,6 +160,10 @@ namespace ITSM.Controllers
         [HttpPost]
         public async Task<IActionResult> Category_Info(Category c)
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var currentUser = await _userService.GetCurrentUserAsync();
             var incCount = await _userService.GetIncidentTeamCount();
             var reqCount = await _userService.GetRequestToMeCount();
@@ -180,6 +200,10 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Inc_Category_List()
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var currentUser = await _userService.GetCurrentUserAsync();
             var incCount = await _userService.GetIncidentTeamCount();
             var reqCount = await _userService.GetRequestToMeCount();
@@ -201,6 +225,10 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Inc_Category_Create()
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var currentUser = await _userService.GetCurrentUserAsync();
             var incCount = await _userService.GetIncidentTeamCount();
             var reqCount = await _userService.GetRequestToMeCount();
@@ -218,6 +246,10 @@ namespace ITSM.Controllers
         [HttpPost]
         public async Task<IActionResult> Inc_Category_Create(Incidentcategory incCategory)
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var currentUser = await _userService.GetCurrentUserAsync();
             var incCount = await _userService.GetIncidentTeamCount();
             var reqCount = await _userService.GetRequestToMeCount();
@@ -261,6 +293,10 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Inc_Category_Info(int id)
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var currentUser = await _userService.GetCurrentUserAsync();
             var incCount = await _userService.GetIncidentTeamCount();
             var reqCount = await _userService.GetRequestToMeCount();
@@ -281,6 +317,10 @@ namespace ITSM.Controllers
         [HttpPost]
         public async Task<IActionResult> Inc_Category_Info(Incidentcategory incCategory)
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var currentUser = await _userService.GetCurrentUserAsync();
             var incCount = await _userService.GetIncidentTeamCount();
             var reqCount = await _userService.GetRequestToMeCount();
@@ -324,6 +364,10 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Subcategory_List()
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var currentUser = await _userService.GetCurrentUserAsync();
             var incCount = await _userService.GetIncidentTeamCount();
             var reqCount = await _userService.GetRequestToMeCount();
@@ -358,6 +402,10 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Subcategory_Create()
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var currentUser = await _userService.GetCurrentUserAsync();
             var incCount = await _userService.GetIncidentTeamCount();
             var reqCount = await _userService.GetRequestToMeCount();
@@ -384,6 +432,10 @@ namespace ITSM.Controllers
         [HttpPost]
         public async Task<IActionResult> Subcategory_Create(Subcategory sub)
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var currentUser = await _userService.GetCurrentUserAsync();
             var incCount = await _userService.GetIncidentTeamCount();
             var reqCount = await _userService.GetRequestToMeCount();
@@ -438,6 +490,10 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Subcategory_Info(int id)
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var currentUser = await _userService.GetCurrentUserAsync();
             var incCount = await _userService.GetIncidentTeamCount();
             var reqCount = await _userService.GetRequestToMeCount();
@@ -466,6 +522,10 @@ namespace ITSM.Controllers
         [HttpPost]
         public async Task<IActionResult> Subcategory_Info(Subcategory sub)
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var currentUser = await _userService.GetCurrentUserAsync();
             var incCount = await _userService.GetIncidentTeamCount();
             var reqCount = await _userService.GetRequestToMeCount();
@@ -519,6 +579,10 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Req_Category_List()
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var currentUser = await _userService.GetCurrentUserAsync();
             var incCount = await _userService.GetIncidentTeamCount();
             var reqCount = await _userService.GetRequestToMeCount();
@@ -540,6 +604,10 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Req_Category_Create()
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var currentUser = await _userService.GetCurrentUserAsync();
             var incCount = await _userService.GetIncidentTeamCount();
             var reqCount = await _userService.GetRequestToMeCount();
@@ -557,6 +625,10 @@ namespace ITSM.Controllers
         [HttpPost]
         public async Task<IActionResult> Req_Category_Create(Req_Category reqcategory)
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var currentUser = await _userService.GetCurrentUserAsync();
             var incCount = await _userService.GetIncidentTeamCount();
             var reqCount = await _userService.GetRequestToMeCount();
@@ -601,6 +673,10 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Req_Category_Info(int id)
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var currentUser = await _userService.GetCurrentUserAsync();
             var incCount = await _userService.GetIncidentTeamCount();
             var reqCount = await _userService.GetRequestToMeCount();
@@ -621,6 +697,10 @@ namespace ITSM.Controllers
         [HttpPost]
         public async Task<IActionResult> Req_Category_Info(Req_Category reqcategory)
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var currentUser = await _userService.GetCurrentUserAsync();
             var incCount = await _userService.GetIncidentTeamCount();
             var reqCount = await _userService.GetRequestToMeCount();
@@ -665,6 +745,10 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Req_Subcategory_List()
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var currentUser = await _userService.GetCurrentUserAsync();
             var incCount = await _userService.GetIncidentTeamCount();
             var reqCount = await _userService.GetRequestToMeCount();
@@ -694,6 +778,10 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Req_Subcategory_Create()
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var currentUser = await _userService.GetCurrentUserAsync();
             var incCount = await _userService.GetIncidentTeamCount();
             var reqCount = await _userService.GetRequestToMeCount();
@@ -714,6 +802,10 @@ namespace ITSM.Controllers
         [HttpPost]
         public async Task<IActionResult> Req_Subcategory_Create(Req_Subcategory reqsubcategory)
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var currentUser = await _userService.GetCurrentUserAsync();
             var incCount = await _userService.GetIncidentTeamCount();
             var reqCount = await _userService.GetRequestToMeCount();
@@ -758,6 +850,10 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Req_Subcategory_Info(int id)
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var currentUser = await _userService.GetCurrentUserAsync();
             var incCount = await _userService.GetIncidentTeamCount();
             var reqCount = await _userService.GetRequestToMeCount();
@@ -783,6 +879,10 @@ namespace ITSM.Controllers
         [HttpPost]
         public async Task<IActionResult> Req_Subcategory_Info(Req_Subcategory reqsubcategory)
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var currentUser = await _userService.GetCurrentUserAsync();
             var incCount = await _userService.GetIncidentTeamCount();
             var reqCount = await _userService.GetRequestToMeCount();
@@ -832,6 +932,10 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Req_Function_List()
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var currentUser = await _userService.GetCurrentUserAsync();
             var incCount = await _userService.GetIncidentTeamCount();
             var reqCount = await _userService.GetRequestToMeCount();
@@ -866,6 +970,10 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Req_Function_Create()
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var currentUser = await _userService.GetCurrentUserAsync();
             var incCount = await _userService.GetIncidentTeamCount();
             var reqCount = await _userService.GetRequestToMeCount();
@@ -893,6 +1001,10 @@ namespace ITSM.Controllers
         [HttpPost]
         public async Task<IActionResult> Req_Function_Create(Req_Function reqfunction)
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var currentUser = await _userService.GetCurrentUserAsync();
             var incCount = await _userService.GetIncidentTeamCount();
             var reqCount = await _userService.GetRequestToMeCount();
@@ -947,6 +1059,10 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Req_Function_Info(int id)
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var currentUser = await _userService.GetCurrentUserAsync();
             var incCount = await _userService.GetIncidentTeamCount();
             var reqCount = await _userService.GetRequestToMeCount();
@@ -978,6 +1094,10 @@ namespace ITSM.Controllers
         [HttpPost]
         public async Task<IActionResult> Req_Function_Info(Req_Function reqfunctionpost)
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var currentUser = await _userService.GetCurrentUserAsync();
             var incCount = await _userService.GetIncidentTeamCount();
             var reqCount = await _userService.GetRequestToMeCount();

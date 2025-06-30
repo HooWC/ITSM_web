@@ -68,7 +68,9 @@ namespace ITSM.Controllers
             {
                 user = currentUser,
                 KnowledgeList = allKB.OrderByDescending(X => X.id).ToList(),
-                CategoryList = allCategory
+                CategoryList = allCategory,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);
@@ -76,6 +78,10 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> KB_List()
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var currentUser = await _userService.GetCurrentUserAsync();
             var incCount = await _userService.GetIncidentTeamCount();
             var reqCount = await _userService.GetRequestToMeCount();
@@ -99,7 +105,9 @@ namespace ITSM.Controllers
             var model = new AllModelVM
             {
                 user = currentUser,
-                KnowledgeList = allKB.OrderByDescending(X => X.id).ToList()
+                KnowledgeList = allKB.OrderByDescending(X => X.id).ToList(),
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);

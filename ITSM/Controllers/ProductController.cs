@@ -41,6 +41,10 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Product_List()
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var currentUser = await _userService.GetCurrentUserAsync();
             var incCount = await _userService.GetIncidentTeamCount();
             var reqCount = await _userService.GetRequestToMeCount();
@@ -73,6 +77,10 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Product_Create()
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var currentUser = await _userService.GetCurrentUserAsync();
             var incCount = await _userService.GetIncidentTeamCount();
             var reqCount = await _userService.GetRequestToMeCount();
@@ -100,6 +108,10 @@ namespace ITSM.Controllers
         [HttpPost]
         public async Task<IActionResult> Product_Create(IFormFile file, Product product)
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var currentUser = await _userService.GetCurrentUserAsync();
             var incCount = await _userService.GetIncidentTeamCount();
             var reqCount = await _userService.GetRequestToMeCount();
@@ -189,6 +201,10 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Product_Info(int id)
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var currentUser = await _userService.GetCurrentUserAsync();
             var incCount = await _userService.GetIncidentTeamCount();
             var reqCount = await _userService.GetRequestToMeCount();
@@ -221,6 +237,10 @@ namespace ITSM.Controllers
         [HttpPost]
         public async Task<IActionResult> Product_Info(IFormFile file, Product product)
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var currentUser = await _userService.GetCurrentUserAsync();
             var incCount = await _userService.GetIncidentTeamCount();
             var reqCount = await _userService.GetRequestToMeCount();

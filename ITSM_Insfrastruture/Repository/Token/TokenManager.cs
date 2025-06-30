@@ -47,7 +47,6 @@
 //                }
 //                catch (Exception)
 //                {
-//                    // 文件读取错误，返回null
 //                    return null;
 //                }
 //            }
@@ -57,13 +56,11 @@
 
 //        public static bool IsTokenValid()
 //        {
-//            // 检查内存中的令牌
 //            if (_cachedToken != null)
 //            {
 //                return true;
 //            }
 
-//            // 如果内存中没有令牌，检查文件中的令牌
 //            if (File.Exists(TokenFilePath))
 //            {
 //                try
@@ -73,13 +70,12 @@
                     
 //                    if (token != null)
 //                    {
-//                        _cachedToken = token; // 将文件中的令牌加载到内存中
+//                        _cachedToken = token;
 //                        return true;
 //                    }
 //                }
 //                catch (Exception)
 //                {
-//                    // 文件读取或解析错误，忽略并返回false
 //                    return false;
 //                }
 //            }

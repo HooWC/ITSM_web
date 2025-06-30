@@ -112,7 +112,9 @@ namespace ITSM.Controllers
                 DepartmentName = getDepartmentName,
                 RoleName = getRoleName,
                 Team = sameDepartment,
-                IncidentsHistory = incident_list
+                IncidentsHistory = incident_list,
+                incCount = incCount,
+                reqCount = reqCount
             };
 
             return View(model);

@@ -21,7 +21,11 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> All()
         {
-            var currentUser = await _userService.GetCurrentUserAsync();
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
+                var currentUser = await _userService.GetCurrentUserAsync();
             var incCount = await _userService.GetIncidentTeamCount();
             var reqCount = await _userService.GetRequestToMeCount();
 
@@ -45,6 +49,10 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Create()
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var currentUser = await _userService.GetCurrentUserAsync();
             var incCount = await _userService.GetIncidentTeamCount();
             var reqCount = await _userService.GetRequestToMeCount();
@@ -62,6 +70,10 @@ namespace ITSM.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(Myversion version)
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var currentUser = await _userService.GetCurrentUserAsync();
             var incCount = await _userService.GetIncidentTeamCount();
             var reqCount = await _userService.GetRequestToMeCount();
@@ -91,14 +103,12 @@ namespace ITSM.Controllers
                 return View(model);
             }
 
-            // Create New Version
             Myversion new_version = new Myversion()
             {
                 version_num = version.version_num,
                 message = version.message
             };
 
-            // API requests
             bool result = await _myversionApi.CreateMyversion_API(new_version);
 
             if (result)
@@ -112,6 +122,10 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Info(int id)
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var currentUser = await _userService.GetCurrentUserAsync();
             var incCount = await _userService.GetIncidentTeamCount();
             var reqCount = await _userService.GetRequestToMeCount();
@@ -132,6 +146,10 @@ namespace ITSM.Controllers
         [HttpPost]
         public async Task<IActionResult> Info(Myversion version)
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var currentUser = await _userService.GetCurrentUserAsync();
             var incCount = await _userService.GetIncidentTeamCount();
             var reqCount = await _userService.GetRequestToMeCount();

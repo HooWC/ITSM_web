@@ -11,11 +11,11 @@ namespace ITSM_DomainModelEntity.Function
         {
             switch (reader.TokenType)
             {
-                case JsonTokenType.String: // 处理 Base64 字符串
+                case JsonTokenType.String: // Processing Base64 Strings
                     string base64 = reader.GetString();
                     return string.IsNullOrEmpty(base64) ? null : Convert.FromBase64String(base64);
 
-                case JsonTokenType.StartArray: // 处理直接字节数组 [255,216,...]
+                case JsonTokenType.StartArray: // Handles direct byte arrays [255,216,...]
                     List<byte> bytes = new List<byte>();
                     while (reader.Read() && reader.TokenType != JsonTokenType.EndArray)
                     {
@@ -23,14 +23,14 @@ namespace ITSM_DomainModelEntity.Function
                     }
                     return bytes.ToArray();
 
-                case JsonTokenType.StartObject: // 处理 Buffer 格式 {"type":"Buffer","data":[255,216,...]}
+                case JsonTokenType.StartObject: // Process Buffer format {"type":"Buffer","data":[255,216,...]}
                     while (reader.Read() && reader.TokenType != JsonTokenType.EndObject)
                     {
                         if (reader.TokenType == JsonTokenType.PropertyName &&
                             reader.GetString() == "data" &&
                             reader.Read())
                         {
-                            return Read(ref reader, typeToConvert, options); // 递归解析 data 数组
+                            return Read(ref reader, typeToConvert, options); // Recursively parse the data array
                         }
                     }
                     return null;
@@ -42,7 +42,7 @@ namespace ITSM_DomainModelEntity.Function
 
         public override void Write(Utf8JsonWriter writer, byte[] value, JsonSerializerOptions options)
         {
-            writer.WriteBase64StringValue(value); // 统一输出为 Base64 字符串
+            writer.WriteBase64StringValue(value); // Unified output as Base64 string
         }
     }
 } 

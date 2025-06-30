@@ -91,6 +91,10 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> All()
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var model = await get_Inc_Data("All");
 
             return View(model);

@@ -38,6 +38,10 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> Ann_List()
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var currentUser = await _userService.GetCurrentUserAsync();
             var incCount = await _userService.GetIncidentTeamCount();
             var reqCount = await _userService.GetRequestToMeCount();

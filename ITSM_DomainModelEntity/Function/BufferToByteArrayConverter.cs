@@ -16,7 +16,7 @@ namespace ITSM_DomainModelEntity.Function
             }
             else if (reader.TokenType == JsonToken.StartObject)
             {
-                // 处理 {"type":"Buffer","data":[...]} 格式
+                // Handle {"type":"Buffer","data":[...]} format
                 var obj = JObject.Load(reader);
                 if (obj.ContainsKey("type") && obj["type"].ToString() == "Buffer" && obj.ContainsKey("data"))
                 {
@@ -42,8 +42,8 @@ namespace ITSM_DomainModelEntity.Function
                 writer.WriteNull();
                 return;
             }
-            
-            // 直接写入Base64字符串，而不是Buffer对象
+
+            // Write Base64 strings directly, not Buffer objects
             writer.WriteValue(Convert.ToBase64String(value));
         }
     }

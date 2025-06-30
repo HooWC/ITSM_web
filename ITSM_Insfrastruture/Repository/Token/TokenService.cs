@@ -255,10 +255,8 @@ namespace ITSM_Insfrastruture.Repository.Token
             {
                 try
                 {
-                    // 创建不包含photo的用户对象副本进行序列化
                     var userInfoForStorage = CreateUserWithoutPhoto(userInfo);
                     
-                    // 序列化不包含photo的用户对象
                     var options = new JsonSerializerOptions { 
                         WriteIndented = false,
                         IgnoreNullValues = false
@@ -275,7 +273,6 @@ namespace ITSM_Insfrastruture.Repository.Token
                         }
                         _httpContextAccessor.HttpContext.Session.SetString(UserInfoKey, userInfoJson);
                         
-                        // 单独存储photo_type，用于指示有photo数据
                         if (userInfo.photo_type != null)
                         {
                             _httpContextAccessor.HttpContext.Session.SetString("UserPhotoType", userInfo.photo_type);
@@ -287,7 +284,7 @@ namespace ITSM_Insfrastruture.Repository.Token
                         Console.WriteLine($"Error saving user info to Session: {ex.Message}");
                     }
                     
-                    // Save to Cookie (不包含photo数据)
+                    // Save to Cookie
                     try
                     {
                         _httpContextAccessor.HttpContext.Response.Cookies.Append(
@@ -319,7 +316,6 @@ namespace ITSM_Insfrastruture.Repository.Token
             }
         }
         
-        // 创建不包含photo的User对象副本
         private User CreateUserWithoutPhoto(User original)
         {
             if (original == null) return null;

@@ -44,6 +44,10 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> User_List()
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var currentUser = await _userService.GetCurrentUserAsync();
             var incCount = await _userService.GetIncidentTeamCount();
             var reqCount = await _userService.GetRequestToMeCount();
@@ -76,6 +80,10 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> UserCreate()
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var currentUser = await _userService.GetCurrentUserAsync();
             var incCount = await _userService.GetIncidentTeamCount();
             var reqCount = await _userService.GetRequestToMeCount();
@@ -102,6 +110,10 @@ namespace ITSM.Controllers
         [HttpPost]
         public async Task<IActionResult> UserCreate(IFormFile file, User user)
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var currentUser = await _userService.GetCurrentUserAsync();
             var incCount = await _userService.GetIncidentTeamCount();
             var reqCount = await _userService.GetRequestToMeCount();
@@ -243,6 +255,10 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> User_Info(int id)
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var currentUser = await _userService.GetCurrentUserAsync();
             var incCount = await _userService.GetIncidentTeamCount();
             var reqCount = await _userService.GetRequestToMeCount();
@@ -274,6 +290,10 @@ namespace ITSM.Controllers
         [HttpPost]
         public async Task<IActionResult> User_Info(User user, string new_password)
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var currentUser = await _userService.GetCurrentUserAsync();
             var incCount = await _userService.GetIncidentTeamCount();
             var reqCount = await _userService.GetRequestToMeCount();
@@ -500,6 +520,10 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> User_Approve_Info(int id)
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var model = await get_User_Info(id);
 
             return View(model);

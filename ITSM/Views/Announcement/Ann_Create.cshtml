@@ -166,6 +166,7 @@
             </div>
         }
 
+
         <form id="incidentForm" class="inc-cre-incident-form" action="~/Announcement/Ann_Create" method="post">
             <div class="inc-cre-form-grid">
                 <div class="inc-cre-form-column">
@@ -178,7 +179,7 @@
                 <div class="inc-cre-form-column">
                     <div class="inc-cre-form-group">
                         <label for="number" class="inc-cre-form-label">User Name</label>
-                        <input type="text" class="inc-cre-form-control" value="@Model.user.fullname" readonly>
+                        <input type="text" class="inc-cre-form-control" value="@Model.user?.fullname" readonly>
                     </div>
                 </div>
             </div>

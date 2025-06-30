@@ -11,9 +11,15 @@ namespace ITSM_Insfrastruture.Repository.Config
         // Base Api Link
         // localhost:5300   It Side
         // hongsenghq.ddns.net   
-        //public static readonly string BaseUrl = "http://localhost:5300";
+
+        // Local Testing
+        public static readonly string BaseUrl = "http://localhost:5300";
+
+        // Outside Internet
         //public static readonly string BaseUrl = "http://hongsenghq.ddns.net:5300";
-        public static readonly string BaseUrl = "http://127.0.0.1:5300";
+
+        // Inside Wifi
+        //public static readonly string BaseUrl = "http://127.0.0.1:5300";
 
         // ============================================================================
 
@@ -31,6 +37,7 @@ namespace ITSM_Insfrastruture.Repository.Config
         // get user delete  (ID) (need token) (x)
         public static readonly string UserDeleteLink = $"{BaseUrl}/users/";
         
+        // other link
         public static readonly string UserForgotPasswordLink = $"{BaseUrl}/userNoToken/forgotpassword";
         public static readonly string UserNoTokenLink = $"{BaseUrl}/userNoToken/getbyid";
         // === For User Part ===
@@ -64,6 +71,7 @@ namespace ITSM_Insfrastruture.Repository.Config
         // search by id & update && delete Request  (ID) (need token)
         public static readonly string ReqSUDLink = $"{BaseUrl}/requests/";
 
+        // search for reqid number
         public static readonly string ReqIDLink = $"{BaseUrl}/requests/reqid/";
         // === For Request Part ===
 
@@ -104,6 +112,7 @@ namespace ITSM_Insfrastruture.Repository.Config
         // search by id & update && delete Incident  (ID) (need token)
         public static readonly string IncidentSUDLink = $"{BaseUrl}/incidents/";
 
+        // search for incid number
         public static readonly string IncIDLink = $"{BaseUrl}/incidents/incid/";
         // === For Incident Part ===
 

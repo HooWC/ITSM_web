@@ -37,6 +37,10 @@ namespace ITSM.Controllers
 
         public async Task<IActionResult> All_Feedback_List()
         {
+            var checkResult = await _userService.checkIsAdmin();
+            if (checkResult is RedirectToActionResult)
+                return checkResult;
+
             var feedList = await GetCommonFeedbackData("All_Feedback_List");  
             return View(feedList);  
         }
@@ -116,10 +120,8 @@ namespace ITSM.Controllers
                 return View(model);
             }
 
-            // Making concurrent API requests
             var FeedTask = _feedbackApi.GetAllFeedback_API();
 
-            // get todo new id
             var allFeed = await FeedTask;
 
             string newId = "";
@@ -135,7 +137,6 @@ namespace ITSM.Controllers
             else
                 newId = "FBK1";
 
-            // Create New Feedback
             Feedback new_feedback = new Feedback()
             {
                 fb_number = newId,
@@ -143,7 +144,6 @@ namespace ITSM.Controllers
                 message = feed.message
             };
 
-            // API requests
             bool result = await _feedbackApi.CreateFeedback_API(new_feedback);
 
             if (result)
